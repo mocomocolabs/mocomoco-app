@@ -1,0 +1,7 @@
+{
+  "name": "appiskind",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

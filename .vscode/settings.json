@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": true,
+  "javascript.validate.enable": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+
+  "relativePath.excludedExtensions": [".js", ".ts", ".tsx"],
+  "relativePath.ignore": ["**/node_modules/**", "**/.history/**", "**/*.dll", "**/obj/**", "**/objd/**"],
+
+  "auto-close-tag.activationOnLanguage": ["html", "xml"]
+}

@@ -1,0 +1,74 @@
+// color
+$white: #fff;
+$border: #dfe2e6;
+$m-border: #ebedef;
+$gray: #c2c7cc;
+$dark-gray: #6c7580;
+$purple: #5f5cce;
+$black: #111111;
+$m-black: #333333;
+$m-gray: #e6e6e5;
+$blue: #39659e;
+$m-blue: #70bcfc;
+$red: #f5493e;
+$m-red: #f19a95;
+$yellow: #fbc936;
+$m-yellow: #fbdf97;
+$pink: #fbc6c2;
+
+$padding-container: 1.6rem;
+%px-container {
+  padding-left: $padding-container;
+  padding-right: $padding-container;
+}
+
+$text-xs-size: 1.2rem;
+$text-sm-size: 1.3rem;
+$text-base-size: 1.4rem;
+$text-lg-size: 1.5rem;
+$text-xl-size: 1.6rem;
+$text-xxl-size: 1.9rem;
+$text-xxxl-size: 2.9rem;
+
+%text-xs {
+  font-size: $text-xs-size;
+  line-height: 2.8rem;
+}
+
+%text-sm {
+  font-size: $text-sm-size;
+  line-height: 2.8rem;
+}
+%text-base {
+  font-size: $text-base-size;
+  line-height: 3.6rem;
+}
+%text-lg {
+  font-size: $text-lg-size;
+  line-height: 3.6rem;
+}
+%text-xl {
+  font-size: $text-xl-size;
+  line-height: 3.6rem;
+}
+%text-xxl {
+  font-size: $text-xxl-size;
+  line-height: 3.6rem;
+}
+%text-xxxl {
+  font-size: $text-xxxl-size;
+  line-height: 3.6rem;
+}
+
+%ellipsis {
+  word-break: break-all;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+%bg-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
