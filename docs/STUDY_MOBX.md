@@ -2,6 +2,8 @@
 
 ## observable의 종류
 
+observable의 값이 변화하면 컴포넌트에서 rerendering 합니다.
+
 https://rannte.tistory.com/entry/react-native-mobx-action-observable
 
 - observable.ref
@@ -69,9 +71,13 @@ class Store {
 
 ## computed
 
-observable은 값이 변경될때마다 무조건 렌더링을 다시 하지만, 실제 사용할 값을 computed해놓고 사용한다면, observable값이 변경되더라도 computed에 명시된 값에 부합하지 않다면 재 렌더링 하지 않는다.
+observable은 값이 변경될때마다 무조건 렌더링을 다시 하지만, computed는 계산된 값을 캐싱해서 사용하기 때문에
+observable값이 변경되더라도 필요한 경우에만 계산을 한다.
+@computed 내부의 동작이 무거울 수록 성능상 이점이 더 커진다.
 
-https://jaroinside.tistory.com/39
+Computed는 기본적으로 JavaScript의 Getter에만 사용할 수 있으며, 따라서 추가 인자를 받을 수가 없다. 입력 인자가 this로 제한되는 순수함수라고 생각하면 이해하기 편하다. (물론 순수함수는 아니다.)
+
+https://hyunseob.github.io/2017/10/07/hello-mobx/
 
 ## reaction vs autorun vs when
 
@@ -155,18 +161,14 @@ https://camel-dev.blogspot.com/2018/06/mobx1-observable-reactions.html
 
 ## action
 
-https://chchoing88.github.io/ho_blog/hello-mobx/
-
 - action은 state를 변화시키는 모든 것들
 - 변화를 한다발로 묶어 computed value와 reaction들에게 가장 마지막 action이 끝난 후에 통지한다.
 - action.bound는 자동으로 action 대상 객체에 대한 this를 바인딩함
 
-### example
-
-`mobx.configure({ enforceActions: 'observed' })` 선언후 해당 코드는 에러가 난다.
+### action 함수를 선언했는데도 state를 변화시키면 에러가 나는 경우
 
 ```typescript
-mobx.configure({ enforceActions: 'observed' }) // don't allow state modifications outside actions
+mobx.configure({ enforceActions: 'observed' }) // action 밖에서 state 수정을 비허용한다
 
 class Store {
   @observable githubProjects = []
@@ -174,15 +176,18 @@ class Store {
 
   @action
   fetchProjects() {
+    // 오류나지 않음
     this.githubProjects = []
     this.state = 'pending'
     fetchGithubProjectsSomehow().then(
       (projects) => {
         const filteredProjects = somePreprocessing(projects)
+        // 오류 발생
         this.githubProjects = filteredProjects
         this.state = 'done'
       },
       (error) => {
+        // 오류 발생
         this.state = 'error'
       }
     )
@@ -192,5 +197,60 @@ class Store {
 
 then 다음 화살표 함수 안에서, 새로운 함수스코프가 만들어지고, 그곳에서 action 값을 바꾸는데, 이것은 액션 밖에서 state값을 바꾼다고 인식한다.
 
-- 해결방법으로는 runInAction과 같은 유틸함수를 이용할 수 있다.
-- https://mobx.js.org/best/actions.html 를 참고할것
+- 해결방법 1 : 각각 별도의 action 함수를 만든다.
+
+```typescript
+  @action
+  fetchProjects() {
+    this.githubProjects = []
+    this.state = 'pending'
+    fetchGithubProjectsSomehow().then(
+      (projects) => {
+        const filteredProjects = somePreprocessing(projects)
+        this.setGithubProjects(filteredProjects)
+        this.setState('done')
+      },
+      (error) => {
+        this.setState('error')
+      }
+    )
+  }
+
+  @action
+  setGithubProjects(p: any) {
+    this.githubProjects = p
+  }
+
+  @action
+  setState(state: string) {
+    this.state = state
+  }
+```
+
+- 해결방법 2 : runInAction 유틸함수를 이용한다.
+
+```typescript
+  import { runInAction } from 'mobx'
+
+  @action
+  fetchProjects() {
+    this.githubProjects = []
+    this.state = 'pending'
+    fetchGithubProjectsSomehow().then(
+      (projects) => {
+        const filteredProjects = somePreprocessing(projects)
+        runInAction(() => {
+          this.githubProjects = filteredProjects
+          this.state = 'done'
+        })
+      },
+      (error) => {
+        runInAction(() => {
+          this.githubProjects = filteredProjects
+          this.state = 'error'
+        })
+      }
+    )
+  }
+
+```
