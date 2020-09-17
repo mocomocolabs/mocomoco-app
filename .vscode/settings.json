@@ -7,7 +7,5 @@
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
 
   "relativePath.excludedExtensions": [".js", ".ts", ".tsx"],
-  "relativePath.ignore": ["**/node_modules/**", "**/.history/**", "**/*.dll", "**/obj/**", "**/objd/**"],
-
-  "auto-close-tag.activationOnLanguage": ["html", "xml"]
+  "relativePath.ignore": ["**/node_modules/**", "**/.history/**", "**/*.dll", "**/obj/**", "**/objd/**"]
 }
