@@ -14,6 +14,8 @@
 ```
 npm install -g ionic@latest
 npm install -g yarn
+npm install -g concurrently
+npm install -g nodemon
 yarn
 yarn dev
 ```
