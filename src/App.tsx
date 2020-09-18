@@ -17,7 +17,7 @@ const App: React.FC = () => {
         <IonTabs>
           <IonRouterOutlet id='main'>
             <Route path='/home' component={Home} exact />
-            <Route path='/community' component={Community} exact />
+            <Route path='/feed' component={Community} exact />
             <Route path='/trade' component={Trade} exact />
             <Route path='/chat' component={Chat} exact />
             <Route path='/my-page' component={MyPage} exact />
@@ -27,7 +27,7 @@ const App: React.FC = () => {
             <IonTabButton tab='home' href='/home'>
               <IonIcon icon={home} />
             </IonTabButton>
-            <IonTabButton tab='community' href='/community'>
+            <IonTabButton tab='feed' href='/feed'>
               <IonIcon icon={beer} />
             </IonTabButton>
             <IonTabButton tab='trade' href='/trade'>
