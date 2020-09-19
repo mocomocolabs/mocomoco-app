@@ -1,10 +1,9 @@
 import { IonIcon } from '@ionic/react'
 import { heart, person } from 'ionicons/icons'
 import React from 'react'
-
 import { INews } from '../../models/example/news'
 
-const NewsItem: React.FC<INews> = ({ title, user, domain, comments_count, time_ago }) => {
+export const NewsItem: React.FC<INews> = ({ title, user, domain, comments_count, time_ago }) => {
   return (
     <li className='br-sm my-2 shadow-md'>
       <div className='flex-col p-2'>
@@ -29,5 +28,3 @@ const NewsItem: React.FC<INews> = ({ title, user, domain, comments_count, time_a
     </li>
   )
 }
-
-export default NewsItem

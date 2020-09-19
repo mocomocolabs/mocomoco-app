@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
 
-export default class TodoItem {
+export class TodoItem {
   id = Date.now()
 
   @observable text = ''

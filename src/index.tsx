@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
-import App from './App'
+import { App } from './App'
 import { StoreProvider } from './hooks/store-provider'
 import * as serviceWorker from './serviceWorker'
-import RootStore from './stores'
+import { RootStore } from './stores'
 
 const rootStore = new RootStore()
 

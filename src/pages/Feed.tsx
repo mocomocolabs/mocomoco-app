@@ -1,14 +1,14 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
 import React from 'react'
-import NewsList from '../components/example/NewsList'
-import NewsSearch from '../components/example/NewsSearch'
+import { NewsList } from '../components/example/NewsList'
+import { NewsSearch } from '../components/example/NewsSearch'
 
-const Community: React.FC = () => {
+export const Feed: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>커뮤니티</IonTitle>
+          <IonTitle></IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -21,5 +21,3 @@ const Community: React.FC = () => {
     </IonPage>
   )
 }
-
-export default Community

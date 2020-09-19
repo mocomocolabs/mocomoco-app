@@ -4,20 +4,20 @@ import { basket, beer, home, paperPlane, personCircle } from 'ionicons/icons'
 import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import './global.scss'
-import Chat from './pages/Chat'
-import Community from './pages/Community'
-import Home from './pages/Home'
-import MyPage from './pages/MyPage'
-import Trade from './pages/Trade'
+import { Chat } from './pages/Chat'
+import { Feed } from './pages/Feed'
+import { Home } from './pages/Home'
+import { MyPage } from './pages/MyPage'
+import { Trade } from './pages/Trade'
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet id='main'>
             <Route path='/home' component={Home} exact />
-            <Route path='/feed' component={Community} exact />
+            <Route path='/feed' component={Feed} exact />
             <Route path='/trade' component={Trade} exact />
             <Route path='/chat' component={Chat} exact />
             <Route path='/my-page' component={MyPage} exact />
@@ -45,5 +45,3 @@ const App: React.FC = () => {
     </IonApp>
   )
 }
-
-export default App
