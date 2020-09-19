@@ -1,9 +1,8 @@
 import { IonInput } from '@ionic/react'
 import React from 'react'
-
 import { useStore } from '../../hooks/use-store'
 
-const Search: React.FC = () => {
+export const NewsSearch: React.FC = () => {
   const { news } = useStore()
 
   return (
@@ -28,5 +27,3 @@ const Search: React.FC = () => {
     </div>
   )
 }
-
-export default Search

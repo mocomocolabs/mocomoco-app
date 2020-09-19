@@ -1,5 +1,5 @@
 import axios from 'axios'
-import config from '../config'
+import { config } from '../config'
 
 // interface IAxiosResponse {
 //   data: IResponse
@@ -10,7 +10,7 @@ import config from '../config'
 //   errorMessage: string
 // }
 
-const _axios = axios.create({
+export const http = axios.create({
   baseURL: config.API_URL,
   withCredentials: false,
   // transformResponse: (r: IAxiosResponse) => r,
@@ -30,5 +30,3 @@ const _axios = axios.create({
 //     return Promise.reject(error)
 //   }
 // )
-
-export default _axios

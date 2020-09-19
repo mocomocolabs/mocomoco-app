@@ -1,9 +1,9 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
 import React from 'react'
-import NewsList from '../components/example/NewsList'
-import NewsSearch from '../components/example/NewsSearch'
+import { NewsList } from '../components/example/NewsList'
+import { NewsSearch } from '../components/example/NewsSearch'
 
-const Chat: React.FC = () => {
+export const Chat: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -21,5 +21,3 @@ const Chat: React.FC = () => {
     </IonPage>
   )
 }
-
-export default Chat

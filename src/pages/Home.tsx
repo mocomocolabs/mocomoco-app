@@ -1,9 +1,9 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
 import React from 'react'
-import NewsList from '../components/example/NewsList'
-import NewsSearch from '../components/example/NewsSearch'
+import { NewsList } from '../components/example/NewsList'
+import { NewsSearch } from '../components/example/NewsSearch'
 
-const Home: React.FC = () => {
+export const Home: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -21,5 +21,3 @@ const Home: React.FC = () => {
     </IonPage>
   )
 }
-
-export default Home
