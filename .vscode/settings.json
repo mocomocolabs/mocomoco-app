@@ -1,9 +1,7 @@
 {
   "editor.formatOnSave": true,
   "javascript.validate.enable": false,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
+  "editor.codeActionsOnSave": ["source.fixAll.eslint", "source.addMissingImports"],
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
 
   "relativePath.excludedExtensions": [".js", ".ts", ".tsx"],
