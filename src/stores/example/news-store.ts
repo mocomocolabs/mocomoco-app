@@ -1,8 +1,7 @@
-import axios from 'axios'
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
-
 import { INews } from '../../models/example/news'
+import { http } from '../../utils/http-util'
 import { Task } from '../task'
 
 const initState = {
@@ -39,7 +38,7 @@ export class News {
   getNews = (async () => {
     await new Promise((r) => setTimeout(() => r(), 1000))
 
-    await axios.get('https://api.hnpwa.com/v0/news/1.json').then(({ data }) => {
+    await http.get<INews[]>('https://api.hnpwa.com/v0/news/1.json').then((data) => {
       this.news = data
     })
   }) as Task

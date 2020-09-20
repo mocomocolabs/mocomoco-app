@@ -23,7 +23,7 @@ export const NewsList: React.FC<INewsList> = () => {
       ),
       resolved: () => (
         <ul className='pl-0 move-up'>
-          {news.filteredNews.map((v, i) => (
+          {news.news.map((v, i) => (
             <NewsItem
               key={i}
               id={v.id}

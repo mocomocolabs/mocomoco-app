@@ -33,6 +33,7 @@ yarn dev
 - atoms : Text와 같은 가장 작은 단위
 - molecules : atom 컴포넌트가 모인 단위, http 통신 불가
 - organisms : molecules가 모인 단위, http 통신 가능
+- modals : 모달 컴포넌트
 
 2. 네이밍
 

@@ -1,9 +1,10 @@
 import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { basket, beer, home, paperPlane, personCircle } from 'ionicons/icons'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import './global.scss'
+import { useStore } from './hooks/use-store'
 import { Chat } from './pages/Chat'
 import { Feed } from './pages/Feed'
 import { Home } from './pages/Home'
@@ -11,6 +12,15 @@ import { MyPage } from './pages/MyPage'
 import { Trade } from './pages/Trade'
 
 export const App: React.FC = () => {
+  const { community } = useStore()
+
+  useEffect(() => {
+    // TODO: login 이후 실행할 공통 호출들
+    community.getCommunities()
+
+    // eslint-disable-next-line
+  }, [])
+
   return (
     <IonApp>
       <IonReactRouter>
