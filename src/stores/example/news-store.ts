@@ -38,9 +38,11 @@ export class News {
   getNews = (async () => {
     await new Promise((r) => setTimeout(() => r(), 1000))
 
-    await http.get<INews[]>('https://api.hnpwa.com/v0/news/1.json').then((data) => {
-      this.news = data
-    })
+    await http.get<INews[]>('https://api.hnpwa.com/v0/news/1.json').then(
+      action((data) => {
+        this.news = data
+      })
+    )
   }) as Task
 
   @action
