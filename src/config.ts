@@ -5,20 +5,21 @@ interface Config {
   API_URL: string
 }
 
-interface ConfigAll {
+interface ConfigByEnv {
   development: Config
   production: Config
   test: Config
 }
 
-const config: ConfigAll = {
+const configEnv: ConfigByEnv = {
   development: {
     API_URL: 'http://localhost:5050/api',
   },
   production: {
     API_URL: 'http://localhost:5050/api',
   },
+  /* eslint-disable */
   test: {} as any,
 }
 
-export default config[NODE_ENV]
+export const config = configEnv[NODE_ENV]
