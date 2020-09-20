@@ -30,6 +30,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/consistent-type-assertions': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-var-requires': 'off', // server code로 인해 추가
   },
   settings: {
     react: {
