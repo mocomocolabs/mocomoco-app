@@ -10,8 +10,8 @@ const initState = {
 }
 
 export class Community {
-  @observable.ref communities: ICommunity[] = initState.communities
   // TODO: API 협의 후 적절한 store로 이동
+  @observable.ref communities: ICommunity[] = initState.communities
   @observable selectedId: number = initState.selectedId
 
   constructor() {}
