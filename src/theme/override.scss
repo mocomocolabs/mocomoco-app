@@ -1,0 +1,10 @@
+/* ionic 기본 content의 경우 변수 사용이 작동하지 않음 */
+
+ion-toolbar {
+  padding-left: $padding-container;
+  padding-right: $padding-container;
+}
+
+.modal-wrapper {
+  color: $black;
+}

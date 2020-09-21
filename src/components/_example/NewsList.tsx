@@ -1,13 +1,12 @@
 import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
-
 import { useStore } from '../../hooks/use-store'
-import NewsItem from './NewsItem'
+import { NewsItem } from './NewsItem'
 
 interface INewsList {}
 
-const ExampleContainer: React.FC<INewsList> = () => {
+export const NewsList: React.FC<INewsList> = () => {
   const { news } = useStore()
 
   useEffect(() => {
@@ -24,7 +23,7 @@ const ExampleContainer: React.FC<INewsList> = () => {
       ),
       resolved: () => (
         <ul className='pl-0 move-up'>
-          {news.filteredNews.map((v, i) => (
+          {news.news.map((v, i) => (
             <NewsItem
               key={i}
               id={v.id}
@@ -40,5 +39,3 @@ const ExampleContainer: React.FC<INewsList> = () => {
     })
   )
 }
-
-export default ExampleContainer

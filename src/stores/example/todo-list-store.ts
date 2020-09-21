@@ -1,6 +1,5 @@
 import { action, computed, observable } from 'mobx'
-
-import TodoItem from './todo-item-store'
+import { TodoItem } from './todo-item-store'
 
 const initState = {
   todos: ['안녕', '땀땀연구소', '함께 :)'],

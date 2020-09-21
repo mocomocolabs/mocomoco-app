@@ -1,23 +1,33 @@
 import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { basket, beer, home, paperPlane, personCircle } from 'ionicons/icons'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import './global.scss'
-import Chat from './pages/Chat'
-import Community from './pages/Community'
-import Home from './pages/Home'
-import MyPage from './pages/MyPage'
-import Trade from './pages/Trade'
+import { useStore } from './hooks/use-store'
+import { Chat } from './pages/Chat'
+import { Feed } from './pages/Feed'
+import { Home } from './pages/Home'
+import { MyPage } from './pages/MyPage'
+import { Trade } from './pages/Trade'
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
+  const { community } = useStore()
+
+  useEffect(() => {
+    // TODO: login 이후 실행할 공통 호출들
+    community.getCommunities()
+
+    // eslint-disable-next-line
+  }, [])
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet id='main'>
             <Route path='/home' component={Home} exact />
-            <Route path='/community' component={Community} exact />
+            <Route path='/feed' component={Feed} exact />
             <Route path='/trade' component={Trade} exact />
             <Route path='/chat' component={Chat} exact />
             <Route path='/my-page' component={MyPage} exact />
@@ -27,7 +37,7 @@ const App: React.FC = () => {
             <IonTabButton tab='home' href='/home'>
               <IonIcon icon={home} />
             </IonTabButton>
-            <IonTabButton tab='community' href='/community'>
+            <IonTabButton tab='feed' href='/feed'>
               <IonIcon icon={beer} />
             </IonTabButton>
             <IonTabButton tab='trade' href='/trade'>
@@ -45,5 +55,3 @@ const App: React.FC = () => {
     </IonApp>
   )
 }
-
-export default App

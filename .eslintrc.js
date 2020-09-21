@@ -17,7 +17,13 @@ module.exports = {
   rules: {
     'react/prop-types': 'off',
     'react/display-name': 'off',
-
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector: 'ExportDefaultDeclaration',
+        message: 'Prefer named exports',
+      },
+    ],
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-empty-function': 'off',
@@ -25,6 +31,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/consistent-type-assertions': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-var-requires': 'off', // server code로 인해 추가
   },
   settings: {
     react: {

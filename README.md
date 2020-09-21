@@ -14,13 +14,38 @@
 ```
 npm install -g ionic@latest
 npm install -g yarn
+npm install -g concurrently
+npm install -g nodemon
 yarn
 yarn dev
 ```
 
 ## ⚙️ 프로젝트 구조
 
-### 컴포넌트 구조
+### 컴포넌트 컨벤션
+
+1. 구조
+   atmoic design pattern을 따른다.
+   https://www.rithmschool.com/courses/intermediate-react/react-design-patterns
+
+![atomic](docs/img/atomic.png)
+
+- atoms : Text와 같은 가장 작은 단위
+- molecules : atom 컴포넌트가 모인 단위, http 통신 불가
+- organisms : molecules가 모인 단위, http 통신 가능
+- modals : 모달 컴포넌트
+
+2. 네이밍
+
+- 이름 끝에 접미사로 `Component`를 붙인다.
+  `TextBaseComponent.tsx`
+- export 시에는 접미사 `Component`를 제외하고 default export를 사용하지 않는다.
+
+```typescript
+export const Text = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <span className={`${className} text-base`}>{children}</span>
+)
+```
 
 ### CSS
 
