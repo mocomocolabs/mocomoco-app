@@ -1,5 +1,14 @@
-import { IonContent, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/react'
-import { settings } from 'ionicons/icons'
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/react'
+import { settingsOutline } from 'ionicons/icons'
 import React from 'react'
 import { MypageColumnList } from '../components/molecules/MypageColumnListComponent'
 import { MypageProfile } from '../components/molecules/MypageProfileComponent'
@@ -11,7 +20,11 @@ export const MyPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle slot='start'>마이페이지</IonTitle>
-          <IonIcon icon={settings} slot='end' />
+          <IonButtons slot='primary'>
+            <IonButton slot='end' color='dark' routerLink='/settings'>
+              <IonIcon slot='icon-only' icon={settingsOutline} size='small' />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 
