@@ -9,6 +9,7 @@ import { Chat } from './pages/Chat'
 import { Feed } from './pages/Feed'
 import { Home } from './pages/Home'
 import { MyPage } from './pages/MyPage'
+import { Settings } from './pages/Settings'
 import { Trade } from './pages/Trade'
 
 export const App: React.FC = () => {
@@ -31,6 +32,7 @@ export const App: React.FC = () => {
             <Route path='/trade' component={Trade} exact />
             <Route path='/chat' component={Chat} exact />
             <Route path='/my-page' component={MyPage} exact />
+            <Route path='/settings' component={Settings} exact />
             <Redirect from='/' to='/home' exact />
           </IonRouterOutlet>
           <IonTabBar slot='bottom'>
