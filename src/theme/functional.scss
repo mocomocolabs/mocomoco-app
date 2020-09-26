@@ -918,6 +918,10 @@
   font-weight: 800;
 }
 
+.no-underline {
+  text-decoration: none;
+}
+
 .leading-none {
   line-height: 1;
 }
@@ -974,7 +978,7 @@
 .x-divider {
   display: block;
   width: 100%;
-  background-color: $m-border;
+  background-color: $border;
   height: 1px;
 }
 
