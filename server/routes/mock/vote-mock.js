@@ -8,7 +8,6 @@ const photoUrls = [
   '/assets/img/food-2.jpeg',
   '/assets/img/food-3.jpeg',
   '/assets/img/food-4.jpeg',
-  '',
 ]
 
 const createPlaces = (count) =>

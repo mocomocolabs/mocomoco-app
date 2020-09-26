@@ -10,8 +10,8 @@ const initState = {
 }
 
 export class Community {
-  // TODO: API 협의 후 적절한 store로 이동
   @observable.ref communities: ICommunity[] = initState.communities
+  // TODO: API 협의 후 적절한 store로 이동, DB에 저장할 필요는 없을듯 함.
   @observable selectedId: number = initState.selectedId
 
   @task
