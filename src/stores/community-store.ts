@@ -29,7 +29,7 @@ export class Community {
   }
 
   @computed
-  get selectedCommunity() {
+  get community() {
     return this.communities.find((v) => v.id === this.selectedId)
   }
 }
