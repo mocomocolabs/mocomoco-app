@@ -3,7 +3,6 @@ import { checkmark } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React, { Dispatch, FC, SetStateAction } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { Spinner } from '../atoms/SpinnerComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { Modal } from './ModalComponent'
 
@@ -17,28 +16,23 @@ export const CommunitySelectorModal: FC<ICommunitySelectorModal> = ({ isShow, se
 
   return useObserver(() => (
     <Modal isShow={isShow} setIsShow={setIsShow} title='지역 / 공동체 선택'>
-      {community.getCommunities.match({
-        resolved: () => (
-          <ul className='px-container pt-2'>
-            {community.communities.map((v) => (
-              <li
-                key={v.id}
-                className='py-2'
-                onClick={() => {
-                  community.setSelectedId(v.id)
-                  setIsShow(false)
-                }}
-              >
-                <div className='flex-between-center'>
-                  <TextLg>{v.name}</TextLg>
-                  {v.id === community.selectedId && <IonIcon icon={checkmark}></IonIcon>}
-                </div>
-              </li>
-            ))}
-          </ul>
-        ),
-        pending: () => <Spinner isFull={true}></Spinner>,
-      })}
+      <ul className='px-container pt-2'>
+        {community.communities.map((v) => (
+          <li
+            key={v.id}
+            className='py-2'
+            onClick={() => {
+              community.setSelectedId(v.id)
+              setIsShow(false)
+            }}
+          >
+            <div className='flex-between-center'>
+              <TextLg>{v.name}</TextLg>
+              {v.id === community.selectedId && <IonIcon icon={checkmark}></IonIcon>}
+            </div>
+          </li>
+        ))}
+      </ul>
     </Modal>
   ))
 }

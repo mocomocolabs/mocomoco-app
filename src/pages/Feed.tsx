@@ -1,8 +1,8 @@
-import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar } from '@ionic/react'
+import { create } from 'ionicons/icons'
 import React from 'react'
-import { CommunitySelector } from '../components/organisms/CommunitySelectorComponent'
-import { NewsList } from '../components/_example/NewsList'
-import { NewsSearch } from '../components/_example/NewsSearch'
+import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
+import { FeedList } from '../components/organisms/FeedListComponent'
 
 export const Feed: React.FC = () => {
   return (
@@ -12,14 +12,15 @@ export const Feed: React.FC = () => {
           <div slot='start'>
             <CommunitySelector></CommunitySelector>
           </div>
-          <div slot='end'>글쓰기버튼</div>
+          <div slot='end'>
+            <IonIcon icon={create}></IonIcon>
+          </div>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
         <div className='px-container'>
-          <NewsSearch />
-          <NewsList />
+          <FeedList />
         </div>
       </IonContent>
     </IonPage>
