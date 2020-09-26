@@ -2,6 +2,15 @@ import axios from 'axios'
 import { IResponse } from '../../types/axios'
 import { config } from '../config'
 
+// interface IAxiosResponse {
+//   data: IResponse
+// }
+
+// interface IResponse {
+//   result: any
+//   errorMessage: string
+// }
+
 const _axios = axios.create({
   baseURL: config.API_URL,
   withCredentials: false,

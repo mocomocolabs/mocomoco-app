@@ -221,6 +221,12 @@
 }
 
 /** height */
+.h-5 {
+  height: 2rem;
+}
+.h-6 {
+  height: 2.4rem;
+}
 .h-7 {
   height: 2.8rem;
 }
@@ -262,6 +268,10 @@
 
 .max-h-half-screen {
   max-height: 50vh;
+}
+
+.min-h-1 {
+  min-height: 1px;
 }
 
 .min-h-100 {
@@ -1033,6 +1043,9 @@
 }
 .bg-m-blue {
   background-color: $m-blue;
+}
+.bg-m-border {
+  background-color: $m-border;
 }
 .bg-red {
   background-color: $red;

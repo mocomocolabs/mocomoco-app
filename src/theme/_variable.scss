@@ -32,32 +32,31 @@ $text-xxxl-size: 2.9rem;
 
 %text-xs {
   font-size: $text-xs-size;
-  line-height: 2.8rem;
+  line-height: 1rem;
 }
-
 %text-sm {
   font-size: $text-sm-size;
-  line-height: 2.8rem;
+  line-height: 2rem;
 }
 %text-base {
   font-size: $text-base-size;
-  line-height: 3.6rem;
+  line-height: 2rem;
 }
 %text-lg {
   font-size: $text-lg-size;
-  line-height: 3.6rem;
+  line-height: 2rem;
 }
 %text-xl {
   font-size: $text-xl-size;
-  line-height: 3.6rem;
+  line-height: 3rem;
 }
 %text-xxl {
   font-size: $text-xxl-size;
-  line-height: 3.6rem;
+  line-height: 3.5rem;
 }
 %text-xxxl {
   font-size: $text-xxxl-size;
-  line-height: 3.6rem;
+  line-height: 4.6rem;
 }
 
 %ellipsis {

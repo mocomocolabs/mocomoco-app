@@ -8,20 +8,19 @@ const photoUrls = [
   '/assets/img/food-2.jpeg',
   '/assets/img/food-3.jpeg',
   '/assets/img/food-4.jpeg',
-  ''
 ]
 
-const createPlaces = count =>
-  _.times(count, num => ({
+const createPlaces = (count) =>
+  _.times(count, (num) => ({
     placeId: faker.random.uuid(),
     rating: (Math.random() * 5).toFixed(1),
     userRatingsTotal: faker.random.number() % 50,
     name: placeNames[faker.random.number() % placeNames.length],
     photoUrl: photoUrls[faker.random.number() % photoUrls.length],
     lat: faker.address.latitude(),
-    lng: faker.address.longitude()
+    lng: faker.address.longitude(),
   }))
 
 module.exports = {
-  places: createPlaces(20)
+  places: createPlaces(20),
 }
