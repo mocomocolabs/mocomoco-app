@@ -14,8 +14,6 @@ export class Community {
   @observable.ref communities: ICommunity[] = initState.communities
   @observable selectedId: number = initState.selectedId
 
-  constructor() {}
-
   @task
   getCommunities = (async () => {
     await http.get<ICommunity[]>('/communities').then(

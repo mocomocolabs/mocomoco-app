@@ -11,8 +11,6 @@ const initState = {
 export class Feed {
   @observable.ref feeds: IFeed[] = initState.feeds
 
-  constructor() {}
-
   @task
   getFeeds = (async () => {
     await http.get<IFeed[]>('/feeds').then(
