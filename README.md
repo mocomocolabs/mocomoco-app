@@ -85,6 +85,10 @@ export const Text = ({ children, className }: { children: React.ReactNode; class
 
 - [MOBX](docs/STUDY_MOBX.md)
 
+## 🕹 Capacitor 플러그인 목록
+
+- 앱 내 저장 : https://capacitorjs.com/docs/apis/storage
+
 ## Reference
 
 react-hooks-mobx : https://github.com/stolenng/react-hooks-mobx
