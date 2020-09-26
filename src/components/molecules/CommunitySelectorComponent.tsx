@@ -16,7 +16,7 @@ export const CommunitySelector: FC<ICommunitySelector> = () => {
     <>
       <div className='flex items-center' onClick={() => setIsShowModal(true)}>
         <IonIcon icon={chevronDown}></IonIcon>
-        <TextLg className='ml-2'>{community.selectedCommunity?.name}</TextLg>
+        <TextLg className='ml-2'>{community.community?.name}</TextLg>
       </div>
 
       <CommunitySelectorModal isShow={isShowModal} setIsShow={setIsShowModal}></CommunitySelectorModal>
