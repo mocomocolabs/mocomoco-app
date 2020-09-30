@@ -1,6 +1,7 @@
 import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { basket, beer, home, paperPlane, personCircle } from 'ionicons/icons'
+import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import './global.scss'
@@ -14,7 +15,7 @@ import { Settings } from './pages/Settings'
 import { Trade } from './pages/Trade'
 
 export const App: React.FC = () => {
-  const { community } = useStore()
+  const { community, ui } = useStore()
 
   useEffect(() => {
     // TODO: login 이후 실행할 공통 호출들
@@ -23,7 +24,7 @@ export const App: React.FC = () => {
     // eslint-disable-next-line
   }, [])
 
-  return (
+  return useObserver(() => (
     <IonApp>
       <IonReactRouter>
         <IonTabs>
@@ -37,7 +38,7 @@ export const App: React.FC = () => {
             <Route path='/settings' component={Settings} exact />
             <Redirect from='/' to='/home' exact />
           </IonRouterOutlet>
-          <IonTabBar slot='bottom'>
+          <IonTabBar slot='bottom' hidden={!ui.isBottomTab}>
             <IonTabButton tab='home' href='/home'>
               <IonIcon icon={home} />
             </IonTabButton>
@@ -57,5 +58,5 @@ export const App: React.FC = () => {
         </IonTabs>
       </IonReactRouter>
     </IonApp>
-  )
+  ))
 }
