@@ -87,4 +87,5 @@ const createFeeds = (count) =>
 
 module.exports = {
   feeds: createFeeds(20),
+  feed: createFeeds(20)[faker.random.number(19)],
 }
