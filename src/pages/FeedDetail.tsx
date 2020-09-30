@@ -1,21 +1,38 @@
-import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import {
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonPage,
+  IonToolbar,
+  useIonViewWillEnter,
+  useIonViewWillLeave,
+} from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { Spinner } from '../components/atoms/SpinnerComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FeedItem } from '../components/molecules/FeedItemComponent'
+import { CommentForm } from '../components/organisms/CommentFormComponent'
 import { ContentPopover } from '../components/organisms/ContentPopoverComponent'
 import { useStore } from '../hooks/use-store'
 
 export const FeedDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
-  const { feed } = useStore()
+  const { feed, ui } = useStore()
 
   useEffect(() => {
     const id = parseInt(match.params.id)
     feed.getFeed(id)
     // eslint-disable-next-line
   }, [])
+
+  useIonViewWillEnter(() => {
+    ui.setIsBottomTab(false)
+  })
+
+  useIonViewWillLeave(() => {
+    ui.setIsBottomTab(true)
+  })
 
   return useObserver(() => (
     <IonPage>
@@ -37,6 +54,10 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ matc
         </div>
         <ContentPopover></ContentPopover>
       </IonContent>
+
+      <IonFooter>
+        <CommentForm></CommentForm>
+      </IonFooter>
     </IonPage>
   ))
 }
