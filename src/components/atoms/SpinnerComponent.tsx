@@ -8,7 +8,7 @@ export interface ISpinnerComponent {
 export const Spinner: FC<ISpinnerComponent> = ({ isFull }) => {
   return (
     <div className={isFull ? 'absolute-center' : ''}>
-      <IonSpinner name='crescent' />
+      <IonSpinner name='crescent' color='dark' />
     </div>
   )
 }
