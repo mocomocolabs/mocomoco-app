@@ -19,9 +19,9 @@ import { useStore } from '../hooks/use-store'
 
 export const FeedDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const { feed, ui } = useStore()
+  const id = parseInt(match.params.id)
 
   useEffect(() => {
-    const id = parseInt(match.params.id)
     feed.getFeed(id)
     // eslint-disable-next-line
   }, [])
@@ -56,7 +56,7 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ matc
       </IonContent>
 
       <IonFooter>
-        <CommentForm></CommentForm>
+        <CommentForm feedId={id}></CommentForm>
       </IonFooter>
     </IonPage>
   ))

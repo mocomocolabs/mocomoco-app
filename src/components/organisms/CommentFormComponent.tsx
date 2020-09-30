@@ -1,28 +1,50 @@
 import { IonIcon, IonTextarea } from '@ionic/react'
 import { paperPlane } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
+import { useStore } from '../../hooks/use-store'
 import { Profile } from '../atoms/ProfileComponent'
+import { Spinner } from '../atoms/SpinnerComponent'
 
-export interface ICommentForm {}
+export interface ICommentForm {
+  feedId: number
+}
 
-export const CommentForm: FC<ICommentForm> = () => {
+export const CommentForm: React.FC<ICommentForm> = ({ feedId }) => {
   const [text, setText] = useState<string>()
+  const { feed } = useStore()
 
   return useObserver(() => (
     <div className='px-container py-2 flex items-center bg-white'>
       <Profile url='assets/mock/profile1.jpeg'></Profile>
 
       <IonTextarea
-        className='ml-2 bg-m-gray br-lg px-3 black'
+        className='ml-2 bg-m-gray br-lg px-3 black leading-8'
         autoGrow={true}
         rows={1}
-        placeholder='Enter more information here...'
         value={text}
-        onIonChange={(e) => setText(e.detail.value!)}
+        onIonChange={(e) => {
+          setText(e.detail.value!)
+        }}
       ></IonTextarea>
 
-      <IonIcon icon={paperPlane} className='ml-2 black'></IonIcon>
+      <div className='ml-2'>
+        {feed.insertComment.match({
+          pending: () => <Spinner></Spinner>,
+          resolved: () => (
+            <IonIcon
+              icon={paperPlane}
+              className='black'
+              onClick={() => {
+                if (text) {
+                  feed.insertComment({ feedId, content: text })
+                  setText('')
+                }
+              }}
+            ></IonIcon>
+          ),
+        })}
+      </div>
     </div>
   ))
 }
