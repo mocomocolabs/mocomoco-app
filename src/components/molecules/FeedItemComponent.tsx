@@ -10,12 +10,14 @@ import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { CommentItem } from './CommentItemComponent'
+import { ImageSlider } from './ImageSliderComponent'
 
 interface IFeedItem {
   feed: IFeed
+  isDetail: boolean
 }
 
-export const FeedItem: FC<IFeedItem> = ({ feed }) => {
+export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
   const history = useHistory()
   const { ui } = useStore()
 
@@ -32,9 +34,17 @@ export const FeedItem: FC<IFeedItem> = ({ feed }) => {
           </div>
           <IonIcon icon={ellipsisVertical} onClick={(e) => ui.showPopover(e.nativeEvent)}></IonIcon>
         </div>
-        <div onClick={() => history.push(`/feed/${feed.id}`)}>
-          <TextBase>{feed.content}</TextBase>
-        </div>
+
+        {isDetail ? (
+          <div>
+            <TextBase>{feed.content}</TextBase>
+          </div>
+        ) : (
+          <div onClick={() => history.push(`/feed/${feed.id}`)}>
+            <TextBase>{feed.content}</TextBase>
+          </div>
+        )}
+
         {feed.type === 'SCHEDULE' && (
           <div className='flex'>
             <IonIcon icon={calendar} size='large'></IonIcon>
@@ -45,9 +55,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed }) => {
           </div>
         )}
         <div>
-          {feed.imageUrls.map((v, i) => (
-            <img className='w-8 h-5' key={i} src={v} alt=''></img>
-          ))}
+          <ImageSlider urls={feed.imageUrls}></ImageSlider>
         </div>
         <div className='flex-between-center'>
           <div className='flex items-center'>

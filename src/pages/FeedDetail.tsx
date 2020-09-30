@@ -32,7 +32,7 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ matc
         <div className='px-container'>
           {feed.getFeed.match({
             pending: () => <Spinner isFull={true}></Spinner>,
-            resolved: () => <FeedItem feed={feed.feed}></FeedItem>,
+            resolved: () => <FeedItem feed={feed.feed} isDetail={true}></FeedItem>,
           })}
         </div>
         <ContentPopover></ContentPopover>
