@@ -3,6 +3,7 @@ import { people } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React, { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
+import { ImageBackground } from '../atoms/ImageBackgroundComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 
 export interface ICommunityBanner {}
@@ -12,14 +13,7 @@ export const CommunityBanner: FC<ICommunityBanner> = () => {
 
   return useObserver(() => (
     <div>
-      <div
-        className='w-full height-100'
-        style={{
-          backgroundImage: `url(${community.community?.bannerUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      ></div>
+      <ImageBackground className='w-full height-100' url={community.community?.bannerUrl}></ImageBackground>
       <div className='flex-between-center'>
         <div className='flex'>
           <IonIcon icon={people}></IonIcon>

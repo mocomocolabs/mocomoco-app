@@ -26,7 +26,7 @@ export const FeedList: React.FC<IFeedList> = () => {
         <>
           <ul className='pl-0 move-up'>
             {feed.feeds.map((v, i) => (
-              <FeedItem key={i} feed={v}></FeedItem>
+              <FeedItem key={i} feed={v} isDetail={false}></FeedItem>
             ))}
           </ul>
           <ContentPopover></ContentPopover>
