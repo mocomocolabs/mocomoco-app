@@ -68,16 +68,26 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             <TextBase>씨앗 {feed.commentCount}</TextBase>
           </div>
         </div>
-        <div className='flex'>
-          <div className='flex-center flex-1'>
-            <IonIcon icon={cloud} className='mr-2'></IonIcon>
-            <TextBase>씨앗뿌리기</TextBase>
+        {!isDetail && (
+          <div className='flex'>
+            <div className='flex-center flex-1'>
+              <IonIcon icon={cloud} className='mr-2'></IonIcon>
+              <TextBase>씨앗뿌리기</TextBase>
+            </div>
+            <div className='flex-center flex-1'>
+              <IonIcon icon={chatbox} className='mr-2'></IonIcon>
+              <TextBase className=''>댓글달기</TextBase>
+            </div>
           </div>
-          <div className='flex-center flex-1'>
-            <IonIcon icon={chatbox} className='mr-2'></IonIcon>
-            <TextBase className=''>댓글달기</TextBase>
+        )}
+        {isDetail && (
+          <div className='flex flex-wrap items-center'>
+            <TextLg className='gray w-12'>씨앗들</TextLg>
+            {feed.likeProflieUrls?.slice(0, 9).map((v, i) => (
+              <Profile key={i} url={v}></Profile>
+            ))}
           </div>
-        </div>
+        )}
         <XDivider></XDivider>
         <div className='py-4'>
           {feed.comments.map((v) => (

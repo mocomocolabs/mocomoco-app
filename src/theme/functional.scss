@@ -45,6 +45,9 @@
   display: flex;
   flex-direction: column;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .flex-1 {
   flex: 1;
 }
@@ -1161,4 +1164,14 @@
 }
 .shadow-none {
   box-shadow: none;
+}
+
+.keep-word {
+  word-break: keep-all;
+}
+.break-word {
+  word-break: break-word;
+}
+.no-wrap {
+  white-space: nowrap;
 }
