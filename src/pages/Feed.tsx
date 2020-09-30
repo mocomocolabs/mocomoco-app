@@ -2,7 +2,7 @@ import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar } from '@ionic/reac
 import { create } from 'ionicons/icons'
 import React from 'react'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
-import { CommunityBanner } from '../components/organisms/CommunityBanner'
+import { CommunityBanner } from '../components/organisms/CommunityBannerComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 
 export const Feed: React.FC = () => {

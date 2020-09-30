@@ -2,23 +2,33 @@ import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { IFeed } from '../models/feed'
 import { http } from '../utils/http-util'
-import { Task } from './task'
+import { Task, TaskByNumber } from './task'
 
 const initState = {
   feeds: [],
+  /* eslint-disable */
+  feed: {} as any,
 }
 
 export class Feed {
   @observable.ref feeds: IFeed[] = initState.feeds
+  @observable.ref feed: IFeed = initState.feed
 
   @task
   getFeeds = (async () => {
     await http.get<IFeed[]>('/feeds').then(
       action((data) => {
-        console.log(data)
-
         this.feeds = data
       })
     )
   }) as Task
+
+  @task
+  getFeed = (async (id: number) => {
+    await http.get<IFeed>(`/feeds/${id}`).then(
+      action((data) => {
+        this.feed = data
+      })
+    )
+  }) as TaskByNumber
 }
