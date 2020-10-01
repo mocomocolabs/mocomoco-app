@@ -74,7 +74,10 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
               <IonIcon icon={cloud} className='mr-2'></IonIcon>
               <TextBase>씨앗뿌리기</TextBase>
             </div>
-            <div className='flex-center flex-1'>
+            <div
+              className='flex-center flex-1'
+              onClick={() => history.push(`/feed/${feed.id}`, { autoFocus: true })}
+            >
               <IonIcon icon={chatbox} className='mr-2'></IonIcon>
               <TextBase className=''>댓글달기</TextBase>
             </div>

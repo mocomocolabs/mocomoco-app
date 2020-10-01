@@ -8,9 +8,10 @@ import { Spinner } from '../atoms/SpinnerComponent'
 
 export interface ICommentForm {
   feedId: number
+  autoFocus?: boolean
 }
 
-export const CommentForm: React.FC<ICommentForm> = ({ feedId }) => {
+export const CommentForm: React.FC<ICommentForm> = ({ feedId, autoFocus = false }) => {
   const [text, setText] = useState<string>()
   const { feed } = useStore()
 
@@ -23,6 +24,7 @@ export const CommentForm: React.FC<ICommentForm> = ({ feedId }) => {
         autoGrow={true}
         rows={1}
         value={text}
+        autofocus={autoFocus}
         onIonChange={(e) => {
           setText(e.detail.value!)
         }}
