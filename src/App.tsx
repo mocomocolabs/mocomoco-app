@@ -4,6 +4,7 @@ import { basket, beer, home, paperPlane, personCircle } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { Redirect, Route } from 'react-router-dom'
+import { Alert } from './components/molecules/AlertComponent'
 // import { Alert } from './components/molecules/AlertComponent'
 import './global.scss'
 import { useStore } from './hooks/use-store'
@@ -59,7 +60,7 @@ export const App: React.FC = () => {
         </IonTabs>
       </IonReactRouter>
 
-      {/* <Alert></Alert> */}
+      <Alert></Alert>
     </IonApp>
   ))
 }

@@ -36,17 +36,20 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             icon={ellipsisVertical}
             onClick={async (e) => {
               const action = await $ui.showPopover(e.nativeEvent)
-              // switch (action) {
-              //   case 'DELETE':
-              //     $ui.showAlert({
-              //       isOpen: true,
-              //       message: '게시글을 삭제하시겠어요?',
-              //       onSuccess: () => {
-              //         $feed.deleteFeed(feed.id)
-              //       },
-              //     })
-              //   case 'EDIT':
-              // }
+              switch (action) {
+                case 'DELETE':
+                  $ui.showAlert({
+                    isOpen: true,
+                    message: '게시글을 삭제하시겠어요?',
+                    onSuccess: async () => {
+                      // TODO: 로더 추가
+                      await $feed.deleteFeed(feed.id)
+                      await $feed.getFeeds()
+                      history.goBack()
+                    },
+                  })
+                case 'EDIT':
+              }
             }}
           ></IonIcon>
         </div>

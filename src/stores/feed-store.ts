@@ -41,6 +41,12 @@ export class Feed {
   }) as TaskByNumber
 
   @task.resolved
+  deleteFeed = (async (id: number) => {
+    await new Promise((r) => setTimeout(() => r(), 1000))
+    await http.delete(`/feeds/${id}`)
+  }) as TaskByNumber
+
+  @task.resolved
   insertComment = (async ({ feedId, content }: IInsertComment) => {
     await new Promise((r) => setTimeout(() => r(), 1000))
     await http.post(`/feeds/${feedId}/comment`, { content }).then(() => this.getFeed(feedId))
