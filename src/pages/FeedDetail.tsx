@@ -26,20 +26,20 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticCont
   match,
   location,
 }) => {
-  const { feed, ui } = useStore()
+  const { $feed, $ui } = useStore()
   const id = parseInt(match.params.id)
 
   useEffect(() => {
-    feed.getFeed(id)
+    $feed.getFeed(id)
     // eslint-disable-next-line
   }, [])
 
   useIonViewWillEnter(() => {
-    ui.setIsBottomTab(false)
+    $ui.setIsBottomTab(false)
   })
 
   useIonViewWillLeave(() => {
-    ui.setIsBottomTab(true)
+    $ui.setIsBottomTab(true)
   })
 
   return useObserver(() => (
@@ -55,9 +55,9 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticCont
 
       <IonContent>
         <div className='px-container'>
-          {feed.getFeed.match({
+          {$feed.getFeed.match({
             pending: () => <Spinner isFull={true}></Spinner>,
-            resolved: () => <FeedItem feed={feed.feed} isDetail={true}></FeedItem>,
+            resolved: () => <FeedItem feed={$feed.feed} isDetail={true}></FeedItem>,
           })}
         </div>
         <ContentPopover></ContentPopover>

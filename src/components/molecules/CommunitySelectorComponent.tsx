@@ -9,14 +9,14 @@ import { CommunitySelectorModal } from '../modals/CommunitySelectorModalComponen
 export interface ICommunitySelector {}
 
 export const CommunitySelector: FC<ICommunitySelector> = () => {
-  const { community } = useStore()
+  const { $community } = useStore()
   const [isShowModal, setIsShowModal] = useState(false)
 
   return useObserver(() => (
     <>
       <div className='flex items-center' onClick={() => setIsShowModal(true)}>
         <IonIcon icon={chevronDown}></IonIcon>
-        <TextLg className='ml-2'>{community.community?.name}</TextLg>
+        <TextLg className='ml-2'>{$community.community?.name}</TextLg>
       </div>
 
       <CommunitySelectorModal isShow={isShowModal} setIsShow={setIsShowModal}></CommunitySelectorModal>

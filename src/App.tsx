@@ -4,6 +4,7 @@ import { basket, beer, home, paperPlane, personCircle } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { Redirect, Route } from 'react-router-dom'
+// import { Alert } from './components/molecules/AlertComponent'
 import './global.scss'
 import { useStore } from './hooks/use-store'
 import { Chat } from './pages/Chat'
@@ -15,11 +16,11 @@ import { Settings } from './pages/Settings'
 import { Trade } from './pages/Trade'
 
 export const App: React.FC = () => {
-  const { community, ui } = useStore()
+  const { $community, $ui } = useStore()
 
   useEffect(() => {
     // TODO: login 이후 실행할 공통 호출들
-    community.getCommunities()
+    $community.getCommunities()
 
     // eslint-disable-next-line
   }, [])
@@ -38,7 +39,7 @@ export const App: React.FC = () => {
             <Route path='/settings' component={Settings} exact />
             <Redirect from='/' to='/home' exact />
           </IonRouterOutlet>
-          <IonTabBar slot='bottom' hidden={!ui.isBottomTab}>
+          <IonTabBar slot='bottom' hidden={!$ui.isBottomTab}>
             <IonTabButton tab='home' href='/home'>
               <IonIcon icon={home} />
             </IonTabButton>
@@ -57,6 +58,8 @@ export const App: React.FC = () => {
           </IonTabBar>
         </IonTabs>
       </IonReactRouter>
+
+      {/* <Alert></Alert> */}
     </IonApp>
   ))
 }
