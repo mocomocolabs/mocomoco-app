@@ -19,7 +19,7 @@ interface IFeedItem {
 
 export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
   const history = useHistory()
-  const { ui } = useStore()
+  const { $ui, $feed } = useStore()
 
   return useObserver(() => (
     <li className='py-4'>
@@ -32,7 +32,23 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
               <TextBase className='dim'>{feed.createdAt}</TextBase>
             </div>
           </div>
-          <IonIcon icon={ellipsisVertical} onClick={(e) => ui.showPopover(e.nativeEvent)}></IonIcon>
+          <IonIcon
+            icon={ellipsisVertical}
+            onClick={async (e) => {
+              const action = await $ui.showPopover(e.nativeEvent)
+              // switch (action) {
+              //   case 'DELETE':
+              //     $ui.showAlert({
+              //       isOpen: true,
+              //       message: '게시글을 삭제하시겠어요?',
+              //       onSuccess: () => {
+              //         $feed.deleteFeed(feed.id)
+              //       },
+              //     })
+              //   case 'EDIT':
+              // }
+            }}
+          ></IonIcon>
         </div>
 
         {isDetail ? (
