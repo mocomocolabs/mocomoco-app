@@ -10,6 +10,14 @@ router.get('/feeds/:id', (req, res) => {
   res.send(feed)
 })
 
+router.put('/feeds/:id', (req, res) => {
+  res.send({ success: true })
+})
+
+router.delete('/feeds/:id', (req, res) => {
+  res.send({ success: true })
+})
+
 router.post('/feeds/:id/comment', (req, res) => {
   res.send({ success: true })
 })
