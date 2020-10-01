@@ -9,6 +9,7 @@ import {
 } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
+import { StaticContext } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
 import { Spinner } from '../components/atoms/SpinnerComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -17,7 +18,14 @@ import { CommentForm } from '../components/organisms/CommentFormComponent'
 import { ContentPopover } from '../components/organisms/ContentPopoverComponent'
 import { useStore } from '../hooks/use-store'
 
-export const FeedDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
+interface ILocationState {
+  autoFocus?: boolean
+}
+
+export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticContext, ILocationState>> = ({
+  match,
+  location,
+}) => {
   const { feed, ui } = useStore()
   const id = parseInt(match.params.id)
 
@@ -56,7 +64,7 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ matc
       </IonContent>
 
       <IonFooter>
-        <CommentForm feedId={id}></CommentForm>
+        <CommentForm feedId={id} autoFocus={location?.state?.autoFocus}></CommentForm>
       </IonFooter>
     </IonPage>
   ))
