@@ -8,7 +8,6 @@ import { IFeed } from '../../models/feed'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
-import { XDivider } from '../atoms/XDividerComponent'
 import { CommentItem } from './CommentItemComponent'
 import { ImageSlider } from './ImageSliderComponent'
 
@@ -32,6 +31,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
               <TextBase className='dim'>{feed.createdAt}</TextBase>
             </div>
           </div>
+          {/* TODO: 본인 게시글에만 나오도록 수정 */}
           <IonIcon
             icon={ellipsisVertical}
             onClick={async (e) => {
@@ -110,13 +110,11 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             ))}
           </div>
         )}
-        <XDivider></XDivider>
         <div className='py-4'>
           {feed.comments.map((v) => (
-            <CommentItem key={v.id} comment={v}></CommentItem>
+            <CommentItem key={v.id} comment={v} feedId={feed.id}></CommentItem>
           ))}
         </div>
-        <XDivider></XDivider>
       </div>
     </li>
   ))

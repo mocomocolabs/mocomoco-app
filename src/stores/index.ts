@@ -1,4 +1,5 @@
 import { configure } from 'mobx'
+import { Comment } from './comment-store'
 import { Community } from './community-store'
 import { News } from './example/news-store'
 import { TodoList } from './example/todo-list-store'
@@ -10,6 +11,7 @@ configure({ enforceActions: 'observed' }) // action 밖에서 state 수정 비�
 export class RootStore {
   $community: Community
   $feed: Feed
+  $comment: Comment
   $ui: Ui
 
   // example
@@ -19,6 +21,7 @@ export class RootStore {
   constructor() {
     this.$community = new Community()
     this.$feed = new Feed()
+    this.$comment = new Comment()
     this.$ui = new Ui()
 
     // example
