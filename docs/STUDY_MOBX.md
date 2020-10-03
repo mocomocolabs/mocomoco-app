@@ -254,3 +254,39 @@ then 다음 화살표 함수 안에서, 새로운 함수스코프가 만들어�
   }
 
 ```
+
+# mobx-task
+
+- mobx-task의 초기값 변경
+
+mobx-task의 초기 state는 `pending` 이다. 초기 state를 바꾸려면 아래와 같이 해준다.
+
+```typescript
+  @task.resolved // .resolved를 붙이면 초기 state가 resolved가 된다.
+  insertComment = (async ({ feedId, content }: IInsertComment) => {
+    await new Promise((r) => setTimeout(() => r(), 1000))
+    await http.post(`/feeds/${feedId}/comment`, { content }).then(() => this.getFeed(feedId))
+  }) as InsertCommentTask
+```
+
+아래 코드는 원래 최초에 `Spinner`가 보이지만, `@task.resolved`를 사용하면 최초에 `Spinner` 가 보이지 않는다.
+
+```javascript
+{
+  feed.insertComment.match({
+    pending: () => <Spinner></Spinner>,
+    resolved: () => (
+      <IonIcon
+        icon={paperPlane}
+        className='black'
+        onClick={() => {
+          if (text) {
+            feed.insertComment({ feedId, content: text })
+            setText('')
+          }
+        }}
+      ></IonIcon>
+    ),
+  })
+}
+```

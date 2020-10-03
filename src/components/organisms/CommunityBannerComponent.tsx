@@ -9,17 +9,17 @@ import { TextBase } from '../atoms/TextBaseComponent'
 export interface ICommunityBanner {}
 
 export const CommunityBanner: FC<ICommunityBanner> = () => {
-  const { community } = useStore()
+  const { $community } = useStore()
 
   return useObserver(() => (
     <div>
-      <ImageBackground className='w-full height-100' url={community.community?.bannerUrl}></ImageBackground>
+      <ImageBackground className='w-full height-100' url={$community.community?.bannerUrl}></ImageBackground>
       <div className='flex-between-center'>
         <div className='flex'>
           <IonIcon icon={people}></IonIcon>
-          <TextBase>{community.community?.count}</TextBase>
+          <TextBase>{$community.community?.count}</TextBase>
         </div>
-        <TextBase>{community.community?.name}</TextBase>
+        <TextBase>{$community.community?.name}</TextBase>
       </div>
     </div>
   ))

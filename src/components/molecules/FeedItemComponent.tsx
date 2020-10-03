@@ -8,7 +8,6 @@ import { IFeed } from '../../models/feed'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
-import { XDivider } from '../atoms/XDividerComponent'
 import { CommentItem } from './CommentItemComponent'
 import { ImageSlider } from './ImageSliderComponent'
 
@@ -19,7 +18,7 @@ interface IFeedItem {
 
 export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
   const history = useHistory()
-  const { ui } = useStore()
+  const { $ui, $feed } = useStore()
 
   return useObserver(() => (
     <li className='py-4'>
@@ -32,7 +31,31 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
               <TextBase className='dim'>{feed.createdAt}</TextBase>
             </div>
           </div>
-          <IonIcon icon={ellipsisVertical} onClick={(e) => ui.showPopover(e.nativeEvent)}></IonIcon>
+          {/* TODO: 본인 게시글에만 나오도록 수정 */}
+          <IonIcon
+            icon={ellipsisVertical}
+            onClick={async (e) => {
+              const action = await $ui.showPopover(e.nativeEvent)
+              switch (action) {
+                case 'DELETE':
+                  $ui.showAlert({
+                    isOpen: true,
+                    message: '게시글을 삭제하시겠어요?',
+                    onSuccess: async () => {
+                      // TODO: 로더 추가
+                      await $feed.deleteFeed(feed.id)
+                      await $feed.getFeeds()
+                      if (isDetail) {
+                        history.goBack()
+                      }
+                    },
+                  })
+                  break
+                case 'EDIT':
+                  break
+              }
+            }}
+          ></IonIcon>
         </div>
 
         {isDetail ? (
@@ -74,7 +97,10 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
               <IonIcon icon={cloud} className='mr-2'></IonIcon>
               <TextBase>씨앗뿌리기</TextBase>
             </div>
-            <div className='flex-center flex-1'>
+            <div
+              className='flex-center flex-1'
+              onClick={() => history.push(`/feed/${feed.id}`, { autoFocus: true })}
+            >
               <IonIcon icon={chatbox} className='mr-2'></IonIcon>
               <TextBase className=''>댓글달기</TextBase>
             </div>
@@ -88,13 +114,11 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             ))}
           </div>
         )}
-        <XDivider></XDivider>
         <div className='py-4'>
           {feed.comments.map((v) => (
-            <CommentItem key={v.id} comment={v}></CommentItem>
+            <CommentItem key={v.id} comment={v} feedId={feed.id}></CommentItem>
           ))}
         </div>
-        <XDivider></XDivider>
       </div>
     </li>
   ))

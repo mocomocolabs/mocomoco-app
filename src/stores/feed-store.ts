@@ -31,4 +31,10 @@ export class Feed {
       })
     )
   }) as TaskByNumber
+
+  @task.resolved
+  deleteFeed = (async (id: number) => {
+    await new Promise((r) => setTimeout(() => r(), 1000))
+    await http.delete(`/feeds/${id}`)
+  }) as TaskByNumber
 }

@@ -10,4 +10,12 @@ router.get('/feeds/:id', (req, res) => {
   res.send(feed)
 })
 
+router.put('/feeds/:id', (req, res) => {
+  res.send({ success: true })
+})
+
+router.delete('/feeds/:id', (req, res) => {
+  res.send({ success: true })
+})
+
 module.exports = router

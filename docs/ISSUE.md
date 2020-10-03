@@ -57,3 +57,46 @@ const TodoListComponent = () => {
 
 export const TodoList = observer(TodoListComponent)
 ```
+
+## mobx-task type
+
+Task 함수를 만들때 인자를 받고 싶다면, 다음과 같이 선언하면 된다
+
+```typescript
+  import { Task } from 'mobx-task'
+
+  @task
+  getFeed = (async (id: number) => {
+    await http.get<IFeed>(`/feeds/${id}`).then(
+      action((data) => {
+        this.feed = data
+      })
+    )
+  }) as Task<[number], void>
+```
+
+그러나 위와같이 하면 map undefined 에러가 난다. 아직 왜 그런지 모르겠다..
+아래와 같이 \*.d.ts 파일을 만들어 import 하여 사용하면 해당 에러가 안난다.
+
+- src/stores/task.d.ts
+
+```typescript
+import { Task as TaskType } from 'mobx-task'
+export type Task = TaskType<[], void>
+export type TaskByNumber = TaskType<[number], void>
+```
+
+```typescript
+  import { TaskByNumber } from './task.d'
+
+  @task
+  getFeed = (async (id: number) => {
+    await http.get<IFeed>(`/feeds/${id}`).then(
+      action((data) => {
+        this.feed = data
+      })
+    )
+  }) as TaskByNumber
+```
+
+> 따라서, 파라미터를 받을 경우 `feed-store.d.ts` 처럼 타입을 따로 만들어서 import 하여 사용한다.

@@ -1,6 +1,6 @@
 const faker = require('faker/locale/ko')
 const _ = require('lodash')
-faker.seed(5)
+faker.seed(Date.now())
 
 const names = ['준호', '규온', '쏘울', '이자', '상자']
 const titles = [
@@ -54,6 +54,18 @@ const contentImgUrls = [
 
 const createdAts = ['3일전', '2일전', '어제', '16시간 전', '2시간전', '방금']
 
+const createComments = (count) =>
+  _.times(count, (num) => ({
+    id: num,
+    user: {
+      id: num,
+      nickname: names[faker.random.number(names.length - 1)],
+      profileUrl: profileUrls[faker.random.number(profileUrls.length)],
+    },
+    content: titles[faker.random.number(titles.length - 1)],
+    createdAt: createdAts[faker.random.number(createdAts.length - 1)],
+  }))
+
 const createFeeds = (count) =>
   _.times(count, (num) => ({
     id: num,
@@ -70,18 +82,7 @@ const createFeeds = (count) =>
     commentCount: faker.random.number(50),
     likeCount: faker.random.number(20),
     likeProflieUrls: profileUrls,
-    comments: [
-      {
-        id: num,
-        user: {
-          id: num,
-          nickname: names[faker.random.number(names.length - 1)],
-          profileUrl: profileUrls[faker.random.number(profileUrls.length)],
-        },
-        content: titles[faker.random.number(titles.length - 1)],
-        createdAt: createdAts[faker.random.number(createdAts.length - 1)],
-      },
-    ],
+    comments: createComments(faker.random.number(20)),
     createdAt: createdAts[num % createdAts.length],
   }))
 

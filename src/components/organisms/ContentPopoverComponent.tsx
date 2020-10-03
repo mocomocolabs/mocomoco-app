@@ -6,15 +6,15 @@ import { useStore } from '../../hooks/use-store'
 export interface IContentPopover {}
 
 export const ContentPopover: FC<IContentPopover> = () => {
-  const { ui } = useStore()
+  const { $ui } = useStore()
 
   return useObserver(() => (
-    <IonPopover isOpen={ui.popover.open} event={ui.popover.event} onDidDismiss={() => ui.hidePopover()}>
+    <IonPopover isOpen={$ui.popover.isOpen} event={$ui.popover.event} onDidDismiss={() => $ui.hidePopover()}>
       <ul className='p-4'>
         <li
           className='p-2'
           onClick={() => {
-            ui.hidePopover()
+            $ui.hidePopover('EDIT')
           }}
         >
           수정
@@ -22,7 +22,7 @@ export const ContentPopover: FC<IContentPopover> = () => {
         <li
           className='p-2'
           onClick={() => {
-            ui.hidePopover()
+            $ui.hidePopover('DELETE')
           }}
         >
           삭제
