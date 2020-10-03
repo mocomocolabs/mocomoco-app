@@ -13,7 +13,7 @@ export interface ICommentForm {
 
 export const CommentForm: React.FC<ICommentForm> = ({ feedId, autoFocus = false }) => {
   const [text, setText] = useState<string>()
-  const { $feed } = useStore()
+  const { $comment, $feed } = useStore()
 
   return useObserver(() => (
     <div className='px-container py-2 flex items-center bg-white'>
@@ -31,15 +31,16 @@ export const CommentForm: React.FC<ICommentForm> = ({ feedId, autoFocus = false 
       ></IonTextarea>
 
       <div className='ml-2'>
-        {$feed.insertComment.match({
+        {$comment.insertComment.match({
           pending: () => <Spinner></Spinner>,
           resolved: () => (
             <IonIcon
               icon={paperPlane}
               className='black'
-              onClick={() => {
+              onClick={async () => {
                 if (text) {
-                  $feed.insertComment({ feedId, content: text })
+                  await $comment.insertComment({ feedId, content: text })
+                  await $feed.getFeed(feedId)
                   setText('')
                 }
               }}
