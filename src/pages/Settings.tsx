@@ -15,6 +15,7 @@ import {
   IonToolbar,
 } from '@ionic/react'
 import React, { useState } from 'react'
+import { XDivider } from '../components/atoms/XDividerComponent'
 
 export const Settings: React.FC = () => {
   const [alarmSound, setAlarmSound] = useState<string>('구름씨 랄라~')
@@ -71,7 +72,7 @@ export const Settings: React.FC = () => {
               </IonItem>
             </IonItemGroup>
 
-            <div className='x-divider my-4' />
+            <XDivider />
 
             <IonItemGroup>
               <IonItem>
