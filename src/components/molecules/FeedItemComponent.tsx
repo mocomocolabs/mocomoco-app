@@ -45,7 +45,9 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
                       // TODO: 로더 추가
                       await $feed.deleteFeed(feed.id)
                       await $feed.getFeeds()
-                      history.goBack()
+                      if (isDetail) {
+                        history.goBack()
+                      }
                     },
                   })
                 case 'EDIT':
