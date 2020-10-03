@@ -1,5 +1,6 @@
 import React from 'react'
+import { IText, TextBase } from './TextBaseComponent'
 
-export const TextXl = ({ children, className }: { children?: React.ReactNode; className?: string }) => (
-  <span className={`${className ? className : ''}  text-xl`}>{children}</span>
+export const TextXl: React.FC<IText> = ({ children, className = '' }) => (
+  <TextBase className={`${className} text-xl`}>{children}</TextBase>
 )

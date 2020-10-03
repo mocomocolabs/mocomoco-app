@@ -1,5 +1,10 @@
 import React from 'react'
 
-export const TextBase = ({ children, className }: { children?: React.ReactNode; className?: string }) => (
+export interface IText {
+  children?: React.ReactNode
+  className?: string
+}
+
+export const TextBase: React.FC<IText> = ({ children, className }): React.ReactElement => (
   <span className={`${className ? className : ''} text-base`}>{children}</span>
 )
