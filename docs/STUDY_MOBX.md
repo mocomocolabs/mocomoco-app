@@ -47,6 +47,7 @@ class Store {
 
 - (기본값) observable.deep
   단계에 상관없이 추적/변경, 기본동작.
+  observable === observable.deep
 
 ```typescript
 class Store {
@@ -68,6 +69,11 @@ class Store {
 - this.user.name
 - this.user.friends
 - this.user.friends[0]
+
+- observable.struct
+  deep 처럼 하위 요소를 모두 추적하지만, 참조에 변화가 있더라도
+  값에 변화가 없는 요소에 대해서는 변경을 전달하지 않는다.
+  render 호출 횟수를 deep과 비교해보자.
 
 ## computed
 
