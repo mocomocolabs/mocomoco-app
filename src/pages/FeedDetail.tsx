@@ -14,7 +14,8 @@ import { RouteComponentProps } from 'react-router-dom'
 import { Spinner } from '../components/atoms/SpinnerComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FeedItem } from '../components/molecules/FeedItemComponent'
-import { CommentForm } from '../components/organisms/CommentFormComponent'
+import { CommentInsertForm } from '../components/organisms/CommentInsertFormComponent'
+import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
 import { ContentPopover } from '../components/organisms/ContentPopoverComponent'
 import { useStore } from '../hooks/use-store'
 
@@ -26,8 +27,9 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticCont
   match,
   location,
 }) => {
-  const { $feed, $ui } = useStore()
   const id = parseInt(match.params.id)
+
+  const { $feed, $ui, $comment } = useStore()
 
   useEffect(() => {
     $feed.getFeed(id)
@@ -36,6 +38,7 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticCont
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(false)
+    $comment.setUpdateCommentId(null)
   })
 
   useIonViewWillLeave(() => {
@@ -64,7 +67,12 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticCont
       </IonContent>
 
       <IonFooter>
-        <CommentForm feedId={id} autoFocus={location?.state?.autoFocus}></CommentForm>
+        {$comment.updateCommentId === null && (
+          <CommentInsertForm feedId={id} autoFocus={location?.state?.autoFocus}></CommentInsertForm>
+        )}
+        {$comment.updateCommentId !== null && (
+          <CommentUpdateForm commentId={$comment.updateCommentId}></CommentUpdateForm>
+        )}
       </IonFooter>
     </IonPage>
   ))
