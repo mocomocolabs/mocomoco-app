@@ -42,9 +42,11 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId }) => {
                           await $feed.getFeed(feedId)
                         },
                       })
+                      break
                     case 'EDIT':
                       $comment.setUpdateFormBy(comment.id, comment.content)
                       $comment.setUpdateCommentId(comment.id)
+                      break
                   }
                 }}
               ></IonIcon>

@@ -50,7 +50,9 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
                       }
                     },
                   })
+                  break
                 case 'EDIT':
+                  break
               }
             }}
           ></IonIcon>
