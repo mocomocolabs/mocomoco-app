@@ -10,6 +10,7 @@ import {
 } from '@ionic/react'
 import { settingsOutline } from 'ionicons/icons'
 import React from 'react'
+import { XDivider } from '../components/atoms/XDividerComponent'
 import { MypageColumnList } from '../components/molecules/MypageColumnListComponent'
 import { MypageProfile } from '../components/molecules/MypageProfileComponent'
 import { MypageRowList } from '../components/molecules/MypageRowListComponent'
@@ -31,9 +32,9 @@ export const MyPage: React.FC = () => {
       <IonContent>
         <div className='px-container my-4'>
           <MypageProfile />
-          <hr className='x-divider' />
+          <XDivider />
           <MypageRowList />
-          <hr className='x-divider' />
+          <XDivider />
           <MypageColumnList />
         </div>
       </IonContent>

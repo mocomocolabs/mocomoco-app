@@ -13,6 +13,8 @@ import { Feed } from './pages/Feed'
 import { FeedDetail } from './pages/FeedDetail'
 import { Home } from './pages/Home'
 import { MyPage } from './pages/MyPage'
+import { ProfileDetail } from './pages/ProfileDetail'
+import { ProfileUpdate } from './pages/ProfileUpdate'
 import { Settings } from './pages/Settings'
 import { Trade } from './pages/Trade'
 
@@ -38,6 +40,8 @@ export const App: React.FC = () => {
             <Route path='/chat' component={Chat} exact />
             <Route path='/my-page' component={MyPage} exact />
             <Route path='/settings' component={Settings} exact />
+            <Route path='/users/:id' component={ProfileDetail} exact />
+            <Route path='/users/:id/edit' component={ProfileUpdate} exact />
             <Redirect from='/' to='/home' exact />
           </IonRouterOutlet>
           <IonTabBar slot='bottom' hidden={!$ui.isBottomTab}>
