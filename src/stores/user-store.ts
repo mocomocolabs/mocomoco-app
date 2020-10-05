@@ -66,7 +66,7 @@ export class User {
   // TODO fix: type-checking not working on caller. mobx-state-tree may be an useful solution
   @task.resolved
   updateUser = (async (userId: number, data: IUser, listener: () => void) => {
-    await http.put<IUser>(`/users/${userId}`, data).then((result) => {
+    await http.patch<IUser>(`/users/${userId}`, data).then((result) => {
       if (!result) {
         return
       }
