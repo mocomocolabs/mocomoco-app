@@ -5,4 +5,4 @@ export type GetUserTask = TaskType<[number], void>
 
 export type SetUserTask = TaskType<[IUser], void>
 
-export type UpdateUserTask = TaskType<[number, IUser, () => void], void>
+export type UpdateUserTask = TaskType<[number, IUser], boolean>
