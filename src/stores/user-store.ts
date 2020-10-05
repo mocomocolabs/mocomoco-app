@@ -20,9 +20,7 @@ export class User {
   @observable currentUserId: number | null = initState.currentUserId
 
   constructor() {
-    ;(async () => {
-      await new Promise(() => this.getCurrentUserId())
-    })()
+    this.getCurrentUserId()
   }
 
   @task
@@ -63,16 +61,15 @@ export class User {
     })
   }) as SetUserTask
 
-  // TODO fix: type-checking not working on caller. mobx-state-tree may be an useful solution
+  // TODO fix: type checking required for actual values inside data object
   @task.resolved
-  updateUser = (async (userId: number, data: IUser, listener: () => void) => {
-    await http.patch<IUser>(`/users/${userId}`, data).then((result) => {
-      if (!result) {
-        return
-      }
+  updateUser = (async (userId: number, data: IUser) => {
+    const { success } = await http.patch<IUser, { success: boolean }>(`/users/${userId}`, data)
 
-      listener()
+    if (success) {
       this.getUser(userId)
-    })
+    }
+
+    return success
   }) as UpdateUserTask
 }

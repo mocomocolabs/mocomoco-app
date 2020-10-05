@@ -35,7 +35,11 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId }) => {
       isOpen: true,
       message: '프로필을 변경하시겠습니까?',
       onSuccess: async () => {
-        await $user.updateUser(userId, data, history.goBack)
+        await $user.updateUser(userId, data).then((success) => {
+          if (success) {
+            history.goBack()
+          }
+        })
       },
     })
   }
@@ -46,7 +50,7 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId }) => {
   }
 
   // eslint-disable-next-line
-  const observableTaskGroup = TaskGroup<any[], void>([$user.getUser, $user.updateUser])
+  const observableTaskGroup = TaskGroup<any[], void | boolean>([$user.getUser, $user.updateUser])
 
   useEffect(() => {
     $user.getUser(userId)
