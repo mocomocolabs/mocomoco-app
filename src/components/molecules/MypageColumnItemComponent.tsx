@@ -2,13 +2,13 @@ import { IonIcon, IonLabel } from '@ionic/react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-interface IMypageColumnItemPropTypes {
+interface IMypageColumnItem {
   icon: string
   title: string
   href: string
 }
 
-export const MypageColumnItem: React.FC<IMypageColumnItemPropTypes> = ({ icon, title, href }) => {
+export const MypageColumnItem: React.FC<IMypageColumnItem> = ({ icon, title, href }) => {
   return (
     <Link to={href} className='no-underline black'>
       <div className='flex-row w-100 items-center height-50'>
