@@ -1,4 +1,4 @@
-import { action, extendObservable, observable, runInAction, transaction } from 'mobx'
+import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { IUser } from '../models/user'
 import { http } from '../utils/http-util'
@@ -31,7 +31,7 @@ export class User {
 
     await http.get<{ userId: number }>(`/users/current`).then(
       action(({ userId }) => {
-        // TODO error handling - when userId not received
+        // TODO error handling - when userId not received from server
         this.setCurrentUserId(userId)
       })
     )
@@ -51,14 +51,9 @@ export class User {
     )
   }) as GetUserTask
 
-  // TODO: test - transaction gives better performance?
   @task.resolved
   setUser = (async (newUser: IUser) => {
-    runInAction(() => {
-      // transaction notify a change after all the job finished
-      // it is not async function, but may be ok because it is running inside async task
-      transaction(() => extendObservable(this.user, newUser))
-    })
+    this.user = newUser
   }) as SetUserTask
 
   // TODO fix: type checking required for actual values inside data object
