@@ -21,7 +21,7 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId }) => {
     mode: 'onChange',
   })
 
-  const onSubmit = (data: IUser) =>
+  const onSubmit = (data: IUser) => {
     // TODO validate data : react-hook-form 에서 data 변경여부 확인 어떻게 하는지?
     // 1) how to set a validate function?
 
@@ -31,25 +31,18 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId }) => {
     // type of id is number but actual value is string type
     // parseInt don't allow number type argument
 
-    {
-      ;(async () => {
-        await new Promise(() =>
-          $ui.showAlert({
-            isOpen: true,
-            message: '프로필을 변경하시겠습니까?',
-            onSuccess: async () => {
-              data.id = +data.id
-              await $user.updateUser(userId, data, history.goBack)
-            },
-          })
-        )
-      })()
-    }
-
-  const onInvalid = () => {
-    new Promise(() => {
-      alert('data invalidation failed')
+    $ui.showAlert({
+      isOpen: true,
+      message: '프로필을 변경하시겠습니까?',
+      onSuccess: async () => {
+        await $user.updateUser(userId, data, history.goBack)
+      },
     })
+  }
+
+  // TODO remove - because submit button will be disabled if isInvalid is false
+  const onInvalid = () => {
+    alert('data invalidation failed')
   }
 
   // eslint-disable-next-line

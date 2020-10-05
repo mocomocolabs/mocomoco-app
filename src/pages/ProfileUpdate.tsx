@@ -8,7 +8,6 @@ import {
   useIonViewWillLeave,
 } from '@ionic/react'
 import { chevronBack } from 'ionicons/icons'
-import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -36,11 +35,9 @@ export const ProfileUpdate: React.FC<RouteComponentProps<{ id: string }>> = ({ m
           </div>
           <IonTitle slot='start'>프로필 수정</IonTitle>
 
-          {useObserver(() => (
-            <button slot='end' form='profile-form' type='submit'>
-              완료
-            </button>
-          ))}
+          <button slot='end' form='profile-form' type='submit'>
+            완료
+          </button>
         </IonToolbar>
       </IonHeader>
 

@@ -14,14 +14,11 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
 
   return useObserver(() => (
     <>
-      <input type='hidden' name='id' defaultValue={user.id} ref={register} />
-      <input type='hidden' name='name' defaultValue={user.name} ref={register} />
-      <input type='hidden' name='community' defaultValue={user.community} ref={register} />
-      <input type='hidden' name='profileUrl' defaultValue={user.profileUrl} ref={register} />
-
       <IonAvatar className='w-30 h-30 my-8 self-center'>
         <img src={user.profileUrl} alt='프로필이미지' />
       </IonAvatar>
+
+      <input type='hidden' name='profileUrl' defaultValue={user.profileUrl} ref={register} />
 
       <input
         type='text'
