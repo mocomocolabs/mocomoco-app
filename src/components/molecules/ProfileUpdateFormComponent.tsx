@@ -39,14 +39,6 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubm
     methods.reset()
   })
 
-  // TODO validate data : react-hook-form 에서 data 변경여부 확인 어떻게 하는지?
-  // 1) how to set a validate function?
-
-  // 2) required to type-checking for all values.
-  // input element values can be string only...-_-
-
-  // type of id is number but actual value is string type
-  // parseInt don't allow number type argument
   const onSubmit = (data: IUser) => {
     $ui.showAlert({
       isOpen: true,

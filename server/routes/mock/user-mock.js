@@ -78,7 +78,6 @@ class Users {
     return this._users.find(this.predicate(id))
   }
 
-  // TODO type-checking required. Use mobx-state-tree?
   replace(id, user) {
     const index = this.findIndex(id)
 

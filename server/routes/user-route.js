@@ -19,13 +19,12 @@ router.post('/users', (req, res) => {
   res.send({ success: result })
 })
 
-// TODO: for update, put vs patch ?
+// not used
 router.put('/users/:id', (req, res) => {
   const result = users.replace(getUserIdFrom(req.params), req.body)
   res.send({ success: result })
 })
 
-// not used
 router.patch('/users/:id', (req, res) => {
   const result = users.update(getUserIdFrom(req.params), req.body)
   res.send({ success: result })
