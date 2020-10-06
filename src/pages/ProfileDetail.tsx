@@ -8,6 +8,7 @@ import {
   useIonViewWillLeave,
 } from '@ionic/react'
 import { chevronBack } from 'ionicons/icons'
+import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useHistory } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
@@ -17,7 +18,7 @@ import { useStore } from '../hooks/use-store'
 
 export const ProfileDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const userId: number = parseInt(match.params.id)
-  const { $ui } = useStore()
+  const { $ui, $user } = useStore()
   const history = useHistory()
 
   useIonViewWillEnter(() => {
@@ -37,9 +38,14 @@ export const ProfileDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ m
           </div>
           <IonTitle slot='start'>프로필 보기</IonTitle>
 
-          <button slot='end' onClick={() => history.push(`/users/${userId}/edit`)}>
-            수정
-          </button>
+          {useObserver(
+            () =>
+              $user.currentUserId === userId && (
+                <button slot='end' onClick={() => history.push(`/users/${userId}/edit`)}>
+                  수정
+                </button>
+              )
+          )}
         </IonToolbar>
       </IonHeader>
 
