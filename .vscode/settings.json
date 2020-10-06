@@ -5,12 +5,6 @@
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
 
   "relativePath.excludedExtensions": [".js", ".ts", ".tsx"],
-  "relativePath.ignore": [
-    "**/node_modules/**",
-    "**/.history/**",
-    "**/*.dll",
-    "**/obj/**",
-    "**/objd/**"
-  ],
-  "typescript.tsdk": "/home/gyuon/moco/mocomoco-app/node_modules/typescript/lib"
+  "relativePath.ignore": ["**/node_modules/**", "**/.history/**", "**/*.dll", "**/obj/**", "**/objd/**"],
+  "typescript.tsdk": "./node_modules/typescript/lib"
 }
