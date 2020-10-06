@@ -1,7 +1,7 @@
 import { useIonViewWillEnter } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
-import React, { useEffect, useLayoutEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useHistory } from 'react-router-dom'
 import { useStore } from '../../hooks/use-store'
@@ -26,7 +26,7 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubm
     methods.formState.isValid,
   ])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     handleSubmitAvailable(submitAvailable)
   }, [submitAvailable, handleSubmitAvailable])
 
