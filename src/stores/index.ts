@@ -4,6 +4,7 @@ import { Community } from './community-store'
 import { News } from './example/news-store'
 import { TodoList } from './example/todo-list-store'
 import { Feed } from './feed-store'
+import { Stuff } from './stuff-store'
 import { Ui } from './ui-store'
 import { User } from './user-store'
 
@@ -13,6 +14,7 @@ export class RootStore {
   $community: Community
   $feed: Feed
   $comment: Comment
+  $stuff: Stuff
   $ui: Ui
   $user: User
 
@@ -26,6 +28,7 @@ export class RootStore {
     this.$comment = new Comment()
     this.$ui = new Ui()
     this.$user = new User()
+    this.$stuff = new Stuff()
 
     // example
     this.todoList = new TodoList()
