@@ -68,6 +68,10 @@ class Users {
     return this.currentUserId
   }
 
+  getUsers() {
+    return this._users
+  }
+
   predicate = (id) => (u) => id === u.id
 
   findIndex(id) {
