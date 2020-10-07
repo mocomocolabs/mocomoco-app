@@ -1,48 +1,26 @@
-import {
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonLabel,
-  IonPage,
-  IonSegment,
-  IonSegmentButton,
-  IonToolbar,
-} from '@ionic/react'
+import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar } from '@ionic/react'
 import { create, filter, search } from 'ionicons/icons'
 import React, { useState } from 'react'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
-import { StuffList } from '../components/organisms/StuffListComponent'
+import { Segment } from '../components/molecules/TradeSegmentComponent'
+import { TradeList } from '../components/organisms/TradeListComponent'
+import { useStore } from '../hooks/use-store'
+import { ISegments } from '../models/segment'
 
-const segment = {
+export const segments: ISegments = {
   stuff: '물건',
   talent: '재능',
 }
 
-interface SegmentChangeEventDetail {
-  value: string | undefined
-}
+const defaultSegment = segments.stuff
 
 export const Trade: React.FC = () => {
-  const [selectedSegment, setSelectedSegment] = useState(segment.stuff)
+  const [selectedSegment, setSelectedSegment] = useState(defaultSegment)
 
-  const onSegmentChanged = (e: CustomEvent<SegmentChangeEventDetail>) => {
-    setSelectedSegment(e.detail.value === undefined ? segment.stuff : e.detail.value)
-  }
+  const { $stuff, $talent } = useStore()
 
-  const renderSegments = () =>
-    Object.values(segment).map((segName) => (
-      <IonSegmentButton key={segName} value={segName}>
-        <IonLabel>{segName}</IonLabel>
-      </IonSegmentButton>
-    ))
-
-  const renderContent = () => {
-    if (selectedSegment === segment.stuff) {
-      return <StuffList />
-    } else {
-      return <div>{segment.talent.valueOf()}</div>
-    }
-  }
+  // TODO: refactoring?
+  const store = selectedSegment === segments.stuff ? $stuff : $talent
 
   return (
     <IonPage>
@@ -59,12 +37,17 @@ export const Trade: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonSegment onIonChange={onSegmentChanged} value={selectedSegment}>
-        {renderSegments()}
-      </IonSegment>
+      <Segment
+        segments={segments}
+        default={defaultSegment}
+        selected={selectedSegment}
+        setSelected={setSelectedSegment}
+      />
 
       <IonContent>
-        <div className='px-container'>{renderContent()}</div>
+        <div className='px-container'>
+          <TradeList store={store} />
+        </div>
       </IonContent>
     </IonPage>
   )
