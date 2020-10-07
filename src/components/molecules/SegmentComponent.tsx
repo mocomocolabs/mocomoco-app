@@ -14,10 +14,7 @@ interface SegmentChangeEventDetail {
 }
 
 export const Segment: React.FC<ISegment> = (prop) => {
-  console.log('TradeSegment')
-
   const onSegmentChanged = (e: CustomEvent<SegmentChangeEventDetail>) => {
-    console.log('onSegmentChanged')
     const newSegment = e.detail.value
     prop.setSelected(newSegment === undefined ? prop.default : newSegment)
   }
