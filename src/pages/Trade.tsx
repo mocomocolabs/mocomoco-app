@@ -2,7 +2,7 @@ import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar } from '@ionic/reac
 import { create, filter, search } from 'ionicons/icons'
 import React, { useState } from 'react'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
-import { Segment } from '../components/molecules/TradeSegmentComponent'
+import { Segment } from '../components/molecules/SegmentComponent'
 import { TradeList } from '../components/organisms/TradeListComponent'
 import { useStore } from '../hooks/use-store'
 import { ISegments } from '../models/segment'
