@@ -1,6 +1,6 @@
 import { IUser } from './user'
 
-export interface IStuff {
+export interface ITrade {
   id: number
   type: 'GIVE' | 'TAKE'
   status: 'AVAILABLE' | 'RESERVED' | 'FINISH'
