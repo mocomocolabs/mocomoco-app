@@ -3,8 +3,6 @@ const _ = require('lodash')
 const { users } = require('./user-mock')
 faker.seed(Date.now())
 
-const names = ['준호', '규온', '쏘울', '이자', '상자']
-const communities = ['은혜공동체', '생태순환공동체', '진강산마을', '기웃기웃협동조합', '우동사']
 const titles = [
   '공기청정기',
   '맛난 딸기 10kg 진짜 맛있어요',
@@ -32,6 +30,7 @@ const contents = [
   '개발도상국 치킨 뚝딱!',
 ]
 const prices = [0, 1000, 2000, 5000, 10000, 33000, 250000]
+
 const profileUrls = [
   '/assets/mock/profile1.jpeg',
   '/assets/mock/profile2.jpeg',
@@ -55,6 +54,8 @@ const contentImgUrls = [
   '/assets/mock/content5.jpeg',
 ]
 
+const categories = ['가전제품', '의류', '식재료']
+
 const createdAts = ['3일전', '2일전', '어제', '16시간 전', '2시간전', '방금']
 
 const createImageUrls = (count) => {
@@ -66,18 +67,6 @@ const createImageUrls = (count) => {
   return imgUrls
 }
 
-const createComments = (count) =>
-  _.times(count, (num) => ({
-    id: num,
-    user: {
-      id: num,
-      nickname: names[faker.random.number(names.length - 1)],
-      profileUrl: profileUrls[faker.random.number(profileUrls.length - 1)],
-    },
-    content: titles[faker.random.number(titles.length - 1)],
-    createdAt: createdAts[faker.random.number(createdAts.length - 1)],
-  }))
-
 const createStuffs = (count) =>
   _.times(count, (num) => ({
     id: num,
@@ -85,17 +74,15 @@ const createStuffs = (count) =>
     status: ['AVAILABLE', 'RESERVED', 'FINISH'][num % 3],
     category: {
       id: num,
-      name: ['가전제품', '의류', '식재료'][num % 3],
+      name: categories[faker.random.number(categories.length - 1)],
     },
     user: users.getUsers()[faker.random.number(users.getUsers().length - 1)],
     title: titles[num % titles.length],
     content: contents[num % contents.length],
     price: prices[num % prices.length],
     imageUrls: createImageUrls(faker.random.number(contentImgUrls.length - 1)),
-    commentCount: faker.random.number(50),
     likeCount: faker.random.number(20),
     likeProflieUrls: profileUrls,
-    comments: createComments(faker.random.number(20)),
     chatCount: faker.random.number(10),
     publicOpen: [true, false][num % 2],
     createdAt: createdAts[num % createdAts.length],
