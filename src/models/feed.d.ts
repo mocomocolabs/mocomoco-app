@@ -16,3 +16,8 @@ export interface IFeed {
   comments: IComment[]
   createdAt: string // TODO: 임시
 }
+
+export enum FEED_TYPE {
+  NORMAL = 'NORMAL',
+  SCHEDULE = 'SCHEDULE',
+}

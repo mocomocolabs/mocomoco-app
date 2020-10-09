@@ -11,6 +11,7 @@ import { useStore } from './hooks/use-store'
 import { Chat } from './pages/Chat'
 import { Feed } from './pages/Feed'
 import { FeedDetail } from './pages/FeedDetail'
+import { FeedWrite } from './pages/FeedWrite'
 import { Home } from './pages/Home'
 import { MyPage } from './pages/MyPage'
 import { ProfileDetail } from './pages/ProfileDetail'
@@ -36,6 +37,7 @@ export const App: React.FC = () => {
             <Route path='/home' component={Home} exact />
             <Route path='/feed' component={Feed} exact />
             <Route path='/feed/:id' component={FeedDetail} exact />
+            <Route path='/feed/write' component={FeedWrite} exact />
             <Route path='/trade' component={Trade} exact />
             <Route path='/chat' component={Chat} exact />
             <Route path='/my-page' component={MyPage} exact />
