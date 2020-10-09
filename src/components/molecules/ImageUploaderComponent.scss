@@ -1,0 +1,11 @@
+@import '../../theme/variable';
+
+.uploader-item {
+  width: 8rem;
+  height: 8rem;
+  border: 1px $border solid;
+  border-radius: 3px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
