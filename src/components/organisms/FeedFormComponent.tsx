@@ -11,6 +11,7 @@ import { Pad } from '../atoms/PadComponent'
 import { Radio } from '../atoms/RadioComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { DatetimePicker } from '../molecules/DatetimePickerComponent'
+import { ImageUploader } from '../molecules/ImageUploaderComponent'
 
 export interface IFeedForm {}
 
@@ -55,6 +56,8 @@ export const FeedForm: FC<IFeedForm> = () => {
           ></DatetimePicker>
         </div>
       )}
+
+      <ImageUploader></ImageUploader>
 
       <div className='flex-between-center'>
         <TextLg>전체공개</TextLg>
