@@ -47,6 +47,7 @@
     "@ionic/react-router": "^5.3.4",
     "@types/node": "^14.11.2",
     "axios": "^0.20.0",
+    "dayjs": "^1.9.1",
     "ionicons": "^5.1.2",
     "lodash": "^4.17.20",
     "mobx": "^5.15.7",
