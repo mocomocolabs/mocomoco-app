@@ -2,7 +2,8 @@ import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { ITrade } from '../models/trade'
 import { http } from '../utils/http-util'
-import { Task, TaskByNumber } from './task'
+import { TaskByNumber } from './task'
+import { TaskByString } from './task.d'
 
 const initState = {
   items: [],
@@ -21,13 +22,34 @@ export abstract class TradeStore {
   }
 
   @task
-  getItems = (async () => {
-    await http.get<ITrade[]>(`/${this.path}`).then(
-      action((data) => {
-        this.items = data
+  getItems = (async (keyword) => {
+    await http
+      .get<ITrade[]>(`/${this.path}`, {
+        params: {
+          keyword: keyword,
+        },
       })
-    )
-  }) as Task
+      .then(
+        action((data) => {
+          this.items = data
+        })
+      )
+  }) as TaskByString
+
+  @task
+  getItemsLegacy = (async (keyword?) => {
+    await http
+      .get<ITrade[]>(`/${this.path}`, {
+        params: {
+          keyword: keyword,
+        },
+      })
+      .then(
+        action((data) => {
+          this.items = data
+        })
+      )
+  }) as TaskByString
 
   @task
   getItem = (async (id: number) => {

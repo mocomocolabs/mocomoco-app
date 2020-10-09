@@ -11,8 +11,8 @@ import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 interface ITradeItem {
   store: TradeStore
-  items: ITrade
-  isDetail: boolean
+  item: ITrade
+  isDetail?: boolean
 }
 
 const TypeString = {
@@ -26,7 +26,7 @@ const StatusString = {
   FINISH: '거래완료',
 }
 
-export const TradeItem: React.FC<ITradeItem> = ({ store, items, isDetail = false }) => {
+export const TradeItem: React.FC<ITradeItem> = ({ store, item, isDetail = false }) => {
   const history = useHistory()
   const { $ui, $user } = useStore()
 
@@ -35,41 +35,41 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, items, isDetail = false
       <div className='flex'>
         <div
           className='flex-between-center w-full'
-          onClick={() => !isDetail && history.push(`/trade/${store.path}/${items.id}`)}
+          onClick={() => !isDetail && history.push(`/trade/${store.path}/${item.id}`)}
         >
-          <img className='w-20 h-20 mr-2' src={items.imageUrls[0]} alt={items.title} />
+          <img className='w-20 h-20 mr-2' src={item.imageUrls[0]} alt={item.title} />
 
           <div className='flex-col flex-1'>
             <TextBase>
-              [{StatusString[items.status]}] {items.title}
+              [{StatusString[item.status]}] {item.title}
             </TextBase>
-            <TextBase>{items.user.community}</TextBase>
+            <TextBase>{item.user.community}</TextBase>
             <TextBase>
-              [{TypeString[items.type]}] {items.price}원
+              [{TypeString[item.type]}] {item.price}원
             </TextBase>
           </div>
         </div>
 
         <div className='flex-col items-end w-25'>
-          <div className='flex items-center' onClick={() => history.push(`/users/${items.user.id}`)}>
-            <Profile url={items.user.profileUrl}></Profile>
-            <TextBase className='ml-1'>{items.user.nickname}</TextBase>
+          <div className='flex items-center' onClick={() => history.push(`/users/${item.user.id}`)}>
+            <Profile url={item.user.profileUrl}></Profile>
+            <TextBase className='ml-1'>{item.user.nickname}</TextBase>
           </div>
 
           <div className='flex'>
             <IonIcon icon={cloud} className='mr-1'></IonIcon>
-            <TextBase className='dim mr-1'>{items.likeCount}</TextBase>
+            <TextBase className='dim mr-1'>{item.likeCount}</TextBase>
             <IonIcon icon={chatbox} className='mr-1'></IonIcon>
-            <TextBase className='dim'>{items.chatCount}</TextBase>
+            <TextBase className='dim'>{item.chatCount}</TextBase>
           </div>
 
-          <TextBase className='dim'>{items.createdAt}</TextBase>
+          <TextBase className='dim'>{item.createdAt}</TextBase>
         </div>
 
         <div className='flex justify-end w-4'>
           {/* // TODO: extract component */}
           <IonIcon
-            hidden={$user.currentUserId !== items.user.id}
+            hidden={$user.currentUserId !== item.user.id}
             className='self-top'
             icon={ellipsisVertical}
             onClick={async (e) => {
@@ -81,8 +81,8 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, items, isDetail = false
                     message: '게시글을 삭제하시겠어요?',
                     onSuccess: async () => {
                       // TODO: 로더 추가
-                      await store.deleteItem(items.id)
-                      await store.getItems()
+                      await store.deleteItem(item.id)
+                      await store.getItems('') // TODO: keyword
                       if (isDetail) {
                         history.goBack()
                       }
@@ -100,7 +100,7 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, items, isDetail = false
       <div className='flex-col' hidden={!isDetail}>
         <div className='flex flex-wrap items-center'>
           <TextLg className='gray w-12'>씨앗들</TextLg>
-          {items.likeProflieUrls?.slice(0, 9).map((v, i) => (
+          {item.likeProflieUrls?.slice(0, 9).map((v, i) => (
             <Profile key={i} url={v}></Profile>
           ))}
         </div>

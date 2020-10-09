@@ -4,7 +4,6 @@ import { ISegments } from '../../models/segment'
 
 interface ISegment {
   segments: ISegments
-  default: string
   selected: string
   setSelected: React.Dispatch<React.SetStateAction<string>>
 }
@@ -15,8 +14,7 @@ interface SegmentChangeEventDetail {
 
 export const Segment: React.FC<ISegment> = (prop) => {
   const onSegmentChanged = (e: CustomEvent<SegmentChangeEventDetail>) => {
-    const newSegment = e.detail.value
-    prop.setSelected(newSegment === undefined ? prop.default : newSegment)
+    prop.setSelected(e.detail.value!)
   }
 
   const renderedSegments = useMemo(
