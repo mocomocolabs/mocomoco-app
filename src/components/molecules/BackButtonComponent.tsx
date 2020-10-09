@@ -5,13 +5,15 @@ import { useHistory } from 'react-router'
 
 export interface IBackButton {
   icon?: string
+  action?: () => void
 }
 
-export const BackButton: FC<IBackButton> = ({ icon = closeOutline }) => {
+export const BackButton: FC<IBackButton> = ({ icon = closeOutline, action }) => {
   const history = useHistory()
+  const defaultAction = () => history.goBack()
 
   return (
-    <div onClick={() => history.goBack()}>
+    <div onClick={action ?? defaultAction}>
       <IonIcon icon={icon} size='large'></IonIcon>
     </div>
   )
