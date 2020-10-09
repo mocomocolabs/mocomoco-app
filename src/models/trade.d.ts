@@ -1,10 +1,15 @@
 import { IUser } from './user'
 
+export interface ITradeCategory {
+  id: num
+  name: string
+}
+
 export interface ITrade {
   id: number
   type: 'GIVE' | 'TAKE'
   status: 'AVAILABLE' | 'RESERVED' | 'FINISH'
-  category: IStuffCategory
+  category: ITradeCategory
   user: IUser
   title: string
   content: string
