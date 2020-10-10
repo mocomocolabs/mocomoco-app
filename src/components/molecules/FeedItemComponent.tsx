@@ -2,9 +2,9 @@ import { IonIcon } from '@ionic/react'
 import { calendar, chatbox, cloud, ellipsisVertical } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React, { FC } from 'react'
-import { useHistory } from 'react-router-dom'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed'
+import { route } from '../../route'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
@@ -17,7 +17,6 @@ interface IFeedItem {
 }
 
 export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
-  const history = useHistory()
   const { $ui, $feed } = useStore()
 
   return useObserver(() => (
@@ -46,7 +45,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
                       await $feed.deleteFeed(feed.id)
                       await $feed.getFeeds()
                       if (isDetail) {
-                        history.goBack()
+                        route.goBack()
                       }
                     },
                   })
@@ -63,7 +62,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             <TextBase>{feed.content}</TextBase>
           </div>
         ) : (
-          <div onClick={() => history.push(`/feed/${feed.id}`)}>
+          <div onClick={() => route.feedDetail(feed.id)}>
             <TextBase>{feed.content}</TextBase>
           </div>
         )}
@@ -99,7 +98,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             </div>
             <div
               className='flex-center flex-1'
-              onClick={() => history.push(`/feed/${feed.id}`, { autoFocus: true })}
+              onClick={() => route.feedDetail(feed.id, { autoFocus: true })}
             >
               <IonIcon icon={chatbox} className='mr-2'></IonIcon>
               <TextBase className=''>댓글달기</TextBase>

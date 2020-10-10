@@ -1,7 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { closeOutline } from 'ionicons/icons'
 import React, { FC } from 'react'
-import { useHistory } from 'react-router'
+import { route } from '../../route'
 
 export interface IBackButton {
   icon?: string
@@ -9,8 +9,7 @@ export interface IBackButton {
 }
 
 export const BackButton: FC<IBackButton> = ({ icon = closeOutline, action }) => {
-  const history = useHistory()
-  const defaultAction = () => history.goBack()
+  const defaultAction = () => route.goBack()
 
   return (
     <div onClick={action ?? defaultAction}>

@@ -5,7 +5,6 @@ import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import { Alert } from './components/molecules/AlertComponent'
-// import { Alert } from './components/molecules/AlertComponent'
 import './global.scss'
 import { useStore } from './hooks/use-store'
 import { Chat } from './pages/Chat'
@@ -18,6 +17,7 @@ import { ProfileDetail } from './pages/ProfileDetail'
 import { ProfileUpdate } from './pages/ProfileUpdate'
 import { Settings } from './pages/Settings'
 import { Trade } from './pages/Trade'
+import { route } from './route'
 
 export const App: React.FC = () => {
   const { $community, $ui } = useStore()
@@ -31,7 +31,7 @@ export const App: React.FC = () => {
 
   return useObserver(() => (
     <IonApp>
-      <IonReactRouter>
+      <IonReactRouter history={route.history}>
         <IonTabs>
           <IonRouterOutlet id='main'>
             <Route path='/home' component={Home} exact />
