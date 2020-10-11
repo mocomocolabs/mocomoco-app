@@ -16,6 +16,7 @@ export const Alert: FC = () => {
         {
           text: '취소',
           role: 'cancel',
+          handler: $ui.alert.onFail,
         },
         {
           text: '확인',

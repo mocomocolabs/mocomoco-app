@@ -26,7 +26,7 @@ export const DatetimePicker: FC<IDatetimePicker> = ({ value, onChangeDate, onCha
       ></IonDatetime>
       <IonDatetime
         displayFormat='HH:mm'
-        pickerFormat='HH mm'
+        pickerFormat='HH:mm'
         doneText='입력'
         cancelText='취소'
         value={hm(value)}

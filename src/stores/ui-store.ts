@@ -13,6 +13,7 @@ const initState = {
     header: '',
     message: '',
     onSuccess: () => {},
+    onFail: () => {},
   },
 
   isBottomTab: true,
