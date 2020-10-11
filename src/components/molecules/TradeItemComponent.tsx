@@ -2,9 +2,9 @@ import { IonIcon } from '@ionic/react'
 import { chatbox, cloud, ellipsisVertical } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 import { useStore } from '../../hooks/use-store'
 import { ITrade } from '../../models/trade'
+import { route } from '../../route'
 import { TradeStore } from '../../stores/trade-store'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -27,7 +27,6 @@ const StatusString = {
 }
 
 export const TradeItem: React.FC<ITradeItem> = ({ store, item, isDetail = false }) => {
-  const history = useHistory()
   const { $ui, $user } = useStore()
 
   return useObserver(() => (
@@ -35,7 +34,7 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, isDetail = false 
       <div className='flex'>
         <div
           className='flex-between-center w-full'
-          onClick={() => !isDetail && history.push(`/trade/${store.path}/${item.id}`)}
+          onClick={() => !isDetail && route.tradeDetail(store.path, item.id)}
         >
           <img className='w-20 h-20 mr-2' src={item.imageUrls[0]} alt={item.title} />
 
@@ -51,7 +50,7 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, isDetail = false 
         </div>
 
         <div className='flex-col items-end w-25'>
-          <div className='flex items-center' onClick={() => history.push(`/users/${item.user.id}`)}>
+          <div className='flex items-center' onClick={() => route.profileDetail(item.user.id)}>
             <Profile url={item.user.profileUrl}></Profile>
             <TextBase className='ml-1'>{item.user.nickname}</TextBase>
           </div>
@@ -84,7 +83,7 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, isDetail = false 
                       await store.deleteItem(item.id)
                       await store.getItems('') // TODO: keyword
                       if (isDetail) {
-                        history.goBack()
+                        route.goBack()
                       }
                     },
                   })

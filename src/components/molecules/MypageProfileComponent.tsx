@@ -2,15 +2,14 @@ import { IonAvatar, IonButton } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router'
 import { useStore } from '../../hooks/use-store'
+import { route } from '../../route'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { TextXxl } from '../atoms/TextXxlComponent'
 
 export const MypageProfile: React.FC = () => {
   const { $user } = useStore()
-  const history = useHistory()
 
   // eslint-disable-next-line
   const getCurrentUserTaskGroup = TaskGroup<any[], void>([$user.getCurrentUserId, $user.getUser])
@@ -45,7 +44,7 @@ export const MypageProfile: React.FC = () => {
             <TextLg className='text-bold gray'>{$user.user.community}</TextLg>
           </div>
           <div className='flex-center' slot='end'>
-            <IonButton color='dark' fill='outline' onClick={() => history.push(`/users/${$user.user.id}`)}>
+            <IonButton color='dark' fill='outline' onClick={() => route.profileDetail($user.user.id)}>
               프로필 보기
             </IonButton>
           </div>

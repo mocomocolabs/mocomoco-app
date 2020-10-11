@@ -23,6 +23,18 @@ class Route {
     this.history.push(`/feed/${feedId}`, { autoFocus: param?.autoFocus })
   }
 
+  tradeDetail(path: string, tradeId: number) {
+    this.history.push(`/trade/${path}/${tradeId}`)
+  }
+
+  profileDetail(userId: number) {
+    this.history.push(`/users/${userId}`)
+  }
+
+  profileDetailEdit(userId: number) {
+    this.history.push(`/users/${userId}/edit`)
+  }
+
   get history() {
     return this._history
   }
