@@ -6,6 +6,10 @@ router.get('/feeds', (req, res) => {
   res.send(feeds)
 })
 
+router.post('/feeds', (req, res) => {
+  res.send({ success: true })
+})
+
 router.get('/feeds/:id', (req, res) => {
   res.send(feed)
 })
