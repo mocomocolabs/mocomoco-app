@@ -2,6 +2,7 @@ import { IonIcon } from '@ionic/react'
 import { add, closeCircle } from 'ionicons/icons'
 import React, { FC, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { compress } from '../../utils/image-compressor'
 import './ImageUploaderComponent.scss'
 
 export interface ImageUploadItem extends File {
@@ -17,13 +18,14 @@ export const ImageUploader: FC<IImageUploader> = () => {
   const [images, setImages] = useState<ImageUploadItem[]>([])
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
-    onDrop: (acceptedFiles: File[]) => {
+    onDrop: async (acceptedFiles: File[]) => {
+      const compressed = await Promise.all(acceptedFiles.map((file) => compress(file)))
       setImages([
         ...images,
-        ...acceptedFiles.map((file, i) =>
-          Object.assign(file, {
+        ...compressed.map((v, i) =>
+          Object.assign(v, {
             id: i,
-            preview: URL.createObjectURL(file),
+            preview: URL.createObjectURL(v),
           })
         ),
       ])
