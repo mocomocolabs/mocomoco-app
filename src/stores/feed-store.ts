@@ -1,7 +1,9 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { IFeed, IFeedForm } from '../models/feed'
+import { httpFile } from '../utils/http-file-util'
 import { http } from '../utils/http-util'
+import { InsertFeedTask } from './feed-store.d'
 import { Task, TaskByNumber } from './task'
 
 const initState = {
@@ -39,6 +41,25 @@ export class Feed {
     await new Promise((r) => setTimeout(() => r(), 1000))
     await http.delete(`/feeds/${id}`)
   }) as TaskByNumber
+
+  @task.resolved
+  insertFeed = (async (form: IFeedForm) => {
+    await new Promise((r) => setTimeout(() => r(), 1000))
+    const formData = new FormData()
+    formData.append('type', form.type)
+    formData.append('scheduleDate', form.scheduleDate)
+    formData.append('scheduleTime', form.scheduleTime)
+    formData.append('scheduleTitle', form.scheduleTitle)
+    formData.append('title', form.title)
+    formData.append('content', form.content)
+    formData.append('publicYn', form.isPublic ? 'Y' : 'N') // formData에서는 string만 넘길 수 있으므로 publicYn으로 넘긴다
+
+    form.images?.forEach((v) => {
+      formData.append('images', v)
+    })
+
+    await httpFile.post(`/feeds`, formData)
+  }) as InsertFeedTask
 
   @action
   setForm(data: Partial<IFeedForm>) {

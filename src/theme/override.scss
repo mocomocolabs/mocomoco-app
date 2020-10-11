@@ -9,3 +9,7 @@ ion-toolbar {
 ion-searchbar {
   margin-bottom: -1rem;
 }
+
+ion-button {
+  --padding-top: 4px; // TODO : 버튼 내 글자 여백에 문제가 있음 왜 그런지 파악 필요
+}

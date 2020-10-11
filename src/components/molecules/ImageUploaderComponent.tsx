@@ -57,7 +57,7 @@ export const ImageUploader: FC<IImageUploader> = () => {
             className='absolute right-0 top-0'
             onClick={() => setImages(images.filter((v) => v.id !== image.id))}
           ></IonIcon>
-          <img src={image.preview} className='h-full w-auto' />
+          <img src={image.preview} alt='' className='h-full w-auto' />
         </div>
       ))}
     </section>

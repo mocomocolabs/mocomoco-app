@@ -11,6 +11,10 @@ class Route {
     this.history.goBack()
   }
 
+  feed() {
+    this.history.push('/feed')
+  }
+
   feedForm() {
     this.history.push('/feed/write')
   }
