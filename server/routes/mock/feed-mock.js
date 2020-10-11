@@ -4,6 +4,8 @@ faker.seed(Date.now())
 
 const names = ['준호', '규온', '쏘울', '이자', '상자']
 const titles = [
+  '',
+  '',
   '아 현기증 나ㅏㅏㅏ!!',
   '우리집에서 코딩할 사람',
   '순창살이에 도전하였습니다!',
@@ -75,8 +77,9 @@ const createFeeds = (count) =>
       nickname: names[faker.random.number(names.length - 1)],
       profileUrl: profileUrls[faker.random.number(profileUrls.length - 1)],
     },
+    title: titles[num % contents.length],
     content: contents[num % contents.length],
-    scheduleDate: ['2020년 12월 28일 오후 8시', ''][num % 2],
+    scheduleDate: ['2020-12-18 18:00', ''][num % 2],
     scheduleTitle: '준호네집 집들이겸 파자마 파티 합니다!',
     imageUrls: contentImgUrls,
     commentCount: faker.random.number(50),
@@ -84,6 +87,7 @@ const createFeeds = (count) =>
     likeProflieUrls: profileUrls,
     comments: createComments(faker.random.number(20)),
     createdAt: createdAts[num % createdAts.length],
+    isPublic: count % 2 ? true : false,
   }))
 
 module.exports = {

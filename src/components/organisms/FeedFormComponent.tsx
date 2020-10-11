@@ -1,4 +1,4 @@
-import { IonIcon } from '@ionic/react'
+import { IonIcon, useIonViewDidLeave } from '@ionic/react'
 import dayjs from 'dayjs'
 import { calendar } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
@@ -34,6 +34,11 @@ export const FeedForm: FC<IFeedForm> = () => {
 
   const initYMD = $feed.form.scheduleDate ?? dayjs().format(DT_FORMAT.YMD)
   const initHM = $feed.form.scheduleTime ?? dayjs().add(1, 'hour').startOf('hour').format(DT_FORMAT.HM)
+
+  useIonViewDidLeave(() => {
+    // TODO : 리셋시, 리렌더링되면서 다시 값이 셋팅되는 이슈가 있음
+    setTimeout(() => $feed.resetForm(), 1000)
+  })
 
   return useObserver(() => (
     <div>

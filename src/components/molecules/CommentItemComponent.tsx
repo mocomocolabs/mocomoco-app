@@ -12,9 +12,10 @@ import { XDivider } from '../atoms/XDividerComponent'
 export interface ICommentItem {
   comment: IComment
   feedId: number
+  isDetail?: boolean
 }
 
-export const CommentItem: FC<ICommentItem> = ({ comment, feedId }) => {
+export const CommentItem: FC<ICommentItem> = ({ comment, feedId, isDetail }) => {
   const { $ui, $feed, $comment } = useStore()
 
   return useObserver(() => (
@@ -27,29 +28,31 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId }) => {
             <div className='flex items-center'>
               <TextSm className='gray'>{comment.createdAt}</TextSm>
               {/* TODO : 본인 댓글에만 나오도록 작업 */}
-              <IonIcon
-                icon={ellipsisVertical}
-                onClick={async (e) => {
-                  const action = await $ui.showPopover(e.nativeEvent)
-                  switch (action) {
-                    case 'DELETE':
-                      $ui.showAlert({
-                        isOpen: true,
-                        message: '댓글을 삭제하시겠어요?',
-                        onSuccess: async () => {
-                          // TODO: 로더 추가
-                          await $comment.deleteComment(comment.id)
-                          await $feed.getFeed(feedId)
-                        },
-                      })
-                      break
-                    case 'EDIT':
-                      $comment.setUpdateFormBy(comment.id, comment.content)
-                      $comment.setUpdateCommentId(comment.id)
-                      break
-                  }
-                }}
-              ></IonIcon>
+              {isDetail && (
+                <IonIcon
+                  icon={ellipsisVertical}
+                  onClick={async (e) => {
+                    const action = await $ui.showPopover(e.nativeEvent)
+                    switch (action) {
+                      case 'DELETE':
+                        $ui.showAlert({
+                          isOpen: true,
+                          message: '댓글을 삭제하시겠어요?',
+                          onSuccess: async () => {
+                            // TODO: 로더 추가
+                            await $comment.deleteComment(comment.id)
+                            await $feed.getFeed(feedId)
+                          },
+                        })
+                        break
+                      case 'EDIT':
+                        $comment.setUpdateFormBy(comment.id, comment.content)
+                        $comment.setUpdateCommentId(comment.id)
+                        break
+                    }
+                  }}
+                ></IonIcon>
+              )}
             </div>
           </div>
           <TextBase>{comment.content}</TextBase>
