@@ -4,15 +4,22 @@ import React, { FC, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import './ImageUploaderComponent.scss'
 
-export interface IImageUploader {}
+export interface ImageUploadItem extends File {
+  id: number
+  preview: string
+}
+
+export interface IImageUploader {
+  images?: ImageUploadItem[]
+}
 
 export const ImageUploader: FC<IImageUploader> = () => {
-  const [files, setFiles] = useState<(File & { preview: string; id: number })[]>([])
+  const [images, setImages] = useState<ImageUploadItem[]>([])
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: (acceptedFiles: File[]) => {
-      setFiles([
-        ...files,
+      setImages([
+        ...images,
         ...acceptedFiles.map((file, i) =>
           Object.assign(file, {
             id: i,
@@ -26,9 +33,9 @@ export const ImageUploader: FC<IImageUploader> = () => {
   useEffect(
     () => () => {
       // Make sure to revoke the data uris to avoid memory leaks
-      files.forEach((file) => URL.revokeObjectURL(file.preview))
+      images.forEach((image) => URL.revokeObjectURL(image.preview))
     },
-    [files]
+    [images]
   )
 
   return (
@@ -41,14 +48,14 @@ export const ImageUploader: FC<IImageUploader> = () => {
         <input {...getInputProps()} />
         <IonIcon icon={add} size='large' className='absolute'></IonIcon>
       </div>
-      {files.map((file) => (
-        <div className='uploader-item relative' key={file.name}>
+      {images.map((image) => (
+        <div className='uploader-item relative' key={image.name}>
           <IonIcon
             icon={closeCircle}
             className='absolute right-0 top-0'
-            onClick={() => setFiles(files.filter((v) => v.id !== file.id))}
+            onClick={() => setImages(images.filter((v) => v.id !== image.id))}
           ></IonIcon>
-          <img src={file.preview} className='h-full w-auto' />
+          <img src={image.preview} className='h-full w-auto' />
         </div>
       ))}
     </section>

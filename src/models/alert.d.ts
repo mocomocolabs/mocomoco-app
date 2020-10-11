@@ -3,4 +3,5 @@ export interface IAlert {
   header?: string
   message: string
   onSuccess: () => void
+  onFail?: () => void
 }

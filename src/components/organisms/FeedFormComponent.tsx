@@ -1,15 +1,18 @@
-import { IonIcon, IonTextarea, IonToggle } from '@ionic/react'
+import { IonIcon } from '@ionic/react'
 import dayjs from 'dayjs'
 import { calendar } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC, useState } from 'react'
+import React, { FC } from 'react'
+import { useStore } from '../../hooks/use-store'
 import { FEED_TYPE } from '../../models/feed.d'
 import { IRadioItem } from '../../models/radio'
 import { DT_FORMAT } from '../../utils/datetime-util'
 import { Input } from '../atoms/InputComponent'
 import { Pad } from '../atoms/PadComponent'
 import { Radio } from '../atoms/RadioComponent'
+import { Textarea } from '../atoms/TextareaComponent'
 import { TextLg } from '../atoms/TextLgComponent'
+import { Toggle } from '../atoms/ToggleComponent'
 import { DatetimePicker } from '../molecules/DatetimePickerComponent'
 import { ImageUploader } from '../molecules/ImageUploaderComponent'
 
@@ -27,41 +30,57 @@ const feedTypes: IRadioItem[] = [
 ]
 
 export const FeedForm: FC<IFeedForm> = () => {
-  const defaultTime = dayjs().add(1, 'hour').startOf('hour').format(DT_FORMAT.YMDHM)
-  const [feedType, setFeedType] = useState<string>(FEED_TYPE.NORMAL)
+  const { $feed } = useStore()
+
+  const initYMD = $feed.form.scheduleDate ?? dayjs().format(DT_FORMAT.YMD)
+  const initHM = $feed.form.scheduleTime ?? dayjs().add(1, 'hour').startOf('hour').format(DT_FORMAT.HM)
 
   return useObserver(() => (
     <div>
       <div className='flex-between-center'>
-        <Radio items={feedTypes} selected={feedType} setSelected={setFeedType}></Radio>
+        <Radio
+          items={feedTypes}
+          selected={$feed.form.type ?? FEED_TYPE.NORMAL}
+          setSelected={(type: any) => $feed.setForm({ type })}
+        ></Radio>
       </div>
       <Pad className='h-5'></Pad>
-      <Input placeholder='제목(옵션)'></Input>
-      <IonTextarea
-        className='black border-border px-container leading-8'
+      <Input
+        value={$feed.form.title}
+        placeholder='제목(옵션)'
+        onChange={(title) => $feed.setForm({ title })}
+      ></Input>
+      <Textarea
+        value={$feed.form.content}
+        onChange={(content) => $feed.setForm({ content })}
         rows={10}
-        placeholder='새로운 소식을 작성해주세요'
-      ></IonTextarea>
-      {feedType === FEED_TYPE.SCHEDULE && (
+        placeholder='어떤 일이 있으셨나요?'
+      ></Textarea>
+      {$feed.form.type === FEED_TYPE.SCHEDULE && (
         <div className='flex-between-center mt-3'>
           <IonIcon icon={calendar} size='large'></IonIcon>
           <DatetimePicker
-            value={defaultTime}
+            value={`${initYMD} ${initHM}`}
             onChangeDate={(d) => {
-              console.log(d)
+              $feed.setForm({ scheduleDate: d })
             }}
             onChangeTime={(t) => {
               console.log(t)
+
+              $feed.setForm({ scheduleTime: t })
             }}
           ></DatetimePicker>
         </div>
       )}
 
-      <ImageUploader></ImageUploader>
+      <ImageUploader images={$feed.form.images}></ImageUploader>
 
       <div className='flex-between-center'>
         <TextLg>전체공개</TextLg>
-        <IonToggle slot='end' name='chat_alarm_on_off' checked></IonToggle>
+        <Toggle
+          checked={$feed.form.isPublic ?? false}
+          onChange={(isPublic) => $feed.setForm({ isPublic })}
+        ></Toggle>
       </div>
     </div>
   ))
