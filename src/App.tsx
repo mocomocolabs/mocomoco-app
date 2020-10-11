@@ -37,7 +37,7 @@ export const App: React.FC = () => {
             <Route path='/home' component={Home} exact />
             <Route path='/feed' component={Feed} exact />
             <Route path='/feed/:id' component={FeedDetail} exact />
-            <Route path='/feed/write' component={FeedWrite} exact />
+            <Route path='/feed-write' component={FeedWrite} exact />
             <Route path='/trade' component={Trade} exact />
             <Route path='/chat' component={Chat} exact />
             <Route path='/my-page' component={MyPage} exact />

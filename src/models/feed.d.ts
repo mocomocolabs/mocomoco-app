@@ -18,9 +18,11 @@ export interface IFeed {
   likeProflieUrls: string[]
   comments: IComment[]
   createdAt: string // TODO: 임시
+  isPublic: boolean
 }
 
 export interface IFeedForm {
+  id?: number
   type: FeedType
   scheduleDate: string // TODO: 임시
   scheduleTime: string // TODO: 임시

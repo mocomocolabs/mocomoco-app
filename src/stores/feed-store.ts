@@ -3,6 +3,7 @@ import { task } from 'mobx-task'
 import { IFeed, IFeedForm } from '../models/feed'
 import { httpFile } from '../utils/http-file-util'
 import { http } from '../utils/http-util'
+import { urlToFile } from '../utils/image-util'
 import { InsertFeedTask } from './feed-store.d'
 import { Task, TaskByNumber } from './task'
 
@@ -32,6 +33,28 @@ export class Feed {
     await http.get<IFeed>(`/feeds/${id}`).then(
       action((data) => {
         this.feed = data
+      })
+    )
+  }) as TaskByNumber
+
+  @task
+  getFeedForm = (async (id: number) => {
+    await http.get<IFeed>(`/feeds/${id}`).then(
+      action(async (data) => {
+        const images: any = await Promise.all(data.imageUrls.map((v) => urlToFile(v)))
+
+        this.setForm({
+          id,
+          type: data.type,
+          scheduleDate: data.scheduleDate,
+          // TODO: 협의후 구현
+          // scheduleTime: data.scheduleTime,
+          scheduleTitle: data.scheduleTitle,
+          title: data.title,
+          content: data.content,
+          images,
+          isPublic: data.isPublic,
+        })
       })
     )
   }) as TaskByNumber

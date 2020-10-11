@@ -32,6 +32,7 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticCont
   const { $feed, $ui, $comment } = useStore()
 
   useEffect(() => {
+    // TODO : 게시글 접근제한 테스트 필요
     $feed.getFeed(id)
     // eslint-disable-next-line
   }, [])

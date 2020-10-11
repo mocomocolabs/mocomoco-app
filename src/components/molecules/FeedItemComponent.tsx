@@ -51,6 +51,8 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
                   })
                   break
                 case 'EDIT':
+                  await $feed.getFeedForm(feed.id)
+                  route.feedForm()
                   break
               }
             }}
@@ -115,7 +117,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
         )}
         <div className='py-4'>
           {feed.comments.map((v) => (
-            <CommentItem key={v.id} comment={v} feedId={feed.id}></CommentItem>
+            <CommentItem key={v.id} comment={v} feedId={feed.id} isDetail={isDetail}></CommentItem>
           ))}
         </div>
       </div>

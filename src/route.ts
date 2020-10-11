@@ -16,7 +16,7 @@ class Route {
   }
 
   feedForm() {
-    this.history.push('/feed/write')
+    this.history.push('/feed-write')
   }
 
   feedDetail(feedId: number, param?: { autoFocus?: boolean }) {

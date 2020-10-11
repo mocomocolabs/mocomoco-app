@@ -14,31 +14,27 @@ export interface IImageUploader {
   images?: ImageUploadItem[]
 }
 
-export const ImageUploader: FC<IImageUploader> = () => {
-  const [images, setImages] = useState<ImageUploadItem[]>([])
+export const ImageUploader: FC<IImageUploader> = ({ images }) => {
+  const assignPreview = (v: File, i: number) =>
+    Object.assign(v, {
+      id: i,
+      preview: URL.createObjectURL(v),
+    })
+
+  const [imgs, setImgs] = useState<ImageUploadItem[]>(images ? images.map((v, i) => assignPreview(v, i)) : [])
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: async (acceptedFiles: File[]) => {
       const compressed = await Promise.all(acceptedFiles.map((file) => compress(file)))
-      setImages([
-        ...images,
-        ...compressed.map((v, i) =>
-          Object.assign(v, {
-            id: i,
-            preview: URL.createObjectURL(v),
-          })
-        ),
-      ])
+      setImgs([...imgs, ...compressed.map((v, i) => assignPreview(v, i))])
     },
   })
 
-  useEffect(
-    () => () => {
-      // Make sure to revoke the data uris to avoid memory leaks
-      images.forEach((image) => URL.revokeObjectURL(image.preview))
-    },
-    [images]
-  )
+  useEffect(() => {
+    // Make sure to revoke the data uris to avoid memory leaks
+    imgs.forEach((image) => URL.revokeObjectURL(image.preview))
+  }, [imgs])
 
   return (
     <section>
@@ -50,12 +46,12 @@ export const ImageUploader: FC<IImageUploader> = () => {
         <input {...getInputProps()} />
         <IonIcon icon={add} size='large' className='absolute'></IonIcon>
       </div>
-      {images.map((image) => (
+      {imgs.map((image) => (
         <div className='uploader-item relative' key={image.name}>
           <IonIcon
             icon={closeCircle}
             className='absolute right-0 top-0'
-            onClick={() => setImages(images.filter((v) => v.id !== image.id))}
+            onClick={() => setImgs(imgs.filter((v) => v.id !== image.id))}
           ></IonIcon>
           <img src={image.preview} alt='' className='h-full w-auto' />
         </div>
