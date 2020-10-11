@@ -3,9 +3,9 @@ import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import React, { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { useHistory } from 'react-router-dom'
 import { useStore } from '../../hooks/use-store'
 import { IUser } from '../../models/user'
+import { route } from '../../route'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { ProfileUpdateInput } from './ProfileUpdateInputComponent'
 
@@ -16,7 +16,6 @@ interface IProfileUpdate {
 
 export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubmitAvailable }) => {
   const { $ui, $user } = useStore()
-  const history = useHistory()
   const methods = useForm<IUser>({
     mode: 'onChange',
   })
@@ -46,7 +45,7 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubm
       onSuccess: async () => {
         await $user.updateUser(userId, data).then((success) => {
           if (success) {
-            history.goBack()
+            route.goBack()
           }
         })
       },
