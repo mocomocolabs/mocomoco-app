@@ -8,6 +8,7 @@ import {
   useIonViewWillLeave,
 } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
+import { TaskGroup } from 'mobx-task'
 import React, { useEffect } from 'react'
 import { StaticContext } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
@@ -46,6 +47,9 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticCont
     $ui.setIsBottomTab(true)
   })
 
+  // eslint-disable-next-line
+  const taskGroup = TaskGroup<any[], void>([$feed.getFeed, $comment.deleteComment])
+
   return useObserver(() => (
     <IonPage>
       <IonHeader>
@@ -59,7 +63,7 @@ export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticCont
 
       <IonContent>
         <div className='px-container'>
-          {$feed.getFeed.match({
+          {taskGroup.match({
             pending: () => <Spinner isFull={true}></Spinner>,
             resolved: () => <FeedItem feed={$feed.feed} isDetail={true}></FeedItem>,
           })}

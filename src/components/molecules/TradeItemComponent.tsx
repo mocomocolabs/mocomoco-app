@@ -1,17 +1,19 @@
 import { IonIcon } from '@ionic/react'
-import { chatbox, cloud, ellipsisVertical } from 'ionicons/icons'
+import { chatbox, cloud } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { ITrade } from '../../models/trade'
 import { route } from '../../route'
 import { TradeStore } from '../../stores/trade-store'
+import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 interface ITradeItem {
   store: TradeStore
   item: ITrade
+  searchKeyword: string
   isDetail?: boolean
 }
 
@@ -26,8 +28,17 @@ const StatusString = {
   FINISH: '거래완료',
 }
 
-export const TradeItem: React.FC<ITradeItem> = ({ store, item, isDetail = false }) => {
-  const { $ui, $user } = useStore()
+export const TradeItem: React.FC<ITradeItem> = ({ store, item, searchKeyword, isDetail = false }) => {
+  const { $user } = useStore()
+
+  const onDelete = async () => {
+    await store.deleteItem(item.id)
+    await store.getItems(searchKeyword)
+
+    if (isDetail) {
+      route.goBack()
+    }
+  }
 
   return useObserver(() => (
     <li className='py-4'>
@@ -66,33 +77,11 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, isDetail = false 
         </div>
 
         <div className='flex justify-end w-4'>
-          {/* // TODO: extract component */}
-          <IonIcon
-            hidden={$user.currentUserId !== item.user.id}
+          <OverflowMenuIcon
             className='self-top'
-            icon={ellipsisVertical}
-            onClick={async (e) => {
-              const action = await $ui.showPopover(e.nativeEvent)
-              switch (action) {
-                case 'DELETE':
-                  $ui.showAlert({
-                    isOpen: true,
-                    message: '게시글을 삭제하시겠어요?',
-                    onSuccess: async () => {
-                      // TODO: 로더 추가
-                      await store.deleteItem(item.id)
-                      await store.getItems('') // TODO: keyword
-                      if (isDetail) {
-                        route.goBack()
-                      }
-                    },
-                  })
-                  break
-                case 'EDIT':
-                  break
-              }
-            }}
-          ></IonIcon>
+            show={$user.currentUserId === item.user.id}
+            onDelete={onDelete}
+          />
         </div>
       </div>
 

@@ -1,9 +1,8 @@
-import { IonIcon } from '@ionic/react'
-import { ellipsisVertical } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React, { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IComment } from '../../models/comment'
+import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextSm } from '../atoms/TextSmComponent'
@@ -12,11 +11,21 @@ import { XDivider } from '../atoms/XDividerComponent'
 export interface ICommentItem {
   comment: IComment
   feedId: number
-  isDetail?: boolean
+  showOverlowMenu: boolean
 }
 
-export const CommentItem: FC<ICommentItem> = ({ comment, feedId, isDetail }) => {
-  const { $ui, $feed, $comment } = useStore()
+export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu }) => {
+  const { $comment, $feed } = useStore()
+
+  const onDelete = async (id: number) => {
+    await $comment.deleteComment(id)
+    await $feed.getFeed(feedId)
+  }
+
+  const onEdit = (id: number, content: string) => {
+    $comment.setUpdateFormBy(id, content)
+    $comment.setUpdateCommentId(id)
+  }
 
   return useObserver(() => (
     <>
@@ -27,32 +36,11 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, isDetail }) => 
             <TextBase>{comment.user.nickname}</TextBase>
             <div className='flex items-center'>
               <TextSm className='gray'>{comment.createdAt}</TextSm>
-              {/* TODO : 본인 댓글에만 나오도록 작업 */}
-              {isDetail && (
-                <IonIcon
-                  icon={ellipsisVertical}
-                  onClick={async (e) => {
-                    const action = await $ui.showPopover(e.nativeEvent)
-                    switch (action) {
-                      case 'DELETE':
-                        $ui.showAlert({
-                          isOpen: true,
-                          message: '댓글을 삭제하시겠어요?',
-                          onSuccess: async () => {
-                            // TODO: 로더 추가
-                            await $comment.deleteComment(comment.id)
-                            await $feed.getFeed(feedId)
-                          },
-                        })
-                        break
-                      case 'EDIT':
-                        $comment.setUpdateFormBy(comment.id, comment.content)
-                        $comment.setUpdateCommentId(comment.id)
-                        break
-                    }
-                  }}
-                ></IonIcon>
-              )}
+              <OverflowMenuIcon
+                show={showOverlowMenu}
+                onDelete={() => onDelete(comment.id)}
+                onEdit={() => onEdit(comment.id, comment.content)}
+              />
             </div>
           </div>
           <TextBase>{comment.content}</TextBase>

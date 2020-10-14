@@ -26,6 +26,7 @@ export const Trade: React.FC = () => {
   const store = selectedSegment === segments.stuff ? $stuff : $talent
 
   const [searchMode, setSearchMode] = useState(false)
+  // TODO: move searchkeyword to trade-store for recent keyword list
   const [searchKeyword, setSearchKeyword] = useState(emptyKeyword)
   const onSearchSubmit = (e: CustomEvent<SearchbarChangeEventDetail>) => setSearchKeyword(e.detail.value!)
 
