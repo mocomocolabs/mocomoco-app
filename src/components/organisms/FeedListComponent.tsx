@@ -1,5 +1,6 @@
 import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
+import { TaskGroup } from 'mobx-task'
 import React, { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { FeedItem } from '../molecules/FeedItemComponent'
@@ -15,8 +16,11 @@ export const FeedList: React.FC<IFeedList> = () => {
     // eslint-disable-next-line
   }, [])
 
+  // eslint-disable-next-line
+  const taskGroup = TaskGroup<any[], void>([$feed.getFeeds, $feed.deleteFeed])
+
   return useObserver(() =>
-    $feed.getFeeds.match({
+    taskGroup.match({
       pending: () => (
         <div className='height-150 flex-center'>
           <IonSpinner color='tertiary' name='crescent' />
@@ -26,7 +30,7 @@ export const FeedList: React.FC<IFeedList> = () => {
         <>
           <ul className='pl-0 move-up'>
             {$feed.feeds.map((v, i) => (
-              <FeedItem key={i} feed={v} isDetail={false}></FeedItem>
+              <FeedItem key={i} feed={v}></FeedItem>
             ))}
           </ul>
           <ContentPopover></ContentPopover>

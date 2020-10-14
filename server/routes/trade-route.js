@@ -25,6 +25,12 @@ tradeMocks.map((mock) => {
   })
 
   router.delete(`${mock.path}/:id`, (req, res) => {
+    const id = parseInt(req.params.id)
+    mock.data.splice(
+      mock.data.findIndex((s) => id === s.id),
+      1
+    )
+
     res.send({ success: true })
   })
 })

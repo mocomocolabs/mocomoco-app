@@ -1,10 +1,11 @@
 import { IonIcon } from '@ionic/react'
-import { calendar, chatbox, cloud, ellipsisVertical } from 'ionicons/icons'
+import { calendar, chatbox, cloud } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React, { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed'
 import { route } from '../../route'
+import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
@@ -13,11 +14,25 @@ import { ImageSlider } from './ImageSliderComponent'
 
 interface IFeedItem {
   feed: IFeed
-  isDetail: boolean
+  isDetail?: boolean
 }
 
 export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
-  const { $ui, $feed } = useStore()
+  const { $user, $feed } = useStore()
+
+  const onDelete = async () => {
+    await $feed.deleteFeed(feed.id)
+    await $feed.getFeeds()
+
+    if (isDetail) {
+      route.goBack()
+    }
+  }
+
+  const onEdit = async () => {
+    await $feed.getFeedForm(feed.id)
+    route.feedForm()
+  }
 
   return useObserver(() => (
     <li className='py-4'>
@@ -30,33 +45,8 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
               <TextBase className='dim'>{feed.createdAt}</TextBase>
             </div>
           </div>
-          {/* TODO: 본인 게시글에만 나오도록 수정 */}
-          <IonIcon
-            icon={ellipsisVertical}
-            onClick={async (e) => {
-              const action = await $ui.showPopover(e.nativeEvent)
-              switch (action) {
-                case 'DELETE':
-                  $ui.showAlert({
-                    isOpen: true,
-                    message: '게시글을 삭제하시겠어요?',
-                    onSuccess: async () => {
-                      // TODO: 로더 추가
-                      await $feed.deleteFeed(feed.id)
-                      await $feed.getFeeds()
-                      if (isDetail) {
-                        route.goBack()
-                      }
-                    },
-                  })
-                  break
-                case 'EDIT':
-                  await $feed.getFeedForm(feed.id)
-                  route.feedForm()
-                  break
-              }
-            }}
-          ></IonIcon>
+
+          <OverflowMenuIcon show={$user.currentUserId === feed.user.id} onDelete={onDelete} onEdit={onEdit} />
         </div>
 
         {isDetail ? (
@@ -117,7 +107,12 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
         )}
         <div className='py-4'>
           {feed.comments.map((v) => (
-            <CommentItem key={v.id} comment={v} feedId={feed.id} isDetail={isDetail}></CommentItem>
+            <CommentItem
+              key={v.id}
+              comment={v}
+              feedId={feed.id}
+              showOverlowMenu={isDetail && $user.currentUserId === v.id}
+            ></CommentItem>
           ))}
         </div>
       </div>

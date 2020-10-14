@@ -1,5 +1,6 @@
 import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
+import { TaskGroup } from 'mobx-task'
 import React, { useLayoutEffect } from 'react'
 import { TradeStore } from '../../stores/trade-store'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -21,8 +22,11 @@ export const TradeList: React.FC<ITradeList> = ({ store, searchKeyword }) => {
     store.getItems(searchKeyword)
   }, [searchKeyword, store])
 
+  // eslint-disable-next-line
+  const taskGroup = TaskGroup<any[], void>([store.getItems, store.deleteItem])
+
   return useObserver(() =>
-    store.getItems.match({
+    taskGroup.match({
       pending: () => (
         <div className='height-150 flex-center'>
           <IonSpinner color='tertiary' name='crescent' />
@@ -35,7 +39,7 @@ export const TradeList: React.FC<ITradeList> = ({ store, searchKeyword }) => {
           </div>
           <ul className='pl-0 move-up'>
             {store.items.map((item) => (
-              <TradeItem key={item.id} store={store} item={item} />
+              <TradeItem key={item.id} store={store} item={item} searchKeyword={searchKeyword} />
             ))}
           </ul>
           <ContentPopover></ContentPopover>
