@@ -1,7 +1,6 @@
-import { IonAvatar, IonButton } from '@ionic/react'
+import { IonAvatar, IonButton, useIonViewWillEnter } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import { TaskGroup } from 'mobx-task'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../route'
 import { Spinner } from '../atoms/SpinnerComponent'
@@ -11,20 +10,12 @@ import { TextXxl } from '../atoms/TextXxlComponent'
 export const MypageProfile: React.FC = () => {
   const { $user } = useStore()
 
-  // eslint-disable-next-line
-  const getCurrentUserTaskGroup = TaskGroup<any[], void>([$user.getCurrentUserId, $user.getUser])
-
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      await $user.getCurrentUserId()
-      await $user.getUser($user.currentUserId!)
-    }
-
-    getCurrentUser()
-  }, [$user])
+  useIonViewWillEnter(() => {
+    $user.getCurrentUser()
+  })
 
   return useObserver(() =>
-    getCurrentUserTaskGroup.match({
+    $user.getCurrentUser.match({
       pending: () => {
         return (
           <div className='flex-center'>
