@@ -43,6 +43,12 @@ export class User {
   }
 
   @task
+  getCurrentUser = (async () => {
+    await this.getCurrentUserId()
+    this.getUser(this.currentUserId!)
+  }) as Task
+
+  @task
   getUser = (async (userId: number) => {
     await http.get<IUser>(`/users/${userId}`).then(
       action((data) => {
