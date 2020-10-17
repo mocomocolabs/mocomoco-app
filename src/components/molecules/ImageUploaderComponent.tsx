@@ -27,7 +27,7 @@ export const ImageUploader: FC<IImageUploader> = ({ images }) => {
     accept: 'image/*',
     onDrop: async (acceptedFiles: File[]) => {
       const compressed = await Promise.all(acceptedFiles.map((file) => compress(file)))
-      setImgs([...imgs, ...compressed.map((v, i) => assignPreview(v, i))])
+      setImgs([...imgs, ...compressed.map((v, i) => assignPreview(v, i + imgs.length))])
     },
   })
 
