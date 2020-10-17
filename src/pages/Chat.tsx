@@ -1,7 +1,6 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
 import React from 'react'
-import { NewsList } from '../components/_example/NewsList'
-import { NewsSearch } from '../components/_example/NewsSearch'
+import { ChatRoomList } from '../components/organisms/ChatRoomListComponent'
 
 export const Chat: React.FC = () => {
   return (
@@ -14,8 +13,7 @@ export const Chat: React.FC = () => {
 
       <IonContent>
         <div className='px-container'>
-          <NewsSearch />
-          <NewsList />
+          <ChatRoomList></ChatRoomList>
         </div>
       </IonContent>
     </IonPage>

@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx'
+import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { IChatMessage, IChatMessageForm, IChatRoom } from '../models/chat'
 import { http } from '../utils/http-util'
@@ -59,7 +59,6 @@ export class Chat {
     delete this.form[roomId]
   }
 
-  @computed
   roomBy(roomId: number): IChatRoom | undefined {
     return this.rooms.find((v) => v.id === roomId)
   }

@@ -1,3 +1,5 @@
+import { IUser } from './user'
+
 export interface IChatMessage {
   id: number
   roomId: number
@@ -12,7 +14,7 @@ export interface IChatMessageForm {
 
 export interface IChatRoom {
   id: number
-  user: User
+  user: IUser
   recentMessage: IChatMessage
   unreadCount: number
   messages?: IChatMessage[] // 룸 입장시 셋팅됌
