@@ -8,6 +8,7 @@ class Route {
   }
 
   goBack() {
+    // TODO: modal의 open 상태를 store로 관리하여. hardware back 버튼을 제어할 필요가 있음
     this.history.goBack()
   }
 

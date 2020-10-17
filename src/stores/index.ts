@@ -1,4 +1,5 @@
 import { configure } from 'mobx'
+import { Chat } from './chat-store'
 import { Comment } from './comment-store'
 import { Community } from './community-store'
 import { News } from './example/news-store'
@@ -16,6 +17,7 @@ export class RootStore {
   $comment: Comment
   $stuff: Stuff
   $talent: Talent
+  $chat: Chat
   $ui: Ui
   $user: User
 
@@ -31,6 +33,7 @@ export class RootStore {
     this.$user = new User()
     this.$stuff = new Stuff()
     this.$talent = new Talent()
+    this.$chat = new Chat()
 
     // example
     this.todoList = new TodoList()
