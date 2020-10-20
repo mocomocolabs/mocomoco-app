@@ -37,7 +37,7 @@ class Route {
   }
 
   chatRoom(roomId: number) {
-    this.history.push(`/chats/${roomId}`)
+    this.history.push(`/chat/${roomId}`)
   }
 
   get history() {

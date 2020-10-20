@@ -8,6 +8,7 @@ import { Alert } from './components/molecules/AlertComponent'
 import './global.scss'
 import { useStore } from './hooks/use-store'
 import { Chat } from './pages/Chat'
+import { ChatRoom } from './pages/ChatRoom'
 import { Feed } from './pages/Feed'
 import { FeedDetail } from './pages/FeedDetail'
 import { FeedWrite } from './pages/FeedWrite'
@@ -40,6 +41,7 @@ export const App: React.FC = () => {
             <Route path='/feed-write' component={FeedWrite} exact />
             <Route path='/trade' component={Trade} exact />
             <Route path='/chat' component={Chat} exact />
+            <Route path='/chat/:id' component={ChatRoom} exact />
             <Route path='/my-page' component={MyPage} exact />
             <Route path='/settings' component={Settings} exact />
             <Route path='/users/:id' component={ProfileDetail} exact />
