@@ -3,6 +3,7 @@ import { IUser } from './user'
 export interface IChatMessage {
   id: number
   roomId: number
+  user: IUser
   message: string
   createdAt: string // TODO : 논의 필요
 }

@@ -41,6 +41,9 @@
   display: flex;
   flex-direction: row;
 }
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
 .flex-col {
   display: flex;
   flex-direction: column;
@@ -1227,4 +1230,7 @@
 }
 .no-wrap {
   white-space: nowrap;
+}
+.pre-line {
+  white-space: pre-line;
 }

@@ -2,7 +2,7 @@ import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { ChatRoomItem } from '../molecules/ChatRoomItemComponent'
+import { ChatRoomListItem } from '../molecules/ChatRoomListItemComponent'
 
 interface IChatRoomList {}
 
@@ -11,8 +11,7 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
 
   useEffect(() => {
     $chat.getRooms()
-    // eslint-disable-next-line
-  }, [])
+  }, [$chat])
 
   return useObserver(() =>
     $chat.getRooms.match({
@@ -25,7 +24,7 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
         <>
           <ul className='pl-0'>
             {$chat.rooms.map((v, i) => (
-              <ChatRoomItem key={i} room={v}></ChatRoomItem>
+              <ChatRoomListItem key={i} room={v}></ChatRoomListItem>
             ))}
           </ul>
         </>

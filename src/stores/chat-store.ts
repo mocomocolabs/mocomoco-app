@@ -1,18 +1,21 @@
-import { action, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { IChatMessage, IChatMessageForm, IChatRoom } from '../models/chat'
 import { http } from '../utils/http-util'
-import { IInsertChatMessage, InsertChatMessageTask } from './chat-store.d'
-import { Task, TaskByNumber } from './task'
+import { GetChatMessagesTask, IInsertChatMessage, InsertChatMessageTask } from './chat-store.d'
+import { Task } from './task'
 
 const initState = {
-  form: {} as any,
   rooms: [],
+  currentRoomId: null,
+  form: {} as any,
 }
 
 export class Chat {
   @observable.shallow rooms: IChatRoom[] = initState.rooms
-  @observable.struct form: { [roomId: number]: IChatMessageForm } = initState.form
+  @observable currentRoomId: number | null = initState.currentRoomId
+  // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
+  @observable form: { [roomId: number]: IChatMessageForm } = initState.form
 
   @task
   getRooms = (async () => {
@@ -24,24 +27,27 @@ export class Chat {
   }) as Task
 
   @task
-  getRoomMessages = (async (roomId: number) => {
-    await http.get<IChatMessage[]>(`/chats/rooms/${roomId}`).then(
-      action(async (data) => {
-        if (!data) {
-          return
-        }
+  getRoomMessages = (async ({ roomId, messageId }) => {
+    this.setCurrentRoomId(roomId)
+    // TODO: messageId를 넘길 경우, 해당 id 이후의 메세지만 response해줌
+    await http
+      .get<IChatMessage[]>(`/chats/rooms/${roomId}`, { params: { messageId } })
+      .then(
+        action(async (data) => {
+          if (!data) {
+            return
+          }
 
-        if (!this.roomBy(roomId)) {
-          await this.getRooms()
-        }
+          if (!this.room) {
+            await this.getRooms()
+          }
 
-        const room = this.roomBy(roomId)
-        if (room) {
-          room.messages = data
-        }
-      })
-    )
-  }) as TaskByNumber
+          if (this.room) {
+            this.room.messages = [...(this.room.messages || []), ...data]
+          }
+        })
+      )
+  }) as GetChatMessagesTask
 
   @task.resolved
   insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
@@ -50,16 +56,22 @@ export class Chat {
   }) as InsertChatMessageTask
 
   @action
+  setCurrentRoomId(roomId: number | null) {
+    this.currentRoomId = roomId
+  }
+
+  @action
   setForm(roomId: number, message: string) {
     this.form[roomId] = { roomId, message }
   }
 
-  @action
-  resetForm(roomId: number) {
-    delete this.form[roomId]
+  @computed
+  get room(): IChatRoom | undefined {
+    return this.rooms.find((v) => v.id === this.currentRoomId)
   }
 
-  roomBy(roomId: number): IChatRoom | undefined {
-    return this.rooms.find((v) => v.id === roomId)
+  @computed
+  get lastMessageId(): number | undefined {
+    return this.room?.messages?.slice(-1).pop()?.id
   }
 }
