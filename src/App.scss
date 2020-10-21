@@ -1,0 +1,11 @@
+@import './theme/variable';
+
+.badge {
+  position: absolute;
+  right: 25%;
+  top: 20%;
+  width: 0.8rem;
+  height: 0.8rem;
+  background: $m-red;
+  border-radius: 50%;
+}

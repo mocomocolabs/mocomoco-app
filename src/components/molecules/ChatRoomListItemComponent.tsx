@@ -25,9 +25,11 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           </div>
           <TextBase className='ellipsis max-width-270'>{room.recentMessage.message}</TextBase>
         </div>
-        <div className='flex-center br-full bg-m-red w-6 min-w-6 h-6 ml-2'>
-          <TextSm>{room.unreadCount}</TextSm>
-        </div>
+        {room.unreadCount > 0 && (
+          <div className='flex-center br-full bg-m-red w-6 min-w-6 h-6 ml-2'>
+            <TextSm>{room.unreadCount}</TextSm>
+          </div>
+        )}
       </div>
     </li>
   )
