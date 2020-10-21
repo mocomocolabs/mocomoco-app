@@ -74,4 +74,11 @@ export class Chat {
   get lastMessageId(): number | undefined {
     return this.room?.messages?.slice(-1).pop()?.id
   }
+
+  @computed
+  get countUnread(): number {
+    return this.rooms.reduce((acc, cur) => {
+      return acc + cur.unreadCount
+    }, 0)
+  }
 }
