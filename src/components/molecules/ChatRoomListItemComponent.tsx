@@ -23,8 +23,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
             <TextBase className='mr-2 dark-gray'>{room.user.community}</TextBase>
             <TextBase className='dark-gray'>{room.recentMessage.createdAt}</TextBase>
           </div>
-          {/* TODO: ellipsis 추가할것 */}
-          <TextBase>{room.recentMessage.message}</TextBase>
+          <TextBase className='ellipsis max-width-270'>{room.recentMessage.message}</TextBase>
         </div>
         <div className='flex-center br-full bg-m-red w-6 min-w-6 h-6 ml-2'>
           <TextSm>{room.unreadCount}</TextSm>
