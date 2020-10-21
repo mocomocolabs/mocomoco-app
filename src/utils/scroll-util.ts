@@ -1,4 +1,7 @@
-export const scrollToBottom = () => {
-  const list: HTMLIonContentElement | null = document.querySelector('ion-content')
-  return list?.scrollToBottom()
+export const scrollToBottom = (query = 'ion-content') => {
+  const list: NodeListOf<HTMLIonContentElement> = document.querySelectorAll(query)
+  if (list.length) {
+    const content: HTMLIonContentElement = list[list.length - 1]
+    content.scrollToBottom()
+  }
 }

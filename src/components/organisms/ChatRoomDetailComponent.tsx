@@ -2,6 +2,7 @@ import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
+import { scrollToBottom } from '../../utils/scroll-util'
 import { Profile } from '../atoms/ProfileComponent'
 
 interface IChatRoomDetail {
@@ -12,7 +13,12 @@ export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({ roomId }) => {
   const { $chat, $user } = useStore()
 
   useEffect(() => {
-    $chat.getRoomMessages({ roomId })
+    const getRoomMessagesAndScrollBottom = async () => {
+      await $chat.getRoomMessages({ roomId })
+      scrollToBottom()
+    }
+
+    getRoomMessagesAndScrollBottom()
   }, [$chat, roomId])
 
   return useObserver(() =>
