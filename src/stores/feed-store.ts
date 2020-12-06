@@ -11,7 +11,10 @@ const initState = {
   feeds: [],
   /* eslint-disable */
   feed: {} as any,
-  form: {} as any,
+  form: {
+    title: '',
+    content: '',
+  } as IFeedForm,
 }
 
 export class Feed {
@@ -75,13 +78,14 @@ export class Feed {
     formData.append('scheduleTitle', form.scheduleTitle)
     formData.append('title', form.title)
     formData.append('content', form.content)
-    formData.append('publicYn', form.isPublic ? 'Y' : 'N') // formData에서는 string만 넘길 수 있으므로 publicYn으로 넘긴다
+    formData.append('isPublic', form.isPublic ? 'true' : 'false')
 
     form.images?.forEach((v) => {
       formData.append('images', v)
     })
 
     await httpFile.post(`/feeds`, formData)
+    this.resetForm()
   }) as InsertFeedTask
 
   @action
