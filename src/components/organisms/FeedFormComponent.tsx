@@ -7,7 +7,7 @@ import { useStore } from '../../hooks/use-store'
 import { FEED_TYPE } from '../../models/feed.d'
 import { IRadioItem } from '../../models/radio'
 import { DT_FORMAT } from '../../utils/datetime-util'
-import { Input } from '../atoms/InputComponent'
+import { InputNormal } from '../atoms/InputNormalComponent copy'
 import { Pad } from '../atoms/PadComponent'
 import { Radio } from '../atoms/RadioComponent'
 import { Textarea } from '../atoms/TextareaComponent'
@@ -45,11 +45,11 @@ export const FeedForm: FC<IFeedForm> = () => {
         ></Radio>
       </div>
       <Pad className='h-5'></Pad>
-      <Input
+      <InputNormal
         value={$feed.form.title}
         placeholder='제목(옵션)'
         onChange={(title) => $feed.setForm({ title })}
-      ></Input>
+      ></InputNormal>
       <Textarea
         value={$feed.form.content}
         onChange={(content) => $feed.setForm({ content })}

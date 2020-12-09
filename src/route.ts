@@ -12,6 +12,18 @@ class Route {
     this.history.goBack()
   }
 
+  signUp() {
+    this.history.push('/sign-up')
+  }
+
+  signUpEmail() {
+    this.history.push('/sign-up/email')
+  }
+
+  signUpCommunity() {
+    this.history.push('/sign-up/community')
+  }
+
   feed() {
     this.history.push('/feed')
   }
