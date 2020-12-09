@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 
 export interface IInput {
+  className?: string
   name?: string
   type?: string
   value?: string
@@ -11,18 +12,26 @@ export interface IInput {
   register?: any
 }
 
-export const Input: FC<IInput> = ({ name, type, value, defaultValue, placeholder, onChange, register }) => {
+export const Input: FC<IInput> = ({
+  className,
+  name,
+  type,
+  value,
+  defaultValue,
+  placeholder,
+  onChange,
+  register,
+}) => {
   return (
-    <div className='border-border px-3'>
-      <input
-        type={type || 'text'}
-        name={name}
-        value={value}
-        defaultValue={defaultValue}
-        placeholder={placeholder}
-        onChange={(e) => onChange && onChange(e.target.value!)}
-        ref={register}
-      ></input>
-    </div>
+    <input
+      className={className}
+      type={type || 'text'}
+      name={name}
+      value={value}
+      defaultValue={defaultValue}
+      placeholder={placeholder}
+      onChange={(e) => onChange && onChange(e.target.value!)}
+      ref={register}
+    ></input>
   )
 }

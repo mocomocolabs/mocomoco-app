@@ -18,6 +18,7 @@ import { MyPage } from './pages/MyPage'
 import { ProfileDetail } from './pages/ProfileDetail'
 import { ProfileUpdate } from './pages/ProfileUpdate'
 import { Settings } from './pages/Settings'
+import { SignUp } from './pages/SignUp'
 import { Trade } from './pages/Trade'
 import { route } from './route'
 
@@ -36,6 +37,7 @@ export const App: React.FC = () => {
       <IonReactRouter history={route.history}>
         <IonTabs>
           <IonRouterOutlet id='main'>
+            <Route path='/sign-up' component={SignUp} exact />
             <Route path='/home' component={Home} exact />
             <Route path='/feed' component={Feed} exact />
             <Route path='/feed/:id' component={FeedDetail} exact />
