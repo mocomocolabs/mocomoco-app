@@ -8,7 +8,7 @@ import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 
 export const SignUpForm: FC = () => {
-  const { register, handleSubmit, errors, watch } = useForm<ISignUpForm>({
+  const { register, handleSubmit, errors, watch, formState } = useForm<ISignUpForm>({
     mode: 'onChange',
   })
   const password = useRef({})
@@ -19,9 +19,9 @@ export const SignUpForm: FC = () => {
   })
 
   return useObserver(() => (
-    <form id='sign-up-form' onSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
       <InputNormal name='name' placeholder='이름' register={register({ required: true })}></InputNormal>
-      {errors.name && <ValidationMessage message='이름은 필수값입니다'></ValidationMessage>}
+      <ValidationMessage isShow={errors.name} message='이름은 필수값입니다'></ValidationMessage>
       <InputNormal name='nickname' placeholder='별명(선택)' register={register}></InputNormal>
       <InputPassword
         name='password'
@@ -31,16 +31,17 @@ export const SignUpForm: FC = () => {
           minLength: { value: 6, message: '6자 이상 입력해주세요' },
         })}
       ></InputPassword>
-      {errors.password && <ValidationMessage message={errors.password.message}></ValidationMessage>}
+      <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
       <InputPassword
         name='rePassword'
         placeholder='비밀번호 확인'
         register={register({
+          required: '패스워드를 입력해주세요',
           validate: (value) => value === password.current || '패스워드가 일치하지 않습니다',
         })}
       ></InputPassword>
-      {errors.rePassword && <ValidationMessage message={errors.rePassword.message}></ValidationMessage>}
-      <SubmitButton text='가입하기'></SubmitButton>
+      <ValidationMessage isShow={errors.rePassword} message={errors?.rePassword?.message}></ValidationMessage>
+      <SubmitButton disabled={!formState.isValid} text='가입하기'></SubmitButton>
     </form>
   ))
 }
