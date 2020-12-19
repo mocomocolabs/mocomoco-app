@@ -69,6 +69,17 @@ export const Text = ({ children, className }: { children: React.ReactNode; class
   }
   ```
 
+### TYPE 정의
+타입정의 모델은 `d.ts`를 사용한다.
+
+- View Model
+
+UI에 사용하는 interface는 `src/models`에 정의한다.
+
+- DTO(Data Transfer Object)
+
+UI에 사용하지 않고 서버와의 데이터 통신에만 사용되는 DTO는 `stores` 내의 스토어 명과 동일한 이름의 타입(`d.ts`)을 정의하여 선언한다
+
 ## 🚀 빌드
 
 [빌드 프로세스들을 이곳에서 관리합니다. ](docs/BUILD.md)

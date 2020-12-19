@@ -4,16 +4,6 @@ import { http } from '../utils/http-util'
 import { IInsertComment, InsertCommentTask, IUpdateComment, UpdateCommentTask } from './comment-store.d'
 import { TaskByNumber } from './task'
 
-interface InsertFormByFeed {
-  feedId: number
-  content: string
-}
-
-interface UpdateFormByComment {
-  commentId: number
-  content: string
-}
-
 const initState = {
   insertForm: {},
   updateForm: {},
@@ -22,9 +12,19 @@ const initState = {
 
 export class Comment {
   @observable
-  insertForm: { [feedId: number]: InsertFormByFeed } = initState.insertForm
+  insertForm: {
+    [feedId: number]: {
+      feedId: number
+      content: string
+    }
+  } = initState.insertForm
   @observable
-  updateForm: { [commentId: number]: UpdateFormByComment } = initState.updateForm
+  updateForm: {
+    [commentId: number]: {
+      commentId: number
+      content: string
+    }
+  } = initState.updateForm
   @observable
   updateCommentId: number | null = initState.updateCommentId
 
@@ -55,19 +55,19 @@ export class Comment {
 
   @task.resolved
   insertComment = (async ({ feedId, content }: IInsertComment) => {
-    await new Promise((r) => setTimeout(() => r(), 1000))
+    await new Promise((r) => setTimeout(() => r(true), 1000))
     await http.post(`/comment`, { feedId, content })
   }) as InsertCommentTask
 
   @task.resolved
   updateComment = (async ({ id, content }: IUpdateComment) => {
-    await new Promise((r) => setTimeout(() => r(), 1000))
+    await new Promise((r) => setTimeout(() => r(true), 1000))
     await http.put(`/comment/${id}`, { content })
   }) as UpdateCommentTask
 
   @task.resolved
   deleteComment = (async (id: number) => {
-    await new Promise((r) => setTimeout(() => r(), 1000))
+    await new Promise((r) => setTimeout(() => r(true), 1000))
     await http.delete(`/comment/${id}`)
   }) as TaskByNumber
 }
