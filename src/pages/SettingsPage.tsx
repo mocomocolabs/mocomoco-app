@@ -17,7 +17,7 @@ import {
 import React, { useState } from 'react'
 import { XDivider } from '../components/atoms/XDividerComponent'
 
-export const Settings: React.FC = () => {
+export const SettingsPage: React.FC = () => {
   const [alarmSound, setAlarmSound] = useState<string>('구름씨 랄라~')
   const [language, setLanguage] = useState<string>('한국어')
 

@@ -19,7 +19,7 @@ interface SearchbarChangeEventDetail {
 
 const emptyKeyword = ''
 
-export const Trade: React.FC = () => {
+export const TradePage: React.FC = () => {
   const [selectedSegment, setSelectedSegment] = useState(segments.stuff)
   const { $stuff, $talent } = useStore()
   // TODO: refactoring?

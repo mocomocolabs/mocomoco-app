@@ -4,7 +4,7 @@ import { NewsList } from '../components/_example/NewsList'
 import { NewsSearch } from '../components/_example/NewsSearch'
 import { useStore } from '../hooks/use-store'
 
-export const Home: React.FC = () => {
+export const HomePage: React.FC = () => {
   const { $ui } = useStore()
 
   useIonViewWillEnter(() => {

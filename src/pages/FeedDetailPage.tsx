@@ -24,7 +24,7 @@ interface ILocationState {
   autoFocus?: boolean
 }
 
-export const FeedDetail: React.FC<RouteComponentProps<{ id: string }, StaticContext, ILocationState>> = ({
+export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, StaticContext, ILocationState>> = ({
   match,
   location,
 }) => {

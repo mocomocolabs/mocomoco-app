@@ -17,7 +17,7 @@ import { route } from '../route'
 
 export interface IFeedWrite {}
 
-export const FeedWrite: FC<IFeedWrite> = () => {
+export const FeedWritePage: FC<IFeedWrite> = () => {
   const { $ui, $feed } = useStore()
 
   useIonViewWillEnter(() => {

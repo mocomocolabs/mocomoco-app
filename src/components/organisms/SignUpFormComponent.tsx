@@ -14,8 +14,10 @@ export const SignUpForm: FC = () => {
   const password = useRef({})
   password.current = watch('password', '')
 
+  // const { $auth } = useStore()
+
   const onSubmit = handleSubmit((form) => {
-    console.log(form)
+    // $auth.setSignUpForm(form)
   })
 
   return useObserver(() => (
