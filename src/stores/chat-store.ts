@@ -51,7 +51,7 @@ export class Chat {
 
   @task.resolved
   insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
-    await new Promise((r) => setTimeout(() => r(), 1000))
+    await new Promise((r) => setTimeout(() => r(true), 1000))
     await http.post(`/chats/rooms/${roomId}`, { roomId, message })
   }) as InsertChatMessageTask
 

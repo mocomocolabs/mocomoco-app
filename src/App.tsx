@@ -20,6 +20,7 @@ import { ProfileUpdatePage } from './pages/ProfileUpdatePage'
 import { SettingsPage } from './pages/SettingsPage'
 import { SignUpCommunityPage } from './pages/sign-up/SignUpCommunityPage'
 import { SignUpFormPage } from './pages/sign-up/SignUpFormPage'
+import { SignUpPage } from './pages/sign-up/SignUpPage'
 import { TradePage } from './pages/TradePage'
 import { route } from './route'
 
@@ -38,6 +39,7 @@ export const App: React.FC = () => {
       <IonReactRouter history={route.history}>
         <IonTabs>
           <IonRouterOutlet id='main'>
+            <Route path='/sign-up' component={SignUpPage} exact />
             <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
             <Route path='/sign-up/form' component={SignUpFormPage} exact />
             <Route path='/home' component={HomePage} exact />

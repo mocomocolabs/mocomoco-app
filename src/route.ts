@@ -16,6 +16,10 @@ class Route {
     this.history.push('/sign-up')
   }
 
+  signUpForm() {
+    this.history.push('/sign-up/form')
+  }
+
   signUpEmail() {
     this.history.push('/sign-up/email')
   }

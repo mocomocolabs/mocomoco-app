@@ -5,7 +5,7 @@ import { http } from '../utils/http-util'
 import { Task } from './task'
 
 const initState = {
-  selectedId: 1,
+  selectedId: 0,
   communities: [],
 }
 
@@ -16,9 +16,9 @@ export class Community {
 
   @task
   getCommunities = (async () => {
-    await http.get<ICommunity[]>('/communities').then(
+    await http.get<{ communities: ICommunity[] }>('http://localhost:8080/api/v1/communities').then(
       action((data) => {
-        this.communities = data
+        this.communities = data.communities
       })
     )
   }) as Task
