@@ -1,5 +1,5 @@
 import { IonIcon } from '@ionic/react'
-import { closeOutline } from 'ionicons/icons'
+import { arrowBackOutline } from 'ionicons/icons'
 import React, { FC } from 'react'
 import { route } from '../../route'
 
@@ -8,7 +8,7 @@ export interface IBackButton {
   action?: () => void
 }
 
-export const BackButton: FC<IBackButton> = ({ icon = closeOutline, action }) => {
+export const BackButton: FC<IBackButton> = ({ icon = arrowBackOutline, action }) => {
   const defaultAction = () => route.goBack()
 
   return (

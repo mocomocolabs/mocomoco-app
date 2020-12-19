@@ -1,9 +1,12 @@
 import { useObserver } from 'mobx-react-lite'
 import React, { FC, useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import { useStore } from '../../hooks/use-store'
 import { ISignUpForm } from '../../models/sign-up'
+import { route } from '../../route'
 import { InputNormal } from '../atoms/InputNormalComponent copy'
 import { InputPassword } from '../atoms/InputPasswordComponent'
+import { Spinner } from '../atoms/SpinnerComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 
@@ -14,10 +17,13 @@ export const SignUpForm: FC = () => {
   const password = useRef({})
   password.current = watch('password', '')
 
-  // const { $auth } = useStore()
+  const { $auth } = useStore()
 
   const onSubmit = handleSubmit((form) => {
-    // $auth.setSignUpForm(form)
+    $auth.setSignUpForm(form)
+    $auth.signUp($auth.signUpForm).then(() => {
+      route.feed()
+    })
   })
 
   return useObserver(() => (
@@ -43,7 +49,12 @@ export const SignUpForm: FC = () => {
         })}
       ></InputPassword>
       <ValidationMessage isShow={errors.rePassword} message={errors?.rePassword?.message}></ValidationMessage>
-      <SubmitButton disabled={!formState.isValid} text='가입하기'></SubmitButton>
+
+      {/* TODO: SubmitButton pending 편하게 처리할 수 있도록 수정 */}
+      {$auth.signUp.match({
+        pending: () => <Spinner></Spinner>,
+        resolved: () => <SubmitButton disabled={!formState.isValid} text='가입하기'></SubmitButton>,
+      })}
     </form>
   ))
 }
