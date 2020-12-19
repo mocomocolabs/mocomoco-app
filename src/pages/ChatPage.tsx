@@ -2,7 +2,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/rea
 import React from 'react'
 import { ChatRoomList } from '../components/organisms/ChatRoomListComponent'
 
-export const Chat: React.FC = () => {
+export const ChatPage: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>

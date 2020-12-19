@@ -8,18 +8,19 @@ import './App.scss'
 import { Alert } from './components/molecules/AlertComponent'
 import './global.scss'
 import { useStore } from './hooks/use-store'
-import { Chat } from './pages/Chat'
-import { ChatRoom } from './pages/ChatRoom'
-import { Feed } from './pages/Feed'
-import { FeedDetail } from './pages/FeedDetail'
-import { FeedWrite } from './pages/FeedWrite'
-import { Home } from './pages/Home'
+import { ChatPage } from './pages/ChatPage'
+import { ChatRoomPage } from './pages/ChatRoomPage'
+import { FeedDetailPage } from './pages/FeedDetailPage'
+import { FeedPage } from './pages/FeedPage'
+import { FeedWritePage } from './pages/FeedWritePage'
+import { HomePage } from './pages/HomePage'
 import { MyPage } from './pages/MyPage'
-import { ProfileDetail } from './pages/ProfileDetail'
-import { ProfileUpdate } from './pages/ProfileUpdate'
-import { Settings } from './pages/Settings'
-import { SignUp } from './pages/SignUp'
-import { Trade } from './pages/Trade'
+import { ProfileDetailPage } from './pages/ProfileDetailPage'
+import { ProfileUpdatePage } from './pages/ProfileUpdatePage'
+import { SettingsPage } from './pages/SettingsPage'
+import { SignUpCommunityPage } from './pages/sign-up/SignUpCommunityPage'
+import { SignUpFormPage } from './pages/sign-up/SignUpFormPage'
+import { TradePage } from './pages/TradePage'
 import { route } from './route'
 
 export const App: React.FC = () => {
@@ -37,18 +38,19 @@ export const App: React.FC = () => {
       <IonReactRouter history={route.history}>
         <IonTabs>
           <IonRouterOutlet id='main'>
-            <Route path='/sign-up' component={SignUp} exact />
-            <Route path='/home' component={Home} exact />
-            <Route path='/feed' component={Feed} exact />
-            <Route path='/feed/:id' component={FeedDetail} exact />
-            <Route path='/feed-write' component={FeedWrite} exact />
-            <Route path='/trade' component={Trade} exact />
-            <Route path='/chat' component={Chat} exact />
-            <Route path='/chat/:id' component={ChatRoom} exact />
+            <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
+            <Route path='/sign-up/form' component={SignUpFormPage} exact />
+            <Route path='/home' component={HomePage} exact />
+            <Route path='/feed' component={FeedPage} exact />
+            <Route path='/feed/:id' component={FeedDetailPage} exact />
+            <Route path='/feed-write' component={FeedWritePage} exact />
+            <Route path='/trade' component={TradePage} exact />
+            <Route path='/chat' component={ChatPage} exact />
+            <Route path='/chat/:id' component={ChatRoomPage} exact />
             <Route path='/my-page' component={MyPage} exact />
-            <Route path='/settings' component={Settings} exact />
-            <Route path='/users/:id' component={ProfileDetail} exact />
-            <Route path='/users/:id/edit' component={ProfileUpdate} exact />
+            <Route path='/settings' component={SettingsPage} exact />
+            <Route path='/users/:id' component={ProfileDetailPage} exact />
+            <Route path='/users/:id/edit' component={ProfileUpdatePage} exact />
             <Redirect from='/' to='/home' exact />
           </IonRouterOutlet>
           <IonTabBar slot='bottom' hidden={!$ui.isBottomTab}>

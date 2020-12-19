@@ -8,17 +8,16 @@ import {
   useIonViewWillLeave,
 } from '@ionic/react'
 import { chevronBack } from 'ionicons/icons'
-import { useObserver } from 'mobx-react-lite'
-import React from 'react'
+import React, { useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
-import { ProfileDetailItem } from '../components/molecules/ProfileDetailComponent'
+import { ProfileUpdateForm } from '../components/molecules/ProfileUpdateFormComponent'
 import { useStore } from '../hooks/use-store'
-import { route } from '../route'
 
-export const ProfileDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
+export const ProfileUpdatePage: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const userId: number = parseInt(match.params.id)
-  const { $ui, $user } = useStore()
+
+  const { $ui } = useStore()
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(false)
@@ -28,6 +27,11 @@ export const ProfileDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ m
     $ui.setIsBottomTab(true)
   })
 
+  const [submitAvailble, setSubmitAvailable] = useState(false)
+  const handleSubmitAvailable = (isValid: boolean) => {
+    setSubmitAvailable(isValid)
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -35,22 +39,17 @@ export const ProfileDetail: React.FC<RouteComponentProps<{ id: string }>> = ({ m
           <div slot='start'>
             <BackButton icon={chevronBack} />
           </div>
-          <IonTitle slot='start'>프로필 보기</IonTitle>
+          <IonTitle slot='start'>프로필 수정</IonTitle>
 
-          {useObserver(
-            () =>
-              $user.currentUserId === userId && (
-                <button slot='end' onClick={() => route.profileDetailEdit(userId)}>
-                  수정
-                </button>
-              )
-          )}
+          <button slot='end' form='profile-form' type='submit' disabled={!submitAvailble}>
+            완료
+          </button>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        <div className='px-container'>
-          <ProfileDetailItem userId={userId} />
+        <div className='px-container flex-col items-center'>
+          <ProfileUpdateForm userId={userId} handleSubmitAvailable={handleSubmitAvailable} />
         </div>
       </IonContent>
     </IonPage>

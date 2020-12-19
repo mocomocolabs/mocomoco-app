@@ -9,7 +9,7 @@ import { useStore } from '../hooks/use-store'
 import { route } from '../route'
 import { removeUndefined } from '../utils/object-util'
 
-export const Feed: React.FC = () => {
+export const FeedPage: React.FC = () => {
   const { $ui, $feed } = useStore()
 
   return (

@@ -20,7 +20,7 @@ interface ILocationState {
   autoFocus?: boolean
 }
 
-export const ChatRoom: React.FC<RouteComponentProps<{ id: string }, StaticContext, ILocationState>> = ({
+export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticContext, ILocationState>> = ({
   match,
   location,
 }) => {

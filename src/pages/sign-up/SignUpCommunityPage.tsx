@@ -1,10 +1,10 @@
 import { IonContent, IonHeader, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 import React from 'react'
-import { BackButton } from '../components/molecules/BackButtonComponent'
-import { SignUpForm } from '../components/organisms/SignUpFormComponent'
-import { useStore } from '../hooks/use-store'
+import { BackButton } from '../../components/molecules/BackButtonComponent'
+import { SignUpCommunity } from '../../components/organisms/SignUpCommunityComponent'
+import { useStore } from '../../hooks/use-store'
 
-export const SignUp: React.FC = () => {
+export const SignUpCommunityPage: React.FC = () => {
   const { $ui } = useStore()
 
   useIonViewWillEnter(() => {
@@ -21,8 +21,7 @@ export const SignUp: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className='px-container'>회원가입</div>
-        <SignUpForm></SignUpForm>
+        <SignUpCommunity></SignUpCommunity>
       </IonContent>
     </IonPage>
   )
