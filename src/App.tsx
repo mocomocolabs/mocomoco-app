@@ -22,14 +22,15 @@ import { SignUpCommunityPage } from './pages/sign-up/SignUpCommunityPage'
 import { SignUpFormPage } from './pages/sign-up/SignUpFormPage'
 import { SignUpPage } from './pages/sign-up/SignUpPage'
 import { TradePage } from './pages/TradePage'
-import { route } from './route'
+import { route } from './services/route-service'
 
 export const App: React.FC = () => {
   const { $community, $ui, $chat } = useStore()
 
   useEffect(() => {
-    // TODO: login 이후 실행할 공통 호출들
     $community.getCommunities()
+
+    // TODO: login 이후 실행할 공통 호출들
     $chat.getRooms()
     // eslint-disable-next-line
   }, [])
@@ -39,6 +40,7 @@ export const App: React.FC = () => {
       <IonReactRouter history={route.history}>
         <IonTabs>
           <IonRouterOutlet id='main'>
+            {/* <Route path='/sign-in' component={SignInPage} exact /> */}
             <Route path='/sign-up' component={SignUpPage} exact />
             <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
             <Route path='/sign-up/form' component={SignUpFormPage} exact />

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { IChatRoom } from '../../models/chat'
-import { route } from '../../route'
+import { route } from '../../services/route-service'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'

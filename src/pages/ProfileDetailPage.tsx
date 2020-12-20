@@ -14,7 +14,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ProfileDetailItem } from '../components/molecules/ProfileDetailComponent'
 import { useStore } from '../hooks/use-store'
-import { route } from '../route'
+import { route } from '../services/route-service'
 
 export const ProfileDetailPage: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const userId: number = parseInt(match.params.id)

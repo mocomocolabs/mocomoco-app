@@ -13,7 +13,7 @@ import { Spinner } from '../components/atoms/SpinnerComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FeedForm } from '../components/organisms/FeedFormComponent'
 import { useStore } from '../hooks/use-store'
-import { route } from '../route'
+import { route } from '../services/route-service'
 
 export interface IFeedWrite {}
 

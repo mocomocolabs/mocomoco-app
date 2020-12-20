@@ -64,13 +64,13 @@ export class Feed {
 
   @task.resolved
   deleteFeed = (async (id: number) => {
-    await new Promise((r) => setTimeout(() => r(), 1000))
+    await new Promise((r) => setTimeout(() => r(1), 1000))
     await http.delete(`/feeds/${id}`)
   }) as TaskByNumber
 
   @task.resolved
   insertFeed = (async (form: IFeedForm) => {
-    await new Promise((r) => setTimeout(() => r(), 1000))
+    await new Promise((r) => setTimeout(() => r(1), 1000))
     const formData = new FormData()
     formData.append('type', form.type)
     formData.append('scheduleDate', form.scheduleDate)

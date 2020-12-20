@@ -5,7 +5,7 @@ import React, { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { IUser } from '../../models/user'
-import { route } from '../../route'
+import { route } from '../../services/route-service'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { ProfileUpdateInput } from './ProfileUpdateInputComponent'
 

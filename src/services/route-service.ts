@@ -1,6 +1,6 @@
 import { createBrowserHistory, History } from 'history'
 
-class Route {
+class RouteService {
   private _history: History
 
   constructor() {
@@ -10,6 +10,10 @@ class Route {
   goBack() {
     // TODO: modal의 open 상태를 store로 관리하여. hardware back 버튼을 제어할 필요가 있음
     this.history.goBack()
+  }
+
+  signIn() {
+    this.history.push('/sign-in')
   }
 
   signUp() {
@@ -61,4 +65,4 @@ class Route {
   }
 }
 
-export const route = new Route()
+export const route = new RouteService()
