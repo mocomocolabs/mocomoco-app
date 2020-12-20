@@ -7,7 +7,7 @@ import { SubmitButton } from '../../components/atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../../components/atoms/ValidationMessageComponent'
 import { useStore } from '../../hooks/use-store'
 import { ISignUpForm } from '../../models/sign-up'
-import { route } from '../../route'
+import { route } from '../../services/route-service'
 
 export const SignUpPage: React.FC = () => {
   const { $ui, $auth } = useStore()
@@ -39,8 +39,9 @@ export const SignUpPage: React.FC = () => {
         <SubmitButton
           disabled={!formState.isValid}
           text='이메일로 시작하기'
-          onClick={() => {
+          onClick={async () => {
             // TODO: 이메일 중복 검사 필요
+            // const exists = await $auth.checkEmail(getValues().email)
             $auth.setSignUpForm({ email: getValues().email })
             route.signUpCommunity()
           }}

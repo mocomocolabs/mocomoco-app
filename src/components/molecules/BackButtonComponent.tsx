@@ -1,7 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { arrowBackOutline } from 'ionicons/icons'
 import React, { FC } from 'react'
-import { route } from '../../route'
+import { route } from '../../services/route-service'
 
 export interface IBackButton {
   icon?: string

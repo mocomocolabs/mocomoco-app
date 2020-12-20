@@ -6,7 +6,7 @@ import { CommunitySelector } from '../components/molecules/CommunitySelectorComp
 import { CommunityBanner } from '../components/organisms/CommunityBannerComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { useStore } from '../hooks/use-store'
-import { route } from '../route'
+import { route } from '../services/route-service'
 import { removeUndefined } from '../utils/object-util'
 
 export const FeedPage: React.FC = () => {
