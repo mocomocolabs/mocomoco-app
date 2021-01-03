@@ -2,14 +2,17 @@ import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } fr
 import { IonReactRouter } from '@ionic/react-router'
 import { basket, beer, home, paperPlane, personCircle } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import './App.scss'
+import { Spinner } from './components/atoms/SpinnerComponent'
 import { Alert } from './components/molecules/AlertComponent'
 import './global.scss'
+import { GuardRoute } from './GuardRoute'
 import { useStore } from './hooks/use-store'
 import { ChatPage } from './pages/ChatPage'
 import { ChatRoomPage } from './pages/ChatRoomPage'
+import { DevPage } from './pages/DevPage'
 import { FeedDetailPage } from './pages/FeedDetailPage'
 import { FeedPage } from './pages/FeedPage'
 import { FeedWritePage } from './pages/FeedWritePage'
@@ -21,62 +24,81 @@ import { SettingsPage } from './pages/SettingsPage'
 import { SignUpCommunityPage } from './pages/sign-up/SignUpCommunityPage'
 import { SignUpFormPage } from './pages/sign-up/SignUpFormPage'
 import { SignUpPage } from './pages/sign-up/SignUpPage'
+import { SignInPage } from './pages/SignInPage'
 import { TradePage } from './pages/TradePage'
 import { route } from './services/route-service'
 
 export const App: React.FC = () => {
-  const { $community, $ui, $chat } = useStore()
+  const { $community, $ui, $chat, $auth } = useStore()
+  const [intialized, setInitailzed] = useState(false)
 
   useEffect(() => {
-    $community.getCommunities()
-
-    // TODO: login 이후 실행할 공통 호출들
-    $chat.getRooms()
+    init()
     // eslint-disable-next-line
   }, [])
 
+  const init = async () => {
+    // 로그인
+    await Promise.all([
+      //
+      $auth.signInWithToken(),
+      $community.getCommunities(),
+    ])
+
+    // $auth.setIsLogin()
+
+    // TODO: login 이후 실행할 공통 호출들
+    $chat.getRooms()
+    setInitailzed(true)
+  }
+
   return useObserver(() => (
     <IonApp>
-      <IonReactRouter history={route.history}>
-        <IonTabs>
-          <IonRouterOutlet id='main'>
-            {/* <Route path='/sign-in' component={SignInPage} exact /> */}
-            <Route path='/sign-up' component={SignUpPage} exact />
-            <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
-            <Route path='/sign-up/form' component={SignUpFormPage} exact />
-            <Route path='/home' component={HomePage} exact />
-            <Route path='/feed' component={FeedPage} exact />
-            <Route path='/feed/:id' component={FeedDetailPage} exact />
-            <Route path='/feed-write' component={FeedWritePage} exact />
-            <Route path='/trade' component={TradePage} exact />
-            <Route path='/chat' component={ChatPage} exact />
-            <Route path='/chat/:id' component={ChatRoomPage} exact />
-            <Route path='/my-page' component={MyPage} exact />
-            <Route path='/settings' component={SettingsPage} exact />
-            <Route path='/users/:id' component={ProfileDetailPage} exact />
-            <Route path='/users/:id/edit' component={ProfileUpdatePage} exact />
-            <Redirect from='/' to='/home' exact />
-          </IonRouterOutlet>
-          <IonTabBar slot='bottom' hidden={!$ui.isBottomTab}>
-            <IonTabButton tab='home' href='/home'>
-              <IonIcon icon={home} />
-            </IonTabButton>
-            <IonTabButton tab='feed' href='/feed'>
-              <IonIcon icon={beer} />
-            </IonTabButton>
-            <IonTabButton tab='trade' href='/trade'>
-              <IonIcon icon={basket} />
-            </IonTabButton>
-            <IonTabButton tab='chat' href='/chat'>
-              <IonIcon icon={paperPlane} />
-              {$chat.countUnread > 0 && <div className='badge'></div>}
-            </IonTabButton>
-            <IonTabButton tab='my-page' href='/my-page'>
-              <IonIcon icon={personCircle} />
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
-      </IonReactRouter>
+      {intialized ? (
+        <IonReactRouter history={route.history}>
+          <IonTabs>
+            <IonRouterOutlet id='main'>
+              <Route path='/dev' component={DevPage} exact />
+              <Route path='/sign-in' component={SignInPage} exact />
+              <Route path='/sign-up' component={SignUpPage} exact />
+              <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
+              <Route path='/sign-up/form' component={SignUpFormPage} exact />
+              <GuardRoute path='/home' component={HomePage} exact />
+              <GuardRoute path='/feed' component={FeedPage} exact />
+              <GuardRoute path='/feed/:id' component={FeedDetailPage} exact />
+              <GuardRoute path='/feed-write' component={FeedWritePage} exact />
+              <GuardRoute path='/trade' component={TradePage} exact />
+              <GuardRoute path='/chat' component={ChatPage} exact />
+              <GuardRoute path='/chat/:id' component={ChatRoomPage} exact />
+              <GuardRoute path='/my-page' component={MyPage} exact />
+              <GuardRoute path='/settings' component={SettingsPage} exact />
+              <GuardRoute path='/users/:id' component={ProfileDetailPage} exact />
+              <GuardRoute path='/users/:id/edit' component={ProfileUpdatePage} exact />
+              <Redirect from='/' to='/home' exact />
+            </IonRouterOutlet>
+            <IonTabBar slot='bottom' hidden={!$ui.isBottomTab}>
+              <IonTabButton tab='home' href='/home'>
+                <IonIcon icon={home} />
+              </IonTabButton>
+              <IonTabButton tab='feed' href='/feed'>
+                <IonIcon icon={beer} />
+              </IonTabButton>
+              <IonTabButton tab='trade' href='/trade'>
+                <IonIcon icon={basket} />
+              </IonTabButton>
+              <IonTabButton tab='chat' href='/chat'>
+                <IonIcon icon={paperPlane} />
+                {$chat.countUnread > 0 && <div className='badge'></div>}
+              </IonTabButton>
+              <IonTabButton tab='my-page' href='/my-page'>
+                <IonIcon icon={personCircle} />
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </IonReactRouter>
+      ) : (
+        <Spinner></Spinner>
+      )}
 
       <Alert></Alert>
     </IonApp>

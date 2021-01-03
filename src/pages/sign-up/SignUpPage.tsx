@@ -46,6 +46,7 @@ export const SignUpPage: React.FC = () => {
             route.signUpCommunity()
           }}
         ></SubmitButton>
+        <button onClick={() => route.signIn()}>로그인</button>
       </IonContent>
     </IonPage>
   ))

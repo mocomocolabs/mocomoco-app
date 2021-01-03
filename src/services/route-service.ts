@@ -12,6 +12,10 @@ class RouteService {
     this.history.goBack()
   }
 
+  home() {
+    this.history.push('/home')
+  }
+
   signIn() {
     this.history.push('/sign-in')
   }

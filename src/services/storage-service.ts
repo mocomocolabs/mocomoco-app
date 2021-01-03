@@ -9,6 +9,9 @@ class StorageService {
 
   async getAccessToken(): Promise<string> {
     const token = await this.getObject(this.ACCESS_TOKEN)
+    if (!token) {
+      return ''
+    }
     return decrypt(token, config.KEY.ENCRYPT_SECRET)
   }
 
@@ -18,6 +21,9 @@ class StorageService {
 
   async getRefreshToken(): Promise<string> {
     const token = await this.getObject(this.REFRESH_TOKEN)
+    if (!token) {
+      return ''
+    }
     return decrypt(token, config.KEY.ENCRYPT_SECRET)
   }
 
