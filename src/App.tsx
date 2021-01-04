@@ -97,7 +97,7 @@ export const App: React.FC = () => {
           </IonTabs>
         </IonReactRouter>
       ) : (
-        <Spinner></Spinner>
+        <Spinner isFull={true} color='white'></Spinner>
       )}
 
       <Alert></Alert>

@@ -93,9 +93,13 @@ export class Auth {
       // TODO: 임시 코드
       const refreshToken = await storage.getRefreshToken()
       api.setAuthoriationBy(refreshToken)
-      await api.post<IAuthUserDto>(`http://localhost:8080/api/auth/refresh-token`, {}).then((user) => {
-        this.setAuth(user)
-      })
+      try {
+        await api.post<IAuthUserDto>(`http://localhost:8080/api/auth/refresh-token`, {}).then((user) => {
+          this.setAuth(user)
+        })
+      } catch (e) {
+        console.log(e)
+      }
       return
       /*************************/
 
