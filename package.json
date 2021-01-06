@@ -47,7 +47,7 @@
     "@ionic/react": "^5.5.1",
     "@ionic/react-router": "^5.5.1",
     "@types/node": "^14.14.0",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "compressorjs": "^1.0.7",
     "crypto-js": "^4.0.0",
     "dayjs": "^1.9.7",
