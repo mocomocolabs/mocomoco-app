@@ -23,8 +23,6 @@ export class Auth {
   @observable isLogin = false
   @observable.struct user: IAuthUser = initState.user
 
-  constructor() {}
-
   @action
   setIsLogin() {
     this.isLogin = true
