@@ -68,7 +68,10 @@ export const App: React.FC = () => {
               <GuardRoute path='/feed' component={FeedPage} exact />
               <GuardRoute path='/feed/:id' component={FeedDetailPage} exact />
               <GuardRoute path='/feed-write' component={FeedWritePage} exact />
-              <GuardRoute path='/trade' component={TradePage} exact />
+              {/* TODO fix it */}
+              <GuardRoute path='/stuff' component={TradePage} exact />
+              <GuardRoute path='/talent' component={TradePage} exact />
+
               <GuardRoute path='/chat' component={ChatPage} exact />
               <GuardRoute path='/chat/:id' component={ChatRoomPage} exact />
               <GuardRoute path='/my-page' component={MyPage} exact />
@@ -84,7 +87,7 @@ export const App: React.FC = () => {
               <IonTabButton tab='feed' href='/feed'>
                 <IonIcon icon={beer} />
               </IonTabButton>
-              <IonTabButton tab='trade' href='/trade'>
+              <IonTabButton tab='stuff' href='/stuff'>
                 <IonIcon icon={basket} />
               </IonTabButton>
               <IonTabButton tab='chat' href='/chat'>

@@ -2,13 +2,16 @@ import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import React, { useLayoutEffect } from 'react'
-import { TradeStore } from '../../stores/trade-store'
+import { IStuff } from '../../models/stuff'
+import { ITalent } from '../../models/talent'
+import { Stuff } from '../../stores/stuff-store'
+import { Talent } from '../../stores/talent-store'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TradeItem } from '../molecules/TradeItemComponent'
 import { ContentPopover } from './ContentPopoverComponent'
 
 interface ITradeList {
-  store: TradeStore
+  store: Stuff | Talent
   searchKeyword: string
 }
 
@@ -38,7 +41,7 @@ export const TradeList: React.FC<ITradeList> = ({ store, searchKeyword }) => {
             <TextBase>검색결과가 없어요</TextBase>
           </div>
           <ul className='pl-0 move-up'>
-            {store.items.map((item) => (
+            {(store.items as (IStuff | ITalent)[]).map((item) => (
               <TradeItem key={item.id} store={store} item={item} searchKeyword={searchKeyword} />
             ))}
           </ul>

@@ -48,8 +48,12 @@ class RouteService {
     this.history.push(`/feed/${feedId}`, { autoFocus: param?.autoFocus })
   }
 
-  tradeDetail(path: string, tradeId: number) {
-    this.history.push(`/trade/${path}/${tradeId}`)
+  stuffDetail(stuffId: number) {
+    this.history.push(`/stuff/${stuffId}`)
+  }
+
+  talentDetail(talentId: number) {
+    this.history.push(`/talent/${talentId}`)
   }
 
   profileDetail(userId: number) {
