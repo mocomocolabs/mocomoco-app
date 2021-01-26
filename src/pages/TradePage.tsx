@@ -1,17 +1,11 @@
 import { IonContent, IonHeader, IonIcon, IonPage, IonSearchbar, IonToolbar } from '@ionic/react'
 import { chevronBack, create, filter, search } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
-import { Segment } from '../components/molecules/SegmentComponent'
 import { TradeList } from '../components/organisms/TradeListComponent'
 import { useStore } from '../hooks/use-store'
-import { ISegments } from '../models/segment'
-
-export const segments: ISegments = {
-  stuff: '물건',
-  talent: '재능',
-}
 
 interface SearchbarChangeEventDetail {
   value: string | undefined
@@ -20,10 +14,9 @@ interface SearchbarChangeEventDetail {
 const emptyKeyword = ''
 
 export const TradePage: React.FC = () => {
-  const [selectedSegment, setSelectedSegment] = useState(segments.stuff)
   const { $stuff, $talent } = useStore()
-  // TODO: refactoring?
-  const store = selectedSegment === segments.stuff ? $stuff : $talent
+  const { pathname } = useLocation()
+  const store = pathname === '/stuff' ? $stuff : $talent
 
   const [searchMode, setSearchMode] = useState(false)
   // TODO: move searchkeyword to trade-store for recent keyword list
@@ -62,8 +55,6 @@ export const TradePage: React.FC = () => {
           </div>
         </IonToolbar>
       </IonHeader>
-
-      <Segment segments={segments} selected={selectedSegment} setSelected={setSelectedSegment} />
 
       <IonContent>
         <div className='px-container'>
