@@ -3,16 +3,18 @@ import { chatbox, cloud } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
-import { ITrade } from '../../models/trade'
+import { IStuff } from '../../models/stuff'
+import { ITalent } from '../../models/talent'
 import { route } from '../../services/route-service'
-import { TradeStore } from '../../stores/trade-store'
+import { Stuff } from '../../stores/stuff-store'
+import { Talent } from '../../stores/talent-store'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 interface ITradeItem {
-  store: TradeStore
-  item: ITrade
+  store: Stuff | Talent
+  item: IStuff | ITalent
   searchKeyword: string
   isDetail?: boolean
 }
@@ -40,14 +42,21 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, searchKeyword, is
     }
   }
 
+  const routeDetail = (store as Stuff) ? route.stuffDetail : route.talentDetail
+
+  const getItemLikeCount = (item: IStuff | ITalent) => {
+    if ((item as IStuff).stuffUsers) return (item as IStuff).stuffUsers.length ?? 0
+
+    if ((item as ITalent).talentUsers) return (item as ITalent).talentUsers.length ?? 0
+
+    return 0
+  }
+
   return useObserver(() => (
     <li className='py-4'>
       <div className='flex'>
-        <div
-          className='flex-between-center w-full'
-          onClick={() => !isDetail && route.tradeDetail(store.path, item.id)}
-        >
-          <img className='w-20 h-20 mr-2' src={item.imageUrls[0]} alt={item.title} />
+        <div className='flex-between-center w-full' onClick={() => !isDetail && routeDetail(item.id)}>
+          <img className='w-20 h-20 mr-2' src={item.atchFiles[0].url} alt={item.title} />
 
           <div className='flex-col flex-1'>
             <TextBase>
@@ -68,12 +77,12 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, searchKeyword, is
 
           <div className='flex'>
             <IonIcon icon={cloud} className='mr-1'></IonIcon>
-            <TextBase className='dim mr-1'>{item.likeCount}</TextBase>
+            <TextBase className='dim mr-1'>{getItemLikeCount(item)}</TextBase>
             <IonIcon icon={chatbox} className='mr-1'></IonIcon>
-            <TextBase className='dim'>{item.chatCount}</TextBase>
+            {/* <TextBase className='dim'>{item.chatCount}</TextBase> */}
           </div>
 
-          <TextBase className='dim'>{item.createdAt}</TextBase>
+          {/* <TextBase className='dim'>{item.createdAt}</TextBase> */}
         </div>
 
         <div className='flex justify-end w-4'>
@@ -88,9 +97,9 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, searchKeyword, is
       <div className='flex-col' hidden={!isDetail}>
         <div className='flex flex-wrap items-center'>
           <TextLg className='gray w-12'>씨앗들</TextLg>
-          {item.likeProflieUrls?.slice(0, 9).map((v, i) => (
+          {/* {item.likeProflieUrls?.slice(0, 9).map((v, i) => (
             <Profile key={i} url={v}></Profile>
-          ))}
+          ))} */}
         </div>
       </div>
     </li>
