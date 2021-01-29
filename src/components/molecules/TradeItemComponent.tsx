@@ -8,6 +8,7 @@ import { ITalent } from '../../models/talent'
 import { route } from '../../services/route-service'
 import { Stuff } from '../../stores/stuff-store'
 import { Talent } from '../../stores/talent-store'
+import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -82,7 +83,7 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, searchKeyword, is
             {/* <TextBase className='dim'>{item.chatCount}</TextBase> */}
           </div>
 
-          {/* <TextBase className='dim'>{item.createdAt}</TextBase> */}
+          <TextBase className='dim'>{timeDiff(undefined, item.createdAt)}</TextBase>
         </div>
 
         <div className='flex justify-end w-4'>
