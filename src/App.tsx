@@ -5,8 +5,9 @@ import { useObserver } from 'mobx-react-lite'
 import React, { useEffect, useState } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import './App.scss'
+import { Alert } from './components/atoms/AlertComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
-import { Alert } from './components/molecules/AlertComponent'
+import { Toast } from './components/atoms/ToastComponent'
 import './global.scss'
 import { GuardRoute } from './GuardRoute'
 import { useStore } from './hooks/use-store'
@@ -101,6 +102,7 @@ export const App: React.FC = () => {
       )}
 
       <Alert></Alert>
+      <Toast></Toast>
     </IonApp>
   ))
 }

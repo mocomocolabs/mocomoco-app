@@ -3,6 +3,7 @@ import React from 'react'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { SignInEmail } from '../components/organisms/SignInEmailComponent'
 import { useStore } from '../hooks/use-store'
+import { route } from '../services/route-service'
 
 export const SignInPage: React.FC = () => {
   const { $ui } = useStore()
@@ -16,7 +17,7 @@ export const SignInPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton></BackButton>
+            <BackButton action={() => route.signUp()}></BackButton>
           </div>
         </IonToolbar>
       </IonHeader>
