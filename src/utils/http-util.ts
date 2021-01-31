@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { IResponse } from '../../types/axios'
 import { config } from '../config'
 
@@ -22,13 +22,13 @@ const _axios = axios.create({
 
 _axios.interceptors.response.use(
   (response) => {
-    return JSON.parse(response.data)
+    return response.data ? JSON.parse(response.data) : response.data
   },
-  (error) => {
-    console.log(error)
+  (error: AxiosError) => {
+    console.log(error.response)
 
     // Do something with response error
-    return Promise.reject(error)
+    return Promise.reject(error.response)
   }
 )
 
