@@ -80,6 +80,7 @@ export class Auth {
       })
       .then((user: IAuthUserDto) => {
         this.setAuth(user)
+        this.setUser(user)
       })
   }) as SignInTask
 
@@ -88,27 +89,14 @@ export class Auth {
     const hasToken = await storage.getAccessToken()
 
     if (hasToken) {
-      console.log(hasToken)
-
-      // TODO: 임시 코드
-      const refreshToken = await storage.getRefreshToken()
-      api.setAuthoriationBy(refreshToken)
+      api.setAuthoriationBy(hasToken)
       try {
-        await api.post<IAuthUserDto>(`http://localhost:8080/api/auth/refresh-token`, {}).then((user) => {
-          this.setAuth(user)
+        await api.post<IAuthUserDto>(`http://localhost:8080/api/auth/user`, {}).then((user) => {
+          this.setUser(user)
         })
       } catch (e) {
-        console.log(e)
-      }
-      return
-      /*************************/
-
-      // TODO : 서버 accessToken api 추가 이후 작업
-      // 로그인 체크
-      // 실패시 로그인 페이지로 redirect
-      try {
-      } catch (e) {
         // TODO: 에러코드 서버와 협의 필요
+        // 실패시 로그인 페이지로 redirect
         if (e.status === 405) {
           const refreshToken = await storage.getRefreshToken()
           api.setAuthoriationBy(refreshToken)
@@ -122,7 +110,16 @@ export class Auth {
 
   @action
   setAuth(user: IAuthUserDto) {
-    const { accessToken, refreshToken, id, email, name, nickname, profileUrl, communities } = user
+    const { accessToken, refreshToken } = user
+    storage.setAccessToken(accessToken)
+    storage.setRefreshToken(refreshToken)
+    api.setAuthoriationBy(accessToken)
+  }
+
+  @action
+  setUser(user: IAuthUserDto) {
+    const { id, email, name, nickname, profileUrl, communities } = user
+
     this.user = {
       id,
       email,
@@ -138,9 +135,6 @@ export class Auth {
       })),
     }
 
-    storage.setAccessToken(accessToken)
-    storage.setRefreshToken(refreshToken)
-    api.setAuthoriationBy(accessToken)
     this.setIsLogin()
   }
 }
