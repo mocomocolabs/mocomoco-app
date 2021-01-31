@@ -40,14 +40,7 @@ export class Auth {
 
   @task.resolved
   checkEmail = (async (email) => {
-    await http
-      .post(`http://localhost:8080/api/sys/users/exists`, { email })
-      .then((r) => {
-        console.log(r)
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+    return http.post(`http://localhost:8080/api/sys/users/exists`, { email })
   }) as TaskByString
 
   @task.resolved

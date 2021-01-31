@@ -1,6 +1,7 @@
 import { action, observable } from 'mobx'
 import { IAlert } from '../models/alert'
 import { IPopover, IPopoverResult } from '../models/popover'
+import { IToast } from '../models/toast'
 
 const initState = {
   popover: {
@@ -14,7 +15,13 @@ const initState = {
     message: '',
     onSuccess: () => {},
     onFail: () => {},
-  },
+  } as IAlert,
+
+  toast: {
+    isOpen: false,
+    message: '',
+    color: 'primary',
+  } as IToast,
 
   isBottomTab: true,
 }
@@ -22,6 +29,7 @@ const initState = {
 export class Ui {
   @observable popover: IPopover = initState.popover
   @observable alert: IAlert = initState.alert
+  @observable toast: IToast = initState.toast
   @observable isBottomTab = initState.isBottomTab
 
   @action
@@ -37,6 +45,24 @@ export class Ui {
   @action
   hideAlert = () => {
     this.alert = initState.alert
+  }
+
+  @action
+  showToastSuccess = (toast: Partial<IToast>) => {
+    this.toast = {
+      ...toast,
+      color: 'success',
+      isOpen: true,
+    }
+  }
+
+  @action
+  showToastError = (toast: Partial<IToast>) => {
+    this.toast = {
+      ...toast,
+      color: 'danger',
+      isOpen: true,
+    }
   }
 
   @action

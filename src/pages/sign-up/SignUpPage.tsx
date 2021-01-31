@@ -40,10 +40,17 @@ export const SignUpPage: React.FC = () => {
           disabled={!formState.isValid}
           text='이메일로 시작하기'
           onClick={async () => {
-            // TODO: 이메일 중복 검사 필요
-            // const exists = await $auth.checkEmail(getValues().email)
-            $auth.setSignUpForm({ email: getValues().email })
-            route.signUpCommunity()
+            $auth
+              .checkEmail(getValues().email)
+              .then(() => {
+                $auth.setSignUpForm({ email: getValues().email })
+                route.signUpCommunity()
+              })
+              .catch((err) => {
+                if (err.status === 409) {
+                  $ui.showToastError({ message: '중복된 이메일입니다.' })
+                }
+              })
           }}
         ></SubmitButton>
         <button onClick={() => route.signIn()}>로그인</button>
