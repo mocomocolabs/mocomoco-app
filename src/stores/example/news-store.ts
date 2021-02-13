@@ -36,7 +36,7 @@ export class News {
   // match 함수를 통해 api호출 상태(pending, resolved, rejected)에 맞는 컴포넌트를 그려줄 수 있다.
   @task
   getNews = (async () => {
-    await new Promise((r) => setTimeout(() => r(), 1000))
+    await new Promise((r) => setTimeout(() => r(null), 1000))
 
     await http.get<INews[]>('https://api.hnpwa.com/v0/news/1.json').then(
       action((data) => {
