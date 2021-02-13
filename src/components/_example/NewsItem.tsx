@@ -10,7 +10,7 @@ export const NewsItem: React.FC<INews> = ({ title, user, domain, comments_count,
         <div className='ellipsis text-xxl'>
           <strong>{title}</strong>
         </div>
-        <div className='blue'>{domain}</div>
+        <div className='green'>{domain}</div>
         <div className='flex-between-center'>
           <div className='flex-center'>
             <IonIcon icon={person} slot='start' />
@@ -21,7 +21,7 @@ export const NewsItem: React.FC<INews> = ({ title, user, domain, comments_count,
               <IonIcon icon={heart} slot='start' className='red mr1' />
               <span>{comments_count}</span>
             </div>
-            <div className='dark-gray'>{time_ago}</div>
+            <div className='d-gray'>{time_ago}</div>
           </div>
         </div>
       </div>

@@ -36,7 +36,7 @@ export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({ roomId }) => {
                 <Profile url={v.user.profileUrl}></Profile>
                 <div
                   className={`py-2 px-3 mx-2 br-xlg pre-line ${
-                    v.user.id === $user.currentUserId ? 'bg-m-blue' : 'bg-m-gray'
+                    v.user.id === $user.currentUserId ? 'bg-m-green' : 'bg-m-gray'
                   }`}
                 >
                   {v.message}
