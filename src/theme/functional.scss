@@ -995,48 +995,40 @@
   line-height: 2.25rem;
 }
 
-.black {
-  color: $black;
-}
-.m-black {
-  color: $m-black;
-}
-.gray {
-  color: $gray;
-}
-.m-gray {
-  color: $m-gray;
-}
-.dark-gray {
-  color: $dark-gray;
-}
-.purple {
-  color: $purple;
-}
-.white {
-  color: $white;
-}
 .yellow {
   color: $yellow;
 }
 .m-yellow {
   color: $m-yellow;
 }
-.border {
-  color: $border;
+.d-yellow {
+  color: $d-yellow;
 }
-.m-border {
-  color: $m-border;
+
+.green {
+  color: $green;
 }
-.pink {
-  color: $pink;
+.m-green {
+  color: $m-green;
 }
-.blue {
-  color: $blue;
+.d-green {
+  color: $d-green;
 }
-.m-blue {
-  color: $m-blue;
+
+.black {
+  color: $black;
 }
+.gray {
+  color: $gray;
+}
+.d-gray {
+  color: $d-gray;
+}
+
+.white {
+  color: $white;
+}
+
 .red {
   color: $red;
 }
@@ -1099,50 +1091,35 @@
 .bg-m-yellow {
   background-color: $m-yellow;
 }
+.bg-d-yellow {
+  background-color: $d-yellow;
+}
+.bg-green {
+  background-color: $green;
+}
+.bg-m-green {
+  background-color: $m-green;
+}
+.bg-d-green {
+  background-color: $d-green;
+}
 .bg-white {
   background-color: $white;
 }
-.bg-white-opacity-30 {
-  background-color: rgba(255, 255, 255, 0.3);
+.bg-gray {
+  background-color: $gray;
 }
-.bg-blue {
-  background-color: $blue;
+.bg-d-gray {
+  background-color: $d-gray;
 }
-.bg-m-blue {
-  background-color: $m-blue;
-}
-.bg-m-border {
-  background-color: $m-border;
+.bg-black {
+  background-color: $black;
 }
 .bg-red {
   background-color: $red;
 }
 .bg-m-red {
   background-color: $m-red;
-}
-.bg-gray {
-  background-color: $gray;
-}
-.bg-m-gray {
-  background-color: $m-gray;
-}
-.bg-dark-gray {
-  background-color: $dark-gray;
-}
-.bg-black {
-  background-color: $black;
-}
-.bg-m-black {
-  background-color: $m-black;
-}
-.bg-purple {
-  background-color: $purple;
-}
-.bg-pink {
-  background-color: $pink;
-}
-.bg-black-opacity-60 {
-  background-color: rgba(0, 0, 0, 0.6);
 }
 
 /** opacity */
@@ -1185,8 +1162,41 @@
   border-color: gray;
 }
 
-.border-border {
-  border: 1px solid $border;
+.bg-yellow {
+  border: 1px solid $yellow;
+}
+.bg-m-yellow {
+  border: 1px solid $m-yellow;
+}
+.bg-d-yellow {
+  border: 1px solid $d-yellow;
+}
+.bg-green {
+  border: 1px solid $green;
+}
+.bg-m-green {
+  border: 1px solid $m-green;
+}
+.bg-d-green {
+  border: 1px solid $d-green;
+}
+.bg-white {
+  border: 1px solid $white;
+}
+.bg-gray {
+  border: 1px solid $gray;
+}
+.bg-d-gray {
+  border: 1px solid $d-gray;
+}
+.bg-black {
+  border: 1px solid $black;
+}
+.bg-red {
+  border: 1px solid $red;
+}
+.bg-m-red {
+  border: 1px solid $m-red;
 }
 
 .ripple-parent {
