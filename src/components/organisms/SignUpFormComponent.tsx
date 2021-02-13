@@ -1,4 +1,5 @@
 import { useObserver } from 'mobx-react-lite'
+import { TaskGroup } from 'mobx-task'
 import React, { FC, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
@@ -18,12 +19,13 @@ export const SignUpForm: FC = () => {
   password.current = watch('password', '')
 
   const { $auth } = useStore()
+  const observableTaskGroup = TaskGroup<any[], void | boolean>([$auth.signUp, $auth.signIn])
 
-  const onSubmit = handleSubmit((form) => {
+  const onSubmit = handleSubmit(async (form) => {
     $auth.setSignUpForm(form)
-    $auth.signUp($auth.signUpForm).then(() => {
-      route.feed()
-    })
+    await $auth.signUp($auth.signUpForm)
+    await $auth.signIn($auth.signUpForm.email!, form.password)
+    route.feed()
   })
 
   return useObserver(() => (
@@ -51,7 +53,7 @@ export const SignUpForm: FC = () => {
       <ValidationMessage isShow={errors.rePassword} message={errors?.rePassword?.message}></ValidationMessage>
 
       {/* TODO: SubmitButton pending 편하게 처리할 수 있도록 수정 */}
-      {$auth.signUp.match({
+      {observableTaskGroup.match({
         pending: () => <Spinner></Spinner>,
         resolved: () => <SubmitButton disabled={!formState.isValid} text='가입하기'></SubmitButton>,
       })}
