@@ -3,6 +3,7 @@ import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { ISignUpForm } from '../models/sign-up'
 import { api } from '../services/api-service'
+import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IAuthUser, IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
@@ -43,12 +44,9 @@ export class Auth {
 
   @task.resolved
   signUp = (async (form) => {
-    // TODO: 서버팀과 논의후 제거 결정
     const param = { ...form }
+    // TODO: fcmToken 업데이트
     param.fcmToken = '_'
-    param.profileUrl = '_'
-    param.mobile = '0'
-    //
 
     delete param.rePassword
 
@@ -57,9 +55,7 @@ export class Auth {
       param.nickname = param.name
     }
 
-    await http.post(`http://localhost:8080/api/auth/sign-up`, param).then((r) => {
-      console.log(r)
-    })
+    return http.post(`http://localhost:8080/api/auth/sign-up`, param)
   }) as SignUpTask
 
   @task.resolved
@@ -86,14 +82,14 @@ export class Auth {
           this.setUser(user)
         })
       } catch (e) {
-        // TODO: 에러코드 서버와 협의 필요
-        // 실패시 로그인 페이지로 redirect
         if (e.status === 405) {
           const refreshToken = await storage.getRefreshToken()
           api.setAuthoriationBy(refreshToken)
           api.post<IAuthUserDto>(`http://localhost:8080/api/auth/refresh-token`, {}).then((user) => {
             this.setAuth(user)
           })
+        } else {
+          route.signIn()
         }
       }
     }
