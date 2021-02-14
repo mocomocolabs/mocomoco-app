@@ -8,7 +8,7 @@ import {
   useIonViewWillLeave,
 } from '@ionic/react'
 import { chevronBack } from 'ionicons/icons'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ProfileUpdateForm } from '../components/molecules/ProfileUpdateFormComponent'

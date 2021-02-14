@@ -1,7 +1,5 @@
 import { IonBadge } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
-
 import { useStore } from '../../hooks/use-store'
 import { TodoItem } from './TodoItem'
 

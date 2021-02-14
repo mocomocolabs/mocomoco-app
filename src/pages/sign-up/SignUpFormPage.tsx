@@ -1,5 +1,4 @@
 import { IonContent, IonHeader, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
-import React from 'react'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
 import { SignUpForm } from '../../components/organisms/SignUpFormComponent'
 import { useStore } from '../../hooks/use-store'

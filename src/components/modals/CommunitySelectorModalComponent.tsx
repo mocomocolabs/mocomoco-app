@@ -1,7 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { checkmark } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { TextLg } from '../atoms/TextLgComponent'
 import { Modal } from './ModalComponent'

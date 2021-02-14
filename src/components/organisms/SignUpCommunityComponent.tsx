@@ -1,7 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { checkmark } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'

@@ -1,5 +1,5 @@
 import { useObserver } from 'mobx-react-lite'
-import React, { FC, useRef } from 'react'
+import { FC, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'

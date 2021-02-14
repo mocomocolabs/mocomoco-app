@@ -1,6 +1,6 @@
-import { IonModal, IonHeader, IonToolbar, IonIcon, IonContent } from '@ionic/react'
+import { IonContent, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react'
 import { close } from 'ionicons/icons'
-import React, { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import { TextLg } from '../atoms/TextLgComponent'
 
 export interface ModalProps {

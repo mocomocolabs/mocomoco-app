@@ -1,6 +1,6 @@
 import { IonAvatar } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { TextXxl } from '../atoms/TextXxlComponent'

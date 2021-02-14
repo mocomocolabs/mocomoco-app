@@ -1,5 +1,4 @@
 import { IonIcon, IonLabel } from '@ionic/react'
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 interface IMypageColumnItem {

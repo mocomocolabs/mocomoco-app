@@ -1,6 +1,6 @@
 import { IonItem, IonLabel, IonRadio, IonRadioGroup } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { IRadioItem } from '../../models/radio'
 
 export interface IRadio {

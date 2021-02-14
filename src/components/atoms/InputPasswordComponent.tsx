@@ -1,6 +1,6 @@
 import { IonIcon } from '@ionic/react'
 import { eyeOff, eyeOutline } from 'ionicons/icons'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { IInput, Input } from './InputComponent'
 
 export const InputPassword: FC<IInput> = (props) => {

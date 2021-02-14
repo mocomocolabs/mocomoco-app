@@ -1,6 +1,5 @@
 import { IonAvatar, IonButton, useIonViewWillEnter } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
 import { Spinner } from '../atoms/SpinnerComponent'

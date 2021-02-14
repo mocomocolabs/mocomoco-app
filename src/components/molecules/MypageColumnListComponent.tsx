@@ -5,7 +5,6 @@ import {
   mailOutline,
   settingsOutline,
 } from 'ionicons/icons'
-import React from 'react'
 import { MypageColumnItem } from './MypageColumnItemComponent'
 
 export const MypageColumnList: React.FC = () => {

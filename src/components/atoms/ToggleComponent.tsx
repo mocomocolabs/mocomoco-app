@@ -1,5 +1,5 @@
 import { IonToggle } from '@ionic/react'
-import React, { FC } from 'react'
+import { FC } from 'react'
 
 export interface IToggle {
   checked?: boolean

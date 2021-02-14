@@ -1,7 +1,6 @@
 import { IonButton, IonIcon, IonTextarea } from '@ionic/react'
 import { close } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { Profile } from '../atoms/ProfileComponent'
 import { Spinner } from '../atoms/SpinnerComponent'

@@ -1,5 +1,5 @@
 import { IonInput } from '@ionic/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { onEnterPress } from '../../hooks/use-enter'
 import { useStore } from '../../hooks/use-store'
 import { TodoItem as TodoItemClass } from '../../stores/example/todo-item-store'

@@ -1,7 +1,6 @@
 import { IonIcon } from '@ionic/react'
 import { chatbox, cloud } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IStuff } from '../../models/stuff'
 import { ITalent } from '../../models/talent'
@@ -13,6 +12,7 @@ import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
+
 interface ITradeItem {
   store: Stuff | Talent
   item: IStuff | ITalent

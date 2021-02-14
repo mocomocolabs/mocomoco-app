@@ -1,5 +1,4 @@
 import { IonInput } from '@ionic/react'
-import React from 'react'
 import { useStore } from '../../hooks/use-store'
 
 export const NewsSearch: React.FC = () => {

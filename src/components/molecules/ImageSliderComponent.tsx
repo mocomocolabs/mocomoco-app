@@ -1,6 +1,6 @@
 import { IonSlide, IonSlides } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { ImageBackground } from '../atoms/ImageBackgroundComponent'
 
 export interface IImageSlider {

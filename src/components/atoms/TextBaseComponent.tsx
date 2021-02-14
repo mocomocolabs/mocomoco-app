@@ -1,5 +1,3 @@
-import React from 'react'
-
 export interface IText {
   children?: React.ReactNode
   className?: string

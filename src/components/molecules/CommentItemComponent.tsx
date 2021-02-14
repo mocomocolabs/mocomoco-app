@@ -1,5 +1,5 @@
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IComment } from '../../models/comment'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'

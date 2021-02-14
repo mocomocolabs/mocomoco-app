@@ -1,6 +1,6 @@
 import { IonIcon } from '@ionic/react'
 import { add, closeCircle } from 'ionicons/icons'
-import React, { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { compress } from '../../utils/image-compressor'
 import './ImageUploaderComponent.scss'

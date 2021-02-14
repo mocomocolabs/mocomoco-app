@@ -1,7 +1,6 @@
 import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar } from '@ionic/react'
 import { create } from 'ionicons/icons'
 import * as _ from 'lodash'
-import React from 'react'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { CommunityBanner } from '../components/organisms/CommunityBannerComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'

@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { IInput, Input } from './InputComponent'
 
 export const InputNormal: FC<IInput> = (props) => {

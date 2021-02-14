@@ -1,6 +1,6 @@
 import { IonIcon } from '@ionic/react'
 import { ellipsisVertical } from 'ionicons/icons'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 
 export interface IOverflowMenuIcon {
