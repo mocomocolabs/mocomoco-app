@@ -1,5 +1,4 @@
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react'
-import React from 'react'
 import { useParams } from 'react-router'
 import { TodoList } from '../../components/_example/TodoList'
 import { TodoNew } from '../../components/_example/TodoNew'

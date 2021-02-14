@@ -8,7 +8,7 @@ import {
   useIonViewWillLeave,
 } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Spinner } from '../components/atoms/SpinnerComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FeedForm } from '../components/organisms/FeedFormComponent'

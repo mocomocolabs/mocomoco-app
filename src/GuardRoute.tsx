@@ -1,5 +1,5 @@
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import { useStore } from './hooks/use-store'
 

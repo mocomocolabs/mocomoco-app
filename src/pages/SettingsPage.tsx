@@ -14,7 +14,7 @@ import {
   IonToggle,
   IonToolbar,
 } from '@ionic/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { XDivider } from '../components/atoms/XDividerComponent'
 
 export const SettingsPage: React.FC = () => {

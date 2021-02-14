@@ -1,6 +1,5 @@
 import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
 import { SubmitButton } from '../../components/atoms/SubmitButtonComponent'

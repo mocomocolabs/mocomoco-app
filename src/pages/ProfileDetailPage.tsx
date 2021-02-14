@@ -9,7 +9,6 @@ import {
 } from '@ionic/react'
 import { chevronBack } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ProfileDetailItem } from '../components/molecules/ProfileDetailComponent'

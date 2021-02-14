@@ -1,6 +1,6 @@
 import { IonToast } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 
 export const Toast: FC = () => {

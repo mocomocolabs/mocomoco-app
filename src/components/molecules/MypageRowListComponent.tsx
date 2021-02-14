@@ -1,5 +1,4 @@
 import { basketOutline, beerOutline, heartOutline } from 'ionicons/icons'
-import React from 'react'
 import { MypageRowItem } from './MypageRowItemComponent'
 
 export const MypageRowList: React.FC = () => {

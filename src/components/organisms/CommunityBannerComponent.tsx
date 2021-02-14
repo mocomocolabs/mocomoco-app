@@ -1,7 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { people } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { ImageBackground } from '../atoms/ImageBackgroundComponent'
 import { TextBase } from '../atoms/TextBaseComponent'

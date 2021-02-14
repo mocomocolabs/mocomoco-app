@@ -1,7 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { calendar, chatbox, cloud } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed'
 import { route } from '../../services/route-service'

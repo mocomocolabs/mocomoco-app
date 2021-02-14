@@ -1,7 +1,7 @@
 import { useIonViewWillEnter } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
-import React, { useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { IUser } from '../../models/user'

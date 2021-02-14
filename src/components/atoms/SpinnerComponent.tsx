@@ -1,5 +1,5 @@
 import { IonSpinner } from '@ionic/react'
-import React, { FC } from 'react'
+import { FC } from 'react'
 
 export interface ISpinnerComponent {
   isFull?: boolean

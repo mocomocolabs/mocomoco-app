@@ -8,7 +8,7 @@ import {
   useIonViewWillEnter,
   useIonViewWillLeave,
 } from '@ionic/react'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { StaticContext } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'

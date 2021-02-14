@@ -1,7 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { chevronDown } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { TextLg } from '../atoms/TextLgComponent'
 import { CommunitySelectorModal } from '../modals/CommunitySelectorModalComponent'

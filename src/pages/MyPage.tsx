@@ -9,7 +9,6 @@ import {
   IonToolbar,
 } from '@ionic/react'
 import { settingsOutline } from 'ionicons/icons'
-import React from 'react'
 import { XDivider } from '../components/atoms/XDividerComponent'
 import { MypageColumnList } from '../components/molecules/MypageColumnListComponent'
 import { MypageProfile } from '../components/molecules/MypageProfileComponent'

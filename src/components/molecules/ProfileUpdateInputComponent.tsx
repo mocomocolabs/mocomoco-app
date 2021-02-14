@@ -1,6 +1,5 @@
 import { IonAvatar, IonLabel, IonToggle } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
 import { Controller, Message, useFormContext } from 'react-hook-form'
 import { IUser } from '../../models/user'
 import { TextBase } from '../atoms/TextBaseComponent'

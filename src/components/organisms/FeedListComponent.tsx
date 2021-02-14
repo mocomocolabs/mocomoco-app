@@ -1,7 +1,7 @@
 import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { FeedItem } from '../molecules/FeedItemComponent'
 import { ContentPopover } from './ContentPopoverComponent'

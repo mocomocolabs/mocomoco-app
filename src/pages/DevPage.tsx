@@ -1,5 +1,4 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
-import React from 'react'
 import { useStore } from '../hooks/use-store'
 
 export const DevPage: React.FC = () => {

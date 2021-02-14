@@ -1,6 +1,5 @@
 import { IonIcon } from '@ionic/react'
 import { heart, person } from 'ionicons/icons'
-import React from 'react'
 import { INews } from '../../models/example/news'
 
 export const NewsItem: React.FC<INews> = ({ title, user, domain, comments_count, time_ago }) => {
