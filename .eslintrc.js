@@ -20,6 +20,7 @@ module.exports = {
 
     'react/prop-types': 'off',
     'react/display-name': 'off',
+    'react/react-in-jsx-scope': 'off', // react 17 부터 불필요
     'no-restricted-syntax': [
       'error',
       {
