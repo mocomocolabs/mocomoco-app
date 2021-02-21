@@ -24,40 +24,44 @@ $padding-container: 1.6rem;
 }
 
 $text-xs-size: 1.2rem;
-$text-sm-size: 1.3rem;
-$text-base-size: 1.4rem;
-$text-lg-size: 1.5rem;
-$text-xl-size: 1.6rem;
-$text-xxl-size: 1.9rem;
-$text-xxxl-size: 2.9rem;
+$text-sm-size: 1.4rem;
+$text-base-size: 1.6rem;
+$text-lg-size: 2rem;
+$text-xl-size: 2.2rem;
+$text-xxl-size: 2.4rem;
+$text-xxxl-size: 3rem;
 
 %text-xs {
   font-size: $text-xs-size;
-  line-height: 1rem;
+  line-height: 140%;
 }
 %text-sm {
   font-size: $text-sm-size;
-  line-height: 2rem;
+  line-height: 140%;
+  letter-spacing: 0;
 }
 %text-base {
   font-size: $text-base-size;
-  line-height: 2rem;
+  line-height: 170%;
+  letter-spacing: -0.5%;
 }
 %text-lg {
   font-size: $text-lg-size;
-  line-height: 2rem;
+  line-height: normal;
+  letter-spacing: -1%;
 }
 %text-xl {
   font-size: $text-xl-size;
-  line-height: 3rem;
+  line-height: normal;
+  letter-spacing: -1%;
 }
 %text-xxl {
   font-size: $text-xxl-size;
-  line-height: 3.5rem;
+  line-height: normal;
 }
 %text-xxxl {
   font-size: $text-xxxl-size;
-  line-height: 4.6rem;
+  line-height: normal;
 }
 
 %ellipsis {
