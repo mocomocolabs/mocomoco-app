@@ -952,6 +952,13 @@
 .text-xxxl {
   @extend %text-xxxl;
 }
+.text-title {
+  @extend %text-xl;
+}
+.text-header {
+  @extend %text-xxl;
+  font-weight: bold;
+}
 
 .text-light {
   font-weight: 300;
