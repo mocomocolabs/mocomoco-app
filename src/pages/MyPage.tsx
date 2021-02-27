@@ -7,14 +7,22 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonViewWillEnter,
 } from '@ionic/react'
 import { settingsOutline } from 'ionicons/icons'
 import { XDivider } from '../components/atoms/XDividerComponent'
 import { MypageColumnList } from '../components/molecules/MypageColumnListComponent'
 import { MypageProfile } from '../components/molecules/MypageProfileComponent'
 import { MypageRowList } from '../components/molecules/MypageRowListComponent'
+import { useStore } from '../hooks/use-store'
 
 export const MyPage: React.FC = () => {
+  const { $ui } = useStore()
+
+  useIonViewWillEnter(() => {
+    $ui.setIsBottomTab(true)
+  })
+
   return (
     <IonPage>
       <IonHeader>

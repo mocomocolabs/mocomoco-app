@@ -1,4 +1,13 @@
-import { IonBackdrop, IonContent, IonHeader, IonIcon, IonPage, IonSearchbar, IonToolbar } from '@ionic/react'
+import {
+  IonBackdrop,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonSearchbar,
+  IonToolbar,
+  useIonViewWillEnter,
+} from '@ionic/react'
 import { chevronBack, create, filter as filterIcon, search as searchIcon } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
@@ -19,7 +28,7 @@ const initialSearch = ''
 const initialFilter: IStuffTalentFilter = { categories: [], statuses: [] }
 
 export const TradePage: React.FC = () => {
-  const { $stuff, $talent } = useStore()
+  const { $stuff, $talent, $ui } = useStore()
   const { pathname } = useLocation()
   const store = pathname === '/stuff' ? $stuff : $talent
 
@@ -33,6 +42,10 @@ export const TradePage: React.FC = () => {
   useEffect(() => {
     !searchMode && setSearch(initialSearch)
   }, [searchMode])
+
+  useIonViewWillEnter(() => {
+    $ui.setIsBottomTab(true)
+  })
 
   return (
     <IonPage>
