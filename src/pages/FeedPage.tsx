@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar } from '@ionic/react'
+import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 import { create } from 'ionicons/icons'
 import * as _ from 'lodash'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
@@ -10,6 +10,10 @@ import { removeUndefined } from '../utils/object-util'
 
 export const FeedPage: React.FC = () => {
   const { $ui, $feed } = useStore()
+
+  useIonViewWillEnter(() => {
+    $ui.setIsBottomTab(true)
+  })
 
   return (
     <IonPage>
