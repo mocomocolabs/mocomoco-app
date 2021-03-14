@@ -4,5 +4,5 @@ export interface IText {
 }
 
 export const TextBase: React.FC<IText> = ({ children, className }): React.ReactElement => (
-  <span className={`${className ? className : ''} text-base`}>{children}</span>
+  <div className={`${className ? className : ''} text-base`}>{children}</div>
 )
