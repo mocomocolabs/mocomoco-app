@@ -1,5 +1,5 @@
-import { IText, TextBase } from './TextBaseComponent'
+import { IText } from './TextBaseComponent'
 
 export const TextLg: React.FC<IText> = ({ children, className = '' }) => (
-  <TextBase className={`${className} text-lg`}>{children}</TextBase>
+  <div className={`${className} text-lg`}>{children}</div>
 )
