@@ -1,7 +1,7 @@
-import { IonIcon } from '@ionic/react'
 import { arrowBackOutline } from 'ionicons/icons'
 import { FC } from 'react'
 import { route } from '../../services/route-service'
+import { Icon } from '../atoms/IconComponent'
 
 export interface IBackButton {
   icon?: string
@@ -12,8 +12,8 @@ export const BackButton: FC<IBackButton> = ({ icon = arrowBackOutline, action })
   const defaultAction = () => route.goBack()
 
   return (
-    <div onClick={action ?? defaultAction}>
-      <IonIcon icon={icon} size='large'></IonIcon>
+    <div className='flex' onClick={action ?? defaultAction}>
+      <Icon name='close'></Icon>
     </div>
   )
 }

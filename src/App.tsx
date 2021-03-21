@@ -1,8 +1,8 @@
 import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
-import { basket, beer, home, paperPlane, personCircle } from 'ionicons/icons'
+import { basket, beer, home, paperPlane, people, personCircle } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import './App.scss'
 import { Alert } from './components/atoms/AlertComponent'
@@ -13,6 +13,8 @@ import { GuardRoute } from './GuardRoute'
 import { useStore } from './hooks/use-store'
 import { ChatPage } from './pages/ChatPage'
 import { ChatRoomPage } from './pages/ChatRoomPage'
+import { ClubFormPage } from './pages/club/ClubFormPage'
+import { ClubPage } from './pages/club/ClubPage'
 import { DevPage } from './pages/DevPage'
 import { FeedDetailPage } from './pages/FeedDetailPage'
 import { FeedPage } from './pages/FeedPage'
@@ -71,7 +73,8 @@ export const App: React.FC = () => {
               {/* TODO fix it */}
               <GuardRoute path='/stuff' component={TradePage} exact />
               <GuardRoute path='/talent' component={TradePage} exact />
-
+              <GuardRoute path='/club' component={ClubPage} exact />
+              <GuardRoute path='/club-form' component={ClubFormPage} exact />
               <GuardRoute path='/chat' component={ChatPage} exact />
               <GuardRoute path='/chat/:id' component={ChatRoomPage} exact />
               <GuardRoute path='/my-page' component={MyPage} exact />
@@ -93,6 +96,9 @@ export const App: React.FC = () => {
               <IonTabButton tab='chat' href='/chat'>
                 <IonIcon icon={paperPlane} />
                 {$chat.countUnread > 0 && <div className='badge'></div>}
+              </IonTabButton>
+              <IonTabButton tab='club' href='/club'>
+                <IonIcon icon={people} />
               </IonTabButton>
               <IonTabButton tab='my-page' href='/my-page'>
                 <IonIcon icon={personCircle} />
