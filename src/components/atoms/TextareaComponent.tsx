@@ -1,5 +1,5 @@
-import { IonTextarea } from '@ionic/react'
 import { FC } from 'react'
+import './TextareaComponent.scss'
 
 export interface ITextarea {
   value?: string
@@ -10,12 +10,12 @@ export interface ITextarea {
 
 export const Textarea: FC<ITextarea> = ({ value, rows, placeholder, onChange }) => {
   return (
-    <IonTextarea
+    <textarea
       value={value}
-      className='border-gray px-3 leading-8'
+      className='br-base border-gray leading-8 w-full px-4 py-3 text-base'
       rows={rows}
       placeholder={placeholder}
-      onIonChange={(e) => onChange && onChange(e.detail.value!)}
-    ></IonTextarea>
+      onChange={(e) => onChange && onChange(e.target.value)}
+    ></textarea>
   )
 }

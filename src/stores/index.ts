@@ -1,6 +1,7 @@
 import { configure } from 'mobx'
 import { Auth } from './auth-store'
 import { Chat } from './chat-store'
+import { Club } from './club-store'
 import { Comment } from './comment-store'
 import { Community } from './community-store'
 import { News } from './example/news-store'
@@ -23,6 +24,7 @@ export class RootStore {
   $ui: Ui
   $user: User
   $auth: Auth
+  $club: Club
 
   // example
   todoList: TodoList
@@ -38,6 +40,7 @@ export class RootStore {
     this.$talent = new Talent()
     this.$chat = new Chat()
     this.$auth = new Auth()
+    this.$club = new Club()
 
     // example
     this.todoList = new TodoList()

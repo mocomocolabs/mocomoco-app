@@ -2,7 +2,7 @@ import { IonIcon } from '@ionic/react'
 import dayjs from 'dayjs'
 import { calendar } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import { FC } from 'react'
+import { FC, useRef } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { FEED_TYPE } from '../../models/feed.d'
 import { IRadioItem } from '../../models/radio'
@@ -14,7 +14,7 @@ import { Textarea } from '../atoms/TextareaComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { Toggle } from '../atoms/ToggleComponent'
 import { DatetimePicker } from '../molecules/DatetimePickerComponent'
-import { ImageUploader } from '../molecules/ImageUploaderComponent'
+import { IImageUploaderRef, ImageUploader } from '../molecules/ImageUploaderComponent'
 
 export interface IFeedForm {}
 
@@ -31,6 +31,7 @@ const feedTypes: IRadioItem[] = [
 
 export const FeedForm: FC<IFeedForm> = () => {
   const { $feed } = useStore()
+  const uploader = useRef<IImageUploaderRef>()
 
   const initYMD = $feed.form.scheduleDate ?? dayjs().format(DT_FORMAT.YMD)
   const initHM = $feed.form.scheduleTime ?? dayjs().add(1, 'hour').startOf('hour').format(DT_FORMAT.HM)
@@ -65,15 +66,18 @@ export const FeedForm: FC<IFeedForm> = () => {
               $feed.setForm({ scheduleDate: d })
             }}
             onChangeTime={(t) => {
-              console.log(t)
-
               $feed.setForm({ scheduleTime: t })
             }}
           ></DatetimePicker>
         </div>
       )}
 
-      <ImageUploader images={$feed.form.images}></ImageUploader>
+      <ImageUploader
+        className='mb-6'
+        images={$feed.form.images}
+        setImages={(payload) => $feed.setFormImages(payload)}
+        refUploader={uploader}
+      ></ImageUploader>
 
       <div className='flex-between-center'>
         <TextLg>전체공개</TextLg>

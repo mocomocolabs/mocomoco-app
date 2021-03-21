@@ -1,10 +1,17 @@
+import { HTMLAttributes } from 'react'
 import { ReactSVG } from 'react-svg'
 
-interface IIcon {
+interface IIcon extends HTMLAttributes<HTMLElement> {
   name: string
   className?: string
 }
 
-export const Icon = ({ name, className = '' }: IIcon) => {
-  return <ReactSVG src={`/assets/icon/${name}.svg`} className={className}></ReactSVG>
+export const Icon = ({ name, className = '', onClick = () => {} }: IIcon) => {
+  return (
+    <ReactSVG
+      onClick={($evt: any) => onClick($evt)}
+      src={`/assets/icon/${name}.svg`}
+      className={`${className} flex items-center`}
+    ></ReactSVG>
+  )
 }

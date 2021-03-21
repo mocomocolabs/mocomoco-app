@@ -68,6 +68,18 @@ class RouteService {
     this.history.push(`/chat/${roomId}`)
   }
 
+  clubs() {
+    this.history.push(`/club`)
+  }
+
+  clubForm() {
+    this.history.push(`/club-form`)
+  }
+
+  clubDetail(clubId: string) {
+    this.history.push(`/club/${clubId}`)
+  }
+
   get history() {
     return this._history
   }

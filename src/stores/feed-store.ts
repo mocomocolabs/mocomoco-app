@@ -1,5 +1,6 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IFeed, IFeedForm } from '../models/feed'
 import { httpFile } from '../utils/http-file-util'
 import { http } from '../utils/http-util'
@@ -20,7 +21,7 @@ const initState = {
 export class Feed {
   @observable.ref feeds: IFeed[] = initState.feeds
   @observable.ref feed: IFeed = initState.feed
-  @observable.struct form: Partial<IFeedForm> = initState.form
+  @observable.struct form: IFeedForm = initState.form
 
   @task
   getFeeds = (async () => {
@@ -72,6 +73,19 @@ export class Feed {
   insertFeed = (async (form: IFeedForm) => {
     await new Promise((r) => setTimeout(() => r(1), 1000))
     const formData = new FormData()
+    // TODO: communityId 추가
+    // "feedReqDto": {
+    //   "type": "string",
+    //   "title": "string",
+    //   "content": "string",
+    //   "scheduleDate": "string",
+    //   "isPublic": true,
+    //   "isUse": true
+    // },
+    // "files": [
+    //   "string"
+    // ]
+    formData.append('communityId', String(form.communityId))
     formData.append('type', form.type)
     formData.append('scheduleDate', form.scheduleDate)
     formData.append('scheduleTime', form.scheduleTime)
@@ -94,6 +108,11 @@ export class Feed {
       ...this.form,
       ...data,
     }
+  }
+
+  @action
+  setFormImages(imgs: ImageUploadItem[]) {
+    this.form.images = imgs
   }
 
   @action
