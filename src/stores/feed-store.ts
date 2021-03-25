@@ -5,7 +5,7 @@ import { httpFile } from '../utils/http-file-util'
 import { http } from '../utils/http-util'
 import { urlToFile } from '../utils/image-util'
 import { InsertFeedTask } from './feed-store.d'
-import { Task, TaskByNumber } from './task'
+import { Task, TaskBy } from './task'
 
 const initState = {
   feeds: [],
@@ -38,7 +38,7 @@ export class Feed {
         this.feed = data
       })
     )
-  }) as TaskByNumber
+  }) as TaskBy<number>
 
   @task
   getFeedForm = (async (id: number) => {
@@ -60,13 +60,13 @@ export class Feed {
         })
       })
     )
-  }) as TaskByNumber
+  }) as TaskBy<number>
 
   @task.resolved
   deleteFeed = (async (id: number) => {
     await new Promise((r) => setTimeout(() => r(1), 1000))
     await http.delete(`/feeds/${id}`)
-  }) as TaskByNumber
+  }) as TaskBy<number>
 
   @task.resolved
   insertFeed = (async (form: IFeedForm) => {

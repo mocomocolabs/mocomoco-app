@@ -1,6 +1,7 @@
 import { IAttachFile } from './attachFile'
 import { IUser } from './user'
 
+// TODO talent.d.ts와 중복코드 없애기
 export interface IStuffs {
   count: number
   stuffs: IStuff[]
@@ -22,7 +23,17 @@ export interface IStuff {
   atchFiles: IAttachFile[]
 }
 
+export interface IStuffCategories {
+  count: number
+  categories: IStuffCategory[]
+}
+
 export interface IStuffCategory {
   id: num
   name: string
+}
+
+export interface IStuffTalentFilter {
+  category: number[]
+  status: string[]
 }
