@@ -16,8 +16,7 @@ import { TextLg } from '../atoms/TextLgComponent'
 interface ITradeItem {
   store: Stuff | Talent
   item: IStuff | ITalent
-  searchKeyword: string
-  isDetail?: boolean
+  onDelete: (id: number) => void
 }
 
 const TypeString = {
@@ -31,18 +30,10 @@ const StatusString = {
   FINISH: '거래완료',
 }
 
-export const TradeItem: React.FC<ITradeItem> = ({ store, item, searchKeyword, isDetail = false }) => {
+export const TradeItem: React.FC<ITradeItem> = ({ store, item, onDelete }) => {
   const { $user } = useStore()
 
-  const onDelete = async () => {
-    await store.deleteItem(item.id)
-    await store.getItems(searchKeyword)
-
-    if (isDetail) {
-      route.goBack()
-    }
-  }
-
+  // TODO dont use store. Instead, use another flag
   const routeDetail = (store as Stuff) ? route.stuffDetail : route.talentDetail
 
   const getItemLikeCount = (item: IStuff | ITalent) => {
@@ -56,7 +47,7 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, searchKeyword, is
   return useObserver(() => (
     <li className='py-4'>
       <div className='flex'>
-        <div className='flex-between-center w-full' onClick={() => !isDetail && routeDetail(item.id)}>
+        <div className='flex-between-center w-full' onClick={() => routeDetail(item.id)}>
           <img className='w-20 h-20 mr-2' src={item.atchFiles[0].url} alt={item.title} />
 
           <div className='flex-col flex-1'>
@@ -90,17 +81,14 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, searchKeyword, is
           <OverflowMenuIcon
             className='self-top'
             show={$user.currentUserId === item.user.id}
-            onDelete={onDelete}
+            onDelete={() => onDelete(item.id)}
           />
         </div>
       </div>
 
-      <div className='flex-col' hidden={!isDetail}>
+      <div className='flex-col'>
         <div className='flex flex-wrap items-center'>
           <TextLg className='gray w-12'>씨앗들</TextLg>
-          {/* {item.likeProflieUrls?.slice(0, 9).map((v, i) => (
-            <Profile key={i} url={v}></Profile>
-          ))} */}
         </div>
       </div>
     </li>

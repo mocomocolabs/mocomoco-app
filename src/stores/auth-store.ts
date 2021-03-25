@@ -6,7 +6,7 @@ import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IAuthUser, IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
-import { TaskByString } from './task'
+import { TaskBy } from './task'
 
 const inko = new Inko()
 
@@ -39,7 +39,7 @@ export class Auth {
   @task.resolved
   checkEmail = (async (email) => {
     return http.post(`http://localhost:8080/api/sys/users/exists`, { email })
-  }) as TaskByString
+  }) as TaskBy<string>
 
   @task.resolved
   signUp = (async (form) => {

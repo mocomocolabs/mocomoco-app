@@ -2,7 +2,7 @@ import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { http } from '../utils/http-util'
 import { IInsertComment, InsertCommentTask, IUpdateComment, UpdateCommentTask } from './comment-store.d'
-import { TaskByNumber } from './task'
+import { TaskBy } from './task'
 
 const initState = {
   insertForm: {},
@@ -69,5 +69,5 @@ export class Comment {
   deleteComment = (async (id: number) => {
     await new Promise((r) => setTimeout(() => r(true), 1000))
     await http.delete(`/comment/${id}`)
-  }) as TaskByNumber
+  }) as TaskBy<number>
 }
