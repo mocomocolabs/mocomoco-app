@@ -21,6 +21,7 @@ export interface IStuff {
   createdAt: string
   stuffUsers: IUser[]
   atchFiles: IAttachFile[]
+  isUse: boolean
 }
 
 export interface IStuffCategories {

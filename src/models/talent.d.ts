@@ -21,6 +21,7 @@ export interface ITalent {
   createdAt: string
   talentUsers: IUser[]
   atchFiles: IAttachFile[]
+  isUse: boolean
 }
 
 export interface ITalentCategories {
