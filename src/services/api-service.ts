@@ -23,6 +23,12 @@ class ApiService {
     return this.http.put(url, data)
   }
 
+  // eslint-disable-next-line
+  patch<T>(url: string, data?: any, config?: any): Promise<T> {
+    console.log(this.http.defaults)
+    return this.http.patch(url, data)
+  }
+
   delete<T>(url: string): Promise<T> {
     return this.http.delete(url)
   }
@@ -44,7 +50,7 @@ class ApiService {
 
     this.http.interceptors.response.use(
       (response) => {
-        return JSON.parse(response.data)
+        return response.data && JSON.parse(response.data)
       },
       (error) => {
         console.log(error)

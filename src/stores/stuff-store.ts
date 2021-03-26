@@ -1,5 +1,7 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { api } from '../services/api-service'
+import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IStuff, IStuffCategories, IStuffCategory, IStuffs, IStuffTalentFilter } from './../models/stuff.d'
 import { TaskBy, TaskBy2 } from './task'
@@ -51,6 +53,7 @@ export class Stuff {
         'title': titleParam,
         'category-id': categoryIdParam,
         'status': statusParam,
+        'is-use': true,
       },
     }
 
@@ -72,7 +75,17 @@ export class Stuff {
 
   @task.resolved
   deleteItem = (async (id: number) => {
-    await new Promise((r) => setTimeout(r, 1000))
-    await http.delete(`${this.url}/${id}`)
+    if (this.items.find((item) => item.id === id)?.isUse === false) {
+      return
+    }
+
+    const hasToken = await storage.getAccessToken()
+    console.log('token: ', hasToken)
+
+    if (hasToken) {
+      api.setAuthoriationBy(hasToken)
+      await new Promise((r) => setTimeout(r, 1000))
+      await api.patch(`${this.url}/${id}/is-use`) // WARN this is toggle
+    }
   }) as TaskBy<number>
 }
