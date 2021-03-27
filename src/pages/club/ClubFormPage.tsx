@@ -9,7 +9,6 @@ import { BackButton } from '../../components/molecules/BackButtonComponent'
 import { IImageUploaderRef, ImageUploader } from '../../components/molecules/ImageUploaderComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
-import { route } from '../../services/route-service'
 
 export const ClubFormPage: React.FC = () => {
   const { $ui, $club } = useStore()
@@ -19,6 +18,10 @@ export const ClubFormPage: React.FC = () => {
     $ui.setIsBottomTab(false)
   })
 
+  const insertClub = () => {
+    $club.insertClub($club.form)
+  }
+
   return useObserver(() => (
     <IonPage>
       <Header>
@@ -26,7 +29,7 @@ export const ClubFormPage: React.FC = () => {
           <BackButton></BackButton>
         </div>
         <div className='text-header text-center'>소모임</div>
-        <div slot='end' onClick={() => route.feedForm()}>
+        <div slot='end' onClick={() => insertClub()}>
           완료
         </div>
       </Header>

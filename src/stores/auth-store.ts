@@ -38,7 +38,7 @@ export class Auth {
   }
 
   @task.resolved
-  checkEmail = (async (email) => {
+  checkEmail = (async (email: string) => {
     return http.post(`http://localhost:8080/api/sys/users/exists`, { email })
   }) as TaskBy<string>
 
@@ -54,6 +54,9 @@ export class Auth {
     if (!param.nickname) {
       param.nickname = param.name
     }
+
+    // TODO: 제거필요
+    param.mobile = '123456789'
 
     return http.post(`http://localhost:8080/api/auth/sign-up`, param)
   }) as SignUpTask
@@ -74,6 +77,7 @@ export class Auth {
   @action
   async signInWithToken() {
     const hasToken = await storage.getAccessToken()
+    console.log('🚀 token', hasToken)
 
     if (hasToken) {
       api.setAuthoriationBy(hasToken)
