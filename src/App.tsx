@@ -13,6 +13,7 @@ import { GuardRoute } from './GuardRoute'
 import { useStore } from './hooks/use-store'
 import { ChatPage } from './pages/ChatPage'
 import { ChatRoomPage } from './pages/ChatRoomPage'
+import { ClubDetailPage } from './pages/club/ClubDetailPage'
 import { ClubFormPage } from './pages/club/ClubFormPage'
 import { ClubPage } from './pages/club/ClubPage'
 import { DevPage } from './pages/DevPage'
@@ -75,6 +76,8 @@ export const App: React.FC = () => {
               <GuardRoute path='/talent' component={TradePage} exact />
               <GuardRoute path='/club' component={ClubPage} exact />
               <GuardRoute path='/club-form' component={ClubFormPage} exact />
+              <GuardRoute path='/club/:id' component={ClubDetailPage} exact />
+              <GuardRoute path='/trade' component={TradePage} exact />
               <GuardRoute path='/chat' component={ChatPage} exact />
               <GuardRoute path='/chat/:id' component={ChatRoomPage} exact />
               <GuardRoute path='/my-page' component={MyPage} exact />

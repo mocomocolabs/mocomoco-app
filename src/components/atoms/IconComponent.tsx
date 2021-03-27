@@ -11,7 +11,7 @@ export const Icon = ({ name, className = '', onClick = () => {} }: IIcon) => {
     <ReactSVG
       onClick={($evt: any) => onClick($evt)}
       src={`/assets/icon/${name}.svg`}
-      className={`${className} flex items-center`}
+      className={`${className} flex items-center icon-20`}
     ></ReactSVG>
   )
 }

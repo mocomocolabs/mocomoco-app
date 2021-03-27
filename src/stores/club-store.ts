@@ -1,15 +1,19 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IClub, IClubForm } from '../models/club'
+import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { InsertClubTask } from './club-store.d'
+import { Community } from './community-store'
 import { Task, TaskByNumber } from './task'
 
 const initState = {
   clubs: [],
   club: {} as IClub,
   form: {
+    communityId: 0,
     name: '',
     meetingTime: '',
     meetingPlace: '',
@@ -24,6 +28,12 @@ export class Club {
   @observable.ref clubs: IClub[] = initState.clubs
   @observable.ref club: IClub = initState.club
   @observable.struct form: IClubForm = initState.form
+
+  $community: Community
+
+  constructor(rootStore: RootStore) {
+    this.$community = rootStore.$community
+  }
 
   @task
   getClubs = (async () => {
@@ -111,31 +121,32 @@ export class Club {
 
   @task.resolved
   insertClub = (async (form: IClubForm) => {
-    await new Promise((r) => setTimeout(() => r(1), 1000))
-    // const formData = new FormData()
+    // await new Promise((r) => setTimeout(() => r(1), 1000))
+    const formData = new FormData()
 
-    // formData.append(
-    //   'clubReqDto',
-    //   new Blob(
-    //     [
-    //       JSON.stringify({
-    //         description: form.description,
-    //         meetingTime: form.meetingTime,
-    //         meetingPlace: form.meetingPlace,
-    //         isPublic: form.isPublic,
-    //       }),
-    //     ],
-    //     {
-    //       type: 'application/json',
-    //     }
-    //   )
-    // )
+    formData.append(
+      'clubReqDto',
+      new Blob(
+        [
+          JSON.stringify({
+            communityId: this.$community.selectedId,
+            description: form.description,
+            meetingTime: form.meetingTime,
+            meetingPlace: form.meetingPlace,
+            isPublic: form.isPublic,
+          }),
+        ],
+        {
+          type: 'application/json',
+        }
+      )
+    )
 
-    // form.images?.forEach((v) => {
-    //   formData.append('files', v)
-    // })
+    form.images?.forEach((v) => {
+      formData.append('files', v)
+    })
 
-    // await api.post(`/clubs`, formData)
+    await api.post(`http://localhost:8080/v1/clubs`, formData)
     this.resetForm()
   }) as InsertClubTask
 
@@ -149,7 +160,10 @@ export class Club {
 
   @action
   setFormImage(images: ImageUploadItem[]) {
-    this.form.images = images
+    this.form = {
+      ...this.form,
+      images,
+    }
   }
 
   @action
