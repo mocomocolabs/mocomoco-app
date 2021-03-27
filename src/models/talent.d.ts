@@ -1,4 +1,4 @@
-import { IAttachFile } from './attachFile'
+import { IFileDto } from '../stores/common/file.d'
 import { IUser } from './user'
 
 // TODO stuff.d.ts와 중복코드 없애기
@@ -20,7 +20,7 @@ export interface ITalent {
   isPublic: boolean
   createdAt: string
   talentUsers: IUser[]
-  atchFiles: IAttachFile[]
+  atchFiles: IFileDto[]
   isUse: boolean
 }
 
