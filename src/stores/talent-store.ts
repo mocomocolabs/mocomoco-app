@@ -1,8 +1,10 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { IStuffTalentFilter } from '../models/stuff'
+import { ITalent, ITalentCategories, ITalentCategory, ITalents } from '../models/talent'
+import { api } from '../services/api-service'
+import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
-import { ITalent, ITalentCategories, ITalentCategory, ITalents } from './../models/talent.d'
 import { TaskBy, TaskBy2 } from './task'
 
 const initState = {
@@ -36,7 +38,6 @@ export class Talent {
     await http.get<ITalentCategories>(this.categories_url, config).then(
       action((data) => {
         this.categories = data.categories
-        console.log(`categories = ${this.categories.length}`)
       })
     )
   }
@@ -52,6 +53,7 @@ export class Talent {
         'title': titleParam,
         'category-id': categoryIdParam,
         'status': statusParam,
+        'is-use': true,
       },
     }
 
@@ -73,7 +75,11 @@ export class Talent {
 
   @task.resolved
   deleteItem = (async (id: number) => {
-    await new Promise((r) => setTimeout(r, 1000))
-    await http.delete(`${this.url}/${id}`)
+    const hasToken = await storage.getAccessToken()
+
+    if (hasToken) {
+      api.setAuthoriationBy(hasToken)
+      await api.patch(`${this.url}/${id}/is-use`) // WARN this is toggle
+    }
   }) as TaskBy<number>
 }
