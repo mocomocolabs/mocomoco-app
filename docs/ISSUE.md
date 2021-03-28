@@ -100,3 +100,8 @@ export type TaskByNumber = TaskType<[number], void>
 ```
 
 > 따라서, 파라미터를 받을 경우 `feed-store.d.ts` 처럼 타입을 따로 만들어서 import 하여 사용한다.
+
+
+## react-svg
+
+react-svg library ^12 이상으로 사용할시에, svg가 잘 로드되지 않는 현상이 발생한다. 우선 v11 으로 고정하여 사용하도록 함
