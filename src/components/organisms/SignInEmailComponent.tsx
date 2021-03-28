@@ -1,8 +1,9 @@
 import { useObserver } from 'mobx-react-lite'
-import { FC, useRef } from 'react'
+import React, { FC, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
+import { executeWithError } from '../../utils/http-helper-util'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { InputPassword } from '../atoms/InputPasswordComponent'
 import { Spinner } from '../atoms/SpinnerComponent'
@@ -19,9 +20,11 @@ export const SignInEmail: FC = () => {
   const { $auth } = useStore()
 
   const onSubmit = handleSubmit((form) => {
-    $auth.signIn(form.email, form.password).then(() => {
-      route.home()
-    })
+    executeWithError(() =>
+      $auth.signIn(form.email, form.password).then(() => {
+        route.home()
+      })
+    )
   })
 
   return useObserver(() => (

@@ -4,7 +4,7 @@ import { StoreProvider } from './hooks/store-provider'
 import * as serviceWorker from './serviceWorker'
 import { RootStore } from './stores'
 
-const rootStore = new RootStore()
+export const rootStore = new RootStore()
 
 ReactDOM.render(
   <StoreProvider value={rootStore}>

@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 import { IResponse } from '../../types/axios'
 import { config } from '../config'
+import { responseError, responseSuccess } from '../utils/http-helper-util'
 
 class ApiService {
   http!: AxiosInstance
@@ -50,7 +51,7 @@ class ApiService {
 
     this.http.interceptors.response.use(
       (response) => {
-        return response.data && JSON.parse(response.data)
+        return responseSuccess(response)
       },
       (error) => {
         console.log(error)
@@ -59,8 +60,8 @@ class ApiService {
           // TODO: refreshToken으로 재호출후 불가시 로그인 페이지로 redirect
         }
 
-        // Do something with response error
-        return Promise.reject(error)
+        // Do something with response error)
+        return Promise.reject(responseError(error))
       }
     )
   }

@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { IResponse } from '../../types/axios'
 import { config } from '../config'
+import { responseError, responseSuccess } from '../utils/http-helper-util'
 
 // interface IAxiosResponse {
 //   data: IResponse
@@ -22,13 +23,13 @@ const _axios = axios.create({
 
 _axios.interceptors.response.use(
   (response) => {
-    return response.data ? JSON.parse(response.data) : response.data
+    return responseSuccess(response)
   },
   (error: AxiosError) => {
-    console.log(error.response)
+    console.error(error.response)
 
     // Do something with response error
-    return Promise.reject(error.response)
+    return Promise.reject(responseError(error))
   }
 )
 
