@@ -11,4 +11,5 @@ export interface IToast {
     | 'medium'
     | 'dark'
   message?: string
+  duration?: number
 }
