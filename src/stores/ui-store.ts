@@ -21,6 +21,7 @@ const initState = {
     isOpen: false,
     message: '',
     color: 'primary',
+    duration: 0,
   } as IToast,
 
   isBottomTab: true,
@@ -54,6 +55,8 @@ export class Ui {
       color: 'success',
       isOpen: true,
     }
+
+    this.closeToast(toast)
   }
 
   @action
@@ -63,6 +66,18 @@ export class Ui {
       color: 'danger',
       isOpen: true,
     }
+
+    this.closeToast(toast)
+  }
+
+  @action
+  closeToast = (toast: Partial<IToast>) => {
+    setTimeout(
+      action(() => {
+        this.toast.isOpen = false
+      }),
+      toast.duration ? toast.duration : 3000
+    )
   }
 
   @action

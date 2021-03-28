@@ -7,11 +7,6 @@ export const Toast: FC = () => {
   const { $ui } = useStore()
 
   return useObserver(() => (
-    <IonToast
-      isOpen={$ui.toast.isOpen}
-      color={$ui.toast.color}
-      message={$ui.toast.message}
-      duration={3000}
-    ></IonToast>
+    <IonToast isOpen={$ui.toast.isOpen} color={$ui.toast.color} message={$ui.toast.message}></IonToast>
   ))
 }
