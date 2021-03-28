@@ -3,7 +3,6 @@ import { task } from 'mobx-task'
 import { IStuffTalentFilter } from '../models/stuff'
 import { ITalent, ITalentCategories, ITalentCategory, ITalents } from '../models/talent'
 import { api } from '../services/api-service'
-import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { TaskBy, TaskBy2 } from './task'
 
@@ -45,8 +44,8 @@ export class Talent {
   @task
   getItems = (async (search, filter) => {
     const titleParam = 'like:' + search
-    const categoryIdParam = filter.category.join('_OR_')
-    const statusParam = filter.status.join('_OR_')
+    const categoryIdParam = filter.categories.join('_OR_')
+    const statusParam = filter.statuses.join('_OR_')
 
     const config = {
       params: {
@@ -75,11 +74,6 @@ export class Talent {
 
   @task.resolved
   deleteItem = (async (id: number) => {
-    const hasToken = await storage.getAccessToken()
-
-    if (hasToken) {
-      api.setAuthoriationBy(hasToken)
-      await api.patch(`${this.url}/${id}/is-use`) // WARN this is toggle
-    }
+    await api.patch(`${this.url}/${id}/is-use`) // WARN this is toggle
   }) as TaskBy<number>
 }

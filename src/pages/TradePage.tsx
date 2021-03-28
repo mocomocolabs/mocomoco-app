@@ -12,22 +12,22 @@ interface SearchbarChangeEventDetail {
   value: string | undefined
 }
 
+const FilterMode = { none: 'none', category: 'category', status: 'status' }
+type FilterMode = typeof FilterMode[keyof typeof FilterMode]
+
+const initialSearch = ''
+const initialFilter: IStuffTalentFilter = { categories: [], statuses: [] }
+
 export const TradePage: React.FC = () => {
   const { $stuff, $talent } = useStore()
   const { pathname } = useLocation()
   const store = pathname === '/stuff' ? $stuff : $talent
 
   const [searchMode, setSearchMode] = useState(false)
-
-  const initialSearch = ''
   const [search, setSearch] = useState(initialSearch)
   const onSearchSubmit = (e: CustomEvent<SearchbarChangeEventDetail>) => setSearch(e.detail.value!)
 
-  const FilterPopup = { none: 'none', category: 'category', status: 'status' }
-  type FilterPopup = typeof FilterPopup[keyof typeof FilterPopup]
-  const [filterMode, setFilterMode] = useState<FilterPopup>(FilterPopup.none)
-
-  const initialFilter: IStuffTalentFilter = { category: [], status: [] }
+  const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
   const [filter, setFilter] = useState<IStuffTalentFilter>(initialFilter)
 
   useEffect(() => {
@@ -66,26 +66,26 @@ export const TradePage: React.FC = () => {
           {/* TODO extract as component */}
           <div className='flex justify-around'>
             <div
-              hidden={filter.category.length === 0 && filter.status.length === 0}
+              hidden={filter.categories.length === 0 && filter.statuses.length === 0}
               onClick={() => {
                 setFilter(initialFilter)
-                setFilterMode(FilterPopup.none)
+                setFilterMode(FilterMode.none)
               }}
             >
               초기화
             </div>
             <div
-              className={filter.category.length > 0 ? 'bg-yellow' : ''}
+              className={filter.categories.length > 0 ? 'bg-yellow' : ''}
               onClick={() => {
-                setFilterMode(filterMode === FilterPopup.category ? FilterPopup.none : FilterPopup.category)
+                setFilterMode(filterMode === FilterMode.category ? FilterMode.none : FilterMode.category)
               }}
             >
               ▼카테고리
             </div>
             <div
-              className={filter.status.length > 0 ? 'bg-yellow' : ''}
+              className={filter.statuses.length > 0 ? 'bg-yellow' : ''}
               onClick={() => {
-                setFilterMode(filterMode === FilterPopup.status ? FilterPopup.none : FilterPopup.status)
+                setFilterMode(filterMode === FilterMode.status ? FilterMode.none : FilterMode.status)
               }}
             >
               ▼거래상태
@@ -96,7 +96,7 @@ export const TradePage: React.FC = () => {
 
       <IonContent>
         {/* TODO extract as component */}
-        <div className='justify-around' hidden={filterMode !== FilterPopup.category}>
+        <div className='justify-around' hidden={filterMode !== FilterMode.category}>
           <div className='absolute z-10 w-full bg-white'>
             {store.categories
               .sort((a, b) => (a.name <= b.name ? -1 : 1))
@@ -105,45 +105,45 @@ export const TradePage: React.FC = () => {
                   key={category.id}
                   onClick={() => {
                     setFilter(
-                      filter.category.includes(category.id)
-                        ? { ...filter, category: filter.category.filter((v) => v !== category.id) }
-                        : { ...filter, category: [...filter.category, category.id] }
+                      filter.categories.includes(category.id)
+                        ? { ...filter, categories: filter.categories.filter((v) => v !== category.id) }
+                        : { ...filter, categories: [...filter.categories, category.id] }
                     )
                   }}
                 >
                   {category.name}
-                  {filter.category.includes(category.id) ? ' V' : ''}
+                  {filter.categories.includes(category.id) ? ' V' : ''}
                 </div>
               ))}
           </div>
           <IonBackdrop
             onIonBackdropTap={() => {
-              setFilterMode(FilterPopup.none)
+              setFilterMode(FilterMode.none)
             }}
           />
         </div>
 
-        <div className='justify-around' hidden={filterMode !== FilterPopup.status}>
+        <div className='justify-around' hidden={filterMode !== FilterMode.status}>
           <div className='absolute z-10 w-full bg-white'>
             {store.status.map((status) => (
               <div
                 key={status}
                 onClick={() => {
                   setFilter(
-                    filter.status.includes(status)
-                      ? { ...filter, status: filter.status.filter((v) => v !== status) }
-                      : { ...filter, status: [...filter.status, status] }
+                    filter.statuses.includes(status)
+                      ? { ...filter, statuses: filter.statuses.filter((v) => v !== status) }
+                      : { ...filter, statuses: [...filter.statuses, status] }
                   )
                 }}
               >
                 {status}
-                {filter.status.includes(status) ? ' V' : ''}
+                {filter.statuses.includes(status) ? ' V' : ''}
               </div>
             ))}
           </div>
           <IonBackdrop
             onIonBackdropTap={() => {
-              setFilterMode(FilterPopup.none)
+              setFilterMode(FilterMode.none)
             }}
           />
         </div>

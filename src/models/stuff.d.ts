@@ -35,6 +35,6 @@ export interface IStuffCategory {
 }
 
 export interface IStuffTalentFilter {
-  category: number[]
-  status: string[]
+  categories: number[]
+  statuses: string[]
 }
