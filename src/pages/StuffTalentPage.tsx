@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
-import { TradeList } from '../components/organisms/TradeListComponent'
+import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
 import { IStuffTalentFilter } from '../models/stufftalent.d'
 
@@ -27,7 +27,7 @@ type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 const initialSearch = ''
 const initialFilter: IStuffTalentFilter = { categories: [], statuses: [] }
 
-export const TradePage: React.FC = () => {
+export const StuffTalentPage: React.FC = () => {
   const { $stuff, $talent, $ui } = useStore()
   const { pathname } = useLocation()
   const store = pathname === '/stuff' ? $stuff : $talent
@@ -162,7 +162,7 @@ export const TradePage: React.FC = () => {
         </div>
 
         <div className='px-container'>
-          <TradeList store={store} search={search} filter={filter} />
+          <StuffTalentList store={store} search={search} filter={filter} />
         </div>
       </IonContent>
     </IonPage>

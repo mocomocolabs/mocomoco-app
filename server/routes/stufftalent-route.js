@@ -1,11 +1,11 @@
 const router = require('express').Router()
 
-const tradeMocks = [
+const stuffTalentMocks = [
   { data: require('./mock/stuff-mock').stuffs, path: '/stuffs' },
   { data: require('./mock/talent-mock').talents, path: '/talents' },
 ]
 
-tradeMocks.map((mock) => {
+stuffTalentMocks.map((mock) => {
   router.get(mock.path, (req, res) => {
     const keyword = req.query.keyword
 

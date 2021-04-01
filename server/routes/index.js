@@ -2,7 +2,7 @@ const community = require('./community-route')
 const feed = require('./feed-route')
 const comment = require('./comment-route')
 const user = require('./user-route')
-const trade = require('./trade-route')
+const stufftalent = require('./stufftalent-route')
 const chat = require('./chat-route')
 
 module.exports = function (app) {
@@ -10,6 +10,6 @@ module.exports = function (app) {
   app.use('/api', comment)
   app.use('/api', community)
   app.use('/api', user)
-  app.use('/api', trade)
+  app.use('/api', stufftalent)
   app.use('/api', chat)
 }

@@ -5,16 +5,16 @@ import { useLayoutEffect } from 'react'
 import { IStuffTalentFilter } from '../../models/stufftalent.d'
 import { StuffTalentStore } from '../../stores/stufftalent-store'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { TradeItem } from '../molecules/TradeItemComponent'
+import { StuffTalentItem } from '../molecules/StuffTalentItemComponent'
 import { ContentPopover } from './ContentPopoverComponent'
 
-interface ITradeList {
+interface IStuffTalentList {
   store: StuffTalentStore
   search: string
   filter: IStuffTalentFilter
 }
 
-export const TradeList: React.FC<ITradeList> = ({ store, search, filter }) => {
+export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, filter }) => {
   // 여기는 useLayoutEffect 사용함
   // 문제 : segment가 바뀌면 다른 store prop이 전달되는데, 해당 store에 data가 담겨 있을 경우에
   // useObserver 안에서 pending state를 받기 전에 그 data가 먼저 표시된 후 loading으로 넘어 간다.
@@ -46,7 +46,7 @@ export const TradeList: React.FC<ITradeList> = ({ store, search, filter }) => {
           </div>
           <ul className='pl-0 move-up'>
             {store.items.map((item) => (
-              <TradeItem key={item.id} path={store.pathName} item={item} onDelete={onDeleteItem} />
+              <StuffTalentItem key={item.id} path={store.pathName} item={item} onDelete={onDeleteItem} />
             ))}
           </ul>
           <ContentPopover></ContentPopover>
