@@ -29,7 +29,7 @@ import { SignUpCommunityPage } from './pages/sign-up/SignUpCommunityPage'
 import { SignUpFormPage } from './pages/sign-up/SignUpFormPage'
 import { SignUpPage } from './pages/sign-up/SignUpPage'
 import { SignInPage } from './pages/SignInPage'
-import { TradePage } from './pages/TradePage'
+import { StuffTalentPage } from './pages/StuffTalentPage'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 
@@ -76,8 +76,8 @@ export const App: React.FC = () => {
               <GuardRoute path='/feed' component={FeedPage} exact />
               <GuardRoute path='/feed/:id' component={FeedDetailPage} exact />
               <GuardRoute path='/feed-write' component={FeedWritePage} exact />
-              <GuardRoute path='/stuff' component={TradePage} exact />
-              <GuardRoute path='/talent' component={TradePage} exact />
+              <GuardRoute path='/stuff' component={StuffTalentPage} exact />
+              <GuardRoute path='/talent' component={StuffTalentPage} exact />
               <GuardRoute path='/club' component={ClubPage} exact />
               <GuardRoute path='/club-form' component={ClubFormPage} exact />
               <GuardRoute path='/club/:id' component={ClubDetailPage} exact />
