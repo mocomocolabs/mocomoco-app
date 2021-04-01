@@ -15,7 +15,7 @@ import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 
-interface ITradeItem {
+interface IStuffTalentIItem {
   path: Path
   item: IStuffTalent
   onDelete: (id: number) => void
@@ -32,7 +32,7 @@ const StatusString = {
   [Status.FINISH]: '거래완료',
 }
 
-export const TradeItem: React.FC<ITradeItem> = ({ path, item, onDelete }) => {
+export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ path, item, onDelete }) => {
   const { $user } = useStore()
 
   const routeDetail = path === Path.STUFF ? route.stuffDetail : route.talentDetail
