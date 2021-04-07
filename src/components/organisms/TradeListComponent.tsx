@@ -1,17 +1,15 @@
 import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
-import React, { useLayoutEffect } from 'react'
-import { IStuff, IStuffTalentFilter } from '../../models/stuff'
-import { ITalent } from '../../models/talent'
-import { StuffStore } from '../../stores/stuff-store'
-import { TalentStore } from '../../stores/talent-store'
+import { useLayoutEffect } from 'react'
+import { IStuffTalentFilter } from '../../models/stufftalent.d'
+import { StuffTalentStore } from '../../stores/stufftalent-store'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TradeItem } from '../molecules/TradeItemComponent'
 import { ContentPopover } from './ContentPopoverComponent'
 
 interface ITradeList {
-  store: StuffStore | TalentStore
+  store: StuffTalentStore
   search: string
   filter: IStuffTalentFilter
 }
@@ -47,8 +45,8 @@ export const TradeList: React.FC<ITradeList> = ({ store, search, filter }) => {
             <TextBase>검색결과가 없어요</TextBase>
           </div>
           <ul className='pl-0 move-up'>
-            {(store.items as (IStuff | ITalent)[]).map((item) => (
-              <TradeItem key={item.id} store={store} item={item} onDelete={onDeleteItem} />
+            {store.items.map((item) => (
+              <TradeItem key={item.id} path={store.pathName} item={item} onDelete={onDeleteItem} />
             ))}
           </ul>
           <ContentPopover></ContentPopover>

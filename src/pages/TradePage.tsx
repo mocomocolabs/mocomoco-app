@@ -15,7 +15,7 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { TradeList } from '../components/organisms/TradeListComponent'
 import { useStore } from '../hooks/use-store'
-import { IStuffTalentFilter } from '../models/stuff'
+import { IStuffTalentFilter } from '../models/stufftalent.d'
 
 interface SearchbarChangeEventDetail {
   value: string | undefined
@@ -117,11 +117,11 @@ export const TradePage: React.FC = () => {
                 <div
                   key={category.id}
                   onClick={() => {
-                    setFilter(
-                      filter.categories.includes(category.id)
-                        ? { ...filter, categories: filter.categories.filter((v) => v !== category.id) }
-                        : { ...filter, categories: [...filter.categories, category.id] }
-                    )
+                    const categories = filter.categories.includes(category.id)
+                      ? filter.categories.filter((v) => v !== category.id)
+                      : filter.categories.concat(category.id)
+
+                    setFilter({ ...filter, categories })
                   }}
                 >
                   {category.name}
@@ -142,11 +142,11 @@ export const TradePage: React.FC = () => {
               <div
                 key={status}
                 onClick={() => {
-                  setFilter(
-                    filter.statuses.includes(status)
-                      ? { ...filter, statuses: filter.statuses.filter((v) => v !== status) }
-                      : { ...filter, statuses: [...filter.statuses, status] }
-                  )
+                  const statuses = filter.statuses.includes(status)
+                    ? filter.statuses.filter((v) => v !== status)
+                    : filter.statuses.concat(status)
+
+                  setFilter({ ...filter, statuses })
                 }}
               >
                 {status}
