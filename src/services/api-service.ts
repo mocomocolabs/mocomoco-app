@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { IResponse } from '../../types/axios'
 import { config } from '../config'
 import { responseError, responseSuccess } from '../utils/http-helper-util'
@@ -10,8 +10,8 @@ class ApiService {
     this.init()
   }
 
-  get<T>(url: string): Promise<T> {
-    return this.http.get(url)
+  get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.http.get(url, config)
   }
 
   // eslint-disable-next-line

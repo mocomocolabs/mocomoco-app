@@ -1,4 +1,5 @@
 import { configure } from 'mobx'
+import { StuffTalentPathName as PathName } from './../models/stufftalent.d'
 import { AuthStore } from './auth-store'
 import { ChatStore } from './chat-store'
 import { ClubStore } from './club-store'
@@ -7,8 +8,7 @@ import { CommunityStore } from './community-store'
 import { News } from './example/news-store'
 import { TodoList } from './example/todo-list-store'
 import { FeedStore } from './feed-store'
-import { StuffStore } from './stuff-store'
-import { TalentStore } from './talent-store'
+import { StuffTalentStore } from './stufftalent-store'
 import { UiStore } from './ui-store'
 import { UserStore } from './user-store'
 
@@ -18,8 +18,8 @@ export class RootStore {
   $community: CommunityStore
   $feed: FeedStore
   $comment: CommentStore
-  $stuff: StuffStore
-  $talent: TalentStore
+  $stuff: StuffTalentStore
+  $talent: StuffTalentStore
   $chat: ChatStore
   $ui: UiStore
   $user: UserStore
@@ -36,8 +36,8 @@ export class RootStore {
     this.$comment = new CommentStore()
     this.$ui = new UiStore()
     this.$user = new UserStore()
-    this.$stuff = new StuffStore()
-    this.$talent = new TalentStore()
+    this.$stuff = new StuffTalentStore(PathName.STUFF)
+    this.$talent = new StuffTalentStore(PathName.TALENT)
     this.$chat = new ChatStore()
     this.$auth = new AuthStore()
     this.$club = new ClubStore(this)
