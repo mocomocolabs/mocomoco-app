@@ -2,11 +2,13 @@ import { IonIcon } from '@ionic/react'
 import { chatbox, cloud } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import { useStore } from '../../hooks/use-store'
-import { IStuff } from '../../models/stuff'
-import { ITalent } from '../../models/talent'
+import {
+  IStuffTalent,
+  StuffTalentPathName as Path,
+  StuffTalentStatus as Status,
+  StuffTalentType as Type,
+} from '../../models/stufftalent.d'
 import { route } from '../../services/route-service'
-import { StuffStore } from '../../stores/stuff-store'
-import { TalentStore } from '../../stores/talent-store'
 import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
@@ -14,34 +16,29 @@ import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 
 interface ITradeItem {
-  store: StuffStore | TalentStore
-  item: IStuff | ITalent
+  path: Path
+  item: IStuffTalent
   onDelete: (id: number) => void
 }
 
 const TypeString = {
-  GIVE: '팔아요',
-  TAKE: '구해요',
+  [Type.GIVE]: '팔아요',
+  [Type.TAKE]: '구해요',
 }
 
 const StatusString = {
-  AVAILABLE: '판매중',
-  RESERVED: '예약중',
-  FINISH: '거래완료',
+  [Status.AVAILABLE]: '판매중',
+  [Status.RESERVED]: '예약중',
+  [Status.FINISH]: '거래완료',
 }
 
-export const TradeItem: React.FC<ITradeItem> = ({ store, item, onDelete }) => {
+export const TradeItem: React.FC<ITradeItem> = ({ path, item, onDelete }) => {
   const { $user } = useStore()
 
-  // TODO dont use store. Instead, use another flag
-  const routeDetail = (store as StuffStore) ? route.stuffDetail : route.talentDetail
+  const routeDetail = path === Path.STUFF ? route.stuffDetail : route.talentDetail
 
-  const getItemLikeCount = (item: IStuff | ITalent) => {
-    if ((item as IStuff).stuffUsers) return (item as IStuff).stuffUsers.length ?? 0
-
-    if ((item as ITalent).talentUsers) return (item as ITalent).talentUsers.length ?? 0
-
-    return 0
+  const getItemLikeCount = (item: IStuffTalent) => {
+    return item.stuffUsers ? item.stuffUsers.length : item.talentUsers.length
   }
 
   return useObserver(() => (
