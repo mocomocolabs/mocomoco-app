@@ -1,6 +1,7 @@
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { ICommunity } from '../models/community'
+import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { Task } from './task'
 
@@ -11,8 +12,7 @@ const initState = {
 
 export class Community {
   @observable.ref communities: ICommunity[] = initState.communities
-  // TODO: API 협의 후 적절한 store로 이동, DB에 저장할 필요는 없을듯 함.
-  @observable selectedId: number = initState.selectedId
+  @observable selectedId: number = storage.communityId
 
   @task
   getCommunities = (async () => {

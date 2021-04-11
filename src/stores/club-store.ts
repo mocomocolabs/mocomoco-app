@@ -1,12 +1,11 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
-import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IClub, IClubForm } from '../models/club'
 import { api } from '../services/api-service'
+import { storage } from '../services/storage-service'
 import { urlToFile } from '../utils/image-util'
 import { InsertClubTask } from './club-store.d'
-import { Community } from './community-store'
 import { Task, TaskByNumber } from './task'
 
 const initState = {
@@ -28,12 +27,6 @@ export class Club {
   @observable.ref clubs: IClub[] = initState.clubs
   @observable.ref club: IClub = initState.club
   @observable.struct form: IClubForm = initState.form
-
-  $community: Community
-
-  constructor(rootStore: RootStore) {
-    this.$community = rootStore.$community
-  }
 
   @task
   getClubs = (async () => {
@@ -128,8 +121,7 @@ export class Club {
       new Blob(
         [
           JSON.stringify({
-            // TODO
-            communityId: 1,
+            communityId: storage.communityId,
             name: form.name,
             description: form.description,
             meetingTime: form.meetingTime,

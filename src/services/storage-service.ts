@@ -4,8 +4,18 @@ import { decrypt, encrypt } from '../utils/encrypt-util'
 const { Storage } = Plugins
 
 class StorageService {
+  private _communityId = 0
+
+  private readonly COMMUNITY_ID = 'COMMUNITY_ID'
   private readonly ACCESS_TOKEN = 'ACCESS_TOKEN'
   private readonly REFRESH_TOKEN = 'REFRESH_TOKEN'
+
+  setCommunityId(id: number): Promise<void> {
+    // ** 주의
+    // community-store.ts의 selectedId도 함께 셋팅해줄것
+    this._communityId = id
+    return this.setObject(this.COMMUNITY_ID, id)
+  }
 
   async getAccessToken(): Promise<string> {
     const token = await this.getObject(this.ACCESS_TOKEN)
@@ -45,6 +55,10 @@ class StorageService {
       return null
     }
     return JSON.parse(ret.value)
+  }
+
+  get communityId() {
+    return this._communityId
   }
 }
 

@@ -16,8 +16,6 @@ import { Toggle } from '../atoms/ToggleComponent'
 import { DatetimePicker } from '../molecules/DatetimePickerComponent'
 import { IImageUploaderRef, ImageUploader } from '../molecules/ImageUploaderComponent'
 
-export interface IFeedForm {}
-
 const feedTypes: IRadioItem[] = [
   {
     label: '새소식',
@@ -29,7 +27,7 @@ const feedTypes: IRadioItem[] = [
   },
 ]
 
-export const FeedForm: FC<IFeedForm> = () => {
+export const FeedForm: FC = () => {
   const { $feed } = useStore()
   const uploader = useRef<IImageUploaderRef>()
 

@@ -31,6 +31,7 @@ import { SignUpPage } from './pages/sign-up/SignUpPage'
 import { SignInPage } from './pages/SignInPage'
 import { TradePage } from './pages/TradePage'
 import { route } from './services/route-service'
+import { storage } from './services/storage-service'
 
 export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()
@@ -52,6 +53,10 @@ export const App: React.FC = () => {
     // $auth.setIsLogin()
 
     // TODO: login 이후 실행할 공통 호출들
+    if ($auth.user && !storage.communityId) {
+      storage.setCommunityId($auth.user.communities[0].id)
+    }
+    $community.setSelectedId(storage.communityId)
     $chat.getRooms()
     setInitailzed(true)
   }
