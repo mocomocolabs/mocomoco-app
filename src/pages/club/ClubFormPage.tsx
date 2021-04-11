@@ -1,26 +1,42 @@
 import { IonContent, IonFooter, IonPage, useIonViewWillEnter } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useRef } from 'react'
+import { useForm } from 'react-hook-form'
 import { Checkbox } from '../../components/atoms/CheckboxComponent'
 import { Icon } from '../../components/atoms/IconComponent'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
+import { Spinner } from '../../components/atoms/SpinnerComponent'
 import { Textarea } from '../../components/atoms/TextareaComponent'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
+import { Hashtag } from '../../components/molecules/HashtagComponent'
 import { IImageUploaderRef, ImageUploader } from '../../components/molecules/ImageUploaderComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
+import { IClubForm } from '../../models/club'
+import { route } from '../../services/route-service'
 
 export const ClubFormPage: React.FC = () => {
   const { $ui, $club } = useStore()
+  const { register, handleSubmit, errors, watch, formState } = useForm<IClubForm>({
+    mode: 'onChange',
+  })
+
   const uploader = useRef<IImageUploaderRef>()
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(false)
   })
 
-  const insertClub = () => {
-    $club.insertClub($club.form)
-  }
+  const onSubmit = handleSubmit(async (form) => {
+    console.log(form)
+    console.log(formState.isValid)
+
+    $club.setForm(form)
+    await $club.insertClub($club.form)
+
+    // TODO : go detail
+    route.clubs()
+  })
 
   return useObserver(() => (
     <IonPage>
@@ -29,39 +45,51 @@ export const ClubFormPage: React.FC = () => {
           <BackButton></BackButton>
         </div>
         <div className='text-header text-center'>소모임</div>
-        <div slot='end' onClick={() => insertClub()}>
-          완료
-        </div>
+
+        {$club.insertClub.match({
+          pending: () => <Spinner></Spinner>,
+          resolved: () => (
+            <div className={formState.isValid ? '' : 'gray'} slot='end' onClick={() => onSubmit()}>
+              완료
+            </div>
+          ),
+        })}
       </Header>
       <IonContent>
         <div className='px-container py-5'>
-          <ImageUploader
-            className='mb-6'
-            images={$club.form.images}
-            setImages={(param) => $club.setFormImage(param)}
-            refUploader={uploader as IImageUploaderRef}
-          ></ImageUploader>
-          <InputNormal
-            value={$club.form.name}
-            placeholder='모임 이름'
-            onChange={(name) => $club.setForm({ name })}
-          ></InputNormal>
-          <InputNormal
-            value={$club.form.meetingTime}
-            placeholder='모임 시간'
-            onChange={(meetingTime) => $club.setForm({ meetingTime })}
-          ></InputNormal>
-          <InputNormal
-            value={$club.form.meetingPlace}
-            placeholder='모임 장소'
-            onChange={(meetingPlace) => $club.setForm({ meetingPlace })}
-          ></InputNormal>
-          <Textarea
-            value={$club.form.description}
-            onChange={(description) => $club.setForm({ description })}
-            rows={10}
-            placeholder='소모임을 자유롭게 소게해주세요 :)'
-          ></Textarea>
+          <form onSubmit={onSubmit}>
+            <ImageUploader
+              className='mb-6'
+              images={$club.form.images}
+              setImages={(param) => $club.setFormImage(param)}
+              refUploader={uploader as IImageUploaderRef}
+            ></ImageUploader>
+            <InputNormal
+              name='name'
+              placeholder='모임 이름'
+              register={register({ required: true })}
+            ></InputNormal>
+            <InputNormal
+              name='meetingTime'
+              placeholder='모임 시간'
+              register={register({ required: true })}
+            ></InputNormal>
+            <InputNormal
+              name='meetingPlace'
+              placeholder='모임 장소'
+              register={register({ required: true })}
+            ></InputNormal>
+            <Hashtag
+              onChange={(hashtagNames) => $club.setForm({ hashtagNames })}
+              value={$club.form.hashtagNames?.join(' ')}
+            ></Hashtag>
+            <Textarea
+              name='description'
+              rows={10}
+              placeholder='소모임을 자유롭게 소게해주세요 :)'
+              register={register({ required: true })}
+            ></Textarea>
+          </form>
         </div>
       </IonContent>
       <IonFooter>
