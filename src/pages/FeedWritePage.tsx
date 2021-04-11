@@ -8,8 +8,8 @@ import {
   useIonViewWillLeave,
 } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import { FC } from 'react'
-import { Spinner } from '../components/atoms/SpinnerComponent'
+import React, { FC } from 'react'
+import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FeedForm } from '../components/organisms/FeedFormComponent'
 import { useStore } from '../hooks/use-store'
@@ -36,9 +36,9 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
             <BackButton></BackButton>
           </div>
           <div slot='end'>
-            {$feed.insertFeed.match({
-              pending: () => <Spinner></Spinner>,
-              resolved: () => (
+            <SpinnerWrapper
+              task={$feed.insertFeed}
+              Submit={() => (
                 <IonButton
                   size='small'
                   disabled={!$feed.form.content}
@@ -49,8 +49,8 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
                 >
                   완료
                 </IonButton>
-              ),
-            })}
+              )}
+            ></SpinnerWrapper>
           </div>
         </IonToolbar>
       </IonHeader>

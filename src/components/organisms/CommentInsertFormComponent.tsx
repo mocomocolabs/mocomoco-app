@@ -1,9 +1,10 @@
 import { IonIcon, IonTextarea } from '@ionic/react'
 import { paperPlane } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
+import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { Profile } from '../atoms/ProfileComponent'
-import { Spinner } from '../atoms/SpinnerComponent'
+import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
 export interface ICommentInsertForm {
   feedId: number
@@ -29,9 +30,9 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
       ></IonTextarea>
 
       <div className='ml-2'>
-        {$comment.insertComment.match({
-          pending: () => <Spinner></Spinner>,
-          resolved: () => (
+        <SpinnerWrapper
+          task={$comment.insertComment}
+          Submit={() => (
             <IonIcon
               icon={paperPlane}
               className='black'
@@ -43,8 +44,8 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
                 }
               }}
             ></IonIcon>
-          ),
-        })}
+          )}
+        ></SpinnerWrapper>
       </div>
     </div>
   ))

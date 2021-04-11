@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form'
 import { Checkbox } from '../../components/atoms/CheckboxComponent'
 import { Icon } from '../../components/atoms/IconComponent'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
-import { Spinner } from '../../components/atoms/SpinnerComponent'
 import { Textarea } from '../../components/atoms/TextareaComponent'
+import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
 import { Hashtag } from '../../components/molecules/HashtagComponent'
 import { IImageUploaderRef, ImageUploader } from '../../components/molecules/ImageUploaderComponent'
@@ -28,13 +28,8 @@ export const ClubFormPage: React.FC = () => {
   })
 
   const onSubmit = handleSubmit(async (form) => {
-    console.log(form)
-    console.log(formState.isValid)
-
     $club.setForm(form)
     await $club.insertClub($club.form)
-
-    // TODO : go detail
     route.clubs()
   })
 
@@ -46,14 +41,16 @@ export const ClubFormPage: React.FC = () => {
         </div>
         <div className='text-header text-center'>소모임</div>
 
-        {$club.insertClub.match({
-          pending: () => <Spinner></Spinner>,
-          resolved: () => (
-            <div className={formState.isValid ? '' : 'gray'} slot='end' onClick={() => onSubmit()}>
-              완료
-            </div>
-          ),
-        })}
+        <div slot='end'>
+          <SpinnerWrapper
+            task={$club.insertClub}
+            Submit={() => (
+              <div className={formState.isValid ? '' : 'gray'} slot='end' onClick={() => onSubmit()}>
+                완료
+              </div>
+            )}
+          ></SpinnerWrapper>
+        </div>
       </Header>
       <IonContent>
         <div className='px-container py-5'>

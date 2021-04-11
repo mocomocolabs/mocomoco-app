@@ -52,10 +52,14 @@ export const SignUpForm: FC = () => {
       ></InputPassword>
       <ValidationMessage isShow={errors.rePassword} message={errors?.rePassword?.message}></ValidationMessage>
 
-      {/* TODO: SubmitButton pending 편하게 처리할 수 있도록 수정 */}
       {observableTaskGroup.match({
         pending: () => <Spinner></Spinner>,
         resolved: () => <SubmitButton disabled={!formState.isValid} text='가입하기'></SubmitButton>,
+        rejected: () => {
+          $auth.signUp.reset()
+          $auth.signIn.reset()
+          return <></>
+        },
       })}
     </form>
   ))

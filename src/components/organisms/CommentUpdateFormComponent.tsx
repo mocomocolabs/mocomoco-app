@@ -1,9 +1,10 @@
 import { IonButton, IonIcon, IonTextarea } from '@ionic/react'
 import { close } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
+import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { Profile } from '../atoms/ProfileComponent'
-import { Spinner } from '../atoms/SpinnerComponent'
+import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
 export interface ICommentUpdateForm {
   commentId: number
@@ -31,9 +32,9 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId }) =
       <div className='flex-between-center'>
         <IonIcon icon={close} className='black' onClick={() => $comment.setUpdateCommentId(null)}></IonIcon>
 
-        {$comment.updateComment.match({
-          pending: () => <Spinner></Spinner>,
-          resolved: () => (
+        <SpinnerWrapper
+          task={$comment.updateComment}
+          Submit={() => (
             <IonButton
               disabled={!$comment.updateForm[commentId]?.content}
               size='small'
@@ -48,8 +49,8 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId }) =
             >
               업데이트
             </IonButton>
-          ),
-        })}
+          )}
+        ></SpinnerWrapper>
       </div>
     </div>
   ))

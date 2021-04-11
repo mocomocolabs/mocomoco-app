@@ -1,10 +1,11 @@
 import { IonIcon, IonTextarea } from '@ionic/react'
 import { paperPlane } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
+import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { scrollToBottom } from '../../utils/scroll-util'
 import { Profile } from '../atoms/ProfileComponent'
-import { Spinner } from '../atoms/SpinnerComponent'
+import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
 export interface IChatInsertForm {
   roomId: number
@@ -29,9 +30,9 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
       ></IonTextarea>
 
       <div className='ml-2'>
-        {$chat.insertChatMessage.match({
-          pending: () => <Spinner></Spinner>,
-          resolved: () => (
+        <SpinnerWrapper
+          task={$chat.insertChatMessage}
+          Submit={() => (
             <IonIcon
               icon={paperPlane}
               className='black'
@@ -44,8 +45,8 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
                 }
               }}
             ></IonIcon>
-          ),
-        })}
+          )}
+        ></SpinnerWrapper>
       </div>
     </div>
   ))
