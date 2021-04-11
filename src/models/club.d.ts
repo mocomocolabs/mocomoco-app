@@ -12,8 +12,10 @@ export interface IClub {
   imageUrls: string[]
   isMember: boolean
   members: IClubMember[]
-  createdAt: string
+  hashtagNames: string[]
+  imageUrls?: string[]
   isPublic: boolean
+  createdAt: string
 }
 
 interface IClubMember extends IUser {

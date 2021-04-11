@@ -1,15 +1,16 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IClub, IClubForm } from '../models/club'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { urlToFile } from '../utils/image-util'
-import { InsertClubTask } from './club-store.d'
+import { IClubDto, InsertClubTask } from './club-store.d'
 import { Task, TaskByNumber } from './task'
+import { User } from './user-store'
 
 const initState = {
-  clubs: [],
   club: {} as IClub,
   form: {
     communityId: 0,
@@ -24,72 +25,85 @@ const initState = {
 }
 
 export class Club {
-  @observable.ref clubs: IClub[] = initState.clubs
+  @observable.ref popularClubs: IClub[] = []
+  @observable.ref recentClubs: IClub[] = []
   @observable.ref club: IClub = initState.club
   @observable.struct form: IClubForm = initState.form
 
+  $user: User
+
+  constructor(rootStore: RootStore) {
+    this.$user = rootStore.$user
+  }
+
   @task
-  getClubs = (async () => {
-    action(() => {
-      this.clubs = [
-        {
-          id: 1,
-          name: '이랑 팬클럽',
-          description: `또 사람 죽는 것처럼 울었지
-      인천 공항에서도 나리타 공항에서도
-      울지 말라고 서로 힘내서 약속 해놓고..`,
-          meetingTime: '언제나 함께',
-          meetingPlace: '유튜브 Live',
-          community: { id: 1, name: '진강산 공동체', count: 5, bannerUrl: '/assets/mock/content1.jpeg' },
-          imageUrls: ['/assets/mock/content1.jpeg'],
-          isMember: true,
-          members: [],
-          createdAt: '20210203122311',
-          isPublic: false,
-        },
-        {
-          id: 1,
-          name: '이랑 팬클럽',
-          description: `또 사람 죽는 것처럼 울었지
-      인천 공항에서도 나리타 공항에서도
-      울지 말라고 서로 힘내서 약속 해놓고..`,
-          meetingTime: '언제나 함께',
-          meetingPlace: '유튜브 Live',
-          community: { id: 1, name: '진강산 공동체', count: 5, bannerUrl: '/assets/mock/content1.jpeg' },
-          imageUrls: ['/assets/mock/content1.jpeg'],
-          isMember: true,
-          members: [],
-          createdAt: '20210203122311',
-          isPublic: false,
-        },
-      ]
-    })
-    // await http.get<IClub[]>('/clubs').then(
-    //   action((data) => {
-    //     this.clubs = data
-    //   })
-    // )
+  getPopularClubs = (async () => {
+    // TODO: 페이징 처리 추후 구현
+    await api
+      .get<{ clubs: IClubDto[]; count: number }>(
+        `http://localhost:8080/api/v1/clubs?sort-order=popular&limit=999`
+      )
+      .then(
+        action((data) => {
+          this.popularClubs = data.clubs.map((v) => ({
+            ...v,
+            community: {
+              ...v.community,
+              bannerUrl: v.community.atchFiles[0]?.url,
+            },
+            members: v.clubUsers.map((v) => v.user as any), // TODO: IUser 확정시 any제거
+            isMember: !!v.clubUsers.findIndex((v) => v.user.id === this.$user.currentUserId),
+            imageUrls: v.atchFiles.map((v) => v.url),
+            hashtagNames: v.clubHashtags.map((v) => v.hashtag.name),
+          }))
+        })
+      )
+  }) as Task
+
+  @task
+  getRecentClubs = (async () => {
+    // TODO: 페이징 처리 추후 구현
+    await api
+      .get<{ clubs: IClubDto[]; count: number }>(
+        `http://localhost:8080/api/v1/clubs?sort-order=created_at_desc&limit=999`
+      )
+      .then(
+        action((data) => {
+          this.recentClubs = data.clubs.map((v) => ({
+            ...v,
+            community: {
+              ...v.community,
+              bannerUrl: v.community.atchFiles[0]?.url,
+            },
+            members: v.clubUsers.map((v) => v.user as any), // TODO: IUser 확정시 any제거
+            isMember: !!v.clubUsers.findIndex((v) => v.user.id === this.$user.currentUserId),
+            imageUrls: v.atchFiles.map((v) => v.url),
+            hashtagNames: v.clubHashtags.map((v) => v.hashtag.name),
+          }))
+        })
+      )
   }) as Task
 
   @task
   getClub = (async (id: number) => {
-    action(() => {
-      this.club = {
-        id: 1,
-        name: '이랑 팬클럽',
-        description: `또 사람 죽는 것처럼 울었지
-      인천 공항에서도 나리타 공항에서도
-      울지 말라고 서로 힘내서 약속 해놓고..`,
-        meetingTime: '언제나 함께',
-        meetingPlace: '유튜브 Live',
-        community: { id: 1, name: '진강산 공동체', count: 5, bannerUrl: '/assets/mock/content1.jpeg' },
-        imageUrls: ['/assets/mock/content1.jpeg'],
-        isMember: true,
-        members: [],
-        createdAt: '20210203122311',
-        isPublic: false,
-      }
-    })
+    // action(() => {
+    //   this.club = {
+    //     id: 1,
+    //     name: '이랑 팬클럽',
+    //     description: `또 사람 죽는 것처럼 울었지
+    //   인천 공항에서도 나리타 공항에서도
+    //   울지 말라고 서로 힘내서 약속 해놓고..`,
+    //     meetingTime: '언제나 함께',
+    //     meetingPlace: '유튜브 Live',
+    //     community: { id: 1, name: '진강산 공동체', count: 5, bannerUrl: '/assets/mock/content1.jpeg' },
+    //     imageUrls: ['/assets/mock/content1.jpeg'],
+    //     isMember: true,
+    //     members: [],
+    //     createdAt: '20210203122311',
+    //     isPublic: false,
+    //     hashtagNames: [],
+    //   }
+    // })
     // await http.get<IClub>(`/clubs/${id}`).then(
     //   action((data) => {
     //     this.club = data

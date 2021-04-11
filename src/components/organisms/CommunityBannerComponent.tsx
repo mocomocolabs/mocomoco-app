@@ -17,7 +17,7 @@ export const CommunityBanner: FC<ICommunityBanner> = () => {
       <div className='flex-between-center'>
         <div className='flex'>
           <IonIcon icon={people}></IonIcon>
-          <TextBase>{$community.community?.count}</TextBase>
+          <TextBase>{$community.community?.userCount}</TextBase>
         </div>
         <TextBase>{$community.community?.name}</TextBase>
       </div>
