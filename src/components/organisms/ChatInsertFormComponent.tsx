@@ -3,6 +3,7 @@ import { paperPlane } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
+import { executeWithError } from '../../utils/http-helper-util'
 import { scrollToBottom } from '../../utils/scroll-util'
 import { Profile } from '../atoms/ProfileComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
@@ -38,10 +39,12 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
               className='black'
               onClick={async () => {
                 if ($chat.form[roomId]?.message) {
-                  await $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
-                  await $chat.getRoomMessages({ roomId, messageId: $chat.lastMessageId })
-                  $chat.setForm(roomId, '')
-                  scrollToBottom()
+                  executeWithError(async () => {
+                    await $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
+                    await $chat.getRoomMessages({ roomId, messageId: $chat.lastMessageId })
+                    $chat.setForm(roomId, '')
+                    scrollToBottom()
+                  })
                 }
               }}
             ></IonIcon>

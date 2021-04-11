@@ -14,6 +14,7 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FeedForm } from '../components/organisms/FeedFormComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
+import { executeWithError } from '../utils/http-helper-util'
 
 export interface IFeedWrite {}
 
@@ -43,8 +44,10 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
                   size='small'
                   disabled={!$feed.form.content}
                   onClick={async () => {
-                    await $feed.insertFeed($feed.form)
-                    route.feed()
+                    executeWithError(async () => {
+                      await $feed.insertFeed($feed.form)
+                      route.feed()
+                    })
                   }}
                 >
                   완료
