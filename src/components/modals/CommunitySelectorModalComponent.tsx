@@ -3,6 +3,7 @@ import { checkmark } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import { Dispatch, FC, SetStateAction } from 'react'
 import { useStore } from '../../hooks/use-store'
+import { storage } from '../../services/storage-service'
 import { TextLg } from '../atoms/TextLgComponent'
 import { Modal } from './ModalComponent'
 
@@ -22,13 +23,14 @@ export const CommunitySelectorModal: FC<ICommunitySelectorModal> = ({ isShow, se
             key={v.id}
             className='py-2'
             onClick={() => {
+              storage.setCommunityId(v.id)
               $community.setSelectedId(v.id)
               setIsShow(false)
             }}
           >
             <div className='flex-between-center'>
               <TextLg>{v.name}</TextLg>
-              {v.id === $community.selectedId && <IonIcon icon={checkmark}></IonIcon>}
+              {v.id === storage.communityId && <IonIcon icon={checkmark}></IonIcon>}
             </div>
           </li>
         ))}

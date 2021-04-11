@@ -40,7 +40,7 @@ export class RootStore {
     this.$talent = new Talent()
     this.$chat = new Chat()
     this.$auth = new Auth()
-    this.$club = new Club(this)
+    this.$club = new Club()
 
     // example
     this.todoList = new TodoList()
