@@ -14,6 +14,7 @@ import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
 import { IClubForm } from '../../models/club'
 import { route } from '../../services/route-service'
+import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubFormPage: React.FC = () => {
   const { $ui, $club } = useStore()
@@ -29,8 +30,10 @@ export const ClubFormPage: React.FC = () => {
 
   const onSubmit = handleSubmit(async (form) => {
     $club.setForm(form)
-    await $club.insertClub($club.form)
-    route.clubs()
+    executeWithError(async () => {
+      await $club.insertClub($club.form)
+      route.clubs()
+    })
   })
 
   return useObserver(() => (
