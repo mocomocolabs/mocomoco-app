@@ -6,9 +6,9 @@ import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { InputPassword } from '../atoms/InputPasswordComponent'
-import { Spinner } from '../atoms/SpinnerComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../atoms/ValidationMessageComponent'
+import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
 export const SignInEmail: FC = () => {
   const { register, handleSubmit, errors, watch, formState } = useForm<{ email: string; password: string }>({
@@ -53,11 +53,10 @@ export const SignInEmail: FC = () => {
       ></InputPassword>
       <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
 
-      {/* TODO: SubmitButton pending 편하게 처리할 수 있도록 수정 */}
-      {$auth.signUp.match({
-        pending: () => <Spinner></Spinner>,
-        resolved: () => <SubmitButton disabled={!formState.isValid} text='로그인'></SubmitButton>,
-      })}
+      <SpinnerWrapper
+        task={$auth.signUp}
+        Submit={() => <SubmitButton disabled={!formState.isValid} text='로그인'></SubmitButton>}
+      ></SpinnerWrapper>
     </form>
   ))
 }
