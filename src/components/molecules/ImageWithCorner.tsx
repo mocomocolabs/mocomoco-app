@@ -4,7 +4,7 @@ import './ImageWithCorner.scss'
 
 export interface IImageWithCorner {
   height: number
-  url: string
+  url?: string
 }
 
 export const ImageWithCorner: FC<IImageWithCorner> = ({ height, url }) => {

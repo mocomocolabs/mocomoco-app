@@ -1,5 +1,6 @@
 import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
-import React from 'react'
+import { useObserver } from 'mobx-react-lite'
+import React, { useEffect } from 'react'
 import { Icon } from '../../components/atoms/IconComponent'
 import { TextLg } from '../../components/atoms/TextLgComponent'
 import { ClubOurTownList } from '../../components/organisms/ClubOurTownListComponent'
@@ -15,7 +16,12 @@ export const ClubPage: React.FC = () => {
     $ui.setIsBottomTab(true)
   })
 
-  return (
+  useEffect(() => {
+    $club.getPopularClubs()
+    $club.getRecentClubs()
+  }, [])
+
+  return useObserver(() => (
     <IonPage>
       <Header>
         <div slot='start' className='text-header'>
@@ -23,7 +29,8 @@ export const ClubPage: React.FC = () => {
         </div>
         <div slot='end'>
           <div className='flex'>
-            <Icon name='search' className='icon-24'></Icon>
+            {/* TODO: 추후구현 */}
+            {/* <Icon name='search' className='icon-24'></Icon> */}
             <div onClick={() => route.clubForm()}>
               <Icon name='pencil' className='ml-4 icon-24'></Icon>
             </div>
@@ -32,12 +39,12 @@ export const ClubPage: React.FC = () => {
       </Header>
       <IonContent>
         <TextLg className='px-container mt-5 mb-4 text-bold'>인기 소모임</TextLg>
-        <ClubPopularSlide></ClubPopularSlide>
+        <ClubPopularSlide clubs={$club.popularClubs}></ClubPopularSlide>
         <div className='mt-5 px-container'>
           <TextLg className='mb-4 text-bold'>우리동네 소모임</TextLg>
-          <ClubOurTownList></ClubOurTownList>
+          <ClubOurTownList clubs={$club.recentClubs}></ClubOurTownList>
         </div>
       </IonContent>
     </IonPage>
-  )
+  ))
 }

@@ -3,6 +3,7 @@ import { task } from 'mobx-task'
 import { ICommunity } from '../models/community'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
+import { ICommunityDto } from './community-store.d'
 import { Task } from './task'
 
 const initState = {
@@ -16,9 +17,12 @@ export class Community {
 
   @task
   getCommunities = (async () => {
-    await http.get<{ communities: ICommunity[] }>('http://localhost:8080/api/v1/communities').then(
+    await http.get<{ communities: ICommunityDto[] }>('http://localhost:8080/api/v1/communities').then(
       action((data) => {
-        this.communities = data.communities
+        this.communities = data.communities.map((v: ICommunityDto) => ({
+          ...v,
+          bannerUrl: v.atchFiles[0]?.url,
+        }))
       })
     )
   }) as Task
