@@ -28,5 +28,5 @@ export interface IClubForm {
   description: string
   images: ImageUploadItem[]
   isPublic: boolean
-  hashtags: string[]
+  hashtagNames: string[]
 }

@@ -20,7 +20,7 @@ const initState = {
     description: '',
     images: [],
     isPublic: false,
-    hashtags: [],
+    hashtagNames: [],
   },
 }
 
@@ -121,7 +121,6 @@ export class Club {
 
   @task.resolved
   insertClub = (async (form: IClubForm) => {
-    // await new Promise((r) => setTimeout(() => r(1), 1000))
     const formData = new FormData()
 
     formData.append(
@@ -129,10 +128,13 @@ export class Club {
       new Blob(
         [
           JSON.stringify({
-            communityId: this.$community.selectedId,
+            // TODO
+            communityId: 1,
+            name: form.name,
             description: form.description,
             meetingTime: form.meetingTime,
             meetingPlace: form.meetingPlace,
+            hashtagNames: form.hashtagNames,
             isPublic: form.isPublic,
           }),
         ],
@@ -146,7 +148,7 @@ export class Club {
       formData.append('files', v)
     })
 
-    await api.post(`http://localhost:8080/v1/clubs`, formData)
+    await api.post(`http://localhost:8080/api/v1/clubs`, formData)
     this.resetForm()
   }) as InsertClubTask
 
