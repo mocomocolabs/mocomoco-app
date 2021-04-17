@@ -19,7 +19,7 @@ import { executeWithError } from '../utils/http-helper-util'
 export interface IFeedWrite {}
 
 export const FeedWritePage: FC<IFeedWrite> = () => {
-  const { $ui, $feed } = useStore()
+  const { $ui, $feed, $community } = useStore()
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(false)
@@ -45,7 +45,10 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
                   disabled={!$feed.form.content}
                   onClick={async () => {
                     executeWithError(async () => {
-                      await $feed.insertFeed($feed.form)
+                      await $feed.insertFeed({
+                        ...$feed.form,
+                        communityId: $community.selectedId,
+                      })
                       route.feed()
                     })
                   }}

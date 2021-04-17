@@ -24,6 +24,7 @@ interface IClubMember extends IUser {
 
 export interface IClubForm {
   id?: number
+  communityId: number
   name: string
   meetingTime: string
   meetingPlace: string

@@ -2,7 +2,6 @@ import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IFeed, IFeedForm } from '../models/feed'
-import { storage } from '../services/storage-service'
 import { httpFile } from '../utils/http-file-util'
 import { http } from '../utils/http-util'
 import { urlToFile } from '../utils/image-util'
@@ -86,7 +85,7 @@ export class Feed {
     // "files": [
     //   "string"
     // ]
-    formData.append('communityId', String(storage.communityId))
+    formData.append('communityId', String(form.communityId))
     formData.append('type', form.type)
     formData.append('scheduleDate', form.scheduleDate)
     formData.append('scheduleTime', form.scheduleTime)

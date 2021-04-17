@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { ISignUpForm } from '../../models/sign-up'
 import { route } from '../../services/route-service'
+import { executeWithError } from '../../utils/http-helper-util'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { InputPassword } from '../atoms/InputPasswordComponent'
 import { Spinner } from '../atoms/SpinnerComponent'
@@ -23,9 +24,12 @@ export const SignUpForm: FC = () => {
 
   const onSubmit = handleSubmit(async (form) => {
     $auth.setSignUpForm(form)
-    await $auth.signUp($auth.signUpForm)
-    await $auth.signIn($auth.signUpForm.email!, form.password)
-    route.feed()
+
+    executeWithError(async () => {
+      await $auth.signUp($auth.signUpForm)
+      await $auth.signIn($auth.signUpForm.email!, form.password)
+      route.feed()
+    })
   })
 
   return useObserver(() => (

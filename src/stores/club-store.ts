@@ -4,10 +4,9 @@ import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IClub, IClubForm } from '../models/club'
 import { api } from '../services/api-service'
-import { storage } from '../services/storage-service'
 import { urlToFile } from '../utils/image-util'
 import { IClubDto, InsertClubTask } from './club-store.d'
-import { Task, TaskByNumber } from './task'
+import { Task, TaskBy } from './task'
 import { User } from './user-store'
 
 const initState = {
@@ -109,7 +108,7 @@ export class Club {
     //     this.club = data
     //   })
     // )
-  }) as TaskByNumber
+  }) as TaskBy<number>
 
   @task
   getClubForm = (async (_id: number) => {
@@ -124,7 +123,7 @@ export class Club {
       isPublic,
       images,
     })
-  }) as TaskByNumber
+  }) as TaskBy<number>
 
   @task.resolved
   insertClub = (async (form: IClubForm) => {
@@ -135,7 +134,7 @@ export class Club {
       new Blob(
         [
           JSON.stringify({
-            communityId: storage.communityId,
+            communityId: form.communityId,
             name: form.name,
             description: form.description,
             meetingTime: form.meetingTime,
