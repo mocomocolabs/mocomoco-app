@@ -30,6 +30,7 @@ export class Community {
   @action
   setSelectedId(id: number) {
     this.selectedId = id
+    storage.setCommunityId(id)
   }
 
   @computed

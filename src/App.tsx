@@ -53,10 +53,10 @@ export const App: React.FC = () => {
     // $auth.setIsLogin()
 
     // TODO: login 이후 실행할 공통 호출들
-    if ($auth.user && !storage.communityId) {
-      storage.setCommunityId($auth.user.communities[0].id)
+    if ($auth.user.id && !storage.communityId) {
+      $community.setSelectedId($auth.user.communities[0].id)
     }
-    $community.setSelectedId(storage.communityId)
+
     $chat.getRooms()
     setInitailzed(true)
   }
@@ -76,13 +76,11 @@ export const App: React.FC = () => {
               <GuardRoute path='/feed' component={FeedPage} exact />
               <GuardRoute path='/feed/:id' component={FeedDetailPage} exact />
               <GuardRoute path='/feed-write' component={FeedWritePage} exact />
-              {/* TODO fix it */}
               <GuardRoute path='/stuff' component={TradePage} exact />
               <GuardRoute path='/talent' component={TradePage} exact />
               <GuardRoute path='/club' component={ClubPage} exact />
               <GuardRoute path='/club-form' component={ClubFormPage} exact />
               <GuardRoute path='/club/:id' component={ClubDetailPage} exact />
-              <GuardRoute path='/trade' component={TradePage} exact />
               <GuardRoute path='/chat' component={ChatPage} exact />
               <GuardRoute path='/chat/:id' component={ChatRoomPage} exact />
               <GuardRoute path='/my-page' component={MyPage} exact />

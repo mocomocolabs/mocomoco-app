@@ -17,7 +17,7 @@ import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubFormPage: React.FC = () => {
-  const { $ui, $club } = useStore()
+  const { $ui, $club, $community } = useStore()
   const { register, handleSubmit, errors, watch, formState } = useForm<IClubForm>({
     mode: 'onChange',
   })
@@ -31,7 +31,10 @@ export const ClubFormPage: React.FC = () => {
   const onSubmit = handleSubmit(async (form) => {
     $club.setForm(form)
     executeWithError(async () => {
-      await $club.insertClub($club.form)
+      await $club.insertClub({
+        ...$club.form,
+        communityId: $community.selectedId,
+      })
       route.clubs()
     })
   })
@@ -86,7 +89,7 @@ export const ClubFormPage: React.FC = () => {
             <Textarea
               name='description'
               rows={10}
-              placeholder='소모임을 자유롭게 소게해주세요 :)'
+              placeholder='소모임을 자유롭게 소개해주세요 :)'
               register={register({ required: true })}
             ></Textarea>
           </form>

@@ -23,6 +23,7 @@ export interface IFeed {
 
 export interface IFeedForm {
   id?: number
+  communityId: number
   type: FeedType
   scheduleDate: string // TODO: 임시
   scheduleTime: string // TODO: 임시

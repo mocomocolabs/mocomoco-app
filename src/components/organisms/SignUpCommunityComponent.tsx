@@ -4,7 +4,6 @@ import { useObserver } from 'mobx-react-lite'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
-import { storage } from '../../services/storage-service'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { TextXxl } from '../atoms/TextXxlComponent'
@@ -21,19 +20,19 @@ export const SignUpCommunity: FC = () => {
             key={v.id}
             className='py-2'
             onClick={() => {
-              storage.setCommunityId(v.id)
+              $community.setSelectedId(v.id)
               $auth.setSignUpForm({ communityIds: [v.id] })
             }}
           >
             <div className='flex-between-center'>
               <TextLg>{v.name}</TextLg>
-              {v.id === storage.communityId && <IonIcon icon={checkmark}></IonIcon>}
+              {v.id === $community.selectedId && <IonIcon icon={checkmark}></IonIcon>}
             </div>
           </li>
         ))}
       </ul>
       <SubmitButton
-        disabled={!storage.communityId}
+        disabled={!$community.selectedId}
         text='가입하기'
         onClick={() => {
           route.signUpForm()
