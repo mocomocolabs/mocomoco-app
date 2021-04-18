@@ -46,7 +46,7 @@ export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticCo
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton />
+            <BackButton type='arrow' />
           </div>
           <IonTitle slot='start'>쪽지 보내기</IonTitle>
         </IonToolbar>

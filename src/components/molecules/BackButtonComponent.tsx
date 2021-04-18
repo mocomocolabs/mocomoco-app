@@ -1,4 +1,3 @@
-import { arrowBackOutline } from 'ionicons/icons'
 import { FC } from 'react'
 import { route } from '../../services/route-service'
 import { Icon } from '../atoms/IconComponent'
@@ -6,14 +5,15 @@ import { Icon } from '../atoms/IconComponent'
 export interface IBackButton {
   icon?: string
   action?: () => void
+  type: 'close' | 'arrow'
 }
 
-export const BackButton: FC<IBackButton> = ({ icon = arrowBackOutline, action }) => {
+export const BackButton: FC<IBackButton> = ({ type, action }) => {
   const defaultAction = () => route.goBack()
 
   return (
     <div className='flex' onClick={action ?? defaultAction}>
-      <Icon name='close'></Icon>
+      <Icon name={type === 'close' ? 'close' : 'back-arrow'}></Icon>
     </div>
   )
 }

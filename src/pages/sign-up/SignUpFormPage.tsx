@@ -15,7 +15,7 @@ export const SignUpFormPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton></BackButton>
+            <BackButton type='arrow'></BackButton>
           </div>
         </IonToolbar>
       </IonHeader>

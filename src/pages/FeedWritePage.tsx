@@ -34,7 +34,7 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton></BackButton>
+            <BackButton type='close'></BackButton>
           </div>
           <div slot='end'>
             <SpinnerWrapper
