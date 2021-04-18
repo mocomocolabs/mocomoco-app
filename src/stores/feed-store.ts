@@ -18,7 +18,7 @@ const initState = {
   } as IFeedForm,
 }
 
-export class Feed {
+export class FeedStore {
   @observable.ref feeds: IFeed[] = initState.feeds
   @observable.ref feed: IFeed = initState.feed
   @observable.struct form: IFeedForm = initState.form

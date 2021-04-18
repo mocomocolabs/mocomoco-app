@@ -8,13 +8,13 @@ export type InsertClubTask = Task<[Partial<IClubForm>], void>
 
 export interface IClubDto {
   // adminUsers: [{id: 1, email: "junho@junho.com", name: "준호", nickname: "준호", mobile: "123456789", fcmToken: "_",…}]
-  clubUsers: { user: IUserDto }[]
   id: number
-  community: ICommunityDto
   name: string
   description: string
-  meetingPlace: string
   meetingTime: string
+  meetingPlace: string
+  clubUsers: { user: IUserDto }[]
+  community: ICommunityDto
   atchFiles: IFileDto[]
   isPublic: boolean
   clubHashtags: { hashtag: { name: string } }[]

@@ -8,7 +8,7 @@
     ],
     "experimentalDecorators": true,
     "allowJs": true,
-    "skipLibCheck": true, // d.ts 유형검사를 건너 뜀.
+    "skipLibCheck": false, // d.ts 유형검사를 건너 뜀.
     "esModuleInterop": true, // ES6 모듈 사양을 준수하여 CommonJS 모듈(require)을 가져오게함 https://pewww.tistory.com/26
     "allowSyntheticDefaultImports": true, // export class Foo {} => export default { Foo } 치환 되도록 설정
     "strict": true, // 모든 엄격한 타입 검사 옵션을 활성화 (noImplicitAny, noImplicitThis, alwaysStrict, strictNullChecks, strictFunctionTypes)
@@ -19,7 +19,8 @@
     "isolatedModules": true, // 각 파일을 별도의 모듈로 변환
     "noEmit": true, // 결과파일을 저장하지 않음, 타입스크립트 컴파일러를 컴파일러 용도로만 사용합니다. 컴파일은 웹팩에게 맡깁니다.
     "jsx": "react-jsx",
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "strictPropertyInitialization": false, /** class의 변수 초기화 강제를 해제  */
   },
   "include": [
     "src",

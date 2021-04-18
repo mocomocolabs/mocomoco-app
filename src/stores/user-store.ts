@@ -10,7 +10,7 @@ const initState = {
   currentUserId: null,
 }
 
-export class User {
+export class UserStore {
   // @observable.struct don't notify if new value is equal to old value.
   // Like observable.deep, except that any assigned value that
   // is structurally equal to the current value will be ignored.

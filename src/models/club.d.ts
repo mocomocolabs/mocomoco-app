@@ -1,22 +1,5 @@
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
-import { ICommunity } from './community.d'
 import { IUser } from './user.d'
-
-export interface IClub {
-  id: number
-  name: string
-  description: string
-  meetingTime: string
-  meetingPlace: string
-  community: ICommunity
-  imageUrls: string[]
-  isMember: boolean
-  members: IClubMember[]
-  hashtagNames: string[]
-  imageUrls?: string[]
-  isPublic: boolean
-  createdAt: string
-}
 
 interface IClubMember extends IUser {
   isAdmin: boolean // TODO: 서버와 협의 필요

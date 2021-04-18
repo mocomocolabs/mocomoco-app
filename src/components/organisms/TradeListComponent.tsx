@@ -4,14 +4,14 @@ import { TaskGroup } from 'mobx-task'
 import React, { useLayoutEffect } from 'react'
 import { IStuff, IStuffTalentFilter } from '../../models/stuff'
 import { ITalent } from '../../models/talent'
-import { Stuff } from '../../stores/stuff-store'
-import { Talent } from '../../stores/talent-store'
+import { StuffStore } from '../../stores/stuff-store'
+import { TalentStore } from '../../stores/talent-store'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TradeItem } from '../molecules/TradeItemComponent'
 import { ContentPopover } from './ContentPopoverComponent'
 
 interface ITradeList {
-  store: Stuff | Talent
+  store: StuffStore | TalentStore
   search: string
   filter: IStuffTalentFilter
 }

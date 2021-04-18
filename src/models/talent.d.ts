@@ -29,6 +29,6 @@ export interface ITalentCategories {
   categories: ITalentCategory[]
 }
 export interface ITalentCategory {
-  id: num
+  id: number
   name: string
 }

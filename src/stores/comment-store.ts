@@ -10,7 +10,7 @@ const initState = {
   updateCommentId: null,
 }
 
-export class Comment {
+export class CommentStore {
   @observable
   insertForm: {
     [feedId: number]: {

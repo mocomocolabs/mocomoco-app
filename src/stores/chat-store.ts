@@ -11,7 +11,7 @@ const initState = {
   form: {} as any,
 }
 
-export class Chat {
+export class ChatStore {
   @observable.shallow rooms: IChatRoom[] = initState.rooms
   @observable currentRoomId: number | null = initState.currentRoomId
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
