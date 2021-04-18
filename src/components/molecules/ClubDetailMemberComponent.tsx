@@ -18,8 +18,8 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community }) 
         <TextBase className='text-bold'>참여 멤버</TextBase>
         <TextBase className='ml-1'>30명</TextBase>
       </div>
-      {members.map((v, i) => (
-        <div key={i} className='flex-between-center'>
+      {members.map((v) => (
+        <div key={v.id} className='flex-between-center'>
           <div className='flex items-center'>
             <Profile url={v.profileUrl} className='mr-2 w-10 h-10'></Profile>
             <div className='flex-col'>
