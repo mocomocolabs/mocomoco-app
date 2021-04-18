@@ -1,5 +1,5 @@
-import React, { FC } from 'react'
-import { IClub } from '../../models/club'
+import { FC } from 'react'
+import { Club } from '../../models/club'
 import { Icon } from '../atoms/IconComponent'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -7,7 +7,7 @@ import { TextXs } from '../atoms/TextXsComponent'
 import { ImageWithCorner } from '../molecules/ImageWithCorner'
 
 export interface IClubOurTownList {
-  clubs: IClub[]
+  clubs: Club[]
 }
 
 export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {

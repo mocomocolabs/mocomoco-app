@@ -17,6 +17,7 @@ export type IUserDto = {
   isPublicEmail: boolean
   isPublicMobile: boolean
   isUse: boolean
+  role: 'ROLE_USER' | 'ROLE_ADMIN'
   mobile: string
   status: string
   createdAt: string

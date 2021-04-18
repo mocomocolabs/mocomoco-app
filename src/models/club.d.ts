@@ -2,7 +2,7 @@ import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IUser } from './user.d'
 
 interface IClubMember extends IUser {
-  isAdmin: boolean // TODO: 서버와 협의 필요
+  isAdmin: boolean
 }
 
 export interface IClubForm {

@@ -35,6 +35,8 @@ yarn dev
 - organisms : molecules가 모인 단위, http 통신 가능
 - modals : 모달 컴포넌트
 
+> 컴포넌트의 재사용을 위해, 가급적 순수 컴포넌트로 만들어 props 로 인자를 전달하는 것을 지향합니다.
+
 2. 네이밍
 
 - 이름 끝에 접미사로 `Component`를 붙인다.
