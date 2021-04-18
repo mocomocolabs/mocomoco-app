@@ -20,6 +20,7 @@ export type IUserDto = {
   isPublicEmail: boolean
   isPublicMobile: boolean
   role: USER_ROLE
+  isUse: boolean
   status: string
   profileUrl: string
   communities: ICommunity[]
