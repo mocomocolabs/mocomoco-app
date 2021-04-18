@@ -16,7 +16,7 @@ export const SignInPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton action={() => route.signUp()}></BackButton>
+            <BackButton type='arrow' action={() => route.signUp()}></BackButton>
           </div>
         </IonToolbar>
       </IonHeader>

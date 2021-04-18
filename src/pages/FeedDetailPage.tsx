@@ -55,7 +55,7 @@ export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton></BackButton>
+            <BackButton type='arrow'></BackButton>
           </div>
           <div slot='end'></div>
         </IonToolbar>

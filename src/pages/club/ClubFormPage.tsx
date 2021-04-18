@@ -12,7 +12,7 @@ import { Hashtag } from '../../components/molecules/HashtagComponent'
 import { IImageUploaderRef, ImageUploader } from '../../components/molecules/ImageUploaderComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
-import { IClubForm } from '../../models/club'
+import { IClubForm } from '../../models/club.d'
 import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 
@@ -43,7 +43,7 @@ export const ClubFormPage: React.FC = () => {
     <IonPage>
       <Header>
         <div slot='start' className='text-header'>
-          <BackButton></BackButton>
+          <BackButton type='close'></BackButton>
         </div>
         <div className='text-header text-center'>소모임</div>
 

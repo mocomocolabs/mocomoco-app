@@ -7,7 +7,6 @@ import {
   useIonViewWillEnter,
   useIonViewWillLeave,
 } from '@ionic/react'
-import { chevronBack } from 'ionicons/icons'
 import { useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -37,7 +36,7 @@ export const ProfileUpdatePage: React.FC<RouteComponentProps<{ id: string }>> = 
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton icon={chevronBack} />
+            <BackButton type='close' />
           </div>
           <IonTitle slot='start'>프로필 수정</IonTitle>
 

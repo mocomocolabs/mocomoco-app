@@ -15,7 +15,7 @@ export const LoginPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton></BackButton>
+            <BackButton type='arrow'></BackButton>
           </div>
         </IonToolbar>
       </IonHeader>

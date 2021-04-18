@@ -7,7 +7,6 @@ import {
   useIonViewWillEnter,
   useIonViewWillLeave,
 } from '@ionic/react'
-import { chevronBack } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -32,7 +31,7 @@ export const ProfileDetailPage: React.FC<RouteComponentProps<{ id: string }>> = 
       <IonHeader>
         <IonToolbar>
           <div slot='start'>
-            <BackButton icon={chevronBack} />
+            <BackButton type='close' />
           </div>
           <IonTitle slot='start'>프로필 보기</IonTitle>
 

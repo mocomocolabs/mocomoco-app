@@ -8,7 +8,7 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
-import { chevronBack, create, filter as filterIcon, search as searchIcon } from 'ionicons/icons'
+import { create, filter as filterIcon, search as searchIcon } from 'ionicons/icons'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -63,7 +63,7 @@ export const TradePage: React.FC = () => {
           </div>
 
           <div className='flex-between-center' hidden={!searchMode}>
-            <BackButton icon={chevronBack} action={() => setSearchMode(false)} />
+            <BackButton type='close' action={() => setSearchMode(false)} />
             <IonSearchbar
               value={search}
               placeholder='검색'
