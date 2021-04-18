@@ -9,10 +9,11 @@ export class Club {
   meetingTime: string
   meetingPlace: string
   community: ICommunity
-  isMember: boolean
   members: IClubMember[]
   hashtagNames: string[]
   imageUrls: string[]
+  isMember: boolean
+  isAdmin: boolean
   isPublic: boolean
   createdAt: string
 
@@ -23,11 +24,15 @@ export class Club {
         ...payload.community,
         bannerUrl: payload.community.atchFiles[0]?.url,
       },
-      // TODO: IUser 확정시 any제거
-      members: payload.clubUsers.map((v) => v.user as any),
-      isMember: !!payload.clubUsers.findIndex((v) => v.user.id === userId),
+      members: payload.clubUsers.map((v) => ({
+        ...v.user,
+        // TODO: api업데이트 후 체크 필요
+        isAdmin: v.user.role === 'ROLE_ADMIN',
+      })),
       imageUrls: payload.atchFiles.map((v) => v.url),
       hashtagNames: payload.clubHashtags.map((v) => v.hashtag.name),
+      isMember: !!payload.clubUsers.findIndex((v) => v.user.id === userId),
+      isAdmin: !!payload.adminUsers.findIndex((v) => v.id === userId),
     })
   }
 }

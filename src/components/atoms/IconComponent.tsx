@@ -1,5 +1,6 @@
 import { HTMLAttributes } from 'react'
 import { ReactSVG } from 'react-svg'
+import './IconComponent.scss'
 
 interface IIcon extends HTMLAttributes<HTMLElement> {
   name: string
@@ -11,7 +12,7 @@ export const Icon = ({ name, className = '', onClick = () => {} }: IIcon) => {
     <ReactSVG
       onClick={($evt: any) => onClick($evt)}
       src={`/assets/icon/${name}.svg`}
-      className={`${className} flex items-center icon-20`}
+      className={`${className} svg-icon flex items-center icon-20`}
     ></ReactSVG>
   )
 }

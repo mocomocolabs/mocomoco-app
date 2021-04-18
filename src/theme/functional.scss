@@ -513,7 +513,6 @@
 .pl-2 {
   padding-left: 0.8rem;
 }
-
 .pl-3 {
   padding-left: 1.2rem;
 }
@@ -531,6 +530,10 @@
 }
 .pl-8 {
   padding-left: 3.2rem;
+}
+
+.pb-extra-space {
+  padding-bottom: $padding-bottom-extra-space;
 }
 
 .px-container {
@@ -1196,40 +1199,40 @@
   border-color: gray;
 }
 
-.bg-yellow {
+.border-yellow {
   border: 1px solid $yellow;
 }
-.bg-m-yellow {
+.border-m-yellow {
   border: 1px solid $m-yellow;
 }
-.bg-d-yellow {
+.border-d-yellow {
   border: 1px solid $d-yellow;
 }
-.bg-green {
+.border-green {
   border: 1px solid $green;
 }
-.bg-m-green {
+.border-m-green {
   border: 1px solid $m-green;
 }
-.bg-d-green {
+.border-d-green {
   border: 1px solid $d-green;
 }
-.bg-white {
+.border-white {
   border: 1px solid $white;
 }
-.bg-gray {
+.border-gray {
   border: 1px solid $gray;
 }
-.bg-d-gray {
+.border-d-gray {
   border: 1px solid $d-gray;
 }
-.bg-black {
+.border-black {
   border: 1px solid $black;
 }
-.bg-red {
+.border-red {
   border: 1px solid $red;
 }
-.bg-m-red {
+.border-m-red {
   border: 1px solid $m-red;
 }
 
@@ -1278,15 +1281,19 @@
   box-shadow: none;
 }
 
+/** 줄을 바꿀 때 단어를 끊지 않고 공백에서만 끊음, 흘러넘치는 것 허용 */
 .keep-word {
   word-break: keep-all;
 }
+/** 요소에 맞춰 줄바꿈 */
 .break-word {
   word-break: break-word;
 }
+/** 연속 공백을 하나로 합침. 자동으로 줄바꿈 하지 않음. */
 .no-wrap {
   white-space: nowrap;
 }
+/** \n 을 통해 문자를 개행하고 싶은 경우, 첫줄에서 들여 쓰기가 되지 않음 */
 .pre-line {
   white-space: pre-line;
 }

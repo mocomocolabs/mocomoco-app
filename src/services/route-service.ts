@@ -76,7 +76,7 @@ class RouteService {
     this.history.push(`/club-form`)
   }
 
-  clubDetail(clubId: string) {
+  clubDetail(clubId: number) {
     this.history.push(`/club/${clubId}`)
   }
 

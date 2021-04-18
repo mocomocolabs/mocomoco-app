@@ -1,6 +1,7 @@
 import { IonSlide, IonSlides } from '@ionic/react'
 import React, { FC } from 'react'
-import { IClub } from '../../models/club'
+import { Club } from '../../models/club'
+import { route } from '../../services/route-service'
 import { Icon } from '../atoms/IconComponent'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -9,7 +10,7 @@ import { ImageWithCorner } from '../molecules/ImageWithCorner'
 import './ClubPopularSlideComponent.scss'
 
 export interface IClubPopularSlide {
-  clubs: IClub[]
+  clubs: Club[]
 }
 
 export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
@@ -23,7 +24,7 @@ export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
   return clubs.length ? (
     <IonSlides pager={false} options={slideOpts} className='pb-3'>
       {clubs.map((v) => (
-        <IonSlide className='w-auto' key={v.id}>
+        <IonSlide className='w-auto' key={v.id} onClick={() => route.clubDetail(v.id)}>
           <div className='flex-col width-160 br-xxlg shadow pb-2'>
             <ImageWithCorner height={130} url={v.imageUrls?.slice(-1).pop()}></ImageWithCorner>
             <div className='flex-col w-full bg-white px-3 br-b-xxlg text-left'>

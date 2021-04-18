@@ -1,7 +1,9 @@
 import { FC } from 'react'
 
-export interface IXDivider {}
+export interface IXDivider {
+  className?: string
+}
 
-export const XDivider: FC<IXDivider> = () => {
-  return <hr className='bg-gray min-h-1 w-full'></hr>
+export const XDivider: FC<IXDivider> = ({ className }) => {
+  return <hr className={`bg-yellow min-h-1 w-full ${className}`}></hr>
 }

@@ -3,6 +3,7 @@ import { rootStore } from '../index'
 
 export const executeWithError = (func: () => Promise<any>) => {
   func().catch((err) => {
+    console.error(err)
     rootStore.$ui.showToastError({ message: err.message })
   })
 }

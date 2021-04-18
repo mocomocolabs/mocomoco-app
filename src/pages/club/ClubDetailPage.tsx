@@ -1,10 +1,15 @@
 import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
-import React from 'react'
-import { BackButton } from '../../components/molecules/BackButtonComponent'
-import { Header } from '../../components/organisms/HeaderComponent'
+import React, { useEffect } from 'react'
+import { StaticContext } from 'react-router'
+import { RouteComponentProps } from 'react-router-dom'
+import { Pad } from '../../components/atoms/PadComponent'
+import { Spinner } from '../../components/atoms/SpinnerComponent'
+import { BackFloatingButton } from '../../components/molecules/BackFloatingButtonComponent'
+import { ClubDetailContents } from '../../components/molecules/ClubDetailContentsComponent'
+import { ClubDetailMember } from '../../components/molecules/ClubDetailMemberComponent'
 import { useStore } from '../../hooks/use-store'
 
-export const ClubDetailPage: React.FC = () => {
+export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, StaticContext>> = () => {
   const { $ui, $club } = useStore()
 
   useIonViewWillEnter(() => {
@@ -12,19 +17,28 @@ export const ClubDetailPage: React.FC = () => {
     $ui.setIsBottomTab(false)
   })
 
+  useEffect(() => {
+    $club.getClub(1)
+  }, [])
+
   return (
     <IonPage>
-      <Header>
-        <BackButton></BackButton>
-        {/* <div slot='start' className='text-header'></div> */}
-      </Header>
       <IonContent>
-        {/* <TextLg className='px-container mt-5 mb-4 text-bold'>인기 소모임</TextLg>
-        <ClubPopularSlide></ClubPopularSlide>
-        <div className='mt-5 px-container'>
-          <TextLg className='mb-4 text-bold'>우리동네 소모임</TextLg>
-          <ClubOurTownList></ClubOurTownList>
-        </div> */}
+        <BackFloatingButton></BackFloatingButton>
+
+        {$club.club ? (
+          <>
+            <ClubDetailContents club={$club.club}></ClubDetailContents>
+            <ClubDetailMember
+              members={$club.club.members}
+              community={$club.club.community}
+            ></ClubDetailMember>
+          </>
+        ) : (
+          <Spinner></Spinner>
+        )}
+
+        <Pad className='pb-extra-space'></Pad>
       </IonContent>
     </IonPage>
   )
