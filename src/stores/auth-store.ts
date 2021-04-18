@@ -19,7 +19,7 @@ const initState = {
   user: {} as IAuthUser,
 }
 
-export class Auth {
+export class AuthStore {
   @observable.struct signUpForm: Partial<ISignUpForm> = initState.signUpForm
   @observable isLogin = false
   @observable.struct user: IAuthUser = initState.user
@@ -120,9 +120,8 @@ export class Auth {
       communities: communities.map((v) => ({
         id: v.id,
         name: v.name,
-        // TODO: 추가필요
-        // count: v.count,
-        bannerUrl: v.atchFiles?.slice(-1)?.pop()?.url,
+        userCount: v.userCount,
+        bannerUrl: v.atchFiles[0]?.url,
       })),
     }
 

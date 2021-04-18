@@ -30,7 +30,7 @@ export interface IStuffCategories {
 }
 
 export interface IStuffCategory {
-  id: num
+  id: number
   name: string
 }
 

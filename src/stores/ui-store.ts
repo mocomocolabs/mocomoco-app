@@ -27,7 +27,7 @@ const initState = {
   isBottomTab: true,
 }
 
-export class Ui {
+export class UiStore {
   @observable popover: IPopover = initState.popover
   @observable alert: IAlert = initState.alert
   @observable toast: IToast = initState.toast

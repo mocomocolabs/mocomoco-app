@@ -11,7 +11,7 @@ const initState = {
   categories: [] as IStuffCategory[],
 }
 
-export class Stuff {
+export class StuffStore {
   @observable.struct items: IStuff[] = initState.items
   @observable.struct item: IStuff = initState.item
   @observable.struct categories: IStuffCategory[] = initState.categories

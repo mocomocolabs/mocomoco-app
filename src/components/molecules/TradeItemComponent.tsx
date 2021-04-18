@@ -5,8 +5,8 @@ import { useStore } from '../../hooks/use-store'
 import { IStuff } from '../../models/stuff'
 import { ITalent } from '../../models/talent'
 import { route } from '../../services/route-service'
-import { Stuff } from '../../stores/stuff-store'
-import { Talent } from '../../stores/talent-store'
+import { StuffStore } from '../../stores/stuff-store'
+import { TalentStore } from '../../stores/talent-store'
 import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
@@ -14,7 +14,7 @@ import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 
 interface ITradeItem {
-  store: Stuff | Talent
+  store: StuffStore | TalentStore
   item: IStuff | ITalent
   onDelete: (id: number) => void
 }
@@ -34,7 +34,7 @@ export const TradeItem: React.FC<ITradeItem> = ({ store, item, onDelete }) => {
   const { $user } = useStore()
 
   // TODO dont use store. Instead, use another flag
-  const routeDetail = (store as Stuff) ? route.stuffDetail : route.talentDetail
+  const routeDetail = (store as StuffStore) ? route.stuffDetail : route.talentDetail
 
   const getItemLikeCount = (item: IStuff | ITalent) => {
     if ((item as IStuff).stuffUsers) return (item as IStuff).stuffUsers.length ?? 0

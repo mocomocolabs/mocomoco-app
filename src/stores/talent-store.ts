@@ -12,7 +12,7 @@ const initState = {
   categories: [] as ITalentCategory[],
 }
 
-export class Talent {
+export class TalentStore {
   @observable.struct items: ITalent[] = initState.items
   @observable.struct item: ITalent = initState.item
   @observable.struct categories: ITalentCategory[] = initState.categories

@@ -1,46 +1,46 @@
 import { configure } from 'mobx'
-import { Auth } from './auth-store'
-import { Chat } from './chat-store'
-import { Club } from './club-store'
-import { Comment } from './comment-store'
-import { Community } from './community-store'
+import { AuthStore } from './auth-store'
+import { ChatStore } from './chat-store'
+import { ClubStore } from './club-store'
+import { CommentStore } from './comment-store'
+import { CommunityStore } from './community-store'
 import { News } from './example/news-store'
 import { TodoList } from './example/todo-list-store'
-import { Feed } from './feed-store'
-import { Stuff } from './stuff-store'
-import { Talent } from './talent-store'
-import { Ui } from './ui-store'
-import { User } from './user-store'
+import { FeedStore } from './feed-store'
+import { StuffStore } from './stuff-store'
+import { TalentStore } from './talent-store'
+import { UiStore } from './ui-store'
+import { UserStore } from './user-store'
 
 configure({ enforceActions: 'observed' }) // action 밖에서 state 수정 비허용
 
 export class RootStore {
-  $community: Community
-  $feed: Feed
-  $comment: Comment
-  $stuff: Stuff
-  $talent: Talent
-  $chat: Chat
-  $ui: Ui
-  $user: User
-  $auth: Auth
-  $club: Club
+  $community: CommunityStore
+  $feed: FeedStore
+  $comment: CommentStore
+  $stuff: StuffStore
+  $talent: TalentStore
+  $chat: ChatStore
+  $ui: UiStore
+  $user: UserStore
+  $auth: AuthStore
+  $club: ClubStore
 
   // example
   todoList: TodoList
   news: News
 
   constructor() {
-    this.$community = new Community()
-    this.$feed = new Feed()
-    this.$comment = new Comment()
-    this.$ui = new Ui()
-    this.$user = new User()
-    this.$stuff = new Stuff()
-    this.$talent = new Talent()
-    this.$chat = new Chat()
-    this.$auth = new Auth()
-    this.$club = new Club(this)
+    this.$community = new CommunityStore()
+    this.$feed = new FeedStore()
+    this.$comment = new CommentStore()
+    this.$ui = new UiStore()
+    this.$user = new UserStore()
+    this.$stuff = new StuffStore()
+    this.$talent = new TalentStore()
+    this.$chat = new ChatStore()
+    this.$auth = new AuthStore()
+    this.$club = new ClubStore(this)
 
     // example
     this.todoList = new TodoList()

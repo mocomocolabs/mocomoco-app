@@ -11,7 +11,7 @@ const initState = {
   communities: [],
 }
 
-export class Community {
+export class CommunityStore {
   @observable.ref communities: ICommunity[] = initState.communities
   @observable selectedId: number = storage.communityId
 

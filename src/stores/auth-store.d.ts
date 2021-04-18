@@ -1,5 +1,6 @@
 import { Task as TaskType } from 'mobx-task'
-import { ISignUpForm } from '../models/sign-up'
+import { ICommunity } from '../models/community'
+import { ISignUpForm } from '../models/sign-up.d'
 import { IFileDto } from './common/file.d'
 
 export type SignUpTask = TaskType<[Partial<ISignUpForm>], void>
@@ -13,14 +14,14 @@ export interface IAuthUserDto {
   name: string
   nickname: string
   profileUrl: string
-  communities: [
-    {
-      id: number
-      name: string
-      atchFiles: IFileDto[]
-      isUse: boolean
-    }
-  ]
+  communities: {
+    id: number
+    name: string
+    userCount: number
+    atchFiles: IFileDto[]
+    isUse: boolean
+  }[]
+
   isUse: boolean
 }
 
