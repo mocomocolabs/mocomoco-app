@@ -6,5 +6,5 @@ export interface IProfileComponent {
 }
 
 export const Profile: FC<IProfileComponent> = ({ url, className }) => {
-  return <img className={`br-full w-8 h-8 w-4 h-4 ${className}`} src={url} alt='' />
+  return <img className={`br-full w-8 h-8 ${className}`} src={url} alt='' />
 }
