@@ -9,7 +9,7 @@ interface IProfileDetailItem {
   userId: number
 }
 
-export const ProfileDetailItem: React.FC<IProfileDetailItem> = ({ userId }) => {
+export const ProfileDetail: React.FC<IProfileDetailItem> = ({ userId }) => {
   const { $user } = useStore()
 
   useEffect(() => {
@@ -32,16 +32,17 @@ export const ProfileDetailItem: React.FC<IProfileDetailItem> = ({ userId }) => {
             <TextXxl className='mb-4 text-center text-bold'>
               {$user.user.nickname} ({$user.user.name})
             </TextXxl>
-            <TextXxl className='mb-4 text-center'>{$user.user.community}</TextXxl>
+            <TextXxl className='mb-4 text-center'>
+              {$user.user.communities.map((community) => community.name).join('/')}
+            </TextXxl>
 
             <TextXxl className='mb-4 text-center'>{$user.user.status}</TextXxl>
-
             <TextXxl className='mb-4 text-center'>
-              {$user.user.mobile} ({$user.user.mobileOpen === 'on' ? '공개' : '비공개'})
+              {$user.user.mobile} ({$user.user.isPublicMobile ? '공개' : '비공개'})
             </TextXxl>
 
             <TextXxl className='mb-4 text-center'>
-              {$user.user.email} ({$user.user.emailOpen === 'on' ? '공개' : '비공개'})
+              {$user.user.email} ({$user.user.isPublicEmail ? '공개' : '비공개'})
             </TextXxl>
           </div>
         )

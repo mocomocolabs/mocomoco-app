@@ -1,24 +1,27 @@
-import { Task as TaskType } from 'mobx-task'
-import { IUser } from './../models/user.d'
+import { ICommunity } from '../models/community.d'
 
-export type GetUserTask = TaskType<[number], void>
+export enum USER_STATUS {
+  APPROVAL = 'APPROVAL',
+  PENDING = 'PENDING',
+}
 
-export type SetUserTask = TaskType<[IUser], void>
-
-export type UpdateUserTask = TaskType<[number, IUser], boolean>
+export enum USER_ROLE {
+  USER = 'ROLE_USER',
+  ADMIN = 'ROLE_ADMIN',
+  SYS = 'ROLD_SYS',
+}
 
 export type IUserDto = {
-  // communities: [{id: 1, name: "진강산 공동체", locale: "ko_KR", adminUsers: [], users: [], atchFiles: [], isUse: true,…}]
   id: number
-  email: string
   name: string
   nickname: string
-  fcmToken: string
+  email: string
+  mobile: string
   isPublicEmail: boolean
   isPublicMobile: boolean
-  isUse: boolean
-  role: 'ROLE_USER' | 'ROLE_ADMIN'
-  mobile: string
+  role: USER_ROLE
   status: string
+  profileUrl: string
+  communities: ICommunity[]
   createdAt: string
 }

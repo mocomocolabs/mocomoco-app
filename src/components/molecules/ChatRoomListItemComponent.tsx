@@ -20,7 +20,9 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
         <div className='flex-col'>
           <div className='flex'>
             <TextLg className='mr-2'>{room.user.nickname}</TextLg>
-            <TextBase className='mr-2 d-gray'>{room.user.community}</TextBase>
+            <TextBase className='mr-2 d-gray'>
+              {room.user.communities.map((community) => community.name).join('/')}
+            </TextBase>
             <TextBase className='d-gray'>{room.recentMessage.createdAt}</TextBase>
           </div>
           <TextBase className='ellipsis max-width-270'>{room.recentMessage.message}</TextBase>

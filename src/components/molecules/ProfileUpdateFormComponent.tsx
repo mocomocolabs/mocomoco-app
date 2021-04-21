@@ -32,7 +32,7 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubm
   useIonViewWillEnter(() => {
     // Submit-button's "disabled" is set as formState.isDirty value.
     // From 2nd entering into the ProfileUpdateInput component,
-    // custom fields - emailOpen & mobileOpen - are always set to dirty.
+    // custom fields - isPublicEmail & isPublicMobile - are always set to dirty.
     // It is a behavior of react-hook-form.
     // So, required to reset formState.dirty fields.
     methods.reset()
@@ -43,7 +43,7 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubm
       isOpen: true,
       message: '프로필을 변경하시겠습니까?',
       onSuccess: async () => {
-        await $user.updateUser(userId, data).then((success) => {
+        await $user.updateUser(data).then((success) => {
           if (success) {
             route.goBack()
           }
@@ -57,7 +57,7 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubm
 
   useEffect(() => {
     $user.getUser(userId)
-  }, [$user, userId])
+  }, [userId])
 
   // TODO performance check - render 횟수 등
   return useObserver(() =>

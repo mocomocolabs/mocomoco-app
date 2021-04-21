@@ -6,9 +6,9 @@ import { Club } from '../models/club'
 import { IClubForm } from '../models/club.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
+import { AuthStore } from './auth-store'
 import { IClubDto, InsertClubTask } from './club-store.d'
 import { Task, TaskBy } from './task'
-import { UserStore } from './user-store'
 
 const initState = {
   club: {},
@@ -30,10 +30,10 @@ export class ClubStore {
   @observable.ref club: Club
   @observable.struct form: IClubForm = initState.form
 
-  $user: UserStore
+  $auth: AuthStore
 
   constructor(rootStore: RootStore) {
-    this.$user = rootStore.$user
+    this.$auth = rootStore.$auth
   }
 
   @task
@@ -45,7 +45,7 @@ export class ClubStore {
       )
       .then(
         action((data) => {
-          this.popularClubs = data.clubs.map((v) => Club.of(v, this.$user.currentUserId!))
+          this.popularClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
         })
       )
   }) as Task
@@ -59,7 +59,7 @@ export class ClubStore {
       )
       .then(
         action((data) => {
-          this.recentClubs = data.clubs.map((v) => Club.of(v, this.$user.currentUserId!))
+          this.recentClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
         })
       )
   }) as Task
@@ -68,7 +68,7 @@ export class ClubStore {
   getClub = (async (id: number) => {
     await api.get<IClubDto>(`http://localhost:8080/api/v1/clubs/${id}`).then(
       action((data) => {
-        this.club = Club.of(data, this.$user.currentUserId!)
+        this.club = Club.of(data, this.$auth.user.id!)
       })
     )
   }) as TaskBy<number>
