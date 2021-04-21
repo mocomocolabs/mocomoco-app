@@ -17,6 +17,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
         <img src={user.profileUrl} alt='프로필이미지' />
       </IonAvatar>
 
+      <input type='hidden' name='id' defaultValue={user.id} ref={register} />
       <input type='hidden' name='profileUrl' defaultValue={user.profileUrl} ref={register} />
 
       <input
@@ -47,7 +48,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
           required: 'this field is required',
           pattern: {
             value: /^[0-9]{3}[-]+[0-9]{3,4}[-]+[0-9]{4}$/i,
-            message: 'invalied phone number',
+            message: 'invalid phone number',
           },
         })}
       />
@@ -57,18 +58,18 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
         <IonLabel slot='start'>전화번호 공개</IonLabel>
         <Controller
           control={control}
-          name='mobileOpen'
+          name='isPublicMobile'
           render={({ onChange, name, value }) => (
             <IonToggle
               name={name}
               onIonChange={(e) => {
-                onChange(e.detail.checked ? 'on' : 'off')
+                onChange(e.detail.checked)
               }}
-              checked={value === 'on'}
+              checked={value}
               slot='end'
             />
           )}
-          defaultValue={user.mobileOpen}
+          defaultValue={user.isPublicMobile}
         />
       </div>
 
@@ -81,7 +82,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
           required: 'this field is required',
           pattern: {
             value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: 'invalied email address',
+            message: 'invalid email address',
           },
         })}
       />
@@ -92,18 +93,18 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
         <IonLabel slot='start'>이메일 공개</IonLabel>
         <Controller
           control={control}
-          name='emailOpen'
+          name='isPublicEmail'
           render={({ onChange, name, value }) => (
             <IonToggle
               name={name}
               onIonChange={(e) => {
-                onChange(e.detail.checked ? 'on' : 'off')
+                onChange(e.detail.checked)
               }}
-              checked={value === 'on'}
+              checked={value}
               slot='end'
             />
           )}
-          defaultValue={user.emailOpen}
+          defaultValue={user.isPublicEmail}
         />
       </div>
     </>

@@ -33,7 +33,7 @@ const StatusString = {
 }
 
 export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ path, item, onDelete }) => {
-  const { $user } = useStore()
+  const { $auth } = useStore()
 
   const routeDetail = path === Path.STUFF ? route.stuffDetail : route.talentDetail
 
@@ -51,7 +51,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ path, item, onDel
             <TextBase>
               [{StatusString[item.status]}] {item.title}
             </TextBase>
-            <TextBase>{item.user.community}</TextBase>
+            <TextBase>{item.user.communities.map((community) => community.name).join('/')}</TextBase>
             <TextBase>
               [{TypeString[item.type]}] {item.price}원
             </TextBase>
@@ -77,7 +77,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ path, item, onDel
         <div className='flex justify-end w-4'>
           <OverflowMenuIcon
             className='self-top'
-            show={$user.currentUserId === item.user.id}
+            show={$auth.user.id === item.user.id}
             onDelete={() => onDelete(item.id)}
           />
         </div>

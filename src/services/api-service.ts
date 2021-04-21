@@ -26,8 +26,7 @@ class ApiService {
 
   // eslint-disable-next-line
   patch<T>(url: string, data?: any, config?: any): Promise<T> {
-    console.log(this.http.defaults)
-    return this.http.patch(url, data)
+    return this.http.patch(url, data, config)
   }
 
   delete<T>(url: string): Promise<T> {

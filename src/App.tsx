@@ -53,8 +53,8 @@ export const App: React.FC = () => {
     // $auth.setIsLogin()
 
     // TODO: login 이후 실행할 공통 호출들
-    if ($auth.user.id && !storage.communityId) {
-      $community.setSelectedId($auth.user.communities[0].id)
+    if ($auth.isLogin && $auth.user.communityId && !storage.communityId) {
+      $community.setSelectedId($auth.user.communityId)
     }
 
     $chat.getRooms()

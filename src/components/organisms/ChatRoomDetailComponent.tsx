@@ -10,7 +10,7 @@ interface IChatRoomDetail {
 }
 
 export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({ roomId }) => {
-  const { $chat, $user } = useStore()
+  const { $chat, $auth } = useStore()
 
   useEffect(() => {
     const getRoomMessagesAndScrollBottom = async () => {
@@ -32,11 +32,11 @@ export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({ roomId }) => {
         <>
           <ul className='pl-0'>
             {$chat.room?.messages?.map((v, i) => (
-              <li key={i} className={`flex my-2 ${v.user.id === $user.currentUserId && 'flex-row-reverse'}`}>
+              <li key={i} className={`flex my-2 ${v.user.id === $auth.user.id && 'flex-row-reverse'}`}>
                 <Profile url={v.user.profileUrl}></Profile>
                 <div
                   className={`py-2 px-3 mx-2 br-xlg pre-line ${
-                    v.user.id === $user.currentUserId ? 'bg-m-green' : 'bg-m-gray'
+                    v.user.id === $auth.user.id ? 'bg-m-green' : 'bg-m-gray'
                   }`}
                 >
                   {v.message}
