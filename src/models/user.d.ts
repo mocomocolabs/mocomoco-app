@@ -1,12 +1,15 @@
+import { USER_STATUS } from '../stores/user-store.d'
+import { ICommunity } from './community'
+
 export interface IUser {
   id: number
   name: string
   nickname: string
-  community: string
+  communities: ICommunity[]
   email: string
-  emailOpen: string // boolean?
+  isPublicEmail: boolean
   mobile: string
-  mobileOpen: string // boolean?
+  isPublicMobile: boolean
   profileUrl: string
-  status: string
+  status: USER_STATUS
 }

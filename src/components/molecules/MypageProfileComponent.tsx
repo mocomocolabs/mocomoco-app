@@ -1,5 +1,6 @@
-import { IonAvatar, IonButton, useIonViewWillEnter } from '@ionic/react'
+import { IonAvatar, IonButton } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
+import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
 import { Spinner } from '../atoms/SpinnerComponent'
@@ -7,21 +8,15 @@ import { TextLg } from '../atoms/TextLgComponent'
 import { TextXxl } from '../atoms/TextXxlComponent'
 
 export const MypageProfile: React.FC = () => {
-  const { $user } = useStore()
+  const { $auth, $user } = useStore()
 
-  useIonViewWillEnter(() => {
-    $user.getCurrentUser()
-  })
+  useEffect(() => {
+    $user.getUser($auth.user.id)
+  }, [$auth.user.id])
 
   return useObserver(() =>
-    $user.getCurrentUser.match({
-      pending: () => {
-        return (
-          <div className='flex-center'>
-            <Spinner isFull={true}></Spinner>
-          </div>
-        )
-      },
+    $user.getUser.match({
+      pending: () => <Spinner isFull={true}></Spinner>,
       resolved: () => (
         <div className='flex-row justify-between height-100'>
           <div className='flex-center' slot='start'>
@@ -31,7 +26,9 @@ export const MypageProfile: React.FC = () => {
           </div>
           <div className='flex-col justify-center w-full ml-4 mr-4' slot='start'>
             <TextXxl className='text-bold'>{$user.user.nickname}</TextXxl>
-            <TextLg className='text-bold gray'>{$user.user.community}</TextLg>
+            <TextLg className='text-bold gray'>
+              {$user.user.communities.map((community) => community.name).join('/')}
+            </TextLg>
           </div>
           <div className='flex-center' slot='end'>
             <IonButton color='dark' fill='outline' onClick={() => route.profileDetail($user.user.id)}>

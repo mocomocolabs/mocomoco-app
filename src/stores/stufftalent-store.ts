@@ -49,7 +49,8 @@ export class StuffTalentStore {
   getCategoriesBy = (async (pathName: string) => {
     const config = {
       params: {
-        type: pathName,
+        'type': pathName,
+        'is-use': true,
       },
     }
 

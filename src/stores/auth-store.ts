@@ -1,12 +1,12 @@
 import Inko from 'inko'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { IAuthUser } from '../models/auth'
 import { ISignUpForm } from '../models/sign-up'
 import { api } from '../services/api-service'
 import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
-import { http } from '../utils/http-util'
-import { IAuthUser, IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
+import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy } from './task'
 
 const inko = new Inko()
@@ -39,7 +39,7 @@ export class AuthStore {
 
   @task.resolved
   checkEmail = (async (email: string) => {
-    return http.post(`http://localhost:8080/api/sys/users/exists`, { email })
+    return api.post(`http://localhost:8080/api/sys/users/exists`, { email })
   }) as TaskBy<string>
 
   @task.resolved
@@ -58,12 +58,12 @@ export class AuthStore {
     // TODO: 제거필요
     param.mobile = '123456789'
 
-    return http.post(`http://localhost:8080/api/auth/sign-up`, param)
+    return api.post(`http://localhost:8080/api/auth/sign-up`, param)
   }) as SignUpTask
 
   @task.resolved
   signIn = (async (email: string, password: string) => {
-    await http
+    await api
       .post<IAuthUserDto>(`http://localhost:8080/api/auth/sign-in`, {
         email,
         password: inko.ko2en(password),
@@ -109,22 +109,8 @@ export class AuthStore {
 
   @action
   setUser(user: IAuthUserDto) {
-    const { id, email, name, nickname, profileUrl, communities } = user
-
-    this.user = {
-      id,
-      email,
-      name,
-      nickname,
-      profileUrl,
-      communities: communities.map((v) => ({
-        id: v.id,
-        name: v.name,
-        userCount: v.userCount,
-        bannerUrl: v.atchFiles[0]?.url,
-      })),
-    }
-
+    const { id, communities } = user
+    this.user = { id, communityId: communities[0].id }
     this.setIsLogin()
   }
 }

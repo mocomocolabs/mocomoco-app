@@ -18,7 +18,7 @@ interface IFeedItem {
 }
 
 export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
-  const { $user, $feed } = useStore()
+  const { $auth, $feed } = useStore()
 
   const onDelete = async () => {
     await $feed.deleteFeed(feed.id)
@@ -46,7 +46,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             </div>
           </div>
 
-          <OverflowMenuIcon show={$user.currentUserId === feed.user.id} onDelete={onDelete} onEdit={onEdit} />
+          <OverflowMenuIcon show={$auth.user.id === feed.user.id} onDelete={onDelete} onEdit={onEdit} />
         </div>
 
         {isDetail ? (
@@ -111,7 +111,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
               key={v.id}
               comment={v}
               feedId={feed.id}
-              showOverlowMenu={isDetail && $user.currentUserId === v.id}
+              showOverlowMenu={isDetail && $auth.user.id === v.id}
             ></CommentItem>
           ))}
         </div>

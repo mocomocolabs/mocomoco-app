@@ -10,13 +10,13 @@ import {
 import { useObserver } from 'mobx-react-lite'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
-import { ProfileDetailItem } from '../components/molecules/ProfileDetailComponent'
+import { ProfileDetail } from '../components/molecules/ProfileDetailComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
 
 export const ProfileDetailPage: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
   const userId: number = parseInt(match.params.id)
-  const { $ui, $user } = useStore()
+  const { $ui, $auth } = useStore()
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(false)
@@ -37,7 +37,7 @@ export const ProfileDetailPage: React.FC<RouteComponentProps<{ id: string }>> = 
 
           {useObserver(
             () =>
-              $user.currentUserId === userId && (
+              $auth.user.id === userId && (
                 <button slot='end' onClick={() => route.profileDetailEdit(userId)}>
                   수정
                 </button>
@@ -48,7 +48,7 @@ export const ProfileDetailPage: React.FC<RouteComponentProps<{ id: string }>> = 
 
       <IonContent>
         <div className='px-container'>
-          <ProfileDetailItem userId={userId} />
+          <ProfileDetail userId={userId} />
         </div>
       </IonContent>
     </IonPage>
