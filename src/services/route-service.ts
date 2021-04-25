@@ -9,6 +9,7 @@ class RouteService {
 
   goBack() {
     // TODO: modal의 open 상태를 store로 관리하여. hardware back 버튼을 제어할 필요가 있음
+    // TODO: go back 시 다소 늦게 화면이 렌더링 되는것 같음.. production 빌드시에도 체크하고 방안을 모색해볼것
     this.history.goBack()
   }
 

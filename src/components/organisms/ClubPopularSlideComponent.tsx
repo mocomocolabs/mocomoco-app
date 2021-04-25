@@ -13,14 +13,14 @@ export interface IClubPopularSlide {
   clubs: Club[]
 }
 
-export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
-  const slideOpts = {
-    initialSlide: 0,
-    spaceBetween: 8,
-    slidesPerView: 'auto',
-    speed: 400,
-  }
+const slideOpts = {
+  initialSlide: 0,
+  spaceBetween: 8,
+  slidesPerView: 'auto',
+  speed: 400,
+}
 
+export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
   return clubs.length ? (
     <IonSlides pager={false} options={slideOpts} className='pb-3'>
       {clubs.map((v, i) => (

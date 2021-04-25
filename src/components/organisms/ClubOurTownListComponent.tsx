@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Club } from '../../models/club'
+import { route } from '../../services/route-service'
 import { Icon } from '../atoms/IconComponent'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -15,7 +16,11 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
     <>
       {clubs.length ? (
         clubs.map((v) => (
-          <div className='flex-col br-xxlg shadow pb-2 relative mb-5' key={v.id}>
+          <div
+            className='flex-col br-xxlg shadow pb-2 relative mb-5'
+            key={v.id}
+            onClick={() => route.clubDetail(v.id)}
+          >
             <ImageWithCorner height={160} url={v.imageUrls[0]}></ImageWithCorner>
             <div className='flex-col px-3 ml-0 br-b-xxlg text-left'>
               <TextBase className='text-bold'>{v.name}</TextBase>
