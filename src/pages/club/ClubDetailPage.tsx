@@ -1,4 +1,5 @@
 import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
+import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { StaticContext } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
@@ -9,7 +10,8 @@ import { ClubDetailContents } from '../../components/molecules/ClubDetailContent
 import { ClubDetailMember } from '../../components/molecules/ClubDetailMemberComponent'
 import { useStore } from '../../hooks/use-store'
 
-export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, StaticContext>> = () => {
+export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, StaticContext>> = ({ match }) => {
+  const id = parseInt(match.params.id)
   const { $ui, $club } = useStore()
 
   useIonViewWillEnter(() => {
@@ -18,10 +20,10 @@ export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
   })
 
   useEffect(() => {
-    $club.getClub(1)
+    $club.getClub(id)
   }, [])
 
-  return (
+  return useObserver(() => (
     <IonPage>
       <IonContent>
         <BackFloatingButton></BackFloatingButton>
@@ -41,5 +43,5 @@ export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
         <Pad className='pb-extra-space'></Pad>
       </IonContent>
     </IonPage>
-  )
+  ))
 }

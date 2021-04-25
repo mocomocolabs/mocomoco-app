@@ -1,22 +1,9 @@
 import { IClubDto } from '../stores/club-store.d'
-import { IClubMember } from './club.d'
-import { ICommunity } from './community'
+import { IClub } from './club.d'
+
+export interface Club extends IClub {}
 
 export class Club {
-  id: number
-  name: string
-  description: string
-  meetingTime: string
-  meetingPlace: string
-  community: ICommunity
-  members: IClubMember[]
-  hashtagNames: string[]
-  imageUrls: string[]
-  isMember: boolean
-  isAdmin: boolean
-  isPublic: boolean
-  createdAt: string
-
   static of(payload: IClubDto, userId: number) {
     return Object.assign(new Club(), {
       ...payload,

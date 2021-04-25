@@ -12,7 +12,13 @@ export const BackButton: FC<IBackButton> = ({ type, action }) => {
   const defaultAction = () => route.goBack()
 
   return (
-    <div className='flex' onClick={action ?? defaultAction}>
+    <div
+      className='flex'
+      onClick={(e) => {
+        e.stopPropagation()
+        action ? action() : defaultAction()
+      }}
+    >
       <Icon name={type === 'close' ? 'close' : 'back-arrow'}></Icon>
     </div>
   )
