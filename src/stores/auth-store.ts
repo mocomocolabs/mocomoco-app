@@ -82,7 +82,7 @@ export class AuthStore {
     if (hasToken) {
       api.setAuthoriationBy(hasToken)
       try {
-        await api.post<IAuthUserDto>(`http://localhost:8080/api/auth/user`, {}).then((user) => {
+        await api.get<IAuthUserDto>(`http://localhost:8080/api/auth/account`).then((user) => {
           this.setUser(user)
         })
       } catch (e) {

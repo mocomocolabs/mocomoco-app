@@ -23,11 +23,11 @@ export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
 
   return clubs.length ? (
     <IonSlides pager={false} options={slideOpts} className='pb-3'>
-      {clubs.map((v) => (
-        <IonSlide className='w-auto' key={v.id} onClick={() => route.clubDetail(v.id)}>
+      {clubs.map((v, i) => (
+        <IonSlide className='w-auto' key={i} onClick={() => route.clubDetail(v.id)}>
           <div className='flex-col width-160 br-xxlg shadow pb-2'>
             <ImageWithCorner height={130} url={v.imageUrls?.slice(-1).pop()}></ImageWithCorner>
-            <div className='flex-col w-full bg-white px-3 br-b-xxlg text-left'>
+            <div className='flex-col w-full height-92 bg-white px-3 br-b-xxlg text-left'>
               <TextBase className='text-bold'>{v.name}</TextBase>
               <div className='flex items-center'>
                 <Icon name='time' className=''></Icon>
@@ -37,7 +37,11 @@ export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
                 <Icon name='time' className=''></Icon>
                 <TextXs className='ml-1'>{v.meetingPlace}</TextXs>
               </div>
-              {v.hashtagNames.length && <TextXs className='green mt-2'>#{v.hashtagNames?.join(' #')}</TextXs>}
+              {v.hashtagNames.length ? (
+                <TextXs className='green mt-2 ellipsis'>#{v.hashtagNames?.join(' #')}</TextXs>
+              ) : (
+                ''
+              )}
             </div>
           </div>
         </IonSlide>
