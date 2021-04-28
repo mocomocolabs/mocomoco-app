@@ -6,6 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { IUser } from '../../models/user'
 import { route } from '../../services/route-service'
+import { executeWithError } from '../../utils/http-helper-util'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { ProfileUpdateInput } from './ProfileUpdateInputComponent'
 
@@ -42,13 +43,14 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubm
     $ui.showAlert({
       isOpen: true,
       message: '프로필을 변경하시겠습니까?',
-      onSuccess: async () => {
-        await $user.updateUser(data).then((success) => {
-          if (success) {
-            route.goBack()
-          }
-        })
-      },
+      onSuccess: () =>
+        executeWithError(async () => {
+          await $user.updateUser(data).then((success) => {
+            if (success) {
+              route.goBack()
+            }
+          })
+        }),
     })
   }
 
