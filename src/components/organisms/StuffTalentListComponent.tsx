@@ -22,7 +22,7 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
   // 해결 : useLayoutEffect를 사용함으로써 render 중에 getItems 호출하도록 한다.
   useLayoutEffect(() => {
     store.getItems(search, filter)
-  }, [search, filter, store])
+  }, [search, filter])
 
   const onDeleteItem = async (id: number) => {
     await store.deleteItem(id)

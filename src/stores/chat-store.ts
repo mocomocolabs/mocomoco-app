@@ -8,7 +8,7 @@ import { Task } from './task'
 const initState = {
   rooms: [],
   currentRoomId: null,
-  form: {} as any,
+  form: {} as { [roomId: number]: IChatMessageForm },
 }
 
 export class ChatStore {

@@ -10,7 +10,7 @@ interface IIcon extends HTMLAttributes<HTMLElement> {
 export const Icon = ({ name, className = '', onClick = () => {} }: IIcon) => {
   return (
     <ReactSVG
-      onClick={($evt: any) => onClick($evt)}
+      onClick={($evt: React.MouseEvent<HTMLElement, MouseEvent>) => onClick($evt)}
       src={`/assets/icon/${name}.svg`}
       className={`${className} svg-icon flex items-center icon-20`}
     ></ReactSVG>

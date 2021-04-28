@@ -18,7 +18,7 @@ import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubFormPage: React.FC = () => {
   const { $ui, $club, $community } = useStore()
-  const { register, handleSubmit, errors, watch, formState } = useForm<IClubForm>({
+  const { register, handleSubmit, formState } = useForm<IClubForm>({
     mode: 'onChange',
   })
 
