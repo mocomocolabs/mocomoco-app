@@ -76,7 +76,9 @@ export class ClubStore {
   @task
   getClubForm = (async (_id: number) => {
     await this.getClub(_id)
-    const images: any = await Promise.all(this.club.imageUrls.map((v) => urlToFile(v)))
+    const images: ImageUploadItem[] = await Promise.all(
+      this.club.imageUrls.map((v) => urlToFile(v) as Promise<ImageUploadItem>)
+    )
     const { id, description, meetingTime, meetingPlace, isPublic } = this.club
     this.setForm({
       id,

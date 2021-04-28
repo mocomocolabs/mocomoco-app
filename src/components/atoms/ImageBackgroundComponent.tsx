@@ -3,7 +3,7 @@ import { FC } from 'react'
 export interface IImageBackground {
   className?: string
   url?: string
-  style?: any
+  style?: React.CSSProperties
 }
 
 export const ImageBackground: FC<IImageBackground> = ({ className = '', url, style }) => (
