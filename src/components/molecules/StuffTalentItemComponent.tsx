@@ -21,12 +21,12 @@ interface IStuffTalentIItem {
   onDelete: (id: number) => void
 }
 
-const TypeString = {
+const TypeLabel = {
   [Type.GIVE]: '팔아요',
   [Type.TAKE]: '구해요',
 }
 
-const StatusString = {
+const StatusLabel = {
   [Status.AVAILABLE]: '판매중',
   [Status.RESERVED]: '예약중',
   [Status.FINISH]: '거래완료',
@@ -49,11 +49,11 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ path, item, onDel
 
           <div className='flex-col flex-1'>
             <TextBase>
-              [{StatusString[item.status]}] {item.title}
+              [{StatusLabel[item.status]}] {item.title}
             </TextBase>
             <TextBase>{item.user.communities.map((community) => community.name).join('/')}</TextBase>
             <TextBase>
-              [{TypeString[item.type]}] {item.price}원
+              [{TypeLabel[item.type]}] {item.price}원
             </TextBase>
           </div>
         </div>
