@@ -8,7 +8,7 @@ export enum USER_STATUS {
 export enum USER_ROLE {
   USER = 'ROLE_USER',
   ADMIN = 'ROLE_ADMIN',
-  SYS = 'ROLD_SYS',
+  SYS = 'ROLE_SYS',
 }
 
 export type IUserDto = {
