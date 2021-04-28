@@ -4,11 +4,22 @@ class Users {
       id: 1,
       name: '남준호',
       nickname: '준호',
-      community: '낙성대명상공동체',
+      communities: [
+        {
+          id: 1,
+          name: '낙성대명상공동체',
+          userCount: 1,
+          atchFiles: [
+            {
+              url: 'http://localhost:8080/static/file/uploadfile/table/communities/612cf1059db7493f91b40f5781835568.png'
+            },
+          ],
+        },
+      ],
       email: 'junho@gmail.com',
-      emailOpen: 'on',
+      isPublicEmail: true,
       mobile: '010-1111-1111',
-      mobileOpen: 'on',
+      isPublicMobile: true,
       profileUrl: '/assets/mock/profile1.jpeg',
       status: '사는 동안 즐겁게',
     },
@@ -16,11 +27,22 @@ class Users {
       id: 2,
       name: '황규온',
       nickname: '규온',
-      community: '생태마을공동체',
+      communities: [
+        {
+          id: 2,
+          name: '손과발',
+          userCount: 1,
+          atchFiles: [
+            {
+              url: 'http://localhost:8080/static/file/uploadfile/table/communities/612cf1059db7493f91b40f5781835568.png'
+            },
+          ],
+        },
+      ],
       email: 'onssss@gmail.com',
-      emailOpen: 'off',
+      isPublicEmail: false,
       mobile: '010-4444-5555',
-      mobileOpen: 'on',
+      isPublicMobile: true,
       profileUrl: '/assets/mock/profile4.jpeg',
       status: '천국으로 가는 길~~',
     },
@@ -28,11 +50,22 @@ class Users {
       id: 3,
       name: '하서영',
       nickname: '쏘울',
-      community: '기웃기웃',
+      communities: [
+        {
+          id: 2,
+          name: '손과발',
+          userCount: 2,
+          atchFiles: [
+            {
+              url: 'http://localhost:8080/static/file/uploadfile/table/communities/612cf1059db7493f91b40f5781835568.png'
+            },
+          ],
+        },
+      ],
       email: 'soul@gmail.com',
-      emailOpen: 'on',
+      isPublicEmail: true,
       mobile: '010-9999-9999',
-      mobileOpen: 'on',
+      isPublicMobile: true,
       profileUrl: '/assets/mock/profile12.jpeg',
       status: '쏘울충만 즐거워용',
     },
@@ -40,11 +73,22 @@ class Users {
       id: 4,
       name: '이지혜',
       nickname: '이자',
-      community: '진강산마을공동체',
+      communities: [
+        {
+          id: 3,
+          name: '진강산마을공동체',
+          userCount: 2,
+          atchFiles: [
+            {
+              url: 'http://localhost:8080/static/file/uploadfile/table/communities/612cf1059db7493f91b40f5781835568.png'
+            },
+          ],
+        },
+      ],
       email: 'lsa@gmail.com',
-      emailOpen: 'off',
+      isPublicEmail: false,
       mobile: '010-2222-2222',
-      mobileOpen: 'off',
+      isPublicMobile: false,
       profileUrl: '/assets/mock/profile2.jpeg',
       status: '가는거야~!',
     },
@@ -52,11 +96,22 @@ class Users {
       id: 5,
       name: '이상철',
       nickname: '상자',
-      community: '생태마을공동체',
+      communities: [
+        {
+          id: 3,
+          name: '진강산마을공동체',
+          userCount: 2,
+          atchFiles: [
+            {
+              url: 'http://localhost:8080/static/file/uploadfile/table/communities/612cf1059db7493f91b40f5781835568.png'
+            },
+          ],
+        },
+      ],
       email: 'sangsang@gmail.com',
-      emailOpen: 'on',
+      isPublicEmail: true,
       mobile: '010-3333-3333',
-      mobileOpen: 'off',
+      isPublicMobile: false,
       profileUrl: '/assets/mock/profile3.jpeg',
       status: '레알 리버!',
     },
