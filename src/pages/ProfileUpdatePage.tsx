@@ -1,16 +1,8 @@
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  useIonViewWillEnter,
-  useIonViewWillLeave,
-} from '@ionic/react'
-import { useState } from 'react'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { useCallback, useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
-import { ProfileUpdateForm } from '../components/molecules/ProfileUpdateFormComponent'
+import { ProfileUpdateFormComponent } from '../components/molecules/ProfileUpdateFormComponent'
 import { useStore } from '../hooks/use-store'
 
 export const ProfileUpdatePage: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
@@ -22,14 +14,8 @@ export const ProfileUpdatePage: React.FC<RouteComponentProps<{ id: string }>> = 
     $ui.setIsBottomTab(false)
   })
 
-  useIonViewWillLeave(() => {
-    $ui.setIsBottomTab(true)
-  })
-
-  const [submitAvailble, setSubmitAvailable] = useState(false)
-  const handleSubmitAvailable = (isValid: boolean) => {
-    setSubmitAvailable(isValid)
-  }
+  const [submittable, setSubmittable] = useState(false)
+  const onSubmittableChange = useCallback((available: boolean) => setSubmittable(available), [])
 
   return (
     <IonPage>
@@ -40,7 +26,7 @@ export const ProfileUpdatePage: React.FC<RouteComponentProps<{ id: string }>> = 
           </div>
           <IonTitle slot='start'>프로필 수정</IonTitle>
 
-          <button slot='end' form='profile-form' type='submit' disabled={!submitAvailble}>
+          <button slot='end' form='profile-form' type='submit' disabled={!submittable}>
             완료
           </button>
         </IonToolbar>
@@ -48,7 +34,7 @@ export const ProfileUpdatePage: React.FC<RouteComponentProps<{ id: string }>> = 
 
       <IonContent>
         <div className='px-container flex-col items-center'>
-          <ProfileUpdateForm userId={userId} handleSubmitAvailable={handleSubmitAvailable} />
+          <ProfileUpdateFormComponent userId={userId} onSubmittableChange={onSubmittableChange} />
         </div>
       </IonContent>
     </IonPage>

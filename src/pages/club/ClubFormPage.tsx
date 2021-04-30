@@ -68,29 +68,25 @@ export const ClubFormPage: React.FC = () => {
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
             <InputNormal
-              name='name'
               placeholder='모임 이름'
-              register={register({ required: true })}
+              register={register('name', { required: true })}
             ></InputNormal>
             <InputNormal
-              name='meetingTime'
               placeholder='모임 시간'
-              register={register({ required: true })}
+              register={register('meetingTime', { required: true })}
             ></InputNormal>
             <InputNormal
-              name='meetingPlace'
               placeholder='모임 장소'
-              register={register({ required: true })}
+              register={register('meetingPlace', { required: true })}
             ></InputNormal>
             <Hashtag
               onChange={(hashtagNames) => $club.setForm({ hashtagNames })}
               value={$club.form.hashtagNames?.join(' ')}
             ></Hashtag>
             <Textarea
-              name='description'
               rows={10}
               placeholder='소모임을 자유롭게 소개해주세요 :)'
-              register={register({ required: true })}
+              register={register('description', { required: true })}
             ></Textarea>
           </form>
         </div>

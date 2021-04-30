@@ -1,8 +1,7 @@
-import { useIonViewWillEnter } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
-import { useEffect, useMemo } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import React, { useCallback, useEffect, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { IUser } from '../../models/user'
 import { route } from '../../services/route-service'
@@ -10,49 +9,66 @@ import { executeWithError } from '../../utils/http-helper-util'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { ProfileUpdateInput } from './ProfileUpdateInputComponent'
 
-interface IProfileUpdate {
+interface IProfileUpdateForm {
   userId: number
-  handleSubmitAvailable: (isValid: boolean) => void
+  onSubmittableChange: (available: boolean) => void
 }
 
-export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubmitAvailable }) => {
+export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
+  userId,
+  onSubmittableChange: setSubmittable,
+}) => {
   const { $ui, $user } = useStore()
-  const methods = useForm<IUser>({
+
+  const {
+    formState: { isValid, dirtyFields, errors },
+    reset,
+    handleSubmit,
+    control,
+    register,
+    getValues,
+  } = useForm<IUser>({
     mode: 'onChange',
   })
 
-  const submitAvailable = useMemo(() => methods.formState.isDirty && methods.formState.isValid, [
-    methods.formState.isDirty,
-    methods.formState.isValid,
+  useEffect(() => {
+    // react-hook-form의 dirtyFields가 정상적으로 동작하려면,
+    // 제공하는 api를 이용해서 default value 값들을 설정해 줘야 함.
+    // 1. useForm 호출 시 defaultValues 프로퍼티 설정하거나,
+    // 2. reset() 호출해서 default value를 재설정하기
+    //
+    // 이렇게 하지 않고, input 필드에 직접 defaultValue를 지정할 경우에는
+    // 필드를 한 번 클릭만 해도 dirtyFields에 포함되며, 다시 원래 값으로 돌려놔도
+    // dirtyFields에서 제외되지 않고 계속 남아 있음.
+    reset({ ...$user.user }, { keepDefaultValues: false })
+  }, [$user.user])
+
+  const submittable = useMemo(() => isValid && Object.keys(dirtyFields).length > 0, [
+    isValid,
+    Object.keys(dirtyFields).length,
   ])
 
   useEffect(() => {
-    handleSubmitAvailable(submitAvailable)
-  }, [submitAvailable, handleSubmitAvailable])
+    setSubmittable(submittable)
+  }, [submittable])
 
-  useIonViewWillEnter(() => {
-    // Submit-button's "disabled" is set as formState.isDirty value.
-    // From 2nd entering into the ProfileUpdateInput component,
-    // custom fields - isPublicEmail & isPublicMobile - are always set to dirty.
-    // It is a behavior of react-hook-form.
-    // So, required to reset formState.dirty fields.
-    methods.reset()
-  })
-
-  const onSubmit = (data: IUser) => {
-    $ui.showAlert({
-      isOpen: true,
-      message: '프로필을 변경하시겠습니까?',
-      onSuccess: () =>
-        executeWithError(async () => {
-          await $user.updateUser(data).then((success) => {
-            if (success) {
-              route.goBack()
-            }
-          })
-        }),
-    })
-  }
+  const onSubmit = useCallback(
+    (user: IUser) => {
+      $ui.showAlert({
+        isOpen: true,
+        message: '프로필을 변경하시겠습니까?',
+        onSuccess: () =>
+          executeWithError(() =>
+            $user.updateUser(user).then((success) => {
+              if (success) {
+                route.goBack()
+              }
+            })
+          ),
+      })
+    },
+    [$user.user]
+  )
 
   // eslint-disable-next-line
   const observableTaskGroup = TaskGroup<any[], void | boolean>([$user.getUser, $user.updateUser])
@@ -69,15 +85,9 @@ export const ProfileUpdateForm: React.FC<IProfileUpdate> = ({ userId, handleSubm
       },
       resolved: () => {
         return (
-          <FormProvider {...methods}>
-            <form
-              className='flex-col w-full my-4'
-              id='profile-form'
-              onSubmit={methods.handleSubmit(onSubmit)}
-            >
-              <ProfileUpdateInput user={$user.user} />
-            </form>
-          </FormProvider>
+          <form className='flex-col w-full my-4' id='profile-form' onSubmit={handleSubmit(onSubmit)}>
+            <ProfileUpdateInput fields={{ control, errors, register, getValues }} />
+          </form>
         )
       },
     })

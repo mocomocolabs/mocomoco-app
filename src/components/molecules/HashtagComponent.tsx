@@ -36,21 +36,21 @@ export const Hashtag: FC<IHashtag> = ({ value = '', onChange }) => {
     <InputNormal
       value={val}
       placeholder='#해시태그를 적어주세요'
-      onChange={(e) => {
-        if (e === '') {
+      onChange={(value) => {
+        if (value === '') {
           return setAndOnChange('#')
         }
 
         // 삭제하는 경우 그대로 리턴
-        if (beforeInput.length > e.length) {
-          return setAndOnChange(e)
+        if (beforeInput.length > value.length) {
+          return setAndOnChange(value)
         }
 
-        if (e.endsWith('# ') || e.endsWith('##')) {
-          return setAndOnChange(e.slice(0, e.length - 1))
+        if (value.endsWith('# ') || value.endsWith('##')) {
+          return setAndOnChange(value.slice(0, value.length - 1))
         }
 
-        setAndOnChange(withSharp(e))
+        setAndOnChange(withSharp(value))
       }}
     />
   ))
