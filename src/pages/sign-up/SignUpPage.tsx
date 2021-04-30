@@ -15,7 +15,11 @@ export const SignUpPage: React.FC = () => {
     $ui.setIsBottomTab(false)
   })
 
-  const { register, errors, formState, getValues } = useForm<ISignUpForm>({
+  const {
+    register,
+    formState: { errors, isValid },
+    getValues,
+  } = useForm<ISignUpForm>({
     mode: 'onChange',
   })
 
@@ -23,10 +27,9 @@ export const SignUpPage: React.FC = () => {
     <IonPage>
       <IonContent>
         <InputNormal
-          name='email'
           type='email'
           placeholder='이메일'
-          register={register({
+          register={register('email', {
             required: '이메일을 입력해주세요',
             pattern: {
               value: /\S+@\S+[.]\S+$/,
@@ -36,7 +39,7 @@ export const SignUpPage: React.FC = () => {
         ></InputNormal>
         <ValidationMessage isShow={errors.email} message={errors.email?.message}></ValidationMessage>
         <SubmitButton
-          disabled={!formState.isValid}
+          disabled={!isValid}
           text='이메일로 시작하기'
           onClick={async () => {
             $auth

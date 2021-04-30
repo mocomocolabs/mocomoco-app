@@ -1,65 +1,54 @@
-import { IonAvatar, IonLabel, IonToggle } from '@ionic/react'
+import { IonAvatar, IonToggle } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import { Controller, Message, useFormContext } from 'react-hook-form'
-import { IUser } from '../../models/user'
-import { TextBase } from '../atoms/TextBaseComponent'
+import React from 'react'
+import { Controller, FieldError, FieldValues } from 'react-hook-form'
+import { InputNormal } from '../atoms/InputNormalComponent'
+import { TextXs } from '../atoms/TextXsComponent'
 
 interface IProfileUpdateInput {
-  user: IUser
+  fields: FieldValues
 }
 
-export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
-  const { register, control, errors } = useFormContext()
+export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) => {
+  const { register, control, errors, getValues } = fields
 
   return useObserver(() => (
     <>
-      <IonAvatar className='w-30 h-30 my-8 self-center'>
-        <img src={user.profileUrl} alt='프로필이미지' />
+      <input type='hidden' {...register('id')} />
+      <input type='hidden' {...register('profileUrl')} />
+
+      <IonAvatar className='w-30 h-30 my-3 self-center'>
+        <img src={getValues('profileUrl')} alt='프로필이미지' />
       </IonAvatar>
 
-      <input type='hidden' name='id' defaultValue={user.id} ref={register} />
-      <input type='hidden' name='profileUrl' defaultValue={user.profileUrl} ref={register} />
-
-      <input
-        type='text'
-        className='input-text mb-4'
-        name='nickname'
+      <InputNormal
+        register={register('nickname', { required: '별명을 입력해 주세요' })}
         placeholder='별명을 입력해 주세요'
-        defaultValue={user.nickname}
-        ref={register}
       />
 
-      <input
-        type='text'
-        className='input-text'
-        name='status'
-        placeholder='상태메시지를 입력해주세요'
-        defaultValue={user.status}
-        ref={register}
-      />
+      <ErrorText field={errors.nickname} />
 
-      <input
-        type='text'
-        className='input-text mt-9 mb-4'
-        name='mobile'
-        placeholder='전화번호를 입력해주세요'
-        defaultValue={user.mobile}
-        ref={register({
-          required: 'this field is required',
+      <InputNormal placeholder='상태메시지를 입력해 주세요' register={register('status')} disabled={true} />
+
+      <InputNormal
+        placeholder='010-1234-5678'
+        register={register('mobile', {
+          required: '전화번호를 입력해 주세요',
           pattern: {
             value: /^[0-9]{3}[-]+[0-9]{3,4}[-]+[0-9]{4}$/i,
-            message: 'invalid phone number',
+            message: '전화번호를 확인해 주세요',
           },
         })}
       />
-      {errors.mobile && <TextBase className='red'>{errors.mobile.message}</TextBase>}
 
-      <div className='flex-between-center w-full'>
-        <IonLabel slot='start'>전화번호 공개</IonLabel>
+      <ErrorText field={errors.mobile} />
+
+      <div className='flex-between-center w-full pb-3'>
+        <label slot='start'>전화번호 공개</label>
         <Controller
           control={control}
           name='isPublicMobile'
-          render={({ onChange, name, value }) => (
+          render={({ field: { name, onChange, value } }) => (
             <IonToggle
               name={name}
               onIonChange={(e) => {
@@ -69,32 +58,17 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
               slot='end'
             />
           )}
-          defaultValue={user.isPublicMobile}
         />
       </div>
 
-      <input
-        type='email'
-        className='input-text mt-9 mb-4'
-        name='email'
-        defaultValue={user.email}
-        ref={register({
-          required: 'this field is required',
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: 'invalid email address',
-          },
-        })}
-      />
+      <InputNormal register={register('email')} disabled={true} />
 
-      <ErrorText errorField={errors.email} />
-
-      <div className='flex-between-center w-full'>
-        <IonLabel slot='start'>이메일 공개</IonLabel>
+      <div className='flex-between-center w-full pb-3'>
+        <label slot='start'>이메일 공개</label>
         <Controller
           control={control}
           name='isPublicEmail'
-          render={({ onChange, name, value }) => (
+          render={({ field: { name, onChange, value } }) => (
             <IonToggle
               name={name}
               onIonChange={(e) => {
@@ -104,7 +78,6 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
               slot='end'
             />
           )}
-          defaultValue={user.isPublicEmail}
         />
       </div>
     </>
@@ -112,8 +85,8 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ user }) => {
 }
 
 interface IErrorText {
-  errorField: { message: Message | React.ReactElement }
+  field?: FieldError
 }
 
-const ErrorText: React.FC<IErrorText> = ({ errorField }) =>
-  errorField ? <TextBase className='red'>{errorField.message}</TextBase> : <></>
+// TODO how to show error message?
+const ErrorText: React.FC<IErrorText> = ({ field }) => <TextXs className='red'>{field?.message}</TextXs>

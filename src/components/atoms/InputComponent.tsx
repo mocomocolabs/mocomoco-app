@@ -1,37 +1,20 @@
-import { FC } from 'react'
+import { FC, InputHTMLAttributes } from 'react'
+import { UseFormRegisterReturn } from 'react-hook-form'
 
-export interface IInput {
-  className?: string
-  name?: string
-  type?: string
-  value?: string
-  defaultValue?: string
-  placeholder?: string
+// Omit 'ref', to fix below warning
+// Warning: Function components cannot be given refs. Attempts to access this ref will fail.
+export interface IInput extends Omit<InputHTMLAttributes<HTMLInputElement>, 'ref' | 'onChange'> {
   onChange?: (v: string) => void
-  // eslint-disable-next-line
-  register?: any
+  register?: UseFormRegisterReturn
 }
 
-export const Input: FC<IInput> = ({
-  className,
-  name,
-  type,
-  value,
-  defaultValue,
-  placeholder,
-  onChange,
-  register,
-}) => {
+export const Input: FC<IInput> = ({ type, onChange, register, ...props }) => {
   return (
     <input
-      className={className}
       type={type || 'text'}
-      name={name}
-      value={value}
-      defaultValue={defaultValue}
-      placeholder={placeholder}
       onChange={(e) => onChange && onChange(e.target.value!)}
-      ref={register}
+      {...props}
+      {...register}
     ></input>
   )
 }

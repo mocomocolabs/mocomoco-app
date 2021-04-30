@@ -1,25 +1,21 @@
-import { FC } from 'react'
+import { FC, TextareaHTMLAttributes } from 'react'
+import { UseFormRegisterReturn } from 'react-hook-form'
 import './TextareaComponent.scss'
 
-export interface ITextarea {
-  name?: string
-  value?: string
-  rows?: number
-  placeholder?: string
+// Omit 'ref', to fix below warning
+// Warning: Function components cannot be given refs. Attempts to access this ref will fail.
+export interface ITextarea extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'ref' | 'onChange'> {
   onChange?: (v: string) => void
-  register?: any
+  register?: UseFormRegisterReturn
 }
 
-export const Textarea: FC<ITextarea> = ({ name, value, rows, placeholder, onChange, register }) => {
+export const Textarea: FC<ITextarea> = ({ onChange, register, ...props }) => {
   return (
     <textarea
-      name={name}
-      value={value}
       className='br-base border-gray leading-8 w-full px-4 py-3 text-base'
-      rows={rows}
-      placeholder={placeholder}
-      onChange={(e) => onChange && onChange(e.target.value)}
-      ref={register}
+      onChange={(e) => onChange && onChange(e.target.value!)}
+      {...props}
+      {...register}
     ></textarea>
   )
 }
