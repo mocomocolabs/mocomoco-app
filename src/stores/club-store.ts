@@ -7,7 +7,7 @@ import { IClubForm } from '../models/club.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
-import { IClubDto, InsertClubTask } from './club-store.d'
+import { IClubDto, IJoinClubDto, InsertClubTask, JoinClubTask } from './club-store.d'
 import { Task, TaskBy } from './task'
 
 const initState = {
@@ -121,6 +121,15 @@ export class ClubStore {
     await api.post(`http://localhost:8080/api/v1/clubs`, formData)
     this.resetForm()
   }) as InsertClubTask
+
+  @task.resolved
+  joinClub = (async (payload: IJoinClubDto) => {
+    await api.post(`http://localhost:8080/api/v1/club-users`, {
+      ...payload,
+      role: 'ROLE_USER',
+      isUse: true,
+    })
+  }) as JoinClubTask
 
   @action
   setForm(data: Partial<IClubForm>) {
