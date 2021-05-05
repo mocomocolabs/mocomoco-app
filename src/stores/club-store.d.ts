@@ -6,6 +6,13 @@ import { IUserDto } from './user-store.d'
 
 export type InsertClubTask = Task<[Partial<IClubForm>], void>
 
+export type JoinClubTask = Task<[IJoinClubDto], void>
+
+export interface IJoinClubDto {
+  clubId: number
+  userId: number
+}
+
 export interface IClubDto {
   id: number
   name: string

@@ -5,14 +5,18 @@ import { StaticContext } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
 import { Pad } from '../../components/atoms/PadComponent'
 import { Spinner } from '../../components/atoms/SpinnerComponent'
+import { SubmitButton } from '../../components/atoms/SubmitButtonComponent'
+import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackFloatingButton } from '../../components/molecules/BackFloatingButtonComponent'
 import { ClubDetailContents } from '../../components/molecules/ClubDetailContentsComponent'
 import { ClubDetailMember } from '../../components/molecules/ClubDetailMemberComponent'
+import { Footer } from '../../components/organisms/FooterComponent'
 import { useStore } from '../../hooks/use-store'
+import { route } from '../../services/route-service'
 
 export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, StaticContext>> = ({ match }) => {
   const id = parseInt(match.params.id)
-  const { $ui, $club } = useStore()
+  const { $ui, $club, $auth } = useStore()
 
   useIonViewWillEnter(() => {
     // TODO: statusbar 투명 체크
@@ -42,6 +46,28 @@ export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
 
         <Pad className='pb-extra-space'></Pad>
       </IonContent>
+      <Footer>
+        <div className='mx-5'>
+          {!$club.club.isMember ? (
+            <SpinnerWrapper
+              task={$club.joinClub}
+              Submit={() => (
+                <SubmitButton
+                  text='채팅 참여하기'
+                  onClick={() => $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })}
+                ></SubmitButton>
+              )}
+            ></SpinnerWrapper>
+          ) : (
+            <SubmitButton
+              text='채팅 참여하기'
+              className='bg-m-green'
+              // TODO: set chatRoom Id
+              onClick={() => route.chatRoom(1)}
+            ></SubmitButton>
+          )}
+        </div>
+      </Footer>
     </IonPage>
   ))
 }
