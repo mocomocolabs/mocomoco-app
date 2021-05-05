@@ -8,7 +8,6 @@ export interface IImageSlider {
 
 const slideOpts = {
   spaceBetween: 0,
-  initialSlide: 1,
   speed: 400,
 }
 
