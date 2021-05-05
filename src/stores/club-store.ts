@@ -76,16 +76,10 @@ export class ClubStore {
   @task
   getClubForm = (async (_id: number) => {
     await this.getClub(_id)
-    const images: ImageUploadItem[] = await Promise.all(
-      this.club.imageUrls.map((v) => urlToFile(v) as Promise<ImageUploadItem>)
-    )
-    const { id, description, meetingTime, meetingPlace, isPublic } = this.club
+    const images: any = await Promise.all(this.club.imageUrls.map((v) => urlToFile(v)))
+
     this.setForm({
-      id,
-      description,
-      meetingTime,
-      meetingPlace,
-      isPublic,
+      ...this.club,
       images,
     })
   }) as TaskBy<number>
@@ -114,12 +108,18 @@ export class ClubStore {
       )
     )
 
+    if (form.images.length === 0) {
+      // TODO: empty image 추가
+      form.images = [(await urlToFile('/assets/img/club/club01.jpg')) as any]
+    }
+
     form.images?.forEach((v) => {
       formData.append('files', v)
     })
 
     await api.post(`http://localhost:8080/api/v1/clubs`, formData)
     this.resetForm()
+    this.resetPopularClubs()
   }) as InsertClubTask
 
   @task.resolved
@@ -150,5 +150,14 @@ export class ClubStore {
   @action
   resetForm() {
     this.form = initState.form
+  }
+
+  /**
+   * IonSlide에서 슬라이드가 동적으로 추가되면 레이아웃이 깨지는 이슈가 있어서, 초기화 후 새롭게 슬라이드를 그려준다.
+   * https://github.com/ionic-team/ionic-framework/issues/18784
+   * */
+  @action
+  resetPopularClubs() {
+    this.popularClubs = []
   }
 }

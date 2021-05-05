@@ -48,7 +48,7 @@ export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
       </IonContent>
       <Footer>
         <div className='mx-5'>
-          {!$club.club.isMember ? (
+          {!$club.club?.isMember ? (
             <SpinnerWrapper
               task={$club.joinClub}
               Submit={() => (

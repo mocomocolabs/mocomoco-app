@@ -26,7 +26,11 @@ export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
       {clubs.map((v) => (
         <IonSlide className='w-auto' key={v.id} onClick={() => route.clubDetail(v.id)}>
           <div className='flex-col width-160 br-xxlg shadow pb-2'>
-            <ImageWithCorner height={130} url={v.imageUrls?.slice(-1).pop()}></ImageWithCorner>
+            <ImageWithCorner
+              height={130}
+              url={v.imageUrls?.slice(-1).pop()}
+              isRoundTop={true}
+            ></ImageWithCorner>
             <div className='flex-col w-full height-92 bg-white px-3 br-b-xxlg text-left'>
               <TextBase className='text-bold'>{v.name}</TextBase>
               <div className='flex items-center'>
