@@ -12,11 +12,11 @@ export interface IClubDetailMember {
 }
 
 export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community }) => {
-  return (
+  return members?.length ? (
     <div className='flex-col px-container'>
       <div className='flex mb-2'>
         <TextBase className='text-bold'>참여 멤버</TextBase>
-        <TextBase className='ml-1'>30명</TextBase>
+        <TextBase className='ml-1'>{members.length}명</TextBase>
       </div>
       {members.map((v) => (
         <div key={v.id} className='flex-between-center'>
@@ -34,5 +34,7 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community }) 
         </div>
       ))}
     </div>
+  ) : (
+    <></>
   )
 }

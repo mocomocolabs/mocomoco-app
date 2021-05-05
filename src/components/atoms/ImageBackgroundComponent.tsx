@@ -1,9 +1,9 @@
-import { FC } from 'react'
+import { CSSProperties, FC } from 'react'
 
 export interface IImageBackground {
   className?: string
   url?: string
-  style?: React.CSSProperties
+  style?: CSSProperties
 }
 
 export const ImageBackground: FC<IImageBackground> = ({ className = '', url, style }) => (

@@ -1,27 +1,26 @@
 import { IonSlide, IonSlides } from '@ionic/react'
-import { useObserver } from 'mobx-react-lite'
 import { FC } from 'react'
-import { ImageBackground } from '../atoms/ImageBackgroundComponent'
+import { ImageWithCorner } from './ImageWithCorner'
 
 export interface IImageSlider {
   urls: string[]
 }
 
 const slideOpts = {
+  spaceBetween: 0,
   initialSlide: 1,
   speed: 400,
 }
 
-export const ImageSlider: FC<IImageSlider> = ({ urls }) => {
-  return useObserver(() => (
-    <div>
-      <IonSlides pager={true} options={slideOpts}>
-        {urls.map((v, i) => (
-          <IonSlide key={i}>
-            <ImageBackground className='w-full height-250' url={v}></ImageBackground>
-          </IonSlide>
-        ))}
-      </IonSlides>
-    </div>
-  ))
-}
+export const ImageSlider: FC<IImageSlider> = ({ urls }) =>
+  urls.length ? (
+    <IonSlides key={urls.join('_')} pager={true} options={slideOpts}>
+      {urls?.map((v, i) => (
+        <IonSlide key={i}>
+          <ImageWithCorner height={337} url={v}></ImageWithCorner>
+        </IonSlide>
+      ))}
+    </IonSlides>
+  ) : (
+    <></>
+  )

@@ -10,7 +10,7 @@ export interface IImageWithCorner {
 
 export const ImageWithCorner: FC<IImageWithCorner> = ({ height, url, isRoundTop }) => {
   return (
-    <div className='relative'>
+    <div className='relative w-full'>
       <ImageBackground
         style={{ height }}
         url={url}

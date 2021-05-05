@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import React, { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { Club } from '../../models/club'
 import { route } from '../../services/route-service'
@@ -8,7 +8,7 @@ import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { TextSm } from '../atoms/TextSmComponent'
 import { XDivider } from '../atoms/XDividerComponent'
-import { ImageWithCorner } from './ImageWithCorner'
+import { ImageSlider } from './ImageSliderComponent'
 import { MorePopoverButton } from './MorePopoverButtonComponent'
 
 export interface IClubDetailContents {
@@ -20,7 +20,7 @@ export const ClubDetailContents: FC<IClubDetailContents> = ({ club }) => {
 
   return (
     <div>
-      <ImageWithCorner height={337} url={club.imageUrls[0]}></ImageWithCorner>
+      <ImageSlider urls={club.imageUrls}></ImageSlider>
       <div className='px-container pt-2'>
         <div className='flex-between-center'>
           <TextLg className='text-bold'>{club.name}</TextLg>
@@ -36,7 +36,7 @@ export const ClubDetailContents: FC<IClubDetailContents> = ({ club }) => {
             ]}
           ></MorePopoverButton>
         </div>
-        <TextSm className='mt-1 gray'>{club.community.name}</TextSm>
+        <TextSm className='mt-1 gray'>{club.community?.name}</TextSm>
         <div className='flex items-center mt-4'>
           <Icon name='time' className='mr-1'></Icon>
           <TextBase>{club.meetingPlace}</TextBase>
