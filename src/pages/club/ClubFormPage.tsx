@@ -20,6 +20,9 @@ export const ClubFormPage: React.FC = () => {
   const { $ui, $club, $community } = useStore()
   const { register, handleSubmit, formState } = useForm<IClubForm>({
     mode: 'onChange',
+    defaultValues: {
+      ...$club.form,
+    },
   })
 
   const uploader = useRef<IImageUploaderRef>()

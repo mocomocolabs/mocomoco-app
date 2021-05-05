@@ -5,12 +5,17 @@ import './ImageWithCorner.scss'
 export interface IImageWithCorner {
   height: number
   url?: string
+  isRoundTop?: boolean
 }
 
-export const ImageWithCorner: FC<IImageWithCorner> = ({ height, url }) => {
+export const ImageWithCorner: FC<IImageWithCorner> = ({ height, url, isRoundTop }) => {
   return (
     <div className='relative'>
-      <ImageBackground style={{ height }} url={url} className='br-t-xxlg'></ImageBackground>
+      <ImageBackground
+        style={{ height }}
+        url={url}
+        className={isRoundTop ? 'br-t-xxlg' : ''}
+      ></ImageBackground>
       <img
         src='/assets/img/corner.svg'
         style={{ top: height - 26 }}
