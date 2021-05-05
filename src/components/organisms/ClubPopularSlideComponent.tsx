@@ -22,9 +22,14 @@ const slideOpts = {
 
 export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
   return clubs.length ? (
-    <IonSlides pager={false} options={slideOpts} className='pb-3'>
-      {clubs.map((v) => (
-        <IonSlide className='w-auto' key={v.id} onClick={() => route.clubDetail(v.id)}>
+    <IonSlides
+      key={clubs.map((v) => v.id).join('_')}
+      pager={false}
+      options={slideOpts}
+      className='pb-3 club-popular'
+    >
+      {clubs.map((v, i) => (
+        <IonSlide className='w-auto' key={i} onClick={() => route.clubDetail(v.id)}>
           <div className='flex-col width-160 br-xxlg shadow pb-2'>
             <ImageWithCorner
               height={130}
