@@ -1,22 +1,39 @@
 import { IUser } from './user'
 
-export interface IChatMessage {
+export interface IChat {
   id: number
-  roomId: number
+  type: ChatType
   user: IUser
   message: string
   createdAt: string // TODO : 논의 필요
 }
 
-export interface IChatMessageForm {
+export interface IChatForm {
   roomId: number
   message: string
 }
 
 export interface IChatRoom {
   id: number
-  user: IUser
-  recentMessage: IChatMessage
-  unreadCount: number
-  messages?: IChatMessage[] // 룸 입장시 셋팅됌
+  type: ChatRoomType
+  name: string
+  users: IUser[]
+  chats: IChat[]
+  readChatId: number
+}
+
+export interface IChatRoomsDto {
+  count: number
+  chatrooms: IChatRoom[]
+}
+
+export enum ChatType {
+  NORMAL = 'NORMAL',
+  CLUB = 'CLUB',
+}
+
+export enum ChatRoomType {
+  TALK = 'TALK',
+  ENTER = 'ENTER',
+  LEAVE = 'LEAVE',
 }
