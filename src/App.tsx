@@ -34,15 +34,16 @@ import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 import SockJS from 'sockjs-client'
 import { Stomp } from '@stomp/stompjs'
-
-const sockJS = new SockJS('http://localhost:8080/ws-chat')
-const stompClient = Stomp.over(sockJS)
-stompClient.debug = (str) => console.log(str)
-let accessToken: string
+import _ from 'lodash'
 
 export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()
   const [intialized, setInitailzed] = useState(false)
+
+  const sockJS = new SockJS('http://localhost:8080/ws-chat')
+  const stompClient = Stomp.over(sockJS)
+  stompClient.debug = (str) => console.log(str)
+  // let accessToken: string
 
   useEffect(() => {
     init()
@@ -50,23 +51,24 @@ export const App: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    console.log(accessToken)
-    console.log(accessToken)
-    console.log(accessToken)
-    console.log(accessToken)
-    stompClient.connect(
-      {
-        Authorization:
-          'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzcHJpbmdib290and0Iiwic3ViIjoiYXNkZkBhc2RmLmNvbSIsImp0aSI6IjEiLCJuYW1lIjoibHNjMzcyIiwibmlja25hbWUiOiJsc2MzNzIiLCJsb2NhbGUiOiJlbl9VUyIsInJvbGVzIjoiUk9MRV9VU0VSOlJPTEVfQURNSU46Uk9MRV9TWVMiLCJpYXQiOjE2MjA0OTE3NDAsImV4cCI6MTYyMTkzMTc0MH0._1YIJadJfDnNBgosQc4_jg85MxQZfjIhz7cMBX5_B7A',
-      },
-      () => {
-        console.log('여기 들어옴?')
-        // stompClient.subscribe('/topic/roomId',(data)=>{
-        //   const newMessage : message = JSON.parse(data.body) as message;
-        //   addMessage(newMessage);
-        // });
-      }
-    )
+    console.log($chat.wsClient)
+    console.log($chat.wsClient)
+    console.log($chat.wsClient)
+    if (!_.isEmpty($chat.wsClient)) {
+      stompClient.connect(
+        {
+          Authorization:
+            'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzcHJpbmdib290and0Iiwic3ViIjoiYXNkZkBhc2RmLmNvbSIsImp0aSI6IjEiLCJuYW1lIjoibHNjMzcyIiwibmlja25hbWUiOiJsc2MzNzIiLCJsb2NhbGUiOiJlbl9VUyIsInJvbGVzIjoiUk9MRV9VU0VSOlJPTEVfQURNSU46Uk9MRV9TWVMiLCJpYXQiOjE2MjA2NTIxNDEsImV4cCI6MTYyMjA5MjE0MX0.onozohnKV5gA-30R_JCzyF--epnA0s6cLW5EeINp9sk',
+        },
+        () => {
+          console.log('여기 들어옴?')
+          // stompClient.subscribe('/topic/roomId',(data)=>{
+          //   const newMessage : message = JSON.parse(data.body) as message;
+          //   addMessage(newMessage);
+          // });
+        }
+      )
+    }
   }, [$chat.wsClient])
 
   const init = async () => {
@@ -86,8 +88,12 @@ export const App: React.FC = () => {
       // 챗방 리스트 조회
       await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
       // stomp client 저장
-      // $chat.setWsClient(stompClient)
-      accessToken = await storage.getAccessToken()
+
+      $chat.setWsClient(stompClient)
+      console.log($chat.wsClient)
+      console.log($chat.wsClient)
+      console.log('---------------------------')
+      // accessToken = await storage.getAccessToken()
       //
       // console.log(accessToken)
       // console.log(accessToken)
@@ -145,7 +151,7 @@ export const App: React.FC = () => {
               </IonTabButton>
               <IonTabButton tab='chat' href='/chat'>
                 <IonIcon icon={paperPlane} />
-                {$chat.countUnread > 0 && <div className='badge'></div>}
+                {$chat.unreadCountAll > 0 && <div className='badge'></div>}
               </IonTabButton>
               <IonTabButton tab='club' href='/club'>
                 <IonIcon icon={people} />

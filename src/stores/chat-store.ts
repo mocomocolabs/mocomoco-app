@@ -1,6 +1,6 @@
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
-import { IChatMessage, IChatMessageForm, IChatRoom } from '../models/chat'
+import { IChat, IChatForm, IChatRoom, IChatRoomsDto } from '../models/chat'
 import { http } from '../utils/http-util'
 import { api } from '../services/api-service'
 import {
@@ -16,7 +16,7 @@ const initState = {
   isWsReady: false,
   wsClient: null,
   topic: 'chat',
-  form: {} as { [roomId: number]: IChatMessageForm },
+  form: {} as { [roomId: number]: IChatForm },
 }
 
 export class ChatStore {
@@ -26,17 +26,17 @@ export class ChatStore {
   @observable wsClient: any = initState.wsClient
   @observable topic: string = initState.topic
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
-  @observable form: { [roomId: number]: IChatMessageForm } = initState.form
+  @observable form: { [roomId: number]: IChatForm } = initState.form
 
   @task
   getRooms = (async ({ roomIds }) => {
     await api
-      .get<IChatRoom[]>('http://localhost:8080/api/v1/chatrooms', {
+      .get<IChatRoomsDto>('http://localhost:8080/api/v1/chatrooms', {
         params: { ids: roomIds.toString() },
       })
       .then(
         action((data) => {
-          this.rooms = data
+          this.rooms = data.chatrooms
         })
       )
   }) as GetChatRoomsTask
@@ -46,7 +46,7 @@ export class ChatStore {
     this.setCurrentRoomId(roomId)
     // TODO: messageId를 넘길 경우, 해당 id 이후의 메세지만 response해줌
     await http
-      .get<IChatMessage[]>(`http://localhost:8080/api/v1/chatrooms/${roomId}`, {
+      .get<IChat[]>(`http://localhost:8080/api/v1/chatrooms/${roomId}`, {
         params: { lastId: messageId },
       })
       .then(
@@ -60,7 +60,7 @@ export class ChatStore {
           }
 
           if (this.room) {
-            this.room.messages = [...(this.room.messages || []), ...data]
+            this.room.chats = [...(this.room.chats || []), ...data]
           }
         })
       )
@@ -99,13 +99,13 @@ export class ChatStore {
 
   @computed
   get lastMessageId(): number | undefined {
-    return this.room?.messages?.slice(-1).pop()?.id
+    return this.room?.chats?.slice(-1).pop()?.id
   }
 
   @computed
-  get countUnread(): number {
+  get unreadCountAll(): number {
     return this.rooms.reduce((acc, cur) => {
-      return acc + cur.unreadCount
+      return acc + cur.chats.filter((v) => v.id > cur.readChatId).length
     }, 0)
   }
 }
