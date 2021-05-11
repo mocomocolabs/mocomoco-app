@@ -15,7 +15,7 @@ const initState = {
   currentRoomId: null,
   isWsReady: false,
   wsClient: null,
-  topic: 'chat',
+  // topic: 'chat',
   form: {} as { [roomId: number]: IChatForm },
 }
 
@@ -24,7 +24,7 @@ export class ChatStore {
   @observable currentRoomId: number | null = initState.currentRoomId
   @observable isWsReady: boolean = initState.isWsReady
   @observable wsClient: any = initState.wsClient
-  @observable topic: string = initState.topic
+  // @observable topic: string = initState.topic
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
   @observable form: { [roomId: number]: IChatForm } = initState.form
 
