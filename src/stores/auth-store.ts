@@ -81,6 +81,7 @@ export class AuthStore {
 
     if (hasToken) {
       api.setAuthoriationBy(hasToken)
+      await storage.setAccessTokenForSync()
       try {
         await api.get<IAuthUserDto>(`http://localhost:8080/api/auth/account`).then((user) => {
           this.setUser(user)

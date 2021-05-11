@@ -41,34 +41,21 @@ export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()
   const [intialized, setInitailzed] = useState(false)
 
-  const sockJS = new SockJS('http://localhost:8080/ws-chat')
-  const stompClient = Stomp.over(sockJS)
-  stompClient.debug = (str) => console.log(str)
-  // let accessToken: string
-
   useEffect(() => {
     init()
     // eslint-disable-next-line
   }, [])
 
   useEffect(() => {
-    console.log($chat.wsClient)
-    console.log($chat.wsClient)
-    console.log($chat.wsClient)
     if (!_.isEmpty($chat.wsClient)) {
-      stompClient.connect(
-        {
-          Authorization:
-            'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzcHJpbmdib290and0Iiwic3ViIjoiYXNkZkBhc2RmLmNvbSIsImp0aSI6IjEiLCJuYW1lIjoibHNjMzcyIiwibmlja25hbWUiOiJsc2MzNzIiLCJsb2NhbGUiOiJlbl9VUyIsInJvbGVzIjoiUk9MRV9VU0VSOlJPTEVfQURNSU46Uk9MRV9TWVMiLCJpYXQiOjE2MjA2NTIxNDEsImV4cCI6MTYyMjA5MjE0MX0.onozohnKV5gA-30R_JCzyF--epnA0s6cLW5EeINp9sk',
-        },
-        () => {
-          console.log('여기 들어옴?')
-          // stompClient.subscribe('/topic/roomId',(data)=>{
-          //   const newMessage : message = JSON.parse(data.body) as message;
-          //   addMessage(newMessage);
-          // });
-        }
-      )
+      $chat.wsClient.connect({ Authorization: storage.accessTokenForSync }, () => {
+        $chat.rooms.forEach((v) => {
+          $chat.wsClient.subscribe(`/sub/chatroom/${v.id}`, (data: any) => {
+            console.log(data)
+          })
+        })
+      })
+      console.log('여기??')
     }
   }, [$chat.wsClient])
 
@@ -88,12 +75,19 @@ export const App: React.FC = () => {
 
       // 챗방 리스트 조회
       await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
+
+      // websocket 연
+      const sockJS = new SockJS('http://localhost:8080/ws-chat')
+      const stompClient = Stomp.over(sockJS)
+      stompClient.debug = (str) => console.log(str)
+
       // stomp client 저장
+      // storage.getAccessToken()
 
       $chat.setWsClient(stompClient)
-      console.log($chat.wsClient)
-      console.log($chat.wsClient)
-      console.log('---------------------------')
+      // console.log($chat.wsClient)
+      // console.log($chat.wsClient)
+      // console.log('---------------------------')
       // accessToken = await storage.getAccessToken()
       //
       // console.log(accessToken)

@@ -5,6 +5,7 @@ const { Storage } = Plugins
 
 class StorageService {
   private _communityId = 0
+  accessTokenForSync = ''
 
   private readonly COMMUNITY_ID = 'COMMUNITY_ID'
   private readonly ACCESS_TOKEN = 'ACCESS_TOKEN'
@@ -59,6 +60,10 @@ class StorageService {
 
   get communityId() {
     return this._communityId
+  }
+
+  async setAccessTokenForSync() {
+    this.accessTokenForSync = await this.getAccessToken()
   }
 }
 
