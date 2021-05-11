@@ -13,26 +13,26 @@ interface IChatRoomListItem {
 export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
   return (
     <li className='py-4 flex'>
-      <div className='mr-2' onClick={() => route.profileDetail(room.user.id)}>
-        <Profile url={room.user.profileUrl}></Profile>
-      </div>
-      <div className='flex-between-center flex-1' onClick={() => route.chatRoom(room.id)}>
-        <div className='flex-col'>
-          <div className='flex'>
-            <TextLg className='mr-2'>{room.user.nickname}</TextLg>
-            <TextBase className='mr-2 d-gray'>
-              {room.user.communities.map((community) => community.name).join('/')}
-            </TextBase>
-            <TextBase className='d-gray'>{room.recentMessage.createdAt}</TextBase>
-          </div>
-          <TextBase className='ellipsis max-width-270'>{room.recentMessage.message}</TextBase>
-        </div>
-        {room.unreadCount > 0 && (
-          <div className='flex-center br-full bg-m-red w-6 min-w-6 h-6 ml-2'>
-            <TextSm>{room.unreadCount}</TextSm>
-          </div>
-        )}
-      </div>
+      {/*<div className='mr-2' onClick={() => route.profileDetail(room.user.id)}>*/}
+      {/*  <Profile url={room.user.profileUrl}></Profile>*/}
+      {/*</div>*/}
+      {/*<div className='flex-between-center flex-1' onClick={() => route.chatRoom(room.id)}>*/}
+      {/*  <div className='flex-col'>*/}
+      {/*    <div className='flex'>*/}
+      {/*      <TextLg className='mr-2'>{room.user.nickname}</TextLg>*/}
+      {/*      <TextBase className='mr-2 d-gray'>*/}
+      {/*        {room.user.communities.map((community) => community.name).join('/')}*/}
+      {/*      </TextBase>*/}
+      {/*      <TextBase className='d-gray'>{room.recentMessage.createdAt}</TextBase>*/}
+      {/*    </div>*/}
+      {/*    <TextBase className='ellipsis max-width-270'>{room.recentMessage.message}</TextBase>*/}
+      {/*  </div>*/}
+      {/*  {room.unreadCount > 0 && (*/}
+      {/*    <div className='flex-center br-full bg-m-red w-6 min-w-6 h-6 ml-2'>*/}
+      {/*      <TextSm>{room.unreadCount}</TextSm>*/}
+      {/*    </div>*/}
+      {/*  )}*/}
+      {/*</div>*/}
     </li>
   )
 }
