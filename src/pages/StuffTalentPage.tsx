@@ -9,6 +9,7 @@ import {
   useIonViewWillEnter,
 } from '@ionic/react'
 import { create, filter as filterIcon, search as searchIcon } from 'ionicons/icons'
+import { autorun } from 'mobx'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -21,15 +22,24 @@ interface SearchbarChangeEventDetail {
   value: string | undefined
 }
 
-const FilterMode = { none: 'none', category: 'category', status: 'status' }
+const FilterMode = { none: 'none', category: 'category', status: 'status', type: 'type' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 const initialSearch = ''
-const initialFilter: IStuffTalentFilter = { categories: [], statuses: [] }
+const initialFilter: IStuffTalentFilter = {
+  isPublic: false,
+  communityId: undefined,
+  userId: undefined,
+  categories: [],
+  statuses: [],
+  types: [],
+}
 
 export const StuffTalentPage: React.FC = () => {
-  const { $stuff, $talent, $ui } = useStore()
+  const { $stuff, $talent, $ui, $community } = useStore()
   const { pathname } = useLocation()
+
+  // TODO 경로명 하드코딩하지 않기
   const store = pathname === '/stuff' ? $stuff : $talent
 
   const [searchMode, setSearchMode] = useState(false)
@@ -37,15 +47,32 @@ export const StuffTalentPage: React.FC = () => {
   const onSearchSubmit = (e: CustomEvent<SearchbarChangeEventDetail>) => setSearch(e.detail.value!)
 
   const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
-  const [filter, setFilter] = useState<IStuffTalentFilter>(initialFilter)
-
-  useEffect(() => {
-    !searchMode && setSearch(initialSearch)
-  }, [searchMode])
+  const [filter, setFilter] = useState<IStuffTalentFilter>({
+    ...initialFilter,
+    communityId: $community.selectedId,
+  })
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(true)
   })
+
+  useEffect(() => {
+    autorun(() => {
+      setFilter({ ...filter, communityId: $community.selectedId })
+    })
+
+    return function cleanup() {
+      setFilter(initialFilter)
+    }
+  }, [])
+
+  useEffect(() => {
+    !searchMode && setSearch(initialSearch)
+
+    return function cleanup() {
+      setSearch(initialSearch)
+    }
+  }, [searchMode])
 
   return (
     <IonPage>
@@ -103,6 +130,14 @@ export const StuffTalentPage: React.FC = () => {
             >
               ▼거래상태
             </div>
+            <div
+              className={filter.types.length > 0 ? 'bg-yellow' : ''}
+              onClick={() => {
+                setFilterMode(filterMode === FilterMode.type ? FilterMode.none : FilterMode.type)
+              }}
+            >
+              ▼유형
+            </div>
           </div>
         </div>
       </IonHeader>
@@ -138,7 +173,7 @@ export const StuffTalentPage: React.FC = () => {
 
         <div className='justify-around' hidden={filterMode !== FilterMode.status}>
           <div className='absolute z-10 w-full bg-white'>
-            {store.status.map((status) => (
+            {store.statuses.map((status) => (
               <div
                 key={status}
                 onClick={() => {
@@ -151,6 +186,31 @@ export const StuffTalentPage: React.FC = () => {
               >
                 {status}
                 {filter.statuses.includes(status) ? ' V' : ''}
+              </div>
+            ))}
+          </div>
+          <IonBackdrop
+            onIonBackdropTap={() => {
+              setFilterMode(FilterMode.none)
+            }}
+          />
+        </div>
+
+        <div className='justify-around' hidden={filterMode !== FilterMode.type}>
+          <div className='absolute z-10 w-full bg-white'>
+            {store.types.map((type) => (
+              <div
+                key={type}
+                onClick={() => {
+                  const types = filter.types.includes(type)
+                    ? filter.types.filter((v) => v !== type)
+                    : filter.types.concat(type)
+
+                  setFilter({ ...filter, types: types })
+                }}
+              >
+                {type}
+                {filter.types.includes(type) ? ' V' : ''}
               </div>
             ))}
           </div>
