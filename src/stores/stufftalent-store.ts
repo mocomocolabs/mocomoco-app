@@ -1,10 +1,12 @@
+import { AxiosRequestConfig } from 'axios'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import {
   IStuffTalent,
   IStuffTalentFilter,
   StuffTalentPathName as PathName,
-  StuffTalentStatus as Status,
+  StuffTalentStatus,
+  StuffTalentType,
 } from '../models/stufftalent.d'
 import { api } from '../services/api-service'
 import {
@@ -31,7 +33,8 @@ export class StuffTalentStore {
   @observable.struct item: IStuffTalent = initState.item
   @observable.struct categories: IStuffTalentCategoryDto[] = initState.categories
 
-  readonly status: string[] = Object.values(Status)
+  readonly statuses: StuffTalentStatus[] = Object.values(StuffTalentStatus)
+  readonly types: StuffTalentType[] = Object.values(StuffTalentType)
 
   readonly baseUrl: string = 'http://localhost:8080/api/v1'
   readonly url: string
@@ -63,25 +66,50 @@ export class StuffTalentStore {
 
   @task
   getItems = (async (search, filter) => {
-    const titleParam = 'like:' + search
-    const categoryIdParam = filter.categories.join('_OR_')
-    const statusParam = filter.statuses.join('_OR_')
-
-    const config = {
-      params: {
-        'title': titleParam,
-        'category-id': categoryIdParam,
-        'status': statusParam,
-        'is-use': true,
-      },
-    }
-
-    await api.get<IStuffsTalentsDto>(this.url, config).then(
+    await api.get<IStuffsTalentsDto>(this.url, this.config(search, filter)).then(
       action((data) => {
         this.items = this.pathName === PathName.STUFF ? data.stuffs : data.talents
       })
     )
   }) as TaskBy2<string, IStuffTalentFilter>
+
+  private config = (search: string, filter: IStuffTalentFilter) => {
+    const { userId, categories, statuses, types, isPublic, communityId } = filter
+
+    const config: AxiosRequestConfig = {
+      params: {
+        'is-use': true,
+      },
+    }
+
+    !!userId && this.addParam(config, 'user-id', userId)
+    categories?.length > 0 && this.addParam(config, 'category-id', categories.join('_OR_'))
+    statuses?.length > 0 && this.addParam(config, 'status', statuses.join('_OR_'))
+    types?.length > 0 && this.addParam(config, 'type', types.join('_OR_'))
+
+    if (isPublic) {
+      this.addParam(config, 'is-public', isPublic)
+    } else {
+      !!communityId && this.addParam(config, 'community-id', communityId)
+    }
+
+    !!search && this.addParam(config, 'title', 'like:' + search)
+
+    return config
+  }
+
+  private addParam(
+    options: AxiosRequestConfig = {
+      params: {},
+    },
+    name: string,
+    value: any
+  ) {
+    options.params = {
+      ...options.params,
+      [name]: value,
+    }
+  }
 
   @task
   getItem = (async (id: number) => {

@@ -25,6 +25,10 @@ export enum StuffTalentMethod {
 export interface IStuffTalent extends IStuffTalentDto {}
 
 export interface IStuffTalentFilter {
+  isPublic: boolean
+  communityId: number | undefined
+  userId: number | undefined
   categories: number[]
-  statuses: string[]
+  statuses: StuffTalentStatus[]
+  types: StuffTalentType[]
 }
