@@ -38,13 +38,19 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
               icon={paperPlane}
               className='black'
               onClick={async () => {
+                console.log('여기 들어옴?')
+                console.log('여기 들어옴?')
+
                 if ($chat.form[roomId]?.message) {
-                  executeWithError(async () => {
-                    await $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
-                    await $chat.getRoomMessages({ roomId, messageId: $chat.lastMessageId })
-                    $chat.setForm(roomId, '')
-                    scrollToBottom()
-                  })
+                  $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
+                  // executeWithError(async () => {
+                  //   console.log('여기는 들어옴?')
+                  //   console.log('여기는 들어옴?')
+                  //   await $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
+                  //   await $chat.getRoomMessages({ roomId, messageId: $chat.lastMessageId })
+                  //   $chat.setForm(roomId, '')
+                  //   scrollToBottom()
+                  // })
                 }
               }}
             ></IonIcon>

@@ -1,32 +1,30 @@
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
-import { IChat, IChatForm, IChatRoom, IChatRoomsDto } from '../models/chat'
+import { IChat, IChatForm, IChatRoom, IChatRoomsDto, IPatchReadChatIdDto, ISubChat } from '../models/chat'
 import { http } from '../utils/http-util'
 import { api } from '../services/api-service'
 import {
-  GetChatMessagesTask,
   GetChatRoomsTask,
   IInsertChatMessage,
   InsertChatMessageTask,
+  SetReadChatIdTask,
 } from './chat-store.d'
+import { webSocket } from '../services/WebSocketService'
+import _ from 'lodash'
 
 const initState = {
   rooms: [],
   currentRoomId: null,
-  isWsReady: false,
-  wsClient: null,
-  // topic: 'chat',
   form: {} as { [roomId: number]: IChatForm },
+  // unReadCountAll: 0,
 }
 
 export class ChatStore {
   @observable.shallow rooms: IChatRoom[] = initState.rooms
   @observable currentRoomId: number | null = initState.currentRoomId
-  @observable isWsReady: boolean = initState.isWsReady
-  @observable wsClient: any = initState.wsClient
-  // @observable topic: string = initState.topic
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
   @observable form: { [roomId: number]: IChatForm } = initState.form
+  // @observable unReadCountAll: number = initState.unReadCountAll
 
   @task
   getRooms = (async ({ roomIds }) => {
@@ -36,40 +34,50 @@ export class ChatStore {
       })
       .then(
         action((data) => {
-          this.rooms = data.chatrooms
+          this.rooms = data.chatrooms.map((v) => ({
+            ...v,
+            unReadChatCount: v.chats.filter((vv) => vv.id > v.readChatId).length,
+          }))
+          // this.setUnReadCountAll()
         })
       )
   }) as GetChatRoomsTask
 
   @task
-  getRoomMessages = (async ({ roomId, messageId }) => {
-    this.setCurrentRoomId(roomId)
-    // TODO: messageId를 넘길 경우, 해당 id 이후의 메세지만 response해줌
-    await http
-      .get<IChat[]>(`http://localhost:8080/api/v1/chatrooms/${roomId}`, {
-        params: { lastId: messageId },
+  setLastChatId = (async ({ roomId, readChatId }) => {
+    await api
+      .post('http://localhost:8080/api/v1/chatrooms-users/read-chat-id', {
+        chatroomId: roomId,
+        readChatId,
       })
       .then(
-        action(async (data) => {
-          if (!data) {
-            return
-          }
-
-          if (!this.room) {
-            // await this.getRooms()
-          }
-
-          if (this.room) {
-            this.room.chats = [...(this.room.chats || []), ...data]
-          }
+        action(() => {
+          this.rooms = this.rooms.map((v) => ({
+            ...v,
+            readChatId: v.id === roomId ? readChatId : v.readChatId,
+            unReadChatCount: 0,
+          }))
         })
       )
-  }) as GetChatMessagesTask
+  }) as SetReadChatIdTask
 
   @task.resolved
   insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
+    const room = _.find(this.rooms, (v) => v.id === roomId)
+
     await new Promise((r) => setTimeout(() => r(true), 1000))
-    await http.post(`/chats/rooms/${roomId}`, { roomId, message })
+    await api
+      .post<ISubChat>('http://localhost:8080/api/v1/chats', {
+        type: 'TALK',
+        message,
+        chatroomId: roomId,
+        isUse: true,
+      })
+      .then((data) => {
+        if (room !== undefined) room.readChatId = data.id
+        // this.setUnReadCountAll()
+        webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
+      })
   }) as InsertChatMessageTask
 
   @action
@@ -78,18 +86,20 @@ export class ChatStore {
   }
 
   @action
-  setWsClient(wsClient: any) {
-    this.wsClient = wsClient
-  }
-
-  @action
-  setIsWsReady(isWsReady: boolean) {
-    this.isWsReady = isWsReady
-  }
-
-  @action
   setForm(roomId: number, message: string) {
     this.form[roomId] = { roomId, message }
+  }
+
+  @action
+  setChat(subChat: ISubChat) {
+    const chat = _.omit(subChat, ['chatroom']) as IChat
+    const isCurRoom = this.room !== undefined && this.room.id === subChat.chatroom.id
+
+    this.rooms = this.rooms.map((v) => ({
+      ...v,
+      chats: v.id === subChat.chatroom.id ? [...v.chats, chat] : v.chats,
+      unReadChatCount: isCurRoom ? v.unReadChatCount : v.unReadChatCount + 1,
+    }))
   }
 
   @computed
@@ -103,9 +113,9 @@ export class ChatStore {
   }
 
   @computed
-  get unreadCountAll(): number {
+  get unReadCountAll(): number {
     return this.rooms.reduce((acc, cur) => {
-      return acc + cur.chats.filter((v) => v.id > cur.readChatId).length
+      return acc + cur.unReadChatCount
     }, 0)
   }
 }

@@ -12,40 +12,26 @@ interface IChatRoomDetail {
 export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({ roomId }) => {
   const { $chat, $auth } = useStore()
 
-  useEffect(() => {
-    const getRoomMessagesAndScrollBottom = async () => {
-      await $chat.getRoomMessages({ roomId })
-      scrollToBottom()
-    }
+  useEffect(() => {}, [$chat.room?.chats])
 
-    getRoomMessagesAndScrollBottom()
-  }, [$chat, roomId])
-
-  return useObserver(() =>
-    $chat.getRoomMessages.match({
-      pending: () => (
-        <div className='height-150 flex-center'>
-          <IonSpinner color='tertiary' name='crescent' />
-        </div>
-      ),
-      resolved: () => (
-        <>
-          <ul className='pl-0'>
-            {/*{$chat.room?.messages?.map((v, i) => (*/}
-            {/*  <li key={i} className={`flex my-2 ${v.user.id === $auth.user.id && 'flex-row-reverse'}`}>*/}
-            {/*    <Profile url={v.user.profileUrl}></Profile>*/}
-            {/*    <div*/}
-            {/*      className={`py-2 px-3 mx-2 br-xlg pre-line ${*/}
-            {/*        v.user.id === $auth.user.id ? 'bg-m-green' : 'bg-m-gray'*/}
-            {/*      }`}*/}
-            {/*    >*/}
-            {/*      {v.message}*/}
-            {/*    </div>*/}
-            {/*  </li>*/}
-            {/*))}*/}
-          </ul>
-        </>
-      ),
-    })
-  )
+  return useObserver(() => {
+    return (
+      <>
+        <ul className='pl-0'>
+          {$chat.room?.chats?.map((v, i) => (
+            <li key={i} className={`flex my-2 ${v.user.id === $auth.user.id && 'flex-row-reverse'}`}>
+              <Profile url={v.user.profileUrl}></Profile>
+              <div
+                className={`py-2 px-3 mx-2 br-xlg pre-line ${
+                  v.user.id === $auth.user.id ? 'bg-m-green' : 'bg-m-gray'
+                }`}
+              >
+                {v.message}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  })
 }
