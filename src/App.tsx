@@ -32,9 +32,8 @@ import { SignInPage } from './pages/SignInPage'
 import { StuffTalentPage } from './pages/StuffTalentPage'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
-import SockJS from 'sockjs-client'
-import { Stomp } from '@stomp/stompjs'
-import _ from 'lodash'
+import { webSocket } from './services/WebSocketService'
+import { ISubChat } from './models/chat'
 
 export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()
@@ -45,18 +44,7 @@ export const App: React.FC = () => {
     // eslint-disable-next-line
   }, [])
 
-  useEffect(() => {
-    if (!_.isEmpty($chat.wsClient)) {
-      $chat.wsClient.connect({ Authorization: storage.accessTokenForSync }, () => {
-        $chat.rooms.forEach((v) => {
-          $chat.wsClient.subscribe(`/sub/chatroom/${v.id}`, (data: any) => {
-            console.log(data)
-          })
-        })
-      })
-      console.log('여기??')
-    }
-  }, [$chat.wsClient])
+  useEffect(() => {}, [$chat.unReadCountAll])
 
   const init = async () => {
     // 로그인
@@ -74,32 +62,16 @@ export const App: React.FC = () => {
 
       // 챗방 리스트 조회
       await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
-
-      // websocket 연
-      const sockJS = new SockJS('http://localhost:8080/ws-chat')
-      const stompClient = Stomp.over(sockJS)
-      stompClient.debug = (str) => console.log(str)
-
-      // stomp client 저장
-      // storage.getAccessToken()
-
-      $chat.setWsClient(stompClient)
-      // console.log($chat.wsClient)
-      // console.log($chat.wsClient)
-      // console.log('---------------------------')
-      // accessToken = await storage.getAccessToken()
-      //
-      // console.log(accessToken)
-      // console.log(accessToken)
-      // console.log(accessToken)
-      // console.log(accessToken)
-      // stompClient.connect({ Authorization: '' }, () => {
-      //   console.log('여기 들어옴?')
-      //   // stompClient.subscribe('/topic/roomId',(data)=>{
-      //   //   const newMessage : message = JSON.parse(data.body) as message;
-      //   //   addMessage(newMessage);
-      //   // });
-      // })
+      // 웹소켓 연결
+      webSocket.init()
+      webSocket.connectRooms(
+        $chat.rooms.map((v) => v.id),
+        (data) => {
+          const subChat = JSON.parse(data.body) as ISubChat
+          console.log(subChat)
+          $chat.setChat(subChat)
+        }
+      )
     }
 
     setInitailzed(true)
@@ -145,7 +117,7 @@ export const App: React.FC = () => {
               </IonTabButton>
               <IonTabButton tab='chat' href='/chat'>
                 <IonIcon icon={paperPlane} />
-                {$chat.unreadCountAll > 0 && <div className='badge'></div>}
+                {$chat.unReadCountAll > 0 && <div className='badge'></div>}
               </IonTabButton>
               <IonTabButton tab='club' href='/club'>
                 <IonIcon icon={people} />
@@ -159,21 +131,6 @@ export const App: React.FC = () => {
       ) : (
         <Spinner isFull={true} color='white'></Spinner>
       )}
-
-      {/*{$auth.isLogin && $auth.user.communityId && !storage.communityId && (*/}
-      {/*  <SockJsClient*/}
-      {/*    url={'http://localhost:8080/ws-chat'}*/}
-      {/*    topics={[$chat.topic]}*/}
-      {/*    ref={(wsClient: any) => ($chat.setWsClient = wsClient)}*/}
-      {/*    onConnect={() => {*/}
-      {/*      console.log('연결 성공!')*/}
-      {/*    }}*/}
-      {/*    headers={{ Authorization: accessToken }}*/}
-      {/*    onDisconnect={() => console.log('연결 해제!')}*/}
-      {/*    onMessage={(msg: any) => console.log(`메세지 내용 : ${msg}`)}*/}
-      {/*    debug={false}*/}
-      {/*  />*/}
-      {/*)}*/}
 
       <Alert></Alert>
       <Toast></Toast>

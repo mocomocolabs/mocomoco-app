@@ -3,15 +3,14 @@ import { useObserver } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { ChatRoomListItem } from '../molecules/ChatRoomListItemComponent'
+import _ from 'lodash'
 
 interface IChatRoomList {}
 
 export const ChatRoomList: React.FC<IChatRoomList> = () => {
   const { $chat } = useStore()
 
-  useEffect(() => {
-    // $chat.getRooms()
-  }, [$chat])
+  useEffect(() => {}, [$chat.rooms])
 
   return useObserver(() =>
     $chat.getRooms.match({

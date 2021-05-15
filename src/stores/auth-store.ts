@@ -105,6 +105,7 @@ export class AuthStore {
     const { accessToken, refreshToken } = user
     storage.setAccessToken(accessToken)
     storage.setRefreshToken(refreshToken)
+    storage.setAccessTokenForSync()
     api.setAuthoriationBy(accessToken)
   }
 

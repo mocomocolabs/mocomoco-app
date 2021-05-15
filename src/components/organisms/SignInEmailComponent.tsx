@@ -9,6 +9,8 @@ import { InputPassword } from '../atoms/InputPasswordComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
+import { webSocket } from '../../services/WebSocketService'
+import { IChat, ISubChat } from '../../models/chat'
 
 export const SignInEmail: FC = () => {
   const {
@@ -23,13 +25,29 @@ export const SignInEmail: FC = () => {
   const password = useRef({})
   password.current = watch('password', '')
 
-  const { $auth } = useStore()
+  const { $auth, $chat } = useStore()
 
   const onSubmit = handleSubmit((form) => {
     executeWithError(() =>
-      $auth.signIn(form.email, form.password).then(() => {
-        route.home()
-      })
+      $auth
+        .signIn(form.email, form.password)
+        .then(async () => {
+          // 챗방 리스트 조회
+          await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
+          // websocket 연결
+          webSocket.init()
+          webSocket.connectRooms(
+            $chat.rooms.map((v) => v.id),
+            (data) => {
+              const subChat = JSON.parse(data.body) as ISubChat
+              console.log(subChat)
+              $chat.setChat(subChat)
+            }
+          )
+        })
+        .then(() => {
+          route.home()
+        })
     )
   })
 

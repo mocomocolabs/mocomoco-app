@@ -1,4 +1,5 @@
 import { IUser } from './user'
+import { IClubDto } from '../stores/club-store.d'
 
 export interface IChat {
   id: number
@@ -6,6 +7,10 @@ export interface IChat {
   user: IUser
   message: string
   createdAt: string // TODO : 논의 필요
+}
+
+export interface ISubChat extends IChat {
+  chatroom: IChatRoom
 }
 
 export interface IChatForm {
@@ -20,6 +25,8 @@ export interface IChatRoom {
   users: IUser[]
   chats: IChat[]
   readChatId: number
+  unReadChatCount: number
+  club: IClubDto
 }
 
 export interface IChatRoomsDto {
@@ -27,12 +34,18 @@ export interface IChatRoomsDto {
   chatrooms: IChatRoom[]
 }
 
-export enum ChatType {
+export interface IPatchReadChatIdDto {
+  chatroomId: number
+  readChatId: number
+  isUse: boolean
+}
+
+export enum ChatRoomType {
   NORMAL = 'NORMAL',
   CLUB = 'CLUB',
 }
 
-export enum ChatRoomType {
+export enum ChatType {
   TALK = 'TALK',
   ENTER = 'ENTER',
   LEAVE = 'LEAVE',
