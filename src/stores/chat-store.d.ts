@@ -14,8 +14,15 @@ export interface IGetRooms {
   roomIds: []
 }
 
+export interface ISetReadChatId {
+  roomId: number
+  readChatId: number
+}
+
 export type InsertChatMessageTask = Task<[IInsertChatMessage], void>
 
 export type GetChatMessagesTask = Task<[IGetChatMessages], void>
 
 export type GetChatRoomsTask = Task<[IGetRooms], void>
+
+export type SetReadChatIdTask = Task<[ISetReadChatId], void>
