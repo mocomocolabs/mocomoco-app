@@ -10,6 +10,7 @@ class StorageService {
   private readonly COMMUNITY_ID = 'COMMUNITY_ID'
   private readonly ACCESS_TOKEN = 'ACCESS_TOKEN'
   private readonly REFRESH_TOKEN = 'REFRESH_TOKEN'
+  private readonly STORE_CHAT_ROOM = 'STORE_CHAT_ROOM'
 
   setCommunityId(id: number): Promise<void> {
     // ** 주의
@@ -64,6 +65,14 @@ class StorageService {
 
   async setAccessTokenForSync() {
     this.accessTokenForSync = await this.getAccessToken()
+  }
+
+  setStoreChatRoom(storeChatRoom: string) {
+    return this.setObject(this.STORE_CHAT_ROOM, storeChatRoom)
+  }
+
+  getStoreChatRoom() {
+    return this.getObject(this.STORE_CHAT_ROOM)
   }
 }
 
