@@ -31,6 +31,9 @@ export const ClubFormPage: React.FC = () => {
     $ui.setIsBottomTab(false)
   })
 
+  // TODO: 데이터 변경이 있을 때만 완료 버튼 활성화되도록 조건 추가되면 좋을 것 같네요
+  // => 저는 기본값과 비교해서 수정된 값 있는지 확인하려고 dirtyFields를 활용했는데, 다른 방법이 있을 수도 있겠네요
+  // => formState.isValid && Object.keys(formState.dirtyFields).length > 0
   const onSubmit = handleSubmit(async (form) => {
     $club.setForm(form)
     executeWithError(async () => {

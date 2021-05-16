@@ -16,6 +16,7 @@ export interface IClub {
   isAdmin: boolean
   isPublic: boolean
   createdAt: string
+  chatroomId: number
 }
 
 export interface IClubMember extends IUser {

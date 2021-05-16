@@ -54,7 +54,11 @@ export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
               Submit={() => (
                 <SubmitButton
                   text='채팅 참여하기'
-                  onClick={() => $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })}
+                  onClick={() => {
+                    $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })
+                    // TODO: 테스트후 주석 제거
+                    // route.chatRoom($club.club.chatroomId)
+                  }}
                 ></SubmitButton>
               )}
             ></SpinnerWrapper>
