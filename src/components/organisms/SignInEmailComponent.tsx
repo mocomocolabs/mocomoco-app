@@ -10,7 +10,8 @@ import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 import { webSocket } from '../../services/WebSocketService'
-import { IChat, ISubChat } from '../../models/chat'
+import { ISubChat } from '../../models/chat'
+import _ from 'lodash'
 
 export const SignInEmail: FC = () => {
   const {
@@ -40,8 +41,11 @@ export const SignInEmail: FC = () => {
             $chat.rooms.map((v) => v.id),
             (data) => {
               const subChat = JSON.parse(data.body) as ISubChat
-              console.log(subChat)
               $chat.setChat(subChat)
+              $chat.setLastChatId({
+                roomId: subChat.chatroom.id,
+                readChatId: subChat.id,
+              })
             }
           )
         })

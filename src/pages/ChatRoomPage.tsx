@@ -31,18 +31,16 @@ export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticCo
 
   useEffect(() => {
     // TODO : 접근제한 테스트 필요
-    const curRoom = $chat.rooms.find((v) => v.id === roomId)
-    const curRoomId = curRoom?.id
-    const curReadChatId = curRoom?.readChatId
-    const lastReadChatId = _.maxBy(curRoom?.chats, (v) => v.createdAt)?.id
+    if (roomId !== undefined) $chat.setCurrentRoomId(roomId)
+    const curReadChatId = $chat.storeRoom?.readChatId
+    const lastReadChatId = _.maxBy($chat.room?.chats, (v) => v.createdAt)?.id
 
-    if (lastReadChatId !== undefined && curReadChatId !== undefined && lastReadChatId > curReadChatId)
+    if (lastReadChatId !== undefined && curReadChatId !== undefined && lastReadChatId > curReadChatId) {
       $chat.setLastChatId({
         roomId,
         readChatId: lastReadChatId,
       })
-
-    if (curRoomId !== undefined) $chat.setCurrentRoomId(curRoomId)
+    }
   }, [])
 
   useIonViewWillEnter(() => {

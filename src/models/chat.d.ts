@@ -29,15 +29,15 @@ export interface IChatRoom {
   club: IClubDto
 }
 
+export interface IStoreChatRoom {
+  id: number
+  readChatId: number
+  readCount: number
+}
+
 export interface IChatRoomsDto {
   count: number
   chatrooms: IChatRoom[]
-}
-
-export interface IPatchReadChatIdDto {
-  chatroomId: number
-  readChatId: number
-  isUse: boolean
 }
 
 export enum ChatRoomType {
