@@ -35,6 +35,7 @@ import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 import { webSocket } from './services/WebSocketService'
 import { ISubChat } from './models/chat'
+import _ from 'lodash'
 
 export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()
@@ -69,8 +70,11 @@ export const App: React.FC = () => {
         $chat.rooms.map((v) => v.id),
         (data) => {
           const subChat = JSON.parse(data.body) as ISubChat
-          console.log(subChat)
           $chat.setChat(subChat)
+          $chat.setLastChatId({
+            roomId: subChat.chatroom.id,
+            readChatId: subChat.id,
+          })
         }
       )
     }

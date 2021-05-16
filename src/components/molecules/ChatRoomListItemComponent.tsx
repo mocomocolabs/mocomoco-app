@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { IChatRoom } from '../../models/chat'
 import { route } from '../../services/route-service'
 import { Profile } from '../atoms/ProfileComponent'
@@ -13,7 +13,10 @@ interface IChatRoomListItem {
 }
 
 export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
-  const { $auth } = useStore()
+  const { $auth, $chat } = useStore()
+
+  useEffect(() => {}, [$chat.unReadCountAll])
+
   const isClub = room.type.toString() === 'CLUB'
   const contactUser = room.users.filter((v) => v.id !== $auth.user.id)[0]
   const imageUrl = isClub ? room.club.atchFiles[0].url : contactUser.profileUrl
@@ -23,6 +26,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
   const communityName = isClub
     ? room.club.community.name
     : contactUser.communities.map((community) => community.name).join('/')
+  const readCount = $chat.storeRooms.find((v) => v.id === room.id)?.readCount
 
   return (
     <li className='py-4 flex'>
@@ -47,9 +51,9 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           </div>
           <TextBase className='ellipsis max-width-270'>{lastChat?.message}</TextBase>
         </div>
-        {room.unReadChatCount > 0 && (
+        {_.isNumber(readCount) && readCount > 0 && (
           <div className='flex-center br-full bg-m-red w-6 min-w-6 h-6 ml-2'>
-            <TextSm>{room.unReadChatCount}</TextSm>
+            <TextSm>{readCount}</TextSm>
           </div>
         )}
       </div>

@@ -23,7 +23,7 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
         <>
           <ul className='pl-0'>
             {$chat.rooms.map((v, i) => (
-              <ChatRoomListItem key={i} room={v}></ChatRoomListItem>
+              <ChatRoomListItem key={i} room={v} />
             ))}
           </ul>
         </>
