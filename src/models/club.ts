@@ -18,8 +18,9 @@ export class Club {
       })),
       imageUrls: payload.atchFiles.map((v) => v.url),
       hashtagNames: payload.clubHashtags.map((v) => v.hashtag.name),
-      isMember: !!payload.clubUsers.findIndex((v) => v.user.id === userId),
-      isAdmin: !!payload.adminUsers.findIndex((v) => v.id === userId),
+      isMember: payload.clubUsers.some((v) => v.user.id === userId),
+      isAdmin: payload.adminUsers.some((v) => v.id === userId),
+      chatroomId: payload.chatroom.id,
     })
   }
 }

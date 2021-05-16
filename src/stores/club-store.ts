@@ -123,7 +123,7 @@ export class ClubStore {
 
   @task.resolved
   joinClub = (async (payload: IJoinClubDto) => {
-    await api.post(`http://localhost:8080/api/v1/club-users`, {
+    await api.post(`http://localhost:8080/api/v1/clubs-users`, {
       ...payload,
       role: 'ROLE_USER',
       isUse: true,

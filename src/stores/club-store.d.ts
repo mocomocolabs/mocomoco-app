@@ -20,6 +20,9 @@ export interface IClubDto {
   meetingTime: string
   meetingPlace: string
   clubUsers: { user: IUserDto }[]
+  chatroom: {
+    id: number
+  }
   adminUsers: IUserDto[]
   community: ICommunityDto
   atchFiles: IFileDto[]
