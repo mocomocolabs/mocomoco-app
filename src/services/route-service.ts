@@ -81,6 +81,14 @@ class RouteService {
     this.history.push(`/club/${clubId}`)
   }
 
+  myPageMyList() {
+    this.history.push('/my-page/my-list')
+  }
+
+  myPageLikeList() {
+    this.history.push('/my-page/like-list')
+  }
+
   get history() {
     return this._history
   }
