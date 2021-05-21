@@ -64,7 +64,8 @@ export const StuffTalentPage: React.FC = () => {
     return function cleanup() {
       setFilter(initialFilter)
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [$community.selectedId])
 
   useEffect(() => {
     !searchMode && setSearch(initialSearch)

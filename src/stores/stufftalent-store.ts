@@ -98,13 +98,7 @@ export class StuffTalentStore {
     return config
   }
 
-  private addParam(
-    options: AxiosRequestConfig = {
-      params: {},
-    },
-    name: string,
-    value: any
-  ) {
+  private addParam(options: AxiosRequestConfig, name: string, value: any) {
     options.params = {
       ...options.params,
       [name]: value,
