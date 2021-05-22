@@ -3,6 +3,7 @@ const NODE_ENV: ENV = process.env.NODE_ENV
 
 interface Config {
   API_URL: string
+  SOCKET_URL: string
   KEY: {
     ENCRYPT_SECRET: string
   }
@@ -18,12 +19,14 @@ interface ConfigByEnv {
 const configEnv: ConfigByEnv = {
   development: {
     API_URL: 'http://localhost:5050/api',
+    SOCKET_URL: 'http://localhost:8080/ws-chat',
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },
   },
   production: {
     API_URL: 'http://localhost:5050/api',
+    SOCKET_URL: 'http://localhost:8080/ws-chat',
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },

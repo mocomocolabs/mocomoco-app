@@ -1,11 +1,11 @@
+import { Stomp } from '@stomp/stompjs'
 import { CompatClient } from '@stomp/stompjs/esm6/compatibility/compat-client'
 import SockJS from 'sockjs-client'
-import { Stomp } from '@stomp/stompjs'
+import { config } from '../config'
 import { storage } from './storage-service'
-import { IChat } from '../models/chat'
 
 class WebSocketService {
-  private wsUrl = 'http://localhost:8080/ws-chat'
+  private wsUrl = config.SOCKET_URL
   private stompClient: CompatClient | null = null
 
   init() {

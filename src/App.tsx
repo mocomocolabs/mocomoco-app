@@ -33,7 +33,7 @@ import { SignInPage } from './pages/SignInPage'
 import { StuffTalentPage } from './pages/StuffTalentPage'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
-import { webSocket } from './services/WebSocketService'
+import { webSocket } from './services/web-socket-service'
 import { ISubChat } from './models/chat'
 import _ from 'lodash'
 

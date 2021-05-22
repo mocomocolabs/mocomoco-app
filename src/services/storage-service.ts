@@ -1,5 +1,6 @@
 import { Plugins } from '@capacitor/core'
 import { config } from '../config'
+import { IStoreChatRoom } from '../models/chat'
 import { decrypt, encrypt } from '../utils/encrypt-util'
 const { Storage } = Plugins
 
@@ -67,11 +68,11 @@ class StorageService {
     this.accessTokenForSync = await this.getAccessToken()
   }
 
-  setStoreChatRoom(storeChatRoom: string) {
+  setStoreChatRoom(storeChatRoom: IStoreChatRoom[]) {
     return this.setObject(this.STORE_CHAT_ROOM, storeChatRoom)
   }
 
-  getStoreChatRoom() {
+  getStoreChatRoom(): Promise<IStoreChatRoom[]> {
     return this.getObject(this.STORE_CHAT_ROOM)
   }
 }

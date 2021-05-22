@@ -9,7 +9,7 @@ import { InputPassword } from '../atoms/InputPasswordComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
-import { webSocket } from '../../services/WebSocketService'
+import { webSocket } from '../../services/web-socket-service'
 import { ISubChat } from '../../models/chat'
 import _ from 'lodash'
 
@@ -33,6 +33,7 @@ export const SignInEmail: FC = () => {
       $auth
         .signIn(form.email, form.password)
         .then(async () => {
+          // TODO: App.tsx의 코드와 중복됌. 하나로 합칠 필요가 있을듯
           // 챗방 리스트 조회
           await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
           // websocket 연결

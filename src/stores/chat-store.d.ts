@@ -11,7 +11,7 @@ export interface IGetChatMessages {
 }
 
 export interface IGetRooms {
-  roomIds: []
+  roomIds: number[]
 }
 
 export interface ISetReadChatId {
