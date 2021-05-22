@@ -10,6 +10,12 @@ export interface IGetChatMessages {
   messageId?: number | undefined
 }
 
+export interface IGetRooms {
+  roomIds: []
+}
+
 export type InsertChatMessageTask = Task<[IInsertChatMessage], void>
 
 export type GetChatMessagesTask = Task<[IGetChatMessages], void>
+
+export type GetChatRoomsTask = Task<[IGetRooms], void>

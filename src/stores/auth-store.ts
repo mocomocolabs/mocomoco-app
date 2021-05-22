@@ -109,8 +109,8 @@ export class AuthStore {
 
   @action
   setUser(user: IAuthUserDto) {
-    const { id, communities } = user
-    this.user = { id, communityId: communities[0].id }
+    const { id, communities, chatroomUserIds } = user
+    this.user = { id, communityId: communities[0].id, chatroomIds: chatroomUserIds }
     this.setIsLogin()
   }
 }
