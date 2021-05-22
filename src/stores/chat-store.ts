@@ -1,16 +1,26 @@
+import _ from 'lodash'
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
-import { IChat, IChatForm, IChatRoom, IChatRoomsDto, ISubChat, IStoreChatRoom } from '../models/chat'
+import {
+  ChatType,
+  IChat,
+  IChatForm,
+  IChatRoom,
+  IChatRoomsDto,
+  IStoreChatRoom,
+  ISubChat,
+} from '../models/chat.d'
 import { api } from '../services/api-service'
+import { storage } from '../services/storage-service'
+import { webSocket } from '../services/web-socket-service'
 import {
   GetChatRoomsTask,
+  IGetRooms,
   IInsertChatMessage,
   InsertChatMessageTask,
+  ISetReadChatId,
   SetReadChatIdTask,
 } from './chat-store.d'
-import { webSocket } from '../services/WebSocketService'
-import _ from 'lodash'
-import { storage } from '../services/storage-service'
 
 const initState = {
   rooms: [],
@@ -24,10 +34,14 @@ export class ChatStore {
   @observable currentRoomId: number | null = initState.currentRoomId
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
   @observable form: { [roomId: number]: IChatForm } = initState.form
+  /**
+   * 방마다의 읽음 정보를 저장
+   * TODO: 읽음 정보를 저장한다고 알 수 있는 직관적인 네이밍이 좋을듯
+   */
   @observable storeRooms: IStoreChatRoom[] = initState.storeRooms
 
   @task
-  getRooms = (async ({ roomIds }) => {
+  getRooms = (async ({ roomIds }: IGetRooms) => {
     await api
       .get<IChatRoomsDto>('http://localhost:8080/api/v1/chatrooms', {
         params: { ids: roomIds.toString() },
@@ -36,6 +50,7 @@ export class ChatStore {
         action(async (data) => {
           this.rooms = data.chatrooms
 
+          // TODO: 앱 재설치시, 모든 채팅이 unread 상태인데 추후 대안 필요
           const orgStoreChatRooms = await storage.getStoreChatRoom()
           if (_.isEmpty(orgStoreChatRooms)) {
             this.setStoreRooms(
@@ -46,10 +61,9 @@ export class ChatStore {
               }))
             )
           } else {
-            const orgStoreChatRoomsArr = JSON.parse(orgStoreChatRooms) as IStoreChatRoom[]
             this.setStoreRooms(
               this.rooms.map((v) => {
-                const find = orgStoreChatRoomsArr.find((vv) => vv.id === v.id)
+                const find = orgStoreChatRooms.find((vv) => vv.id === v.id)
                 return _.isEmpty(find) || find === undefined
                   ? {
                       id: v.id,
@@ -65,7 +79,7 @@ export class ChatStore {
   }) as GetChatRoomsTask
 
   @action
-  setLastChatId = (async ({ roomId, readChatId }) => {
+  setLastChatId = (async ({ roomId, readChatId }: ISetReadChatId) => {
     if (this.currentRoomId === undefined || this.currentRoomId === null) {
       this.setStoreRooms(
         this.storeRooms.map((v) => {
@@ -82,7 +96,7 @@ export class ChatStore {
       )
     }
 
-    await storage.setStoreChatRoom(JSON.stringify(this.storeRooms))
+    storage.setStoreChatRoom(this.storeRooms)
   }) as SetReadChatIdTask
 
   @task.resolved
@@ -92,7 +106,7 @@ export class ChatStore {
     await new Promise((r) => setTimeout(() => r(true), 1000))
     await api
       .post<ISubChat>('http://localhost:8080/api/v1/chats', {
-        type: 'TALK',
+        type: ChatType.TALK,
         message,
         chatroomId: roomId,
         isUse: true,

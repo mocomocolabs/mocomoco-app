@@ -1,5 +1,5 @@
-import { IUser } from './user'
 import { IClubDto } from '../stores/club-store.d'
+import { IUser } from './user'
 
 export interface IChat {
   id: number
@@ -32,6 +32,7 @@ export interface IChatRoom {
 export interface IStoreChatRoom {
   id: number
   readChatId: number
+  // TODO: unreadCount인 것이 더 직관적인 이름일듯
   readCount: number
 }
 
