@@ -10,7 +10,7 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
   const { $chat } = useStore()
 
   useEffect(() => {
-    $chat.getRooms()
+    // $chat.getRooms()
   }, [$chat])
 
   return useObserver(() =>

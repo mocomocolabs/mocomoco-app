@@ -24,3 +24,6 @@ yarn-error.log*
 
 # vscode extension
 .history
+
+# idea
+.idea

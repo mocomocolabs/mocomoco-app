@@ -11,4 +11,5 @@ export interface IAuthUserDto {
   communities: {
     id: number
   }[]
+  chatroomUserIds: []
 }
