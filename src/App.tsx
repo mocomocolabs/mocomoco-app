@@ -32,6 +32,13 @@ import { SignInPage } from './pages/SignInPage'
 import { StuffTalentPage } from './pages/StuffTalentPage'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
+import SockJS from 'sockjs-client'
+import { Stomp } from '@stomp/stompjs'
+
+const sockJS = new SockJS('http://localhost:8080/ws-chat')
+const stompClient = Stomp.over(sockJS)
+stompClient.debug = (str) => console.log(str)
+let accessToken: string
 
 export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()
@@ -41,6 +48,26 @@ export const App: React.FC = () => {
     init()
     // eslint-disable-next-line
   }, [])
+
+  useEffect(() => {
+    console.log(accessToken)
+    console.log(accessToken)
+    console.log(accessToken)
+    console.log(accessToken)
+    stompClient.connect(
+      {
+        Authorization:
+          'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzcHJpbmdib290and0Iiwic3ViIjoiYXNkZkBhc2RmLmNvbSIsImp0aSI6IjEiLCJuYW1lIjoibHNjMzcyIiwibmlja25hbWUiOiJsc2MzNzIiLCJsb2NhbGUiOiJlbl9VUyIsInJvbGVzIjoiUk9MRV9VU0VSOlJPTEVfQURNSU46Uk9MRV9TWVMiLCJpYXQiOjE2MjA0OTE3NDAsImV4cCI6MTYyMTkzMTc0MH0._1YIJadJfDnNBgosQc4_jg85MxQZfjIhz7cMBX5_B7A',
+      },
+      () => {
+        console.log('여기 들어옴?')
+        // stompClient.subscribe('/topic/roomId',(data)=>{
+        //   const newMessage : message = JSON.parse(data.body) as message;
+        //   addMessage(newMessage);
+        // });
+      }
+    )
+  }, [$chat.wsClient])
 
   const init = async () => {
     // 로그인
@@ -55,9 +82,26 @@ export const App: React.FC = () => {
     // TODO: login 이후 실행할 공통 호출들
     if ($auth.isLogin && $auth.user.communityId && !storage.communityId) {
       $community.setSelectedId($auth.user.communityId)
+
+      // 챗방 리스트 조회
+      await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
+      // stomp client 저장
+      // $chat.setWsClient(stompClient)
+      accessToken = await storage.getAccessToken()
+      //
+      // console.log(accessToken)
+      // console.log(accessToken)
+      // console.log(accessToken)
+      // console.log(accessToken)
+      // stompClient.connect({ Authorization: '' }, () => {
+      //   console.log('여기 들어옴?')
+      //   // stompClient.subscribe('/topic/roomId',(data)=>{
+      //   //   const newMessage : message = JSON.parse(data.body) as message;
+      //   //   addMessage(newMessage);
+      //   // });
+      // })
     }
 
-    $chat.getRooms()
     setInitailzed(true)
   }
 
@@ -115,6 +159,21 @@ export const App: React.FC = () => {
       ) : (
         <Spinner isFull={true} color='white'></Spinner>
       )}
+
+      {/*{$auth.isLogin && $auth.user.communityId && !storage.communityId && (*/}
+      {/*  <SockJsClient*/}
+      {/*    url={'http://localhost:8080/ws-chat'}*/}
+      {/*    topics={[$chat.topic]}*/}
+      {/*    ref={(wsClient: any) => ($chat.setWsClient = wsClient)}*/}
+      {/*    onConnect={() => {*/}
+      {/*      console.log('연결 성공!')*/}
+      {/*    }}*/}
+      {/*    headers={{ Authorization: accessToken }}*/}
+      {/*    onDisconnect={() => console.log('연결 해제!')}*/}
+      {/*    onMessage={(msg: any) => console.log(`메세지 내용 : ${msg}`)}*/}
+      {/*    debug={false}*/}
+      {/*  />*/}
+      {/*)}*/}
 
       <Alert></Alert>
       <Toast></Toast>
