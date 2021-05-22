@@ -35,6 +35,7 @@ export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticCo
     const curReadChatId = $chat.storeRoom?.readChatId
     const lastReadChatId = _.maxBy($chat.room?.chats, (v) => v.createdAt)?.id
 
+    // 방입장시 읽음 처리
     if (lastReadChatId !== undefined && curReadChatId !== undefined && lastReadChatId > curReadChatId) {
       $chat.setLastChatId({
         roomId,

@@ -1,12 +1,12 @@
+import _ from 'lodash'
 import { FC, useEffect } from 'react'
-import { IChatRoom } from '../../models/chat'
+import { useStore } from '../../hooks/use-store'
+import { ChatRoomType, IChatRoom } from '../../models/chat.d'
 import { route } from '../../services/route-service'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { TextSm } from '../atoms/TextSmComponent'
-import { useStore } from '../../hooks/use-store'
-import _ from 'lodash'
 
 interface IChatRoomListItem {
   room: IChatRoom
@@ -17,7 +17,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
 
   useEffect(() => {}, [$chat.unReadCountAll])
 
-  const isClub = room.type.toString() === 'CLUB'
+  const isClub = room.type === ChatRoomType.CLUB
   const contactUser = room.users.filter((v) => v.id !== $auth.user.id)[0]
   const imageUrl = isClub ? room.club.atchFiles[0].url : contactUser.profileUrl
   const lastChat = _.maxBy(room.chats, (v) => v.createdAt)
