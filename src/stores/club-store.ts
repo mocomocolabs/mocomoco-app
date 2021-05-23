@@ -40,29 +40,21 @@ export class ClubStore {
   @task
   getPopularClubs = (async () => {
     // TODO: 페이징 처리 추후 구현
-    await api
-      .get<{ clubs: IClubDto[]; count: number }>(
-        `http://localhost:8080/api/v1/clubs?sort-order=popular&limit=999`
-      )
-      .then(
-        action((data) => {
-          this.popularClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
-        })
-      )
+    await api.get<{ clubs: IClubDto[]; count: number }>(`/clubs?sort-order=popular&limit=999`).then(
+      action((data) => {
+        this.popularClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
+      })
+    )
   }) as Task
 
   @task
   getRecentClubs = (async () => {
     // TODO: 페이징 처리 추후 구현
-    await api
-      .get<{ clubs: IClubDto[]; count: number }>(
-        `http://localhost:8080/api/v1/clubs?sort-order=created_at_desc&limit=999`
-      )
-      .then(
-        action((data) => {
-          this.recentClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
-        })
-      )
+    await api.get<{ clubs: IClubDto[]; count: number }>(`/clubs?sort-order=created_at_desc&limit=999`).then(
+      action((data) => {
+        this.recentClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
+      })
+    )
   }) as Task
 
   @task
@@ -81,7 +73,7 @@ export class ClubStore {
 
   @task
   getClub = (async (id: number) => {
-    await api.get<IClubDto>(`http://localhost:8080/api/v1/clubs/${id}`).then(
+    await api.get<IClubDto>(`/clubs/${id}`).then(
       action((data) => {
         this.club = Club.of(data, this.$auth.user.id!)
       })
@@ -135,13 +127,13 @@ export class ClubStore {
       formData.append('files', v)
     })
 
-    await api.post(`http://localhost:8080/api/v1/clubs`, formData)
+    await api.post(`/clubs`, formData)
     this.resetForm()
   }) as InsertClubTask
 
   @task.resolved
   joinClub = (async (payload: IJoinClubDto) => {
-    await api.post(`http://localhost:8080/api/v1/clubs-users`, {
+    await api.post(`/clubs-users`, {
       ...payload,
       role: 'ROLE_USER',
       isUse: true,

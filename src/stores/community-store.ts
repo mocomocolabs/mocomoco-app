@@ -17,7 +17,7 @@ export class CommunityStore {
 
   @task
   getCommunities = (async () => {
-    await http.get<{ communities: ICommunityDto[] }>('http://localhost:8080/api/v1/communities').then(
+    await http.get<{ communities: ICommunityDto[] }>('/communities').then(
       action((data) => {
         this.communities = data.communities.map((v: ICommunityDto) => ({
           ...v,
