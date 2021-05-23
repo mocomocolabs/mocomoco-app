@@ -36,15 +36,14 @@ export class StuffTalentStore {
   readonly statuses: StuffTalentStatus[] = Object.values(StuffTalentStatus)
   readonly types: StuffTalentType[] = Object.values(StuffTalentType)
 
-  readonly baseUrl: string = 'http://localhost:8080/api/v1'
   readonly url: string
-  readonly categoriesUrl = `${this.baseUrl}/categories`
+  readonly categoriesUrl = `/categories`
 
   readonly pathName: PathName
 
   constructor(pathName: PathName) {
     this.pathName = pathName
-    this.url = `${this.baseUrl}/${paths[pathName]}`
+    this.url = `/${paths[pathName]}`
     this.getCategoriesBy(pathName)
   }
 

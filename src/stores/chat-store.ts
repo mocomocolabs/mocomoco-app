@@ -43,7 +43,7 @@ export class ChatStore {
   @task
   getRooms = (async ({ roomIds }: IGetRooms) => {
     await api
-      .get<IChatRoomsDto>('http://localhost:8080/api/v1/chatrooms', {
+      .get<IChatRoomsDto>('/chatrooms', {
         params: { ids: roomIds.toString() },
       })
       .then(
@@ -105,7 +105,7 @@ export class ChatStore {
 
     await new Promise((r) => setTimeout(() => r(true), 1000))
     await api
-      .post<ISubChat>('http://localhost:8080/api/v1/chats', {
+      .post<ISubChat>('/chats', {
         type: ChatType.TALK,
         message,
         chatroomId: roomId,

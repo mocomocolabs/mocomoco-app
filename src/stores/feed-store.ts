@@ -3,8 +3,8 @@ import { task } from 'mobx-task'
 import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IFeed, IFeedForm } from '../models/feed'
+import { api } from '../services/api-service'
 import { httpFile } from '../utils/http-file-util'
-import { http } from '../utils/http-util'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
 import { InsertFeedTask } from './feed-store.d'
@@ -34,7 +34,7 @@ export class FeedStore {
 
   @task
   getFeeds = (async () => {
-    await http.get<IFeed[]>('/feeds').then(
+    await api.get<IFeed[]>('/feeds').then(
       action((data) => {
         this.feeds = data
       })
@@ -53,7 +53,7 @@ export class FeedStore {
 
   @task
   getFeed = (async (id: number) => {
-    await http.get<IFeed>(`/feeds/${id}`).then(
+    await api.get<IFeed>(`/feeds/${id}`).then(
       action((data) => {
         this.feed = data
       })
@@ -62,7 +62,7 @@ export class FeedStore {
 
   @task
   getFeedForm = (async (id: number) => {
-    await http.get<IFeed>(`/feeds/${id}`).then(
+    await api.get<IFeed>(`/feeds/${id}`).then(
       action(async (data) => {
         const images: any = await Promise.all(data.imageUrls.map((v) => urlToFile(v)))
 
@@ -85,7 +85,7 @@ export class FeedStore {
   @task.resolved
   deleteFeed = (async (id: number) => {
     await new Promise((r) => setTimeout(() => r(1), 1000))
-    await http.delete(`/feeds/${id}`)
+    await api.delete(`/feeds/${id}`)
   }) as TaskBy<number>
 
   @task.resolved
