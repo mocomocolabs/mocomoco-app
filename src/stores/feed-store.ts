@@ -8,7 +8,7 @@ import { api } from '../services/api-service'
 import { http } from '../utils/http-util'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
-import { IFeedDto, InsertFeedTask } from './feed-store.d'
+import { IFeedDto, SaveFeedTask } from './feed-store.d'
 import { Task, TaskBy } from './task'
 
 const initState = {
@@ -64,19 +64,21 @@ export class FeedStore {
 
   @task
   getFeedForm = (async (id: number) => {
-    await api.get<IFeed>(`/feeds/${id}`).then(
+    await api.get<IFeedDto>(`/feeds/${id}`).then(
       action(async (data) => {
-        const images: any = await Promise.all(data.imageUrls.map((v) => urlToFile(v)))
+        console.log(data)
+
+        const images: any = await Promise.all(data.atchFiles?.map((v) => urlToFile(v.url)))
 
         this.setForm({
           id,
-          type: data.type,
-          scheduleDate: data.scheduleDate,
-          // TODO: 협의후 구현
-          // scheduleTime: data.scheduleTime,
-          scheduleTitle: data.scheduleTitle,
           title: data.title,
           content: data.content,
+          type: data.type,
+          scheduleDate: data.scheduleDate.substr(0, 8),
+          scheduleTime: data.scheduleDate.substr(8),
+          // TODO: 협의후 구현
+          // scheduleTime: data.scheduleTime,
           images,
           isPublic: data.isPublic,
         })
@@ -86,20 +88,36 @@ export class FeedStore {
 
   @task.resolved
   deleteFeed = (async (id: number) => {
-    await new Promise((r) => setTimeout(() => r(1), 1000))
-    await api.delete(`/feeds/${id}`)
-  }) as TaskBy<number>
-
-  @task.resolved
-  insertFeed = (async (form: IFeedForm) => {
     const formData = new FormData()
-    console.log(form)
 
     formData.append(
       'feedReqDto',
       new Blob(
         [
           JSON.stringify({
+            id,
+            isUse: false,
+          }),
+        ],
+        {
+          type: 'application/json',
+        }
+      )
+    )
+
+    await api.patch(`/feeds`, formData)
+  }) as TaskBy<number>
+
+  @task.resolved
+  saveFeed = (async (form: IFeedForm, isUpdate: boolean) => {
+    const formData = new FormData()
+
+    formData.append(
+      'feedReqDto',
+      new Blob(
+        [
+          JSON.stringify({
+            id: form.id,
             communityId: form.communityId,
             type: form.type,
             ...(form.type === FEED_TYPE.SCHEDULE && {
@@ -117,6 +135,21 @@ export class FeedStore {
       )
     )
 
+    console.log(
+      JSON.stringify({
+        id: form.id,
+        communityId: form.communityId,
+        type: form.type,
+        ...(form.type === FEED_TYPE.SCHEDULE && {
+          scheduleDate: form.scheduleDate + form.scheduleTime,
+        }),
+        // TODO : scheduleTitle 추가 필요
+        title: form.title,
+        content: form.content,
+        isPublic: form.isPublic,
+      })
+    )
+
     if (form.images.length === 0) {
       // TODO: 서버 코드 수정후 삭제
       form.images = [(await urlToFile('/assets/img/club/club01.jpg')) as any]
@@ -126,9 +159,13 @@ export class FeedStore {
       formData.append('files', v)
     })
 
-    await api.post(`/feeds`, formData)
+    if (isUpdate) {
+      await api.put('/feeds', formData)
+    } else {
+      await api.post(`/feeds`, formData)
+    }
     this.resetForm()
-  }) as InsertFeedTask
+  }) as SaveFeedTask
 
   @action
   setForm(data: Partial<IFeedForm>) {
@@ -139,8 +176,11 @@ export class FeedStore {
   }
 
   @action
-  setFormImages(imgs: ImageUploadItem[]) {
-    this.form.images = imgs
+  setFormImage(images: ImageUploadItem[]) {
+    this.form = {
+      ...this.form,
+      images,
+    }
   }
 
   @action

@@ -1,11 +1,9 @@
 import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 import { create } from 'ionicons/icons'
-import * as _ from 'lodash'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
-import { removeUndefined } from '../utils/object-util'
 
 export const FeedPage: React.FC = () => {
   const { $ui, $feed } = useStore()
@@ -25,7 +23,13 @@ export const FeedPage: React.FC = () => {
           <div
             slot='end'
             onClick={() => {
-              if (!_.isEmpty(removeUndefined($feed.form))) {
+              const isWriting =
+                $feed.form.title ||
+                $feed.form.content ||
+                $feed.form.images?.length ||
+                $feed.form.scheduleTitle
+
+              if (isWriting) {
                 return $ui.showAlert({
                   isOpen: true,
                   message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
