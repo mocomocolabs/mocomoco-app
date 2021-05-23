@@ -3,7 +3,7 @@ import { calendar, chatbox, cloud } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { IFeed } from '../../models/feed'
+import { IFeed } from '../../models/feed.d'
 import { route } from '../../services/route-service'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
@@ -68,9 +68,11 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             </div>
           </div>
         )}
-        <div>
-          <ImageSlider urls={feed.imageUrls}></ImageSlider>
-        </div>
+        {feed.imageUrls.length && (
+          <div>
+            <ImageSlider urls={feed.imageUrls}></ImageSlider>
+          </div>
+        )}
         <div className='flex-between-center'>
           <div className='flex items-center'>
             <IonIcon icon={cloud} className='mr-2'></IonIcon>
@@ -106,7 +108,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
           </div>
         )}
         <div className='py-4'>
-          {feed.comments.map((v) => (
+          {feed.comments?.map((v) => (
             <CommentItem
               key={v.id}
               comment={v}

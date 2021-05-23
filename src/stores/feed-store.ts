@@ -2,12 +2,13 @@ import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
-import { IFeed, IFeedForm } from '../models/feed'
+import { Feed } from '../models/feed'
+import { FEED_TYPE, IFeed, IFeedForm } from '../models/feed.d'
 import { api } from '../services/api-service'
-import { httpFile } from '../utils/http-file-util'
+import { http } from '../utils/http-util'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
-import { InsertFeedTask } from './feed-store.d'
+import { IFeedDto, InsertFeedTask } from './feed-store.d'
 import { Task, TaskBy } from './task'
 
 const initState = {
@@ -34,9 +35,10 @@ export class FeedStore {
 
   @task
   getFeeds = (async () => {
-    await api.get<IFeed[]>('/feeds').then(
+    await api.get<{ feeds: IFeedDto[] }>(`/feeds?community-id=${this.$auth.user.communityId}`).then(
       action((data) => {
-        this.feeds = data
+        console.log(data)
+        this.feeds = data.feeds.map((v) => Feed.of(v))
       })
     )
   }) as Task
@@ -90,34 +92,41 @@ export class FeedStore {
 
   @task.resolved
   insertFeed = (async (form: IFeedForm) => {
-    await new Promise((r) => setTimeout(() => r(1), 1000))
     const formData = new FormData()
-    // TODO: communityId 추가
-    // "feedReqDto": {
-    //   "type": "string",
-    //   "title": "string",
-    //   "content": "string",
-    //   "scheduleDate": "string",
-    //   "isPublic": true,
-    //   "isUse": true
-    // },
-    // "files": [
-    //   "string"
-    // ]
-    formData.append('communityId', String(form.communityId))
-    formData.append('type', form.type)
-    formData.append('scheduleDate', form.scheduleDate)
-    formData.append('scheduleTime', form.scheduleTime)
-    formData.append('scheduleTitle', form.scheduleTitle)
-    formData.append('title', form.title)
-    formData.append('content', form.content)
-    formData.append('isPublic', form.isPublic ? 'true' : 'false')
+    console.log(form)
+
+    formData.append(
+      'feedReqDto',
+      new Blob(
+        [
+          JSON.stringify({
+            communityId: form.communityId,
+            type: form.type,
+            ...(form.type === FEED_TYPE.SCHEDULE && {
+              scheduleDate: form.scheduleDate + form.scheduleTime,
+            }),
+            // TODO : scheduleTitle 추가 필요
+            title: form.title,
+            content: form.content,
+            isPublic: form.isPublic,
+          }),
+        ],
+        {
+          type: 'application/json',
+        }
+      )
+    )
+
+    if (form.images.length === 0) {
+      // TODO: 서버 코드 수정후 삭제
+      form.images = [(await urlToFile('/assets/img/club/club01.jpg')) as any]
+    }
 
     form.images?.forEach((v) => {
-      formData.append('images', v)
+      formData.append('files', v)
     })
 
-    await httpFile.post(`/feeds`, formData)
+    await api.post(`/feeds`, formData)
     this.resetForm()
   }) as InsertFeedTask
 

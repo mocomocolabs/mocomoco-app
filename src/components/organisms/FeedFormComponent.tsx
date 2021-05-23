@@ -33,6 +33,7 @@ export const FeedForm: FC = () => {
 
   const initYMD = $feed.form.scheduleDate ?? dayjs().format(DT_FORMAT.YMD)
   const initHM = $feed.form.scheduleTime ?? dayjs().add(1, 'hour').startOf('hour').format(DT_FORMAT.HM)
+  $feed.setForm({ type: FEED_TYPE.NORMAL, scheduleDate: initYMD, scheduleTime: initHM })
 
   return useObserver(() => (
     <div>

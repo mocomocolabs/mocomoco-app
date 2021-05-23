@@ -1,5 +1,4 @@
 import {
-  IonButton,
   IonContent,
   IonHeader,
   IonPage,
@@ -8,7 +7,7 @@ import {
   useIonViewWillLeave,
 } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FeedForm } from '../components/organisms/FeedFormComponent'
@@ -29,43 +28,48 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
     $ui.setIsBottomTab(true)
   })
 
-  return useObserver(() => (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <div slot='start'>
-            <BackButton type='close'></BackButton>
-          </div>
-          <div slot='end'>
-            <SpinnerWrapper
-              task={$feed.insertFeed}
-              Submit={() => (
-                <IonButton
-                  size='small'
-                  disabled={!$feed.form.content}
-                  onClick={async () => {
-                    executeWithError(async () => {
-                      await $feed.insertFeed({
-                        ...$feed.form,
-                        communityId: $community.selectedId,
-                      })
-                      route.feed()
-                    })
-                  }}
-                >
-                  완료
-                </IonButton>
-              )}
-            ></SpinnerWrapper>
-          </div>
-        </IonToolbar>
-      </IonHeader>
+  return useObserver(() => {
+    // TODO : 아래 로그를 찍어주어야, SubmitBtn의 $feed가 갱신됌
+    console.log($feed.form.content)
 
-      <IonContent>
-        <div className='px-container'>
-          <FeedForm></FeedForm>
-        </div>
-      </IonContent>
-    </IonPage>
-  ))
+    const SubmitBtn = () => (
+      <div
+        className={$feed.form.content ? '' : 'gray'}
+        slot='end'
+        onClick={() =>
+          $feed.form.content &&
+          executeWithError(async () => {
+            await $feed.insertFeed({
+              ...$feed.form,
+              communityId: $community.selectedId,
+            })
+            route.feed()
+          })
+        }
+      >
+        완료
+      </div>
+    )
+
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <div slot='start'>
+              <BackButton type='close'></BackButton>
+            </div>
+            <div slot='end'>
+              <SpinnerWrapper task={$feed.insertFeed} Submit={SubmitBtn}></SpinnerWrapper>
+            </div>
+          </IonToolbar>
+        </IonHeader>
+
+        <IonContent>
+          <div className='px-container'>
+            <FeedForm></FeedForm>
+          </div>
+        </IonContent>
+      </IonPage>
+    )
+  })
 }

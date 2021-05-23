@@ -2,7 +2,6 @@ import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar, useIonViewWillEnte
 import { create } from 'ionicons/icons'
 import * as _ from 'lodash'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
-import { CommunityBanner } from '../components/organisms/CommunityBannerComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
@@ -49,7 +48,6 @@ export const FeedPage: React.FC = () => {
 
       <IonContent>
         <div className='px-container'>
-          <CommunityBanner></CommunityBanner>
           <FeedList fetchTask={$feed.getFeeds} />
         </div>
       </IonContent>

@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
 
 export enum DT_FORMAT {
-  YMDHM = 'YYYY-MM-DD HH:mm',
-  YMD = 'YYYY-MM-DD',
+  YMDHM = 'YYYYMMDDHHmm',
+  YMD = 'YYYYMMDD',
   Y = 'YYYY',
-  HM = 'HH:mm',
+  HM = 'HHmm',
 }
 
 export const ymd = (value?: string) => dayjs(value).format(DT_FORMAT.YMD)
