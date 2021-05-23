@@ -2,12 +2,13 @@ import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IComment } from './comment'
 import { IUser } from './user'
 
-type FeedType = 'SCHEDULE' | 'NORMAL'
+export type FeedType = 'SCHEDULE' | 'NORMAL'
 
 export interface IFeed {
   id: number
   type: FeedType
-  scheduleDate: string // TODO: 임시
+  scheduleDate: string
+  scheduleTime: string
   scheduleTitle: string
   user: IUser
   title: string
@@ -17,7 +18,7 @@ export interface IFeed {
   likeCount: number
   likeProflieUrls: string[]
   comments: IComment[]
-  createdAt: string // TODO: 임시
+  createdAt: string
   isPublic: boolean
 }
 
@@ -25,8 +26,8 @@ export interface IFeedForm {
   id?: number
   communityId: number
   type: FeedType
-  scheduleDate: string // TODO: 임시
-  scheduleTime: string // TODO: 임시
+  scheduleDate: string
+  scheduleTime: string
   scheduleTitle: string
   title: string
   content: string
