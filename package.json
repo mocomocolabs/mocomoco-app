@@ -20,6 +20,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.12.13",
     "@capacitor/cli": "2.4.7",
     "@types/crypto-js": "^4.0.1",
     "@types/lodash": "^4.14.168",
@@ -32,6 +33,7 @@
     "@types/react-svg": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
+    "babel-preset-jest": "^27.0.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -43,7 +45,8 @@
     "express": "^4.17.1",
     "faker": "^5.4.0",
     "morgan": "^1.10.0",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "type-fest": "^0.13.1"
   },
   "dependencies": {
     "@capacitor/core": "2.4.7",
