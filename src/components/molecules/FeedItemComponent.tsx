@@ -16,8 +16,8 @@ import { ImageSlider } from './ImageSliderComponent'
 interface IFeedItem {
   feed: IFeed
   isDetail?: boolean
-  onDelete: (id: number) => {}
-  onEdit: (id: number) => {}
+  onDelete: (id: number) => void
+  onEdit: (id: number) => void
 }
 
 export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEdit }) => {
