@@ -7,8 +7,8 @@ export interface IOverflowMenuIcon {
   show?: boolean
   className?: string
   icon?: string
-  onDelete?: () => void
-  onEdit?: () => void
+  onDelete?: any
+  onEdit?: any
 }
 
 export const OverflowMenuIcon: FC<IOverflowMenuIcon> = ({
