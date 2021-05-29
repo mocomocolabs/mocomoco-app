@@ -45,7 +45,7 @@ export const MyPageMyList: React.FC = () => {
   useEffect(() => {
     // TODO clublistcomponent 안으로 옮길지 고민해보자
     $segment.mylistSegment === SEGMENT_KEYS.club && $club.getMyClubs()
-  }, [$segment.mylistSegment])
+  }, [$segment.mylistSegment, $club])
 
   // TODO const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
   const [filter, setFilter] = useState<IStuffTalentFilter>({

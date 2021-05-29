@@ -98,6 +98,7 @@ export class StuffTalentStore {
     return config
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private addParam(options: AxiosRequestConfig, name: string, value: any) {
     options.params = {
       ...options.params,

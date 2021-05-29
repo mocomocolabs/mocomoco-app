@@ -40,6 +40,7 @@ export const FeedForm: FC = () => {
         <Radio
           items={feedTypes}
           selected={$feed.form.type ?? FEED_TYPE.NORMAL}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           setSelected={(type: any) => $feed.setForm({ type })}
         ></Radio>
       </div>

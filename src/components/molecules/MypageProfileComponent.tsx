@@ -12,7 +12,7 @@ export const MypageProfile: React.FC = () => {
 
   useEffect(() => {
     $user.getUser($auth.user.id)
-  }, [$auth.user.id])
+  }, [$user, $auth.user.id])
 
   return useObserver(() =>
     $user.getUser.match({

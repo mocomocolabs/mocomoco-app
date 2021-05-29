@@ -8,6 +8,7 @@ import { FeedItem } from '../molecules/FeedItemComponent'
 import { ContentPopover } from './ContentPopoverComponent'
 
 interface IFeedList {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetchTask: Task<any[], void>
 }
 
@@ -16,6 +17,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
 
   useEffect(() => {
     fetchTask()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // eslint-disable-next-line

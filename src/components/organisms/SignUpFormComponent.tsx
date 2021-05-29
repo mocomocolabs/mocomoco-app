@@ -26,6 +26,8 @@ export const SignUpForm: FC = () => {
   password.current = watch('password', '')
 
   const { $auth } = useStore()
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const observableTaskGroup = TaskGroup<any[], void | boolean>([$auth.signUp, $auth.signIn])
 
   const onSubmit = handleSubmit(async (form) => {

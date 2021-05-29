@@ -25,6 +25,7 @@ export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
 
   useEffect(() => {
     $club.getClub(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return useObserver(() => (

@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import { compress } from '../../utils/image-compressor'
 import './ImageUploaderComponent.scss'
 
+// eslint-disable-next-line
 export type IImageUploaderRef = any
 
 export interface ImageUploadItem extends File {
@@ -36,6 +37,7 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
 
   useEffect(() => {
     setImages(images.map((v, i) => assignPreview(v, i)))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useIonViewWillLeave(() => {
