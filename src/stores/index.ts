@@ -8,6 +8,7 @@ import { CommunityStore } from './community-store'
 import { News } from './example/news-store'
 import { TodoList } from './example/todo-list-store'
 import { FeedStore } from './feed-store'
+import { SegmentStore } from './segment-store'
 import { StuffTalentStore } from './stufftalent-store'
 import { UiStore } from './ui-store'
 import { UserStore } from './user-store'
@@ -15,6 +16,7 @@ import { UserStore } from './user-store'
 configure({ enforceActions: 'observed' }) // action 밖에서 state 수정 비허용
 
 export class RootStore {
+  $auth: AuthStore
   $community: CommunityStore
   $feed: FeedStore
   $comment: CommentStore
@@ -23,24 +25,25 @@ export class RootStore {
   $chat: ChatStore
   $ui: UiStore
   $user: UserStore
-  $auth: AuthStore
   $club: ClubStore
+  $segment: SegmentStore
 
   // example
   todoList: TodoList
   news: News
 
   constructor() {
+    this.$auth = new AuthStore()
     this.$community = new CommunityStore()
-    this.$feed = new FeedStore()
+    this.$feed = new FeedStore(this)
     this.$comment = new CommentStore()
     this.$ui = new UiStore()
     this.$user = new UserStore()
     this.$stuff = new StuffTalentStore(PathName.STUFF)
     this.$talent = new StuffTalentStore(PathName.TALENT)
     this.$chat = new ChatStore()
-    this.$auth = new AuthStore()
     this.$club = new ClubStore(this)
+    this.$segment = new SegmentStore()
 
     // example
     this.todoList = new TodoList()

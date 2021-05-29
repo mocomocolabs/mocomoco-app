@@ -9,9 +9,12 @@ import {
   IonToolbar,
 } from '@ionic/react'
 import { filterOutline } from 'ionicons/icons'
+import { useObserver } from 'mobx-react-lite'
 import React, { useEffect, useState } from 'react'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { Segment } from '../components/molecules/SegmentComponent'
+import { ClubOurTownList } from '../components/organisms/ClubOurTownListComponent'
+import { FeedList } from '../components/organisms/FeedListComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
 import { ISegments, SEGMENT_KEYS } from '../models/segment.d'
@@ -29,28 +32,20 @@ const initialFilter: IStuffTalentFilter = {
 }
 
 export const MyPageMyList: React.FC = () => {
-  const { $auth, $stuff, $talent, $feed, $club } = useStore()
+  const { $segment, $auth, $stuff, $talent, $feed, $club } = useStore()
 
+  // TODO segment_keys를 stufftalent용으로만 사용하고 있으니, segment.d 파일명을 바꾸던가 해야겠다
   const segments: ISegments = {
-    [SEGMENT_KEYS.stuff]: { label: '물건창고', store: $stuff },
-    [SEGMENT_KEYS.talent]: { label: '재능창고', store: $talent },
-    [SEGMENT_KEYS.feed]: { label: '이야기창고', store: $feed },
-    [SEGMENT_KEYS.club]: { label: '소모임', store: $club },
+    [SEGMENT_KEYS.stuff]: { label: '물건창고' },
+    [SEGMENT_KEYS.talent]: { label: '재능창고' },
+    [SEGMENT_KEYS.feed]: { label: '이야기창고' },
+    [SEGMENT_KEYS.club]: { label: '소모임' },
   }
 
-  const [selectedSegmentKey, setSelectedSegmentKey] = useState(SEGMENT_KEYS.stuff)
-
-  const store = $stuff //storeGetter[selectedSegment]
-
   useEffect(() => {
-    console.log(selectedSegmentKey)
-  }, [selectedSegmentKey])
-
-  // segment에 따른 변동부
-  // 1. filter component
-  // const getFilterComponent
-
-  // 2. list component : props={store, search, filter, 흠...}
+    // TODO clublistcomponent 안으로 옮길지 고민해보자
+    $segment.mylistSegment === SEGMENT_KEYS.club && $club.getMyClubs()
+  }, [$segment.mylistSegment])
 
   // TODO const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
   const [filter, setFilter] = useState<IStuffTalentFilter>({
@@ -58,7 +53,23 @@ export const MyPageMyList: React.FC = () => {
     userId: $auth.user.id,
   })
 
-  return (
+  const renderList = (segmentKey: SEGMENT_KEYS) => {
+    // TODO 오마이갓.. store/fetchTask/clubs => 파라미터를 통일하자
+    switch (segmentKey) {
+      case SEGMENT_KEYS.stuff:
+        return <StuffTalentList store={$stuff} search={''} filter={filter} />
+      case SEGMENT_KEYS.talent:
+        return <StuffTalentList store={$talent} search={''} filter={filter} />
+      case SEGMENT_KEYS.feed:
+        return <FeedList fetchTask={$feed.getMyFeeds} />
+      case SEGMENT_KEYS.club:
+        return <ClubOurTownList clubs={$club.myClubs} />
+      default:
+        return <></> // TODO error 발생시켜야 하나?
+    }
+  }
+
+  return useObserver(() => (
     <IonPage>
       <IonHeader>
         <IonToolbar>
@@ -75,14 +86,15 @@ export const MyPageMyList: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <Segment segments={segments} selected={selectedSegmentKey} setSelected={setSelectedSegmentKey} />
+      <Segment
+        segments={segments}
+        selected={$segment.mylistSegment}
+        setSelected={$segment.setMyListSegment}
+      />
 
       <IonContent>
-        <div className='px-container my-4'>
-          {/* segment에 따라 여기 내용이 바뀜 */}
-          <StuffTalentList store={store} search={''} filter={filter} />
-        </div>
+        <div className='px-container my-4'>{renderList($segment.mylistSegment)}</div>
       </IonContent>
     </IonPage>
-  )
+  ))
 }

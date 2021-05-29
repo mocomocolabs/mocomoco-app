@@ -9,7 +9,7 @@ import {
   useIonViewWillEnter,
 } from '@ionic/react'
 import { create, filter as filterIcon, search as searchIcon } from 'ionicons/icons'
-import { autorun } from 'mobx'
+import { reaction } from 'mobx'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -57,15 +57,19 @@ export const StuffTalentPage: React.FC = () => {
   })
 
   useEffect(() => {
-    autorun(() => {
-      setFilter({ ...filter, communityId: $community.selectedId })
-    })
+    const disposeReaction = reaction(
+      () => $community.selectedId,
+      (selectedId) => {
+        console.log('reaction for communityId changed') // TODO reaction 객체가 반복생성되는지 확인하려는 용도. 나중에 삭제예정
+        setFilter({ ...filter, communityId: selectedId })
+      }
+    )
 
-    return function cleanup() {
+    return () => {
+      disposeReaction()
       setFilter(initialFilter)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [$community.selectedId])
+  }, [])
 
   useEffect(() => {
     !searchMode && setSearch(initialSearch)

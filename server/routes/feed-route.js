@@ -19,6 +19,8 @@ router.put('/feeds/:id', (req, res) => {
 })
 
 router.delete('/feeds/:id', (req, res) => {
+  const findIndex = feeds.findIndex(({id}) => id === parseInt(req.params.id))
+  findIndex >= 0 && feeds.splice(findIndex, 1)
   res.send({ success: true })
 })
 

@@ -50,7 +50,7 @@ export const FeedPage: React.FC = () => {
       <IonContent>
         <div className='px-container'>
           <CommunityBanner></CommunityBanner>
-          <FeedList />
+          <FeedList fetchTask={$feed.getFeeds} />
         </div>
       </IonContent>
     </IonPage>
