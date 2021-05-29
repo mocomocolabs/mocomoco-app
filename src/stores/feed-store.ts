@@ -35,12 +35,14 @@ export class FeedStore {
 
   @task
   getFeeds = (async () => {
-    await api.get<{ feeds: IFeedDto[] }>(`/feeds?community-id=${this.$auth.user.communityId}`).then(
-      action((data) => {
-        console.log(data)
-        this.feeds = data.feeds.map((v) => Feed.of(v))
-      })
-    )
+    await api
+      .get<{ feeds: IFeedDto[] }>(`/feeds?community-id=${this.$auth.user.communityId}&is-use=true`)
+      .then(
+        action((data) => {
+          console.log(data)
+          this.feeds = data.feeds.map((v) => Feed.of(v))
+        })
+      )
   }) as Task
 
   @task
@@ -105,7 +107,7 @@ export class FeedStore {
       )
     )
 
-    await api.patch(`/feeds`, formData)
+    await api.patch(`/feeds/${id}/is-use`, formData)
   }) as TaskBy<number>
 
   @task.resolved
@@ -127,6 +129,7 @@ export class FeedStore {
             title: form.title,
             content: form.content,
             isPublic: form.isPublic,
+            isUse: true,
           }),
         ],
         {
@@ -149,11 +152,6 @@ export class FeedStore {
         isPublic: form.isPublic,
       })
     )
-
-    if (form.images.length === 0) {
-      // TODO: 서버 코드 수정후 삭제
-      form.images = [(await urlToFile('/assets/img/club/club01.jpg')) as any]
-    }
 
     form.images?.forEach((v) => {
       formData.append('files', v)
