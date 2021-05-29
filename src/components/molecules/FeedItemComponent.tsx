@@ -5,6 +5,7 @@ import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed.d'
 import { route } from '../../services/route-service'
+import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -15,34 +16,24 @@ import { ImageSlider } from './ImageSliderComponent'
 interface IFeedItem {
   feed: IFeed
   isDetail?: boolean
+  onDelete: (id: number) => {}
+  onEdit: (id: number) => {}
 }
 
-export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
-  const { $auth, $feed } = useStore()
-
-  const onDelete = async () => {
-    await $feed.deleteFeed(feed.id)
-    await $feed.getFeeds()
-
-    if (isDetail) {
-      route.goBack()
-    }
-  }
-
-  const onEdit = async () => {
-    await $feed.getFeedForm(feed.id)
-    route.feedForm()
-  }
+export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEdit }) => {
+  // TODO: $auth를 parameter로 넘기던지 organisms로 승격필요
+  const { $auth } = useStore()
 
   return useObserver(() => (
     <li className='py-4'>
       <div className='flex-col'>
+        <TextBase>{feed.title}</TextBase>
         <div className='flex-between-center'>
           <div className='flex'>
             <Profile url={feed.user.profileUrl}></Profile>
             <div className='flex-col'>
               <TextBase className=''>{feed.user.nickname}</TextBase>
-              <TextBase className='dim'>{feed.createdAt}</TextBase>
+              <TextBase className='dim'>{timeDiff(feed.createdAt)}</TextBase>
             </div>
           </div>
 
@@ -68,7 +59,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false }) => {
             </div>
           </div>
         )}
-        {feed.imageUrls.length && (
+        {feed.imageUrls?.length > 0 && (
           <div>
             <ImageSlider urls={feed.imageUrls}></ImageSlider>
           </div>

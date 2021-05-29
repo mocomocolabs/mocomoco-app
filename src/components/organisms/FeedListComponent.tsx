@@ -1,8 +1,8 @@
-import { IonSpinner } from '@ionic/react'
+import { IonSpinner, useIonViewWillEnter } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { Task, TaskGroup } from 'mobx-task'
-import React, { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
+import { route } from '../../services/route-service'
 import { TextXs } from '../atoms/TextXsComponent'
 import { FeedItem } from '../molecules/FeedItemComponent'
 import { ContentPopover } from './ContentPopoverComponent'
@@ -15,13 +15,21 @@ interface IFeedList {
 export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
   const { $feed } = useStore()
 
-  useEffect(() => {
+  useIonViewWillEnter(() => {
     fetchTask()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  })
 
-  // eslint-disable-next-line
   const taskGroup = TaskGroup<any[], void>([fetchTask, $feed.deleteFeed])
+
+  const onDelete = async (id: number) => {
+    await $feed.deleteFeed(id)
+    await $feed.getFeeds()
+  }
+
+  const onEdit = async (id: number) => {
+    await $feed.getFeedForm(id)
+    route.feedForm()
+  }
 
   return useObserver(() =>
     taskGroup.match({
@@ -35,7 +43,12 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
           <>
             <ul className='pl-0 move-up'>
               {$feed.feeds.map((v, i) => (
-                <FeedItem key={i} feed={v}></FeedItem>
+                <FeedItem
+                  key={i}
+                  feed={v}
+                  onEdit={() => onEdit(v.id)}
+                  onDelete={() => onDelete(v.id)}
+                ></FeedItem>
               ))}
             </ul>
             <ContentPopover></ContentPopover>

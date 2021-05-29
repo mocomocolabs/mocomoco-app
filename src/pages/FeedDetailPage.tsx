@@ -19,6 +19,7 @@ import { CommentInsertForm } from '../components/organisms/CommentInsertFormComp
 import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
 import { ContentPopover } from '../components/organisms/ContentPopoverComponent'
 import { useStore } from '../hooks/use-store'
+import { route } from '../services/route-service'
 
 interface ILocationState {
   autoFocus?: boolean
@@ -47,6 +48,16 @@ export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
     $ui.setIsBottomTab(true)
   })
 
+  const onDelete = async (id: number) => {
+    await $feed.deleteFeed(id)
+    route.goBack()
+  }
+
+  const onEdit = async (id: number) => {
+    await $feed.getFeedForm(id)
+    route.feedForm()
+  }
+
   // eslint-disable-next-line
   const taskGroup = TaskGroup<any[], void>([$feed.getFeed, $comment.deleteComment])
 
@@ -65,7 +76,14 @@ export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
         <div className='px-container'>
           {taskGroup.match({
             pending: () => <Spinner isFull={true}></Spinner>,
-            resolved: () => <FeedItem feed={$feed.feed} isDetail={true}></FeedItem>,
+            resolved: () => (
+              <FeedItem
+                feed={$feed.feed}
+                isDetail={true}
+                onDelete={() => onDelete($feed.feed.id)}
+                onEdit={() => onEdit($feed.feed.id)}
+              ></FeedItem>
+            ),
           })}
         </div>
         <ContentPopover></ContentPopover>
