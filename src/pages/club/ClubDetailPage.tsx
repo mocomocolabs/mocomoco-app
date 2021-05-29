@@ -53,7 +53,7 @@ export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
               task={$club.joinClub}
               Submit={() => (
                 <SubmitButton
-                  text='채팅 참여하기'
+                  text='소모임 참여하기'
                   onClick={() => {
                     $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })
                     // TODO: 테스트후 주석 제거

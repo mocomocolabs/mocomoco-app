@@ -27,6 +27,7 @@ const initState = {
 export class ClubStore {
   @observable.ref popularClubs: Club[] = []
   @observable.ref recentClubs: Club[] = []
+  @observable.ref myClubs: Club[] = []
   @observable.ref club: Club
   @observable.struct form: IClubForm = initState.form
 
@@ -60,6 +61,20 @@ export class ClubStore {
       .then(
         action((data) => {
           this.recentClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
+        })
+      )
+  }) as Task
+
+  @task
+  getMyClubs = (async () => {
+    // TODO: 페이징 처리 추후 구현
+    await api
+      .get<{ clubs: IClubDto[]; count: number }>(
+        `http://localhost:8080/api/v1/clubs/users/${this.$auth.user.id}?sort-order=created_at_desc&limit=999`
+      )
+      .then(
+        action((data) => {
+          this.myClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
         })
       )
   }) as Task

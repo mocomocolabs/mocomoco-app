@@ -1,10 +1,12 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IFeed, IFeedForm } from '../models/feed'
 import { httpFile } from '../utils/http-file-util'
 import { http } from '../utils/http-util'
 import { urlToFile } from '../utils/image-util'
+import { AuthStore } from './auth-store'
 import { InsertFeedTask } from './feed-store.d'
 import { Task, TaskBy } from './task'
 
@@ -22,12 +24,29 @@ export class FeedStore {
   @observable.ref feeds: IFeed[] = initState.feeds
   @observable.ref feed: IFeed = initState.feed
   @observable.struct form: IFeedForm = initState.form
+  @observable deleted = false
+
+  $auth: AuthStore
+
+  constructor(rootStore: RootStore) {
+    this.$auth = rootStore.$auth
+  }
 
   @task
   getFeeds = (async () => {
     await http.get<IFeed[]>('/feeds').then(
       action((data) => {
         this.feeds = data
+      })
+    )
+  }) as Task
+
+  @task
+  getMyFeeds = (async () => {
+    //TODO use query instead of filter
+    await http.get<IFeed[]>('/feeds').then(
+      action((data) => {
+        this.feeds = data.filter((feed) => feed.user.id === this.$auth.user.id)
       })
     )
   }) as Task

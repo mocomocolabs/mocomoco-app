@@ -5,7 +5,7 @@ import { ISegments, SEGMENT_KEYS } from '../../models/segment'
 interface ISegment {
   segments: ISegments
   selected: SEGMENT_KEYS
-  setSelected: React.Dispatch<React.SetStateAction<SEGMENT_KEYS>>
+  setSelected: (segment: SEGMENT_KEYS) => void
 }
 
 interface SegmentChangeEventDetail {
