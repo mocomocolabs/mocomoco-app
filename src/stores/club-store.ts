@@ -91,6 +91,8 @@ export class ClubStore {
   @task
   getClubForm = (async (_id: number) => {
     await this.getClub(_id)
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const images: any = await Promise.all(this.club.imageUrls.map((v) => urlToFile(v)))
 
     this.setForm({
@@ -125,6 +127,7 @@ export class ClubStore {
 
     if (form.images.length === 0) {
       // TODO: empty image 추가
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       form.images = [(await urlToFile('/assets/img/club/club01.jpg')) as any]
     }
 

@@ -41,16 +41,22 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
     // 필드를 한 번 클릭만 해도 dirtyFields에 포함되며, 다시 원래 값으로 돌려놔도
     // dirtyFields에서 제외되지 않고 계속 남아 있음.
     reset({ ...$user.user }, { keepDefaultValues: false })
-  }, [$user.user])
+  }, [reset, $user.user])
 
-  const submittable = useMemo(() => isValid && Object.keys(dirtyFields).length > 0, [
-    isValid,
-    Object.keys(dirtyFields).length,
-  ])
+  const submittable = useMemo(
+    () => isValid && Object.keys(dirtyFields).length > 0,
+
+    [
+      isValid,
+      dirtyFields,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      Object.keys(dirtyFields).length,
+    ]
+  )
 
   useEffect(() => {
     setSubmittable(submittable)
-  }, [submittable])
+  }, [setSubmittable, submittable])
 
   const onSubmit = useCallback(
     (user: IUser) => {
@@ -67,7 +73,7 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
           ),
       })
     },
-    [$user.user]
+    [$ui, $user]
   )
 
   // eslint-disable-next-line
@@ -75,7 +81,7 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
 
   useEffect(() => {
     $user.getUser(userId)
-  }, [userId])
+  }, [$user, userId])
 
   // TODO performance check - render 횟수 등
   return useObserver(() =>

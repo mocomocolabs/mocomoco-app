@@ -19,6 +19,7 @@ export const ClubPage: React.FC = () => {
   useEffect(() => {
     $club.getPopularClubs()
     $club.getRecentClubs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return useObserver(() => (
