@@ -21,7 +21,7 @@ interface IFeedItem {
 }
 
 export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEdit }) => {
-  // TODO: $auth를 parameter로 넘기던지 organisms로 승격필요
+  // TODO: $auth를 parameter로 넘기던지 organisms로 승격
   const { $auth } = useStore()
 
   return useObserver(() => (
