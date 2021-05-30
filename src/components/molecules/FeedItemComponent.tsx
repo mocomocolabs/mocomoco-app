@@ -1,11 +1,12 @@
 import { IonIcon } from '@ionic/react'
-import { calendar, chatbox, cloud } from 'ionicons/icons'
+import { calendar } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import { FC } from 'react'
+import React, { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
+import { Icon } from '../atoms/IconComponent'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -64,40 +65,26 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
             <ImageSlider urls={feed.imageUrls}></ImageSlider>
           </div>
         )}
-        <div className='flex-between-center'>
-          <div className='flex items-center'>
-            <IonIcon icon={cloud} className='mr-2'></IonIcon>
-            <TextBase>씨앗 {feed.likeCount}</TextBase>
+        <div className='flex'>
+          <div className='flex items-center mr-4'>
+            {/* TODO: 좋아요 여부에 따라 아이콘 변경 */}
+            <Icon name='heart' className='mr-2'></Icon>
+            {/* 좋아요 갯수 추가확인 */}
+            <TextBase>{feed.likeCount}</TextBase>
           </div>
-          <div className='flex items-center'>
-            <IonIcon icon={chatbox} className='mr-2'></IonIcon>
-            <TextBase className=''>댓글</TextBase>
-            <TextBase>씨앗 {feed.commentCount}</TextBase>
+          <div
+            className='flex items-center'
+            onClick={() => {
+              if (!isDetail) {
+                route.feedDetail(feed.id, { autoFocus: true })
+              }
+            }}
+          >
+            {/* TODO: 댓글 여부에 따라 아이콘 변경 */}
+            <Icon name='conversation-bubble' className='mr-2'></Icon>
+            <TextBase>{feed.comments?.length}</TextBase>
           </div>
         </div>
-        {!isDetail && (
-          <div className='flex'>
-            <div className='flex-center flex-1'>
-              <IonIcon icon={cloud} className='mr-2'></IonIcon>
-              <TextBase>씨앗뿌리기</TextBase>
-            </div>
-            <div
-              className='flex-center flex-1'
-              onClick={() => route.feedDetail(feed.id, { autoFocus: true })}
-            >
-              <IonIcon icon={chatbox} className='mr-2'></IonIcon>
-              <TextBase className=''>댓글달기</TextBase>
-            </div>
-          </div>
-        )}
-        {isDetail && (
-          <div className='flex flex-wrap items-center'>
-            <TextLg className='gray w-12'>씨앗들</TextLg>
-            {feed.likeProflieUrls?.slice(0, 9).map((v, i) => (
-              <Profile key={i} url={v}></Profile>
-            ))}
-          </div>
-        )}
         <div className='py-4'>
           {feed.comments?.map((v) => (
             <CommentItem

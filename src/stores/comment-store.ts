@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
-import { http } from '../utils/http-util'
+import { api } from '../services/api-service'
 import { IInsertComment, InsertCommentTask, IUpdateComment, UpdateCommentTask } from './comment-store.d'
 import { TaskBy } from './task'
 
@@ -28,6 +28,21 @@ export class CommentStore {
   @observable
   updateCommentId: number | null = initState.updateCommentId
 
+  @task.resolved
+  insertComment = (async ({ feedId, content }: IInsertComment) => {
+    await api.post(`/comment`, { feedId, content })
+  }) as InsertCommentTask
+
+  @task.resolved
+  updateComment = (async ({ id, content }: IUpdateComment) => {
+    await api.put(`/comment/${id}`, { content })
+  }) as UpdateCommentTask
+
+  @task.resolved
+  deleteComment = (async (id: number) => {
+    await api.delete(`/comment/${id}`)
+  }) as TaskBy<number>
+
   @action
   setUpdateCommentId(updateCommentId: number | null) {
     this.updateCommentId = updateCommentId
@@ -52,22 +67,4 @@ export class CommentStore {
   resetUpdateFormBy(commentId: number) {
     delete this.updateForm[commentId]
   }
-
-  @task.resolved
-  insertComment = (async ({ feedId, content }: IInsertComment) => {
-    await new Promise((r) => setTimeout(() => r(true), 1000))
-    await http.post(`/comment`, { feedId, content })
-  }) as InsertCommentTask
-
-  @task.resolved
-  updateComment = (async ({ id, content }: IUpdateComment) => {
-    await new Promise((r) => setTimeout(() => r(true), 1000))
-    await http.put(`/comment/${id}`, { content })
-  }) as UpdateCommentTask
-
-  @task.resolved
-  deleteComment = (async (id: number) => {
-    await new Promise((r) => setTimeout(() => r(true), 1000))
-    await http.delete(`/comment/${id}`)
-  }) as TaskBy<number>
 }

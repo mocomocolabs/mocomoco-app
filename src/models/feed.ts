@@ -29,8 +29,7 @@ export class Feed {
         bannerUrl: dto.community.atchFiles[0]?.url,
       },
       imageUrls: dto.atchFiles.map((v) => v.url),
-      // comments:
-      commentCount: dto.feedComments.length,
+      comments: dto.feedComments,
     })
   }
 }
