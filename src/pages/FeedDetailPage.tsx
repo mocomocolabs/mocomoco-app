@@ -94,7 +94,7 @@ export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
           <CommentInsertForm feedId={id} autoFocus={location?.state?.autoFocus}></CommentInsertForm>
         )}
         {$comment.updateCommentId !== null && (
-          <CommentUpdateForm commentId={$comment.updateCommentId}></CommentUpdateForm>
+          <CommentUpdateForm commentId={$comment.updateCommentId} feedId={$feed.feed.id}></CommentUpdateForm>
         )}
       </IonFooter>
     </IonPage>

@@ -40,6 +40,7 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
               onClick={async () => {
                 if ($comment.insertForm[feedId]?.content) {
                   executeWithError(async () => {
+                    // TODO: 댓글입력 api 의존성 분리
                     await $comment.insertComment({ feedId, content: $comment.insertForm[feedId]?.content })
                     await $feed.getFeed(feedId)
                     $comment.resetInsertFormBy(feedId)

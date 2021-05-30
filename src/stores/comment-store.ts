@@ -30,17 +30,17 @@ export class CommentStore {
 
   @task.resolved
   insertComment = (async ({ feedId, content }: IInsertComment) => {
-    await api.post(`/comment`, { feedId, content })
+    await api.post(`/feed-comments`, { feedId, content })
   }) as InsertCommentTask
 
   @task.resolved
-  updateComment = (async ({ id, content }: IUpdateComment) => {
-    await api.put(`/comment/${id}`, { content })
+  updateComment = (async (payload: IUpdateComment) => {
+    await api.put(`/feed-comments`, payload)
   }) as UpdateCommentTask
 
   @task.resolved
   deleteComment = (async (id: number) => {
-    await api.delete(`/comment/${id}`)
+    await api.patch(`/feed-comments/${id}/is-use`)
   }) as TaskBy<number>
 
   @action

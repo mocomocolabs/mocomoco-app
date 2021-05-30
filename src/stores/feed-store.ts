@@ -57,9 +57,9 @@ export class FeedStore {
 
   @task
   getFeed = (async (id: number) => {
-    await api.get<IFeed>(`/feeds/${id}`).then(
-      action((data) => {
-        this.feed = data
+    await api.get<IFeedDto>(`/feeds/${id}`).then(
+      action((v) => {
+        this.feed = Feed.of(v)
       })
     )
   }) as TaskBy<number>
