@@ -8,10 +8,11 @@ import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
 export interface ICommentUpdateForm {
   commentId: number
+  feedId: number
 }
 
-export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId }) => {
-  const { $comment } = useStore()
+export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, feedId }) => {
+  const { $comment, $feed } = useStore()
 
   return useObserver(() => (
     <div className='px-container py-2 flex-col bg-white'>
@@ -41,10 +42,12 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId }) =
               onClick={async () => {
                 await $comment.updateComment({
                   id: commentId,
+                  feedId,
                   content: $comment.updateForm[commentId]?.content,
                 })
                 $comment.setUpdateCommentId(null)
                 $comment.resetUpdateFormBy(commentId)
+                $feed.getFeed(feedId)
               }}
             >
               업데이트

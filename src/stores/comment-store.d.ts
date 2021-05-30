@@ -7,6 +7,7 @@ export interface IInsertComment {
 
 export interface IUpdateComment {
   id: number
+  feedId: number
   content: string
 }
 

@@ -2,6 +2,7 @@ import { useObserver } from 'mobx-react-lite'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IComment } from '../../models/comment'
+import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -35,7 +36,7 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
           <div className='flex-between-center'>
             <TextBase>{comment.user.nickname}</TextBase>
             <div className='flex items-center'>
-              <TextSm className='gray'>{comment.createdAt}</TextSm>
+              <TextSm className='gray'>{timeDiff(comment.createdAt)}</TextSm>
               <OverflowMenuIcon
                 show={showOverlowMenu}
                 onDelete={() => onDelete(comment.id)}
