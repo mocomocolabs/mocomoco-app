@@ -73,16 +73,10 @@ export class FeedStore {
         const images: any = await Promise.all(data.atchFiles?.map((v) => urlToFile(v.url)))
 
         this.setForm({
-          id,
-          title: data.title,
-          content: data.content,
-          type: data.type,
+          ...data,
           scheduleDate: data.scheduleDate.substr(0, 8),
           scheduleTime: data.scheduleDate.substr(8),
-          // TODO: 협의후 구현
-          // scheduleTime: data.scheduleTime,
           images,
-          isPublic: data.isPublic,
         })
       })
     )
@@ -123,9 +117,9 @@ export class FeedStore {
             communityId: form.communityId,
             type: form.type,
             ...(form.type === FEED_TYPE.SCHEDULE && {
+              scheduleTitle: form.scheduleTitle,
               scheduleDate: form.scheduleDate + form.scheduleTime,
             }),
-            // TODO : scheduleTitle 추가 필요
             title: form.title,
             content: form.content,
             isPublic: form.isPublic,
@@ -136,21 +130,6 @@ export class FeedStore {
           type: 'application/json',
         }
       )
-    )
-
-    console.log(
-      JSON.stringify({
-        id: form.id,
-        communityId: form.communityId,
-        type: form.type,
-        ...(form.type === FEED_TYPE.SCHEDULE && {
-          scheduleDate: form.scheduleDate + form.scheduleTime,
-        }),
-        // TODO : scheduleTitle 추가 필요
-        title: form.title,
-        content: form.content,
-        isPublic: form.isPublic,
-      })
     )
 
     form.images?.forEach((v) => {
