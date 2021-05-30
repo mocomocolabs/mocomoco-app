@@ -9,7 +9,7 @@ import { http } from '../utils/http-util'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
 import { IFeedDto, SaveFeedTask } from './feed-store.d'
-import { Task, TaskBy } from './task'
+import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
   feeds: [],
@@ -143,6 +143,11 @@ export class FeedStore {
     }
     this.resetForm()
   }) as SaveFeedTask
+
+  @task.resolved
+  toggleFeedLike = (async (feedId: number, isLike: boolean) => {
+    await api.post('/feeds-users/likes', { feedId, isLike, isUse: true })
+  }) as TaskBy2<number, boolean>
 
   @action
   setForm(data: Partial<IFeedForm>) {
