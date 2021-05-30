@@ -48,8 +48,11 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
   const uploader = useRef<IImageUploaderRef>()
   const isUpdate = $feed.form.id !== undefined
 
-  const initYMD = $feed.form.scheduleDate ?? dayjs().format(DT_FORMAT.YMD)
-  const initHM = $feed.form.scheduleTime ?? dayjs().add(1, 'hour').startOf('hour').format(DT_FORMAT.HM)
+  const initYMD = $feed.form.scheduleDate ? $feed.form.scheduleDate : dayjs().format(DT_FORMAT.YMD)
+  const initHM = $feed.form.scheduleTime
+    ? $feed.form.scheduleTime
+    : dayjs().add(1, 'hour').startOf('hour').format(DT_FORMAT.HM)
+
   $feed.setForm({ type: $feed.form.type ?? FEED_TYPE.NORMAL, scheduleDate: initYMD, scheduleTime: initHM })
 
   useIonViewWillEnter(() => {
@@ -130,18 +133,25 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
               placeholder='어떤 일이 있으셨나요?'
             ></Textarea>
             {$feed.form.type === FEED_TYPE.SCHEDULE && (
-              <div className='flex-between-center mt-3'>
-                <IonIcon icon={calendar} size='large'></IonIcon>
-                <DatetimePicker
-                  value={`${initYMD} ${initHM}`}
-                  onChangeDate={(d) => {
-                    $feed.setForm({ scheduleDate: d })
-                  }}
-                  onChangeTime={(t) => {
-                    $feed.setForm({ scheduleTime: t })
-                  }}
-                ></DatetimePicker>
-              </div>
+              <>
+                <InputNormal
+                  value={$feed.form.scheduleTitle}
+                  placeholder='일정명'
+                  onChange={(scheduleTitle) => $feed.setForm({ scheduleTitle })}
+                ></InputNormal>
+                <div className='flex-between-center mt-3'>
+                  <IonIcon icon={calendar} size='large'></IonIcon>
+                  <DatetimePicker
+                    value={`${initYMD} ${initHM}`}
+                    onChangeDate={(d) => {
+                      $feed.setForm({ scheduleDate: d })
+                    }}
+                    onChangeTime={(t) => {
+                      $feed.setForm({ scheduleTime: t })
+                    }}
+                  ></DatetimePicker>
+                </div>
+              </>
             )}
           </div>
         </IonContent>

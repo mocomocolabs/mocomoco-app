@@ -12,6 +12,7 @@ export interface IFeedDto {
   nickname: string
   title: string
   content: string
+  scheduleTitle: string
   scheduleDate: string
   type: FeedType
   community: ICommunityDto
