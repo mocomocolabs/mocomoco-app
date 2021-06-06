@@ -29,7 +29,7 @@ export class Feed {
         bannerUrl: dto.community.atchFiles[0]?.url,
       },
       imageUrls: dto.atchFiles.map((v) => v.url),
-      comments: dto.feedComments,
+      comments: dto.feedComments.filter((v) => v.isUse),
       likeCount: dto.feedUsers.filter((v) => v.isLike).length,
       writtenComment: dto.feedComments.some((v) => v.id === userId),
     })

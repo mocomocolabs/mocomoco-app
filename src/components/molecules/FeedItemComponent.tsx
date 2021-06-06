@@ -90,7 +90,14 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
             <TextBase>{feed.comments?.length}</TextBase>
           </div>
         </div>
-        <div className='py-4'>
+        <div
+          className='py-4'
+          onClick={() => {
+            if (!isDetail) {
+              route.feedDetail(feed.id)
+            }
+          }}
+        >
           {feed.comments?.map((v) => (
             <CommentItem
               key={v.id}
