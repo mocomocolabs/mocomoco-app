@@ -23,7 +23,7 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { DatetimePicker } from '../components/molecules/DatetimePickerComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { useStore } from '../hooks/use-store'
-import { FEED_TYPE } from '../models/feed.d'
+import { FeedType, FEED_TYPE } from '../models/feed.d'
 import { IRadioItem } from '../models/radio'
 import { route } from '../services/route-service'
 import { DT_FORMAT } from '../utils/datetime-util'
@@ -117,7 +117,7 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
               <Radio
                 items={feedTypes}
                 selected={$feed.form.type ?? FEED_TYPE.NORMAL}
-                setSelected={(type: any) => $feed.setForm({ type })}
+                setSelected={(type) => $feed.setForm({ type: type as FeedType })}
               ></Radio>
             </div>
             <Pad className='h-5'></Pad>

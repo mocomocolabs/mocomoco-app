@@ -11,6 +11,7 @@ import { Toast } from './components/atoms/ToastComponent'
 import './global.scss'
 import { GuardRoute } from './GuardRoute'
 import { useStore } from './hooks/use-store'
+import { ISubChat } from './models/chat'
 import { ChatPage } from './pages/ChatPage'
 import { ChatRoomPage } from './pages/ChatRoomPage'
 import { ClubDetailPage } from './pages/club/ClubDetailPage'
@@ -34,8 +35,6 @@ import { StuffTalentPage } from './pages/StuffTalentPage'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 import { webSocket } from './services/web-socket-service'
-import { ISubChat } from './models/chat'
-import _ from 'lodash'
 
 export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()

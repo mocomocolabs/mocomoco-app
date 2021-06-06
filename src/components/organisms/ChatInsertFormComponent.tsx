@@ -3,8 +3,6 @@ import { paperPlane } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
-import { executeWithError } from '../../utils/http-helper-util'
-import { scrollToBottom } from '../../utils/scroll-util'
 import { Profile } from '../atoms/ProfileComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
