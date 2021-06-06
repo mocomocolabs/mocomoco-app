@@ -19,7 +19,8 @@ export interface IFeedDto {
   atchFiles: IFileDto[]
   user: IUserDto
   isPublic: boolean
+  isLike: boolean
   createdAt: string
-  // TODO
-  feedComments: any[]
+  feedComments: { id: number }[]
+  feedUsers: { isLike: boolean }[]
 }

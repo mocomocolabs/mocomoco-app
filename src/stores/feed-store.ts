@@ -39,8 +39,7 @@ export class FeedStore {
       .get<{ feeds: IFeedDto[] }>(`/feeds?community-id=${this.$auth.user.communityId}&is-use=true`)
       .then(
         action((data) => {
-          console.log(data)
-          this.feeds = data.feeds.map((v) => Feed.of(v))
+          this.feeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
         })
       )
   }) as Task
@@ -59,7 +58,7 @@ export class FeedStore {
   getFeed = (async (id: number) => {
     await api.get<IFeedDto>(`/feeds/${id}`).then(
       action((v) => {
-        this.feed = Feed.of(v)
+        this.feed = Feed.of(v, this.$auth.user.id)
       })
     )
   }) as TaskBy<number>
@@ -147,7 +146,21 @@ export class FeedStore {
   @task.resolved
   toggleFeedLike = (async (feedId: number, isLike: boolean) => {
     await api.post('/feeds-users/likes', { feedId, isLike, isUse: true })
+    this.setFeedLike(feedId, isLike)
   }) as TaskBy2<number, boolean>
+
+  @action
+  setFeedLike(id: number, isLike: boolean) {
+    let found = this.feeds.find((v) => v.id === id)
+
+    if (found) {
+      const likeCount = isLike ? found.likeCount + 1 : found.likeCount - 1
+      // TODO: feeds의 일부 프로퍼티가 변경되어도 리렌더가 되지 않는다. 원인 파악 필요
+      this.feeds = this.feeds.map((v) => {
+        return v.id === id ? { ...found!, isLike, likeCount } : v
+      })
+    }
+  }
 
   @action
   setForm(data: Partial<IFeedForm>) {
