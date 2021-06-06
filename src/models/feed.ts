@@ -19,7 +19,7 @@ export interface Feed extends IFeed {}
 // isPublic: boolean
 
 export class Feed {
-  static of(dto: IFeedDto) {
+  static of(dto: IFeedDto, userId: number) {
     return Object.assign(new Feed(), {
       ...dto,
       scheduleDate: dto.scheduleDate.substr(0, 8),
@@ -30,6 +30,8 @@ export class Feed {
       },
       imageUrls: dto.atchFiles.map((v) => v.url),
       comments: dto.feedComments,
+      likeCount: dto.feedUsers.filter((v) => v.isLike).length,
+      writtenComment: dto.feedComments.some((v) => v.id === userId),
     })
   }
 }

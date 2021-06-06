@@ -20,6 +20,8 @@ export interface IFeed {
   comments: IComment[]
   createdAt: string
   isPublic: boolean
+  isLike: boolean
+  writtenComment: boolean
 }
 
 export interface IFeedForm {

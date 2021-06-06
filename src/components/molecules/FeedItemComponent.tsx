@@ -69,15 +69,10 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
           <div
             className='flex items-center mr-4'
             onClick={async () => {
-              // TODO: 좋아요 토글
-              await $feed.toggleFeedLike(feed.id, true)
-              // TODO: 좋아요 갯수 갱신,
-              // organisms으로 승격시키고, refresh 할 수 있는 인자를 넘겨받는게 어떨까?
+              await $feed.toggleFeedLike(feed.id, !feed.isLike)
             }}
           >
-            {/* TODO: 좋아요 여부에 따라 아이콘 변경 */}
-            <Icon name='heart' className='mr-2'></Icon>
-            {/* 좋아요 갯수 추가확인 */}
+            <Icon name={feed.isLike ? 'heart-solid' : 'heart'} className='mr-2'></Icon>
             <TextBase>{feed.likeCount}</TextBase>
           </div>
           <div
@@ -88,8 +83,10 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
               }
             }}
           >
-            {/* TODO: 댓글 여부에 따라 아이콘 변경 */}
-            <Icon name='conversation-bubble' className='mr-2'></Icon>
+            <Icon
+              name={feed.writtenComment ? 'conversation-bubble-solid' : 'conversation-bubble'}
+              className='mr-2'
+            ></Icon>
             <TextBase>{feed.comments?.length}</TextBase>
           </div>
         </div>
