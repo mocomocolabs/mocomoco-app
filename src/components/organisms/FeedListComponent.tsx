@@ -1,6 +1,7 @@
-import { IonSpinner, useIonViewWillEnter } from '@ionic/react'
+import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { Task, TaskGroup } from 'mobx-task'
+import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
 import { TextXs } from '../atoms/TextXsComponent'
@@ -15,20 +16,21 @@ interface IFeedList {
 export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
   const { $feed } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     fetchTask()
-  })
+  }, [fetchTask])
 
   const taskGroup = TaskGroup<any[], void>([fetchTask, $feed.deleteFeed])
 
   const onDelete = async (id: number) => {
     await $feed.deleteFeed(id)
-    await $feed.getFeeds()
+    fetchTask()
   }
 
   const onEdit = async (id: number) => {
     await $feed.getFeedForm(id)
     route.feedForm()
+    fetchTask()
   }
 
   return useObserver(() =>
