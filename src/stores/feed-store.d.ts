@@ -21,6 +21,6 @@ export interface IFeedDto {
   isPublic: boolean
   isLike: boolean
   createdAt: string
-  feedComments: { id: number }[]
+  feedComments: { id: number; isUse: boolean }[]
   feedUsers: { isLike: boolean }[]
 }
