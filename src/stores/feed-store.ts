@@ -5,7 +5,6 @@ import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { Feed } from '../models/feed'
 import { FEED_TYPE, IFeed, IFeedForm } from '../models/feed.d'
 import { api } from '../services/api-service'
-import { http } from '../utils/http-util'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
 import { IFeedDto, SaveFeedTask } from './feed-store.d'
@@ -47,9 +46,11 @@ export class FeedStore {
   @task
   getMyFeeds = (async () => {
     //TODO use query instead of filter
-    await http.get<IFeed[]>('/feeds').then(
+    await api.get<{ feeds: IFeedDto[] }>('/feeds').then(
       action((data) => {
-        this.feeds = data.filter((feed) => feed.user.id === this.$auth.user.id)
+        this.feeds = data.feeds
+          .filter((feed) => feed.user.id === this.$auth.user.id)
+          .map((v) => Feed.of(v, this.$auth.user.id))
       })
     )
   }) as Task
