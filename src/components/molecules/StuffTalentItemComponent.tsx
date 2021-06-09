@@ -1,7 +1,5 @@
 import { IonIcon } from '@ionic/react'
 import { chatbox, cloud } from 'ionicons/icons'
-import { useObserver } from 'mobx-react-lite'
-import { useStore } from '../../hooks/use-store'
 import {
   IStuffTalent,
   StuffTalentPathName as Path,
@@ -16,6 +14,7 @@ import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 
 interface IStuffTalentIItem {
+  loginUserId: number
   path: Path
   item: IStuffTalent
   onDelete: (id: number) => void
@@ -32,16 +31,14 @@ const StatusLabel = {
   [Status.FINISH]: '거래완료',
 }
 
-export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ path, item, onDelete }) => {
-  const { $auth } = useStore()
-
+export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ loginUserId, path, item, onDelete }) => {
   const routeDetail = path === Path.STUFF ? route.stuffDetail : route.talentDetail
 
   const getItemLikeCount = (item: IStuffTalent) => {
     return item.stuffUsers ? item.stuffUsers.length : item.talentUsers.length
   }
 
-  return useObserver(() => (
+  return (
     <li className='py-4'>
       <div className='flex'>
         <div className='flex-between-center w-full' onClick={() => routeDetail(item.id)}>
@@ -77,7 +74,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ path, item, onDel
         <div className='flex justify-end w-4'>
           <OverflowMenuIcon
             className='self-top'
-            show={$auth.user.id === item.user.id}
+            show={loginUserId === item.user.id}
             onDelete={() => onDelete(item.id)}
           />
         </div>
@@ -89,5 +86,5 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ path, item, onDel
         </div>
       </div>
     </li>
-  ))
+  )
 }

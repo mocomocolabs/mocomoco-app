@@ -2,6 +2,7 @@ import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
+import { useStore } from '../../hooks/use-store'
 import { IStuffTalentFilter } from '../../models/stufftalent.d'
 import { StuffTalentStore } from '../../stores/stufftalent-store'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -15,6 +16,8 @@ interface IStuffTalentList {
 }
 
 export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, filter }) => {
+  const { $auth } = useStore()
+
   useEffect(() => {
     store.getItems(search, filter)
   }, [store, search, filter])
@@ -41,7 +44,13 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
           </div>
           <ul className='pl-0 move-up'>
             {store.items.map((item) => (
-              <StuffTalentItem key={item.id} path={store.pathName} item={item} onDelete={onDeleteItem} />
+              <StuffTalentItem
+                key={item.id}
+                loginUserId={$auth.user.id}
+                path={store.pathName}
+                item={item}
+                onDelete={onDeleteItem}
+              />
             ))}
           </ul>
           <ContentPopover></ContentPopover>
