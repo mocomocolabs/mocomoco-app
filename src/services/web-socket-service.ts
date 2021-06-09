@@ -9,18 +9,20 @@ class WebSocketService {
   private stompClient: CompatClient | null = null
 
   init() {
-    const sockJS = new SockJS(this.wsUrl)
-    this.stompClient = Stomp.over(sockJS)
+    this.stompClient = Stomp.over(() => new SockJS(this.wsUrl))
     this.stompClient.debug = (str) => console.log(str)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   connectRooms(roomIds: number[], cb: (data: any) => void) {
     this.stompClient?.connect({ Authorization: storage.accessTokenForSync }, () =>
       roomIds.forEach((v) => this.subscribeRoom(v, cb))
     )
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscribeRoom(roomId: number, cb: (data: any) => void) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.stompClient?.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
   }
 

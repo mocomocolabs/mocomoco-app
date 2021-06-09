@@ -1,17 +1,16 @@
 import { useObserver } from 'mobx-react-lite'
-import React, { FC, useRef } from 'react'
+import { FC, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
+import { ISubChat } from '../../models/chat'
 import { route } from '../../services/route-service'
+import { webSocket } from '../../services/web-socket-service'
 import { executeWithError } from '../../utils/http-helper-util'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { InputPassword } from '../atoms/InputPasswordComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
-import { webSocket } from '../../services/web-socket-service'
-import { ISubChat } from '../../models/chat'
-import _ from 'lodash'
 
 export const SignInEmail: FC = () => {
   const {

@@ -1,14 +1,13 @@
-import { IonSpinner } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { scrollToBottom } from '../../utils/scroll-util'
 import { Profile } from '../atoms/ProfileComponent'
 
 interface IChatRoomDetail {
   roomId: number
 }
 
+// TODO: roomId is defined but never used
 export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({ roomId }) => {
   const { $chat, $auth } = useStore()
 

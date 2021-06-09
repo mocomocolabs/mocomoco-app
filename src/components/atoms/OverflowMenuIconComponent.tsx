@@ -7,7 +7,9 @@ export interface IOverflowMenuIcon {
   show?: boolean
   className?: string
   icon?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onDelete?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onEdit?: any
 }
 

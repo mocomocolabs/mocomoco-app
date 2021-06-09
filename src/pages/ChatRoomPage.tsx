@@ -8,6 +8,7 @@ import {
   useIonViewWillEnter,
   useIonViewWillLeave,
 } from '@ionic/react'
+import _ from 'lodash'
 import { useEffect } from 'react'
 import { StaticContext } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
@@ -15,7 +16,6 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ChatInsertForm } from '../components/organisms/ChatInsertFormComponent'
 import { ChatRoomDetail } from '../components/organisms/ChatRoomDetailComponent'
 import { useStore } from '../hooks/use-store'
-import _ from 'lodash'
 
 interface ILocationState {
   autoFocus?: boolean
@@ -42,6 +42,7 @@ export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticCo
         readChatId: lastReadChatId,
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useIonViewWillEnter(() => {

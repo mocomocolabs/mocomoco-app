@@ -20,6 +20,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
     fetchTask()
   }, [fetchTask])
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const taskGroup = TaskGroup<any[], void>([fetchTask, $feed.deleteFeed])
 
   const onDelete = async (id: number) => {
