@@ -1,5 +1,4 @@
 import {
-  IonBackdrop,
   IonContent,
   IonHeader,
   IonIcon,
@@ -14,6 +13,7 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
+import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
 import { IStuffTalentFilter } from '../models/stufftalent.d'
@@ -112,7 +112,9 @@ export const StuffTalentPage: React.FC = () => {
           {/* TODO extract as component */}
           <div className='flex justify-around'>
             <div
-              hidden={filter.categories.length === 0 && filter.statuses.length === 0}
+              hidden={
+                filter.categories.length === 0 && filter.statuses.length === 0 && filter.types.length === 0
+              }
               onClick={() => {
                 setFilter(initialFilter)
                 setFilterMode(FilterMode.none)
@@ -149,81 +151,36 @@ export const StuffTalentPage: React.FC = () => {
       </IonHeader>
 
       <IonContent>
-        {/* TODO extract as component */}
+        {/* TODO 팝업영역을 일괄 추출할 수 있을까? */}
+        {/* TODO setFilter할 때 categories: 적는 것도 빼고 싶다 */}
+        {/* TODO print 에서 number 빼고 싶다 */}
         <div className='justify-around' hidden={filterMode !== FilterMode.category}>
-          <div className='absolute z-10 w-full bg-white'>
-            {store.categories
-              .sort((a, b) => (a.name <= b.name ? -1 : 1))
-              .map((category) => (
-                <div
-                  key={category.id}
-                  onClick={() => {
-                    const categories = filter.categories.includes(category.id)
-                      ? filter.categories.filter((v) => v !== category.id)
-                      : filter.categories.concat(category.id)
-
-                    setFilter({ ...filter, categories })
-                  }}
-                >
-                  {category.name}
-                  {filter.categories.includes(category.id) ? ' V' : ''}
-                </div>
-              ))}
-          </div>
-          <IonBackdrop
-            onIonBackdropTap={() => {
-              setFilterMode(FilterMode.none)
-            }}
+          <FilterPopup
+            filter={filter.categories}
+            items={store.categories.map((c) => c.id)}
+            print={(id: number) => store.categories.find((c) => c.id === id)!.name}
+            onSelect={(newFilter: typeof filter.categories) =>
+              setFilter({ ...filter, categories: newFilter })
+            }
+            onClose={() => setFilterMode(FilterMode.none)}
           />
         </div>
 
         <div className='justify-around' hidden={filterMode !== FilterMode.status}>
-          <div className='absolute z-10 w-full bg-white'>
-            {store.statuses.map((status) => (
-              <div
-                key={status}
-                onClick={() => {
-                  const statuses = filter.statuses.includes(status)
-                    ? filter.statuses.filter((v) => v !== status)
-                    : filter.statuses.concat(status)
-
-                  setFilter({ ...filter, statuses })
-                }}
-              >
-                {status}
-                {filter.statuses.includes(status) ? ' V' : ''}
-              </div>
-            ))}
-          </div>
-          <IonBackdrop
-            onIonBackdropTap={() => {
-              setFilterMode(FilterMode.none)
-            }}
+          <FilterPopup
+            filter={filter.statuses}
+            items={store.statuses}
+            onSelect={(newFilter: typeof filter.statuses) => setFilter({ ...filter, statuses: newFilter })}
+            onClose={() => setFilterMode(FilterMode.none)}
           />
         </div>
 
         <div className='justify-around' hidden={filterMode !== FilterMode.type}>
-          <div className='absolute z-10 w-full bg-white'>
-            {store.types.map((type) => (
-              <div
-                key={type}
-                onClick={() => {
-                  const types = filter.types.includes(type)
-                    ? filter.types.filter((v) => v !== type)
-                    : filter.types.concat(type)
-
-                  setFilter({ ...filter, types: types })
-                }}
-              >
-                {type}
-                {filter.types.includes(type) ? ' V' : ''}
-              </div>
-            ))}
-          </div>
-          <IonBackdrop
-            onIonBackdropTap={() => {
-              setFilterMode(FilterMode.none)
-            }}
+          <FilterPopup
+            filter={filter.types}
+            items={store.types}
+            onSelect={(newFilter: typeof filter.types) => setFilter({ ...filter, types: newFilter })}
+            onClose={() => setFilterMode(FilterMode.none)}
           />
         </div>
 
