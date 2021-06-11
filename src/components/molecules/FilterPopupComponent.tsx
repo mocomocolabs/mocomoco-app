@@ -1,38 +1,41 @@
 import { IonBackdrop } from '@ionic/react'
-import React from 'react'
 
 // TODO any를 사용하지 않을 방법 찾아보자
-interface IFilterPopup {
+interface IFilterInfo {
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  filter: any[]
-  items: any[]
-  print?: (item: any) => string
+  filter: (number | string)[]
+  items: [id: number | string, name: string][]
   onSelect: ([]) => void
-  onClose: () => void
   /* eslint-enable */
 }
 
-export const FilterPopup: React.FC<IFilterPopup> = ({ filter, items, print, onSelect, onClose }) => {
-  return (
-    <>
-      <div className='absolute z-10 w-full bg-white'>
-        {items.map((item) => (
+interface IFilterPopup {
+  show: boolean
+  filterInfos: IFilterInfo[]
+  onClose: () => void
+}
+
+export const FilterPopup: React.FC<IFilterPopup> = ({ show, filterInfos, onClose }) => (
+  <div className='justify-around' hidden={!show}>
+    <div className='absolute z-10 w-full bg-white'>
+      {filterInfos.map(({ filter, items, onSelect }) =>
+        items.map(([key, name]) => (
           <div
-            key={item}
+            key={key}
             onClick={() => {
-              onSelect(filter.includes(item) ? filter.filter((v) => v !== item) : filter.concat(item))
+              onSelect(filter.includes(key) ? filter.filter((v) => v !== key) : filter.concat(key))
             }}
           >
-            {print ? print(item) : (item as string)}
-            {filter.includes(item) ? ' V' : ''}
+            {name}
+            {filter.includes(key) ? ' V' : ''}
           </div>
-        ))}
-      </div>
-      <IonBackdrop
-        onIonBackdropTap={() => {
-          onClose()
-        }}
-      />
-    </>
-  )
-}
+        ))
+      )}
+    </div>
+    <IonBackdrop
+      onIonBackdropTap={() => {
+        onClose()
+      }}
+    />
+  </div>
+)

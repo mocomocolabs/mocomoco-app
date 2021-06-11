@@ -29,6 +29,6 @@ export interface IStuffTalentFilter {
   communityId: number | undefined
   userId: number | undefined
   categories: number[]
-  statuses: StuffTalentStatus[]
+  notStatuses: StuffTalentStatus[]
   types: StuffTalentType[]
 }
