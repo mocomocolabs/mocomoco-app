@@ -73,7 +73,7 @@ export class StuffTalentStore {
   }) as TaskBy2<string, IStuffTalentFilter>
 
   private config = (search: string, filter: IStuffTalentFilter) => {
-    const { userId, categories, statuses, types, isPublic, communityId } = filter
+    const { userId, categories, notStatuses, types, isPublic, communityId } = filter
 
     const config: AxiosRequestConfig = {
       params: {
@@ -83,7 +83,8 @@ export class StuffTalentStore {
 
     !!userId && this.addParam(config, 'user-id', userId)
     categories?.length > 0 && this.addParam(config, 'category-id', categories.join('_OR_'))
-    statuses?.length > 0 && this.addParam(config, 'status', statuses.join('_OR_'))
+    notStatuses?.length > 0 &&
+      this.addParam(config, 'status', notStatuses.map((s) => 'not:' + s).join('_OR_'))
     types?.length > 0 && this.addParam(config, 'type', types.join('_OR_'))
 
     if (isPublic) {

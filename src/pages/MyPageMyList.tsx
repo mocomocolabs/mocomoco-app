@@ -27,7 +27,7 @@ const initialFilter: IStuffTalentFilter = {
   communityId: undefined,
   userId: undefined,
   categories: [],
-  statuses: [],
+  notStatuses: [],
   types: [],
 }
 

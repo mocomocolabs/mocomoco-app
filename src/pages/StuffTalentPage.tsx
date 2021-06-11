@@ -13,27 +13,20 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
+import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
-import { IStuffTalentFilter } from '../models/stufftalent.d'
+import { IStuffTalentFilter, StuffTalentType } from '../models/stufftalent.d'
 
 interface SearchbarChangeEventDetail {
   value: string | undefined
 }
 
-const FilterMode = { none: 'none', category: 'category', status: 'status', type: 'type' }
+const FilterMode = { none: 'none', category: '카테고리', type: '유형' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 const initialSearch = ''
-const initialFilter: IStuffTalentFilter = {
-  isPublic: false,
-  communityId: undefined,
-  userId: undefined,
-  categories: [],
-  statuses: [],
-  types: [],
-}
 
 export const StuffTalentPage: React.FC = () => {
   const { $stuff, $talent, $ui, $community } = useStore()
@@ -47,10 +40,16 @@ export const StuffTalentPage: React.FC = () => {
   const onSearchSubmit = (e: CustomEvent<SearchbarChangeEventDetail>) => setSearch(e.detail.value!)
 
   const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
-  const [filter, setFilter] = useState<IStuffTalentFilter>({
-    ...initialFilter,
+
+  const initialFilter: IStuffTalentFilter = {
+    isPublic: false,
     communityId: $community.selectedId,
-  })
+    userId: undefined,
+    categories: [],
+    notStatuses: [],
+    types: [],
+  }
+  const [filter, setFilter] = useState<IStuffTalentFilter>(initialFilter)
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(true)
@@ -60,6 +59,7 @@ export const StuffTalentPage: React.FC = () => {
     const disposeReaction = reaction(
       () => $community.selectedId,
       (selectedId) => {
+        // TODO 모든 공동체 선택 시 isPublic=true 처리 필요
         console.log('reaction for communityId changed') // TODO reaction 객체가 반복생성되는지 확인하려는 용도. 나중에 삭제예정
         setFilter({ ...filter, communityId: selectedId })
       }
@@ -79,6 +79,8 @@ export const StuffTalentPage: React.FC = () => {
       setSearch(initialSearch)
     }
   }, [searchMode])
+
+  const onCloseFilterPopup = () => setFilterMode(FilterMode.none)
 
   return (
     <IonPage>
@@ -109,81 +111,55 @@ export const StuffTalentPage: React.FC = () => {
         </IonToolbar>
 
         <div className='px-container'>
-          {/* TODO extract as component */}
-          <div className='flex justify-around'>
-            <div
-              hidden={
-                filter.categories.length === 0 && filter.statuses.length === 0 && filter.types.length === 0
-              }
-              onClick={() => {
-                setFilter(initialFilter)
-                setFilterMode(FilterMode.none)
-              }}
-            >
-              초기화
-            </div>
-            <div
-              className={filter.categories.length > 0 ? 'bg-yellow' : ''}
-              onClick={() => {
-                setFilterMode(filterMode === FilterMode.category ? FilterMode.none : FilterMode.category)
-              }}
-            >
-              ▼카테고리
-            </div>
-            <div
-              className={filter.statuses.length > 0 ? 'bg-yellow' : ''}
-              onClick={() => {
-                setFilterMode(filterMode === FilterMode.status ? FilterMode.none : FilterMode.status)
-              }}
-            >
-              ▼거래상태
-            </div>
-            <div
-              className={filter.types.length > 0 ? 'bg-yellow' : ''}
-              onClick={() => {
-                setFilterMode(filterMode === FilterMode.type ? FilterMode.none : FilterMode.type)
-              }}
-            >
-              ▼유형
-            </div>
-          </div>
+          <FilterBar
+            filters={[
+              { name: FilterMode.category, length: filter.categories.length },
+              { name: FilterMode.type, length: filter.types.length + filter.notStatuses.length },
+            ]}
+            onReset={() => {
+              setFilter(initialFilter)
+              setFilterMode(FilterMode.none)
+            }}
+            onClick={(name: string) => {
+              setFilterMode(filterMode === name ? FilterMode.none : name)
+            }}
+          />
         </div>
       </IonHeader>
 
+      <FilterPopup
+        show={filterMode === FilterMode.category}
+        filterInfos={[
+          {
+            filter: filter.categories,
+            items: store.categories.map((c) => [c.id, c.name]),
+            onSelect: (newFilter) => setFilter({ ...filter, categories: newFilter }),
+          },
+        ]}
+        onClose={onCloseFilterPopup}
+      />
+
+      <FilterPopup
+        show={filterMode === FilterMode.type}
+        filterInfos={[
+          {
+            filter: filter.types,
+            items: [
+              [StuffTalentType.GIVE, '팔아요'],
+              [StuffTalentType.TAKE, '구해요'],
+            ],
+            onSelect: (newFilter) => setFilter({ ...filter, types: newFilter }),
+          },
+          {
+            filter: filter.notStatuses,
+            items: [['FINISH', '거래완료 안보기']],
+            onSelect: (newFilter) => setFilter({ ...filter, notStatuses: newFilter }),
+          },
+        ]}
+        onClose={onCloseFilterPopup}
+      />
+
       <IonContent>
-        {/* TODO 팝업영역을 일괄 추출할 수 있을까? */}
-        {/* TODO setFilter할 때 categories: 적는 것도 빼고 싶다 */}
-        {/* TODO print 에서 number 빼고 싶다 */}
-        <div className='justify-around' hidden={filterMode !== FilterMode.category}>
-          <FilterPopup
-            filter={filter.categories}
-            items={store.categories.map((c) => c.id)}
-            print={(id: number) => store.categories.find((c) => c.id === id)!.name}
-            onSelect={(newFilter: typeof filter.categories) =>
-              setFilter({ ...filter, categories: newFilter })
-            }
-            onClose={() => setFilterMode(FilterMode.none)}
-          />
-        </div>
-
-        <div className='justify-around' hidden={filterMode !== FilterMode.status}>
-          <FilterPopup
-            filter={filter.statuses}
-            items={store.statuses}
-            onSelect={(newFilter: typeof filter.statuses) => setFilter({ ...filter, statuses: newFilter })}
-            onClose={() => setFilterMode(FilterMode.none)}
-          />
-        </div>
-
-        <div className='justify-around' hidden={filterMode !== FilterMode.type}>
-          <FilterPopup
-            filter={filter.types}
-            items={store.types}
-            onSelect={(newFilter: typeof filter.types) => setFilter({ ...filter, types: newFilter })}
-            onClose={() => setFilterMode(FilterMode.none)}
-          />
-        </div>
-
         <div className='px-container'>
           <StuffTalentList store={store} search={search} filter={filter} />
         </div>
