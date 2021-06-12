@@ -23,7 +23,7 @@ interface SearchbarChangeEventDetail {
   value: string | undefined
 }
 
-const FilterMode = { none: 'none', category: '카테고리', type: '유형' }
+const FilterMode = { none: 'none', category: '카테고리', type: '조건' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 const initialSearch = ''
@@ -39,8 +39,6 @@ export const StuffTalentPage: React.FC = () => {
   const [search, setSearch] = useState(initialSearch)
   const onSearchSubmit = (e: CustomEvent<SearchbarChangeEventDetail>) => setSearch(e.detail.value!)
 
-  const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
-
   const initialFilter: IStuffTalentFilter = {
     isPublic: false,
     communityId: $community.selectedId,
@@ -50,24 +48,29 @@ export const StuffTalentPage: React.FC = () => {
     types: [],
   }
   const [filter, setFilter] = useState<IStuffTalentFilter>(initialFilter)
+  const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
+  const onCloseFilterPopup = () => setFilterMode(FilterMode.none)
+  const onResetFilter = () => {
+    setFilter(initialFilter)
+    setFilterMode(FilterMode.none)
+  }
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(true)
   })
 
   useEffect(() => {
+    //TODO 상세보기 들어갔다가 돌아올 때 기존 filter값 유지되는지 확인할 것
     const disposeReaction = reaction(
       () => $community.selectedId,
       (selectedId) => {
         // TODO 모든 공동체 선택 시 isPublic=true 처리 필요
-        console.log('reaction for communityId changed') // TODO reaction 객체가 반복생성되는지 확인하려는 용도. 나중에 삭제예정
         setFilter({ ...filter, communityId: selectedId })
       }
     )
 
     return () => {
       disposeReaction()
-      setFilter(initialFilter)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -79,8 +82,6 @@ export const StuffTalentPage: React.FC = () => {
       setSearch(initialSearch)
     }
   }, [searchMode])
-
-  const onCloseFilterPopup = () => setFilterMode(FilterMode.none)
 
   return (
     <IonPage>
@@ -110,21 +111,16 @@ export const StuffTalentPage: React.FC = () => {
           </div>
         </IonToolbar>
 
-        <div className='px-container'>
-          <FilterBar
-            filters={[
-              { name: FilterMode.category, length: filter.categories.length },
-              { name: FilterMode.type, length: filter.types.length + filter.notStatuses.length },
-            ]}
-            onReset={() => {
-              setFilter(initialFilter)
-              setFilterMode(FilterMode.none)
-            }}
-            onClick={(name: string) => {
-              setFilterMode(filterMode === name ? FilterMode.none : name)
-            }}
-          />
-        </div>
+        <FilterBar
+          filters={[
+            { name: FilterMode.category, length: filter.categories.length },
+            { name: FilterMode.type, length: filter.types.length + filter.notStatuses.length },
+          ]}
+          onReset={onResetFilter}
+          onClick={(name: string) => {
+            setFilterMode(filterMode === name ? FilterMode.none : name)
+          }}
+        />
       </IonHeader>
 
       <FilterPopup
