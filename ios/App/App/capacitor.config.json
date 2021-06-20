@@ -1,0 +1,8 @@
+{
+	"appId": "com.mocomoco.hama",
+	"appName": "hama",
+	"bundledWebRuntime": false,
+	"npmClient": "yarn",
+	"webDir": "build",
+	"cordova": {}
+}

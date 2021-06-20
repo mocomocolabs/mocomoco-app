@@ -1189,6 +1189,11 @@
   dependencies:
     tslib "^2.1.0"
 
+"@capacitor/ios@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/@capacitor/ios/-/ios-3.0.1.tgz#189ec4f473424b6435528f7cd68b545b79f1acc0"
+  integrity sha512-g0xQgiGu0MyHl/17tEiMJUAL6sTj76pu3gtqY5wWGLAfTDRodDz2WjmV6i8OQvfrR69IWfdqEvKaFz7MCeHajg==
+
 "@capacitor/storage@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@capacitor/storage/-/storage-1.0.1.tgz#5a2ff67e0dc05e6c2c912124bfce3394950089b6"
