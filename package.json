@@ -51,6 +51,7 @@
     "type-fest": "^1.2.1"
   },
   "dependencies": {
+    "@capacitor/android": "^3.0.1",
     "@capacitor/core": "^3.0.1",
     "@capacitor/storage": "^1.0.1",
     "@ionic/react": "^5.6.10",
