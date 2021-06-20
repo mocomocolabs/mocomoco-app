@@ -34,9 +34,9 @@ const createChatMessages = (count) =>
   _.times(count, (num) => ({
     id: num,
     roomId: num,
-    user: users.getUsers()[faker.random.number(users.getUsers().length - 1) % users.getUsers().length],
-    message: messages[faker.random.number(messages.length - 1) % messages.length],
-    createdAt: createdAts[faker.random.number(createdAts.length - 1)],
+    user: users.getUsers()[faker.datatype.number(users.getUsers().length - 1) % users.getUsers().length],
+    message: messages[faker.datatype.number(messages.length - 1) % messages.length],
+    createdAt: createdAts[faker.datatype.number(createdAts.length - 1)],
   }))
 
 const createChatRooms = (count) =>
@@ -46,15 +46,15 @@ const createChatRooms = (count) =>
     recentMessage: {
       id: num,
       roomId: num,
-      user: users.getUsers()[faker.random.number(users.getUsers().length - 1) % users.getUsers().length],
-      message: messages[faker.random.number(messages.length - 1) % messages.length],
-      createdAt: createdAts[faker.random.number(createdAts.length - 1)],
+      user: users.getUsers()[faker.datatype.number(users.getUsers().length - 1) % users.getUsers().length],
+      message: messages[faker.datatype.number(messages.length - 1) % messages.length],
+      createdAt: createdAts[faker.datatype.number(createdAts.length - 1)],
     },
-    unreadCount: faker.random.number(19),
+    unreadCount: faker.datatype.number(19),
   }))
 
 module.exports = {
-  chatRooms: createChatRooms(faker.random.number(10)),
-  chatMessages: createChatMessages(faker.random.number(19)),
+  chatRooms: createChatRooms(faker.datatype.number(10)),
+  chatMessages: createChatMessages(faker.datatype.number(19)),
   createChatMessages,
 }

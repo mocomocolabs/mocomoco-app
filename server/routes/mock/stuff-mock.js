@@ -61,7 +61,7 @@ const createdAts = ['3일전', '2일전', '어제', '16시간 전', '2시간전'
 const createImageUrls = (count) => {
   const imgUrls = []
   for (let i = 0; i <= count; i++) {
-    imgUrls.push(contentImgUrls[faker.random.number(contentImgUrls.length - 1)])
+    imgUrls.push(contentImgUrls[faker.datatype.number(contentImgUrls.length - 1)])
   }
 
   return imgUrls
@@ -74,16 +74,16 @@ const createStuffs = (count) =>
     status: ['AVAILABLE', 'RESERVED', 'FINISH'][num % 3],
     category: {
       id: num,
-      name: categories[faker.random.number(categories.length - 1)],
+      name: categories[faker.datatype.number(categories.length - 1)],
     },
-    user: users.getUsers()[faker.random.number(users.getUsers().length - 1)],
+    user: users.getUsers()[faker.datatype.number(users.getUsers().length - 1)],
     title: titles[num % titles.length],
     content: contents[num % contents.length],
     price: prices[num % prices.length],
-    imageUrls: createImageUrls(faker.random.number(contentImgUrls.length - 1)),
-    likeCount: faker.random.number(20),
+    imageUrls: createImageUrls(faker.datatype.number(contentImgUrls.length - 1)),
+    likeCount: faker.datatype.number(20),
     likeProflieUrls: profileUrls,
-    chatCount: faker.random.number(10),
+    chatCount: faker.datatype.number(10),
     publicOpen: [true, false][num % 2],
     createdAt: createdAts[num % createdAts.length],
   }))
