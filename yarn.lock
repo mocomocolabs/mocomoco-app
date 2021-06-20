@@ -1155,7 +1155,7 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@capacitor/cli@3.0.1":
+"@capacitor/cli@^3.0.1":
   version "3.0.1"
   resolved "https://registry.npmjs.org/@capacitor/cli/-/cli-3.0.1.tgz#54f47962ca03662ffb874145a801900b8f72c9e5"
   integrity sha512-OIzpWgtpg0wshdS60Fz6QgXfsYqnWSfQx/9/bmp0eiiKgvtOJa9QmdfFAaGI2BRVoOyiulTMLetSvOAkuTJBPA==
@@ -1177,7 +1177,7 @@
     tslib "^2.1.0"
     xml2js "^0.4.23"
 
-"@capacitor/core@3.0.1":
+"@capacitor/core@^3.0.1":
   version "3.0.1"
   resolved "https://registry.npmjs.org/@capacitor/core/-/core-3.0.1.tgz#9e4498034b9e23ac7f3fcfd395fe79185c5d7779"
   integrity sha512-17iFkpICdOdTqfbKh3oXFYbwXn9dSxLe85PWeptXSW5jkiHN/YhI+iedRpcukv1QXkR1P629B+7kDqBcrzKL9w==
