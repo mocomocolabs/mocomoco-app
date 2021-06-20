@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "frontend",
+  "appId": "com.mocomoco.hama",
+  "appName": "hama",
   "bundledWebRuntime": false,
   "npmClient": "yarn",
   "webDir": "build",
