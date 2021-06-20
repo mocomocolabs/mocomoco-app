@@ -1,8 +1,7 @@
-import { Plugins } from '@capacitor/core'
+import { Storage } from '@capacitor/storage'
 import { config } from '../config'
 import { IStoreChatRoom } from '../models/chat'
 import { decrypt, encrypt } from '../utils/encrypt-util'
-const { Storage } = Plugins
 
 class StorageService {
   private _communityId: number | null = 0

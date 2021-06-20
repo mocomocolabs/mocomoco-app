@@ -61,11 +61,11 @@ const createComments = (count) =>
     id: num,
     user: {
       id: num,
-      nickname: names[faker.random.number(names.length - 1)],
-      profileUrl: profileUrls[faker.random.number(profileUrls.length)],
+      nickname: names[faker.datatype.number(names.length - 1)],
+      profileUrl: profileUrls[faker.datatype.number(profileUrls.length)],
     },
-    content: titles[faker.random.number(titles.length - 1)],
-    createdAt: createdAts[faker.random.number(createdAts.length - 1)],
+    content: titles[faker.datatype.number(titles.length - 1)],
+    createdAt: createdAts[faker.datatype.number(createdAts.length - 1)],
   }))
 
 const createFeeds = (count) =>
@@ -74,23 +74,23 @@ const createFeeds = (count) =>
     type: ['SCHEDULE', 'NORMAL'][num % 2],
     user: {
       id: num,
-      nickname: names[faker.random.number(names.length - 1)],
-      profileUrl: profileUrls[faker.random.number(profileUrls.length - 1)],
+      nickname: names[faker.datatype.number(names.length - 1)],
+      profileUrl: profileUrls[faker.datatype.number(profileUrls.length - 1)],
     },
     title: titles[num % contents.length],
     content: contents[num % contents.length],
     scheduleDate: ['2020-12-18 18:00', ''][num % 2],
     scheduleTitle: '준호네집 집들이겸 파자마 파티 합니다!',
     imageUrls: contentImgUrls,
-    commentCount: faker.random.number(50),
-    likeCount: faker.random.number(20),
+    commentCount: faker.datatype.number(50),
+    likeCount: faker.datatype.number(20),
     likeProflieUrls: profileUrls,
-    comments: createComments(faker.random.number(20)),
+    comments: createComments(faker.datatype.number(20)),
     createdAt: createdAts[num % createdAts.length],
     isPublic: count % 2 ? true : false,
   }))
 
 module.exports = {
   feeds: createFeeds(20),
-  feed: createFeeds(20)[faker.random.number(19)],
+  feed: createFeeds(20)[faker.datatype.number(19)],
 }
