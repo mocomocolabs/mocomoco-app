@@ -1,5 +1,5 @@
-import { IonContent, IonFooter, IonPage, useIonViewWillEnter } from '@ionic/react'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { IonContent, IonFooter, IonPage, useIonViewWillEnter, useIonViewWillLeave } from '@ionic/react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation } from 'react-router-dom'
 import { Checkbox } from '../components/atoms/CheckboxComponent'
@@ -10,16 +10,12 @@ import { Radio } from '../components/atoms/RadioComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
+import { CategorySelector } from '../components/molecules/CategorySelectorComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { IRadioItem } from '../models/radio.d'
-import {
-  IStuffTalentForm,
-  StuffTalentMethod,
-  StuffTalentStatus,
-  StuffTalentType,
-} from '../models/stufftalent.d'
+import { IStuffTalentForm, StuffTalentMethod, StuffTalentType } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
 import { executeWithError } from '../utils/http-helper-util'
 
@@ -64,12 +60,13 @@ export const StuffTalentFormPage: React.FC = () => {
     handleSubmit,
     getValues,
     setValue,
-    reset,
     watch,
   } = useForm<IStuffTalentForm>({
     mode: 'onChange',
+    defaultValues: { ...store.form, communityId: $community.selectedId },
   })
 
+  const watchCategoryId = watch('categoryId', store.form.categoryId)
   const watchType = watch('type', store.form.type)
   const watchMethod = watch('method', store.form.method)
   const watchPrice = watch('price', store.form.price)
@@ -96,11 +93,13 @@ export const StuffTalentFormPage: React.FC = () => {
     return isValid && isValidMethod
   }, [isValid, watchMethod, watchPrice, watchExchangeText])
 
-  const onSubmit = handleSubmit(async (form) => {
-    store.setForm(form)
-    executeWithError(async () => {
-      await store.insertItem(getValues())
+  const isSubmitCompleted = useRef(false)
 
+  const onSubmit = handleSubmit(async (form) => {
+    executeWithError(async () => {
+      await store.insertItem(form)
+
+      isSubmitCompleted.current = true
       routeList()
     })
   })
@@ -109,33 +108,20 @@ export const StuffTalentFormPage: React.FC = () => {
     $ui.setIsBottomTab(false)
   })
 
-  useEffect(
-    () => {
-      // react-hook-form의 dirtyFields가 정상적으로 동작하려면,
-      // 제공하는 api를 이용해서 default value 값들을 설정해 줘야 함.
-      // 1. useForm 호출 시 defaultValues 프로퍼티 설정하거나,
-      // 2. reset() 호출해서 default value를 재설정하기
-      //
-      // 이렇게 하지 않고, input 필드에 직접 defaultValue를 지정할 경우에는
-      // 필드를 한 번 클릭만 해도 dirtyFields에 포함되며, 다시 원래 값으로 돌려놔도
-      // dirtyFields에서 제외되지 않고 계속 남아 있음.
-      reset(
-        { ...store.form, communityId: $community.selectedId, status: StuffTalentStatus.AVAILABLE },
-        { keepDefaultValues: false }
-      )
+  useIonViewWillLeave(() => {
+    // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
+    if (isSubmitCompleted.current) return
 
-      return () => {
-        // TODO 임시저장할 조건 확인 필요
-        const [title, content, images] = getValues(['title', 'content', 'images'])
+    store.resetForm()
 
-        if (title || content || images?.length) {
-          store.setForm(getValues())
-        }
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+    // TODO 임시저장할 조건 확인 필요
+    const [title, content, images] = getValues(['title', 'content', 'images'])
+
+    if (title || content || images?.length) {
+      store.setForm(getValues())
+      console.log('cleanup', '임시저장 완료')
+    }
+  })
 
   return (
     <IonPage>
@@ -162,8 +148,7 @@ export const StuffTalentFormPage: React.FC = () => {
             <input type='hidden' {...register('type', { required: true })} />
             <input type='hidden' {...register('method', { required: true })} />
             <input type='hidden' {...register('images', { required: false })} />
-            {/* TODO category 선택화면 구현 후 required: true로 설정하기 */}
-            <input hidden={true} {...register('categoryId', { required: false })} />
+            <input type='hidden' {...register('categoryId', { required: true })} />
 
             <ImageUploader
               className='mb-6'
@@ -181,15 +166,14 @@ export const StuffTalentFormPage: React.FC = () => {
               ></Radio>
             </div>
             <Pad className='h-5'></Pad>
-            <button
-              className='w-full px-4 mb-4 py-3 br-base border-gray bg-white text-left text-sm'
-              type='button'
-              onClick={() => {
-                // TODO show category popup
+            <CategorySelector
+              categories={store.categories}
+              selectedId={watchCategoryId}
+              onSelect={(id: number) => {
+                setValueCustom('categoryId', id)
               }}
-            >
-              카테고리 선택
-            </button>
+            />
+
             <InputNormal placeholder='제목' register={register('title', { required: true })}></InputNormal>
             <div className='flex-between-center'>
               <Radio
