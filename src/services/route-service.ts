@@ -49,8 +49,24 @@ class RouteService {
     this.history.push(`/feed/${feedId}`, { autoFocus: param?.autoFocus })
   }
 
+  stuff() {
+    this.history.push('/stuff')
+  }
+
+  stuffForm() {
+    this.history.push('/stuff-form')
+  }
+
   stuffDetail(stuffId: number) {
     this.history.push(`/stuff/${stuffId}`)
+  }
+
+  talent() {
+    this.history.push('/talent')
+  }
+
+  talentForm() {
+    this.history.push('/talent-form')
   }
 
   talentDetail(talentId: number) {

@@ -1,11 +1,15 @@
+import { Task } from 'mobx-task'
 import { IUser } from '../models/user.d'
 import {
+  IStuffTalentForm,
   StuffTalentMethod as Method,
   StuffTalentPathName as PathName,
   StuffTalentStatus as Status,
   StuffTalentType as Type,
 } from './../models/stufftalent.d'
 import { IFileDto } from './common/file.d'
+
+export type InsertStuffTalentTask = Task<[Partial<IStuffTalentForm>], void>
 
 interface IStuffTalentDtoBase {
   id: number
