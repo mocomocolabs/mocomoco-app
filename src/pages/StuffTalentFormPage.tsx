@@ -125,7 +125,12 @@ export const StuffTalentFormPage: React.FC = () => {
       )
 
       return () => {
-        // store.setForm(getValues()) // TODO 페이지 떠날 때 임시저장할 것인가?
+        // TODO 임시저장할 조건 확인 필요
+        const [title, content, images] = getValues(['title', 'content', 'images'])
+
+        if (title || content || images?.length) {
+          store.setForm(getValues())
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

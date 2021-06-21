@@ -97,7 +97,29 @@ export const StuffTalentPage: React.FC = () => {
             </div>
             <div slot='end'>
               <IonIcon icon={filterIcon} size='large' />
-              <IonIcon icon={create} size='large' onClick={routeForm} />
+              <IonIcon
+                icon={create}
+                size='large'
+                onClick={() => {
+                  const isWriting = store.form.title || store.form.content || store.form.images?.length
+
+                  if (isWriting) {
+                    return $ui.showAlert({
+                      isOpen: true,
+                      message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
+                      onSuccess() {
+                        routeForm()
+                      },
+                      onFail() {
+                        store.resetForm()
+                        routeForm()
+                      },
+                    })
+                  }
+
+                  routeForm()
+                }}
+              />
               <IonIcon icon={searchIcon} size='large' onClick={() => setSearchMode(true)} />
             </div>
           </div>
