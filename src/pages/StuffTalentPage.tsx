@@ -18,6 +18,7 @@ import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
 import { IStuffTalentFilter, StuffTalentType } from '../models/stufftalent.d'
+import { route } from '../services/route-service'
 
 interface SearchbarChangeEventDetail {
   value: string | undefined
@@ -34,6 +35,9 @@ export const StuffTalentPage: React.FC = () => {
 
   // TODO 경로명 하드코딩하지 않기
   const store = pathname === '/stuff' ? $stuff : $talent
+  const routeForm = () => {
+    pathname === '/stuff' ? route.stuffForm() : route.talentForm()
+  }
 
   const [searchMode, setSearchMode] = useState(false)
   const [search, setSearch] = useState(initialSearch)
@@ -93,7 +97,7 @@ export const StuffTalentPage: React.FC = () => {
             </div>
             <div slot='end'>
               <IonIcon icon={filterIcon} size='large' />
-              <IonIcon icon={create} size='large' />
+              <IonIcon icon={create} size='large' onClick={routeForm} />
               <IonIcon icon={searchIcon} size='large' onClick={() => setSearchMode(true)} />
             </div>
           </div>

@@ -165,9 +165,10 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
               onClick={() => uploader.current?.click()}
             ></Icon>
             <Checkbox
+              name='isPublic'
               label='전체 공개'
-              onClick={() => $feed.setForm({ isPublic: $feed.form.isPublic })}
-              checked={$feed.form.isPublic}
+              defaultChecked={$feed.form.isPublic}
+              onChange={(checked) => $feed.setForm({ isPublic: checked })}
             ></Checkbox>
           </div>
         </IonFooter>

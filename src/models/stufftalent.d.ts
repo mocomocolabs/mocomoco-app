@@ -1,3 +1,4 @@
+import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IStuffTalentDto } from '../stores/stufftalent-store.d'
 
 export enum StuffTalentPathName {
@@ -31,4 +32,21 @@ export interface IStuffTalentFilter {
   categories: number[]
   notStatuses: StuffTalentStatus[]
   types: StuffTalentType[]
+}
+
+export interface IStuffTalentForm {
+  id?: number
+  communityId: number
+  status: StuffTalentStatus
+  type: StuffTalentType
+  categoryId: number
+  title: string
+  content: string
+  method: StuffTalentMethod
+  price?: number
+  exchangeText?: string
+  isExchangeable: boolean
+  isNegotiable: boolean
+  isPublic: boolean
+  images: ImageUploadItem[]
 }

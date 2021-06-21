@@ -106,9 +106,12 @@ export const ClubFormPage: React.FC = () => {
             onClick={() => uploader.current?.click()}
           ></Icon>
           <Checkbox
+            name='isPublic'
             label='전체 공개'
-            onClick={() => $club.setForm({ isPublic: !$club.form.isPublic })}
-            checked={$club.form.isPublic!}
+            defaultChecked={$club.form.isPublic!}
+            onChange={(checked) => $club.setForm({ isPublic: checked })}
+            required={true}
+            register={register}
           ></Checkbox>
         </div>
       </IonFooter>

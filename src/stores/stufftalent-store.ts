@@ -1,15 +1,20 @@
 import { AxiosRequestConfig } from 'axios'
+import _ from 'lodash'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import {
   IStuffTalent,
   IStuffTalentFilter,
+  IStuffTalentForm,
   StuffTalentPathName as PathName,
   StuffTalentStatus,
   StuffTalentType,
 } from '../models/stufftalent.d'
 import { api } from '../services/api-service'
+import { urlToFile } from '../utils/image-util'
 import {
+  InsertStuffTalentTask,
   IStuffsTalentsDto,
   IStuffTalentCategoryDto,
   IStuffTalentDto,
@@ -26,12 +31,19 @@ const initState = {
   items: [],
   item: {} as IStuffTalent,
   categories: [] as IStuffTalentCategoryDto[],
+  form: {
+    images: [] as ImageUploadItem[],
+    isExchangeable: false,
+    isNegotiable: false,
+    isPublic: false,
+  } as IStuffTalentForm,
 }
 
 export class StuffTalentStore {
   @observable.struct items: IStuffTalent[] = initState.items
   @observable.struct item: IStuffTalent = initState.item
   @observable.struct categories: IStuffTalentCategoryDto[] = initState.categories
+  @observable.struct form: IStuffTalentForm = initState.form
 
   readonly statuses: StuffTalentStatus[] = Object.values(StuffTalentStatus)
   readonly types: StuffTalentType[] = Object.values(StuffTalentType)
@@ -119,4 +131,82 @@ export class StuffTalentStore {
   deleteItem = (async (id: number) => {
     await api.patch(`${this.url}/${id}/is-use`) // WARN this is toggle
   }) as TaskBy<number>
+
+  @task.resolved
+  insertItem = (async (form: IStuffTalentForm) => {
+    console.log(
+      '[[[[[[[[ insertItem ]]]]]]]: ',
+      'path',
+      this.pathName,
+      'form',
+      form,
+      'categoryId',
+      form.categoryId,
+      typeof form.categoryId
+    )
+
+    const formData = new FormData()
+
+    formData.append(
+      `${_.lowerCase(this.pathName)}ReqDto`,
+      new Blob(
+        [
+          JSON.stringify({
+            communityId: form.communityId,
+            status: form.status,
+            type: form.type,
+            categoryId: 1, // form.categoryId
+            title: form.title,
+            content: form.content,
+            method: form.method,
+            price: form.price,
+            exchangeText: form.exchangeText,
+            isExchangable: form.isExchangeable,
+            isNegotiable: form.isNegotiable,
+            isPublic: form.isPublic,
+          }),
+        ],
+        {
+          type: 'application/json',
+        }
+      )
+    )
+
+    console.log('[[[[[[[[ insertItem2 ]]]]]]]', formData)
+
+    if (form.images.length === 0) {
+      // TODO: empty image 추가
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      form.images = [(await urlToFile('/assets/img/stuff/stuff01.jpg')) as any]
+    }
+
+    form.images?.forEach((v) => {
+      formData.append('files', v)
+    })
+
+    console.log('[[[[[[[[ insertItem3 ]]]]]]]', formData)
+    await api.post(this.url, formData)
+    this.resetForm()
+  }) as InsertStuffTalentTask
+
+  @action
+  setForm(data: Partial<IStuffTalentForm>) {
+    this.form = {
+      ...this.form,
+      ...data,
+    }
+  }
+
+  @action
+  setFormImage(images: ImageUploadItem[]) {
+    this.form = {
+      ...this.form,
+      images,
+    }
+  }
+
+  @action
+  resetForm() {
+    this.form = initState.form
+  }
 }
