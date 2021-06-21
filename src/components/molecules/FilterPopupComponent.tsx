@@ -1,12 +1,9 @@
 import { IonBackdrop } from '@ionic/react'
 
-// TODO any를 사용하지 않을 방법 찾아보자
 interface IFilterInfo {
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   filter: (number | string)[]
   items: [id: number | string, name: string][]
   onSelect: ([]) => void
-  /* eslint-enable */
 }
 
 interface IFilterPopup {

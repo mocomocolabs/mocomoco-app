@@ -32,10 +32,11 @@ const initState = {
   item: {} as IStuffTalent,
   categories: [] as IStuffTalentCategoryDto[],
   form: {
-    images: [] as ImageUploadItem[],
+    status: StuffTalentStatus.AVAILABLE,
     isExchangeable: false,
     isNegotiable: false,
     isPublic: false,
+    images: [] as ImageUploadItem[],
   } as IStuffTalentForm,
 }
 
@@ -134,17 +135,6 @@ export class StuffTalentStore {
 
   @task.resolved
   insertItem = (async (form: IStuffTalentForm) => {
-    console.log(
-      '[[[[[[[[ insertItem ]]]]]]]: ',
-      'path',
-      this.pathName,
-      'form',
-      form,
-      'categoryId',
-      form.categoryId,
-      typeof form.categoryId
-    )
-
     const formData = new FormData()
 
     formData.append(
@@ -155,7 +145,7 @@ export class StuffTalentStore {
             communityId: form.communityId,
             status: form.status,
             type: form.type,
-            categoryId: 1, // form.categoryId
+            categoryId: form.categoryId,
             title: form.title,
             content: form.content,
             method: form.method,
@@ -172,8 +162,6 @@ export class StuffTalentStore {
       )
     )
 
-    console.log('[[[[[[[[ insertItem2 ]]]]]]]', formData)
-
     if (form.images.length === 0) {
       // TODO: empty image 추가
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -184,7 +172,6 @@ export class StuffTalentStore {
       formData.append('files', v)
     })
 
-    console.log('[[[[[[[[ insertItem3 ]]]]]]]', formData)
     await api.post(this.url, formData)
     this.resetForm()
   }) as InsertStuffTalentTask
