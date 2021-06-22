@@ -17,7 +17,8 @@ import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
-import { IStuffTalentFilter, StuffTalentType } from '../models/stufftalent.d'
+import { typeLabels } from '../models/stufftalent'
+import { IStuffTalentFilter, StuffTalentStatus } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
 
 interface SearchbarChangeEventDetail {
@@ -154,7 +155,7 @@ export const StuffTalentPage: React.FC = () => {
         filterInfos={[
           {
             filter: filter.categories,
-            items: store.categories.map((c) => [c.id, c.name]),
+            items: store.categories.map((c) => ({ value: c.id, label: c.name })),
             onSelect: (newFilter) => setFilter({ ...filter, categories: newFilter }),
           },
         ]}
@@ -166,15 +167,12 @@ export const StuffTalentPage: React.FC = () => {
         filterInfos={[
           {
             filter: filter.types,
-            items: [
-              [StuffTalentType.GIVE, '팔아요'],
-              [StuffTalentType.TAKE, '구해요'],
-            ],
+            items: typeLabels,
             onSelect: (newFilter) => setFilter({ ...filter, types: newFilter }),
           },
           {
             filter: filter.notStatuses,
-            items: [['FINISH', '거래완료 안보기']],
+            items: [{ value: StuffTalentStatus.FINISH, label: '거래완료 안보기' }],
             onSelect: (newFilter) => setFilter({ ...filter, notStatuses: newFilter }),
           },
         ]}

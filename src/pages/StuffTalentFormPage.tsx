@@ -1,5 +1,5 @@
 import { IonContent, IonFooter, IonPage, useIonViewWillEnter, useIonViewWillLeave } from '@ionic/react'
-import React, { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation } from 'react-router-dom'
 import { Checkbox } from '../components/atoms/CheckboxComponent'
@@ -14,36 +14,10 @@ import { CategorySelector } from '../components/molecules/CategorySelectorCompon
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
-import { IRadioItem } from '../models/radio.d'
-import { IStuffTalentForm, StuffTalentMethod, StuffTalentType } from '../models/stufftalent.d'
+import { typeLabels } from '../models/stufftalent'
+import { IStuffTalentForm, StuffTalentType } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
 import { executeWithError } from '../utils/http-helper-util'
-
-const types: IRadioItem[] = [
-  {
-    label: '팔아요',
-    value: StuffTalentType.GIVE,
-  },
-  {
-    label: '구해요',
-    value: StuffTalentType.TAKE,
-  },
-]
-
-const methods: IRadioItem[] = [
-  {
-    label: '판매', // TODO 구해요 이면, 구매?
-    value: StuffTalentMethod.SELL,
-  },
-  {
-    label: '나눔',
-    value: StuffTalentMethod.FREE,
-  },
-  {
-    label: '교환',
-    value: StuffTalentMethod.EXCHANGE,
-  },
-]
 
 export const StuffTalentFormPage: React.FC = () => {
   const { $ui, $stuff, $talent, $community } = useStore()
@@ -66,12 +40,11 @@ export const StuffTalentFormPage: React.FC = () => {
     defaultValues: { ...store.form, communityId: $community.selectedId },
   })
 
-  const watchCategoryId = watch('categoryId', store.form.categoryId)
-  const watchType = watch('type', store.form.type)
-  const watchMethod = watch('method', store.form.method)
-  const watchPrice = watch('price', store.form.price)
-  const watchExchangeText = watch('exchangeText', store.form.exchangeText)
-  const watchImages = watch('images', store.form.images)
+  const watchCategoryId = watch('categoryId')
+  const watchType = watch('type')
+  const watchPrice = watch('price')
+  const watchExchangeText = watch('exchangeText')
+  const watchImages = watch('images')
 
   const uploader = useRef<IImageUploaderRef>()
 
@@ -85,13 +58,15 @@ export const StuffTalentFormPage: React.FC = () => {
 
   // TODO: 수정 모드인 경우, 데이터 변경이 있을 때만 완료 버튼 활성화되도록 조건 추가 필요. dirtyFields 활용해야 할 듯
   const submittable = useMemo(() => {
-    const isValidMethod =
-      watchMethod === StuffTalentMethod.FREE ||
-      (watchMethod === StuffTalentMethod.SELL && watchPrice && watchPrice >= 0) ||
-      (watchMethod === StuffTalentMethod.EXCHANGE && watchExchangeText && watchExchangeText.length > 0)
+    const isValidType =
+      watchType === StuffTalentType.SELL
+        ? !!watchPrice && watchPrice > 0
+        : watchType === StuffTalentType.EXCHANGE
+        ? !!watchExchangeText
+        : !!watchType
 
-    return isValid && isValidMethod
-  }, [isValid, watchMethod, watchPrice, watchExchangeText])
+    return isValid && isValidType
+  }, [isValid, watchType, watchPrice, watchExchangeText])
 
   const isSubmitCompleted = useRef(false)
 
@@ -123,6 +98,21 @@ export const StuffTalentFormPage: React.FC = () => {
     }
   })
 
+  useEffect(
+    () => {
+      if (watchType === StuffTalentType.SHARE || watchType === StuffTalentType.WANT) {
+        setValueCustom('exchangeText', undefined)
+        setValueCustom('price', undefined)
+      } else if (watchType === StuffTalentType.SELL) {
+        setValueCustom('exchangeText', undefined)
+      } else if (watchType === StuffTalentType.EXCHANGE) {
+        setValueCustom('price', undefined)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [watchType]
+  )
+
   return (
     <IonPage>
       <Header>
@@ -146,7 +136,6 @@ export const StuffTalentFormPage: React.FC = () => {
         <div className='px-container py-5'>
           <form id='stufftalent-form' onSubmit={onSubmit}>
             <input type='hidden' {...register('type', { required: true })} />
-            <input type='hidden' {...register('method', { required: true })} />
             <input type='hidden' {...register('images', { required: false })} />
             <input type='hidden' {...register('categoryId', { required: true })} />
 
@@ -156,9 +145,9 @@ export const StuffTalentFormPage: React.FC = () => {
               setImages={(param) => setValueCustom('images', param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
-            <div className='flex-between-center'>
+            <div className='w-full'>
               <Radio
-                items={types}
+                items={typeLabels}
                 selected={watchType ?? ''}
                 setSelected={(type) => {
                   setValueCustom('type', type as StuffTalentType)
@@ -175,24 +164,14 @@ export const StuffTalentFormPage: React.FC = () => {
             />
 
             <InputNormal placeholder='제목' register={register('title', { required: true })}></InputNormal>
-            <div className='flex-between-center'>
-              <Radio
-                items={methods}
-                selected={watchMethod ?? ''}
-                setSelected={(method) => {
-                  setValueCustom('method', method as StuffTalentMethod)
-                }}
-              ></Radio>
-            </div>
-            <Pad className='h-5'></Pad>
             <InputNormal
-              hidden={watchMethod !== StuffTalentMethod.SELL}
+              hidden={watchType !== StuffTalentType.SELL}
               type='number'
               placeholder='원하시는 가격을 적어주세요'
               register={register('price')}
             ></InputNormal>
             <InputNormal
-              hidden={watchMethod !== StuffTalentMethod.EXCHANGE}
+              hidden={watchType !== StuffTalentType.EXCHANGE}
               placeholder='무엇과 교환하고 싶으신가요?'
               register={register('exchangeText')}
             ></InputNormal>

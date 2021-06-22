@@ -2,7 +2,6 @@ import { Task } from 'mobx-task'
 import { IUser } from '../models/user.d'
 import {
   IStuffTalentForm,
-  StuffTalentMethod as Method,
   StuffTalentPathName as PathName,
   StuffTalentStatus as Status,
   StuffTalentType as Type,
@@ -15,21 +14,31 @@ interface IStuffTalentDtoBase {
   id: number
   type: Type
   status: Status
-  method: Method
   category: IStuffTalentCategoryDto
   user: IUser
   title: string
   content: string
-  price: number // TODO: need a string type
+  price: number
+  exchangeText: string
+  isLike: boolean
+  isExchangeable: boolean
+  isNegotiable: boolean
   isPublic: boolean
   createdAt: string
   atchFiles: IFileDto[]
   isUse: boolean
 }
 
+export interface IStuffTalentLikeUserDto {
+  id: number
+  isLike: boolean
+  user: IUser[]
+  isUse: boolean
+}
+
 export interface IStuffTalentDto extends IStuffTalentDtoBase {
-  stuffUsers: IUser[]
-  talentUsers: IUser[]
+  stuffUsers: IStuffTalentLikeUserDto[]
+  talentUsers: IStuffTalentLikeUserDto[]
 }
 
 export interface IStuffsTalentsDto {
