@@ -110,7 +110,6 @@ export const ClubFormPage: React.FC = () => {
             label='전체 공개'
             defaultChecked={$club.form.isPublic!}
             onChange={(checked) => $club.setForm({ isPublic: checked })}
-            required={true}
             register={register}
           ></Checkbox>
         </div>
