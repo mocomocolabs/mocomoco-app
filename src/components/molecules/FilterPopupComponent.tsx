@@ -2,7 +2,7 @@ import { IonBackdrop } from '@ionic/react'
 
 interface IFilterInfo {
   filter: (number | string)[]
-  items: [id: number | string, name: string][]
+  items: { value: number | string; label: string }[]
   onSelect: ([]) => void
 }
 
@@ -16,15 +16,15 @@ export const FilterPopup: React.FC<IFilterPopup> = ({ show, filterInfos, onClose
   <div className='justify-around' hidden={!show}>
     <div className='absolute z-10 w-full bg-white'>
       {filterInfos.map(({ filter, items, onSelect }) =>
-        items.map(([key, name]) => (
+        items.map(({ value, label }) => (
           <div
-            key={key}
+            key={value}
             onClick={() => {
-              onSelect(filter.includes(key) ? filter.filter((v) => v !== key) : filter.concat(key))
+              onSelect(filter.includes(value) ? filter.filter((v) => v !== value) : filter.concat(value))
             }}
           >
-            {name}
-            {filter.includes(key) ? ' V' : ''}
+            {label}
+            {filter.includes(value) ? ' V' : ''}
           </div>
         ))
       )}

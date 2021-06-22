@@ -1,11 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { chatbox, cloud } from 'ionicons/icons'
-import {
-  IStuffTalent,
-  StuffTalentPathName as Path,
-  StuffTalentStatus as Status,
-  StuffTalentType as Type,
-} from '../../models/stufftalent.d'
+import { getLabel, statusLabels, typeLabels } from '../../models/stufftalent'
+import { IStuffTalent, StuffTalentPathName as Path } from '../../models/stufftalent.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
@@ -20,23 +16,9 @@ interface IStuffTalentIItem {
   onDelete: (id: number) => void
 }
 
-const TypeLabel = {
-  [Type.GIVE]: '팔아요',
-  [Type.TAKE]: '구해요',
-}
-
-const StatusLabel = {
-  [Status.AVAILABLE]: '판매중',
-  [Status.RESERVED]: '예약중',
-  [Status.FINISH]: '거래완료',
-}
-
 export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ loginUserId, path, item, onDelete }) => {
-  const routeDetail = path === Path.STUFF ? route.stuffDetail : route.talentDetail
-
-  const getItemLikeCount = (item: IStuffTalent) => {
-    return item.stuffUsers ? item.stuffUsers.length : item.talentUsers.length
-  }
+  const routeDetail =
+    path === Path.STUFF ? (id: number) => route.stuffDetail(id) : (id: number) => route.talentDetail(id)
 
   return (
     <li className='py-4'>
@@ -46,11 +28,11 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ loginUserId, path
 
           <div className='flex-col flex-1'>
             <TextBase>
-              [{StatusLabel[item.status]}] {item.title}
+              [{getLabel(statusLabels, item.status)}] {item.title}
             </TextBase>
             <TextBase>{item.user.communities.map((community) => community.name).join('/')}</TextBase>
             <TextBase>
-              [{TypeLabel[item.type]}] {item.price}원
+              [{getLabel(typeLabels, item.type)}] {item.price}원
             </TextBase>
           </div>
         </div>
@@ -63,7 +45,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ loginUserId, path
 
           <div className='flex'>
             <IonIcon icon={cloud} className='mr-1'></IonIcon>
-            <TextBase className='dim mr-1'>{getItemLikeCount(item)}</TextBase>
+            <TextBase className='dim mr-1'>{item.likeCount}</TextBase>
             <IonIcon icon={chatbox} className='mr-1'></IonIcon>
             {/* <TextBase className='dim'>{item.chatCount}</TextBase> */}
           </div>

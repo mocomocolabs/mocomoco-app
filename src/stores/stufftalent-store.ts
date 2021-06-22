@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
+import { StuffTalent } from '../models/stufftalent'
 import {
   IStuffTalent,
   IStuffTalentFilter,
@@ -40,6 +41,14 @@ const initState = {
   } as IStuffTalentForm,
 }
 
+// TODO stuff, talent 차이점 모음 => class 분리하자
+/*
+  get data api path: /stuffs, /talents
+  response data name: stuffs, talents
+  like-users property name : stuffUsers, talentUsers
+  insert data file name: stuffReqDto, talentReqDto
+  toggle like api path: stuffs-users/likes, talents-users/likes
+  */
 export class StuffTalentStore {
   @observable.struct items: IStuffTalent[] = initState.items
   @observable.struct item: IStuffTalent = initState.item
@@ -80,7 +89,9 @@ export class StuffTalentStore {
   getItems = (async (search, filter) => {
     await api.get<IStuffsTalentsDto>(this.url, this.config(search, filter)).then(
       action((data) => {
-        this.items = this.pathName === PathName.STUFF ? data.stuffs : data.talents
+        this.items = (this.pathName === PathName.STUFF ? data.stuffs : data.talents).map((item) =>
+          StuffTalent.of(item, this.pathName)
+        )
       })
     )
   }) as TaskBy2<string, IStuffTalentFilter>
@@ -123,7 +134,7 @@ export class StuffTalentStore {
   getItem = (async (id: number) => {
     await api.get<IStuffTalentDto>(`${this.url}/${id}`).then(
       action((data) => {
-        this.item = data
+        this.item = StuffTalent.of(data, this.pathName)
       })
     )
   }) as TaskBy<number>
@@ -148,7 +159,6 @@ export class StuffTalentStore {
             categoryId: form.categoryId,
             title: form.title,
             content: form.content,
-            method: form.method,
             price: form.price,
             exchangeText: form.exchangeText,
             isExchangable: form.isExchangeable,
@@ -164,8 +174,7 @@ export class StuffTalentStore {
 
     if (form.images.length === 0) {
       // TODO: empty image 추가
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      form.images = [(await urlToFile('/assets/img/stuff/stuff01.jpg')) as any]
+      form.images = [(await urlToFile('/assets/img/stuff/stuff01.jpg')) as ImageUploadItem]
     }
 
     form.images?.forEach((v) => {

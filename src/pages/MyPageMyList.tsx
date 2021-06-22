@@ -21,7 +21,8 @@ import { FeedList } from '../components/organisms/FeedListComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
 import { ISegments, SEGMENT_KEYS } from '../models/segment.d'
-import { IStuffTalentFilter, StuffTalentType } from '../models/stufftalent.d'
+import { typeLabels } from '../models/stufftalent'
+import { IStuffTalentFilter, StuffTalentStatus } from '../models/stufftalent.d'
 
 // TODO segment_keys를 stufftalent용으로만 사용하고 있으니, segment.d 파일명을 바꾸던가 해야겠다
 const segments: ISegments = {
@@ -139,15 +140,12 @@ export const MyPageMyList: React.FC = () => {
         filterInfos={[
           {
             filter: filter.types,
-            items: [
-              [StuffTalentType.GIVE, '팔아요'],
-              [StuffTalentType.TAKE, '구해요'],
-            ],
+            items: typeLabels,
             onSelect: (newFilter) => setFilter({ ...filter, types: newFilter }),
           },
           {
             filter: filter.notStatuses,
-            items: [['FINISH', '거래완료 안보기']],
+            items: [{ value: StuffTalentStatus.FINISH, label: '거래완료 안보기' }],
             onSelect: (newFilter) => setFilter({ ...filter, notStatuses: newFilter }),
           },
         ]}
