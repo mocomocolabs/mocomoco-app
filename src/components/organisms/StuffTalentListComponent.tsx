@@ -24,7 +24,7 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
   }, [store, search, filter])
 
   const onEditItem = async (id: number) => {
-    await store.getForm(id)
+    await store.getUpdateForm(id)
 
     // TODO 개선 필요
     store.pathName === StuffTalentPathName.STUFF ? route.stuffForm() : route.talentForm()

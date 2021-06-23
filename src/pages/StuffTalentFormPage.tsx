@@ -28,6 +28,9 @@ export const StuffTalentFormPage: React.FC = () => {
   const title = pathname === '/stuff-form' ? '물건' : '재능'
   const routeList = () => (pathname === '/stuff-form' ? route.stuff() : route.talent())
 
+  const isUpdate = !!store.updateForm.id
+  const form = isUpdate ? store.updateForm : store.form
+
   const {
     formState: { isValid, dirtyFields },
     register,
@@ -37,10 +40,8 @@ export const StuffTalentFormPage: React.FC = () => {
     watch,
   } = useForm<IStuffTalentForm>({
     mode: 'onChange',
-    defaultValues: { ...store.form, communityId: store.form.communityId ?? $community.selectedId },
+    defaultValues: { ...form, communityId: form.communityId ?? $community.selectedId },
   })
-
-  const isUpdate = !!store.form.id
 
   const [watchCategoryId, watchType, watchPrice, watchExchangeText, watchImages] = watch([
     'categoryId',
@@ -91,10 +92,7 @@ export const StuffTalentFormPage: React.FC = () => {
   })
 
   useIonViewWillLeave(() => {
-    // TODO 임시저장된 store.form 데이터가 있을 때, 수정화면에 들어왔다가 나가면 데이터가 지워지는 문제가 있다.
-    // store에서, 임시저장 데이터와 실제 폼에서 사용할 데이터를 분리해야겠다.
-    // 아니면, store.form 은 임시저장용으로만 사용하고, UI 컴포넌트에서 getForm 호출할 때 새로 생성된 form 객체를 리턴받는 것도 좋겠다.
-    store.resetForm()
+    isUpdate ? store.resetUpdateForm() : store.resetForm()
 
     // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
     if (isUpdate || isSubmitCompleted.current) return
@@ -195,12 +193,12 @@ export const StuffTalentFormPage: React.FC = () => {
             <div className='flex-between-center'>
               <Checkbox
                 label='교환 가능'
-                defaultChecked={store.form.isExchangeable}
+                defaultChecked={form.isExchangeable}
                 onChange={(checked) => setValueCustom('isExchangeable', checked)}
               ></Checkbox>
               <Checkbox
                 label='가격제안 가능'
-                defaultChecked={store.form.isNegotiable}
+                defaultChecked={form.isNegotiable}
                 onChange={(checked) => setValueCustom('isNegotiable', checked)}
               ></Checkbox>
             </div>
@@ -223,7 +221,7 @@ export const StuffTalentFormPage: React.FC = () => {
           ></Icon>
           <Checkbox
             label='전체 공개'
-            defaultChecked={store.form.isPublic}
+            defaultChecked={form.isPublic}
             onChange={(checked) => setValueCustom('isPublic', checked)}
           ></Checkbox>
         </div>
