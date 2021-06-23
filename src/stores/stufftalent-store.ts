@@ -60,13 +60,13 @@ export class StuffTalentStore {
   readonly types: StuffTalentType[] = Object.values(StuffTalentType)
 
   readonly url: string
-  readonly categoriesUrl = `/categories`
+  readonly categoriesUrl = `/v1/categories`
 
   readonly pathName: PathName
 
   constructor(pathName: PathName) {
     this.pathName = pathName
-    this.url = `/${paths[pathName]}`
+    this.url = `/v1/${paths[pathName]}`
     this.getCategoriesBy(pathName)
   }
 

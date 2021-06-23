@@ -35,7 +35,7 @@ export class FeedStore {
   @task
   getFeeds = (async () => {
     await api
-      .get<{ feeds: IFeedDto[] }>(`/feeds?community-id=${this.$auth.user.communityId}&is-use=true`)
+      .get<{ feeds: IFeedDto[] }>(`/v1/feeds?community-id=${this.$auth.user.communityId}&is-use=true`)
       .then(
         action((data) => {
           this.feeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
@@ -46,7 +46,7 @@ export class FeedStore {
   @task
   getMyFeeds = (async () => {
     //TODO use query instead of filter
-    await api.get<{ feeds: IFeedDto[] }>('/feeds').then(
+    await api.get<{ feeds: IFeedDto[] }>('/v1/feeds').then(
       action((data) => {
         this.feeds = data.feeds
           .filter((feed) => feed.user.id === this.$auth.user.id)
@@ -57,7 +57,7 @@ export class FeedStore {
 
   @task
   getFeed = (async (id: number) => {
-    await api.get<IFeedDto>(`/feeds/${id}`).then(
+    await api.get<IFeedDto>(`/v1/feeds/${id}`).then(
       action((v) => {
         this.feed = Feed.of(v, this.$auth.user.id)
       })
@@ -66,7 +66,7 @@ export class FeedStore {
 
   @task
   getFeedForm = (async (id: number) => {
-    await api.get<IFeedDto>(`/feeds/${id}`).then(
+    await api.get<IFeedDto>(`/v1/feeds/${id}`).then(
       action(async (data) => {
         console.log(data)
 
@@ -101,7 +101,7 @@ export class FeedStore {
       )
     )
 
-    await api.patch(`/feeds/${id}/is-use`, formData)
+    await api.patch(`/v1/feeds/${id}/is-use`, formData)
   }) as TaskBy<number>
 
   @task.resolved
@@ -137,16 +137,16 @@ export class FeedStore {
     })
 
     if (isUpdate) {
-      await api.put('/feeds', formData)
+      await api.put('/v1/feeds', formData)
     } else {
-      await api.post(`/feeds`, formData)
+      await api.post(`/v1/feeds`, formData)
     }
     this.resetForm()
   }) as SaveFeedTask
 
   @task.resolved
   toggleFeedLike = (async (feedId: number, isLike: boolean) => {
-    await api.post('/feeds-users/likes', { feedId, isLike, isUse: true })
+    await api.post('/v1/feeds-users/likes', { feedId, isLike, isUse: true })
     this.setFeedLike(feedId, isLike)
   }) as TaskBy2<number, boolean>
 

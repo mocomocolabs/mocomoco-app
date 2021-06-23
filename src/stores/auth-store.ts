@@ -6,6 +6,7 @@ import { ISignUpForm } from '../models/sign-up'
 import { api } from '../services/api-service'
 import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
+import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy } from './task'
 
@@ -39,7 +40,7 @@ export class AuthStore {
 
   @task.resolved
   checkEmail = (async (email: string) => {
-    return api.post(`http://localhost:8080/api/sys/users/exists`, { email })
+    return http.post(`/sys/users/exists`, { email })
   }) as TaskBy<string>
 
   @task.resolved
@@ -58,13 +59,13 @@ export class AuthStore {
     // TODO: 제거필요
     param.mobile = '123456789'
 
-    return api.post(`http://localhost:8080/api/auth/sign-up`, param)
+    return http.post(`/auth/sign-up`, param)
   }) as SignUpTask
 
   @task.resolved
   signIn = (async (email: string, password: string) => {
-    await api
-      .post<IAuthUserDto>(`http://localhost:8080/api/auth/sign-in`, {
+    await http
+      .post<IAuthUserDto>(`/auth/sign-in`, {
         email,
         password: inko.ko2en(password),
       })
@@ -83,14 +84,16 @@ export class AuthStore {
       api.setAuthoriationBy(hasToken)
       await storage.setAccessTokenForSync()
       try {
-        await api.get<IAuthUserDto>(`http://localhost:8080/api/auth/account`).then((user) => {
+        await api.get<IAuthUserDto>(`/auth/account`).then((user) => {
           this.setUser(user)
         })
       } catch (e) {
+        console.log()
+
         if (e.status === 405) {
           const refreshToken = await storage.getRefreshToken()
           api.setAuthoriationBy(refreshToken)
-          api.post<IAuthUserDto>(`http://localhost:8080/api/auth/refresh-token`, {}).then((user) => {
+          api.post<IAuthUserDto>(`/auth/refresh-token`, {}).then((user) => {
             this.setAuth(user)
           })
         } else {
