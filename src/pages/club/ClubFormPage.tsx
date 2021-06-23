@@ -37,7 +37,11 @@ export const ClubFormPage: React.FC = () => {
   // => 저는 기본값과 비교해서 수정된 값 있는지 확인하려고 dirtyFields를 활용했는데, 다른 방법이 있을 수도 있겠네요
   // => formState.isValid && Object.keys(formState.dirtyFields).length > 0
   const onSubmit = handleSubmit(async (form) => {
-    $club.setForm(form)
+    $club.setForm({
+      ...form,
+      images: $club.form.images,
+    })
+
     executeWithError(async () => {
       await $club.insertClub({
         ...$club.form,
