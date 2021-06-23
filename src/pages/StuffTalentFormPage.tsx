@@ -29,7 +29,7 @@ export const StuffTalentFormPage: React.FC = () => {
   const routeList = () => (pathname === '/stuff-form' ? route.stuff() : route.talent())
 
   const {
-    formState: { isValid },
+    formState: { isValid, dirtyFields },
     register,
     handleSubmit,
     getValues,
@@ -37,20 +37,24 @@ export const StuffTalentFormPage: React.FC = () => {
     watch,
   } = useForm<IStuffTalentForm>({
     mode: 'onChange',
-    defaultValues: { ...store.form, communityId: $community.selectedId },
+    defaultValues: { ...store.form, communityId: store.form.communityId ?? $community.selectedId },
   })
 
-  const watchCategoryId = watch('categoryId')
-  const watchType = watch('type')
-  const watchPrice = watch('price')
-  const watchExchangeText = watch('exchangeText')
-  const watchImages = watch('images')
+  const isUpdate = !!store.form.id
+
+  const [watchCategoryId, watchType, watchPrice, watchExchangeText, watchImages] = watch([
+    'categoryId',
+    'type',
+    'price',
+    'exchangeText',
+    'images',
+  ])
 
   const uploader = useRef<IImageUploaderRef>()
 
   const setValueCustom = useCallback(
-    (name, value, options?) => {
-      setValue(name, value, { ...options, shouldDirty: true, shouldValidate: true })
+    (name, value) => {
+      setValue(name, value, { shouldDirty: true, shouldValidate: true, shouldTouch: true })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -65,14 +69,17 @@ export const StuffTalentFormPage: React.FC = () => {
         ? !!watchExchangeText
         : !!watchType
 
-    return isValid && isValidType
-  }, [isValid, watchType, watchPrice, watchExchangeText])
+    const isChangedFromDefaultValues = Object.keys(dirtyFields).length > 0
+
+    return isValid && isValidType && isChangedFromDefaultValues
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid, watchType, watchPrice, watchExchangeText, Object.keys(dirtyFields)])
 
   const isSubmitCompleted = useRef(false)
 
   const onSubmit = handleSubmit(async (form) => {
     executeWithError(async () => {
-      await store.insertItem(form)
+      await store.insertItem(form, isUpdate)
 
       isSubmitCompleted.current = true
       routeList()
@@ -84,10 +91,13 @@ export const StuffTalentFormPage: React.FC = () => {
   })
 
   useIonViewWillLeave(() => {
-    // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
-    if (isSubmitCompleted.current) return
-
+    // TODO 임시저장된 store.form 데이터가 있을 때, 수정화면에 들어왔다가 나가면 데이터가 지워지는 문제가 있다.
+    // store에서, 임시저장 데이터와 실제 폼에서 사용할 데이터를 분리해야겠다.
+    // 아니면, store.form 은 임시저장용으로만 사용하고, UI 컴포넌트에서 getForm 호출할 때 새로 생성된 form 객체를 리턴받는 것도 좋겠다.
     store.resetForm()
+
+    // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
+    if (isUpdate || isSubmitCompleted.current) return
 
     // TODO 임시저장할 조건 확인 필요
     const [title, content, images] = getValues(['title', 'content', 'images'])
@@ -100,13 +110,16 @@ export const StuffTalentFormPage: React.FC = () => {
 
   useEffect(
     () => {
+      const [exchangeText, price] = getValues(['exchangeText', 'price'])
+
+      // 불필요한 setValue 호출을 막기 위해 현재 빈 값인 필드는 그냥 둔다.
       if (watchType === StuffTalentType.SHARE || watchType === StuffTalentType.WANT) {
-        setValueCustom('exchangeText', undefined)
-        setValueCustom('price', undefined)
+        !!exchangeText && setValueCustom('exchangeText', undefined)
+        !!price && setValueCustom('price', undefined)
       } else if (watchType === StuffTalentType.SELL) {
-        setValueCustom('exchangeText', undefined)
+        !!exchangeText && setValueCustom('exchangeText', undefined)
       } else if (watchType === StuffTalentType.EXCHANGE) {
-        setValueCustom('price', undefined)
+        !!price && setValueCustom('price', undefined)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,9 +148,13 @@ export const StuffTalentFormPage: React.FC = () => {
       <IonContent>
         <div className='px-container py-5'>
           <form id='stufftalent-form' onSubmit={onSubmit}>
+            <input type='hidden' {...register('id')} />
             <input type='hidden' {...register('type', { required: true })} />
-            <input type='hidden' {...register('images', { required: false })} />
+            <input type='hidden' {...register('images')} />
             <input type='hidden' {...register('categoryId', { required: true })} />
+            <input type='hidden' {...register('isExchangeable')} />
+            <input type='hidden' {...register('isNegotiable')} />
+            <input type='hidden' {...register('isPublic')} />
 
             <ImageUploader
               className='mb-6'
@@ -177,16 +194,14 @@ export const StuffTalentFormPage: React.FC = () => {
             ></InputNormal>
             <div className='flex-between-center'>
               <Checkbox
-                name='isExchangeable'
                 label='교환 가능'
                 defaultChecked={store.form.isExchangeable}
-                register={register}
+                onChange={(checked) => setValueCustom('isExchangeable', checked)}
               ></Checkbox>
               <Checkbox
-                name='isNegotiable'
                 label='가격제안 가능'
                 defaultChecked={store.form.isNegotiable}
-                register={register}
+                onChange={(checked) => setValueCustom('isNegotiable', checked)}
               ></Checkbox>
             </div>
             <Pad className='h-5'></Pad>
@@ -207,10 +222,9 @@ export const StuffTalentFormPage: React.FC = () => {
             onClick={() => uploader.current?.click()}
           ></Icon>
           <Checkbox
-            name='isPublic'
             label='전체 공개'
-            defaultChecked={store.form.isPublic!}
-            register={register}
+            defaultChecked={store.form.isPublic}
+            onChange={(checked) => setValueCustom('isPublic', checked)}
           ></Checkbox>
         </div>
       </IonFooter>

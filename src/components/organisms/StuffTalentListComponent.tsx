@@ -3,7 +3,8 @@ import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { IStuffTalentFilter } from '../../models/stufftalent.d'
+import { IStuffTalentFilter, StuffTalentPathName } from '../../models/stufftalent.d'
+import { route } from '../../services/route-service'
 import { StuffTalentStore } from '../../stores/stufftalent-store'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { StuffTalentItem } from '../molecules/StuffTalentItemComponent'
@@ -21,6 +22,13 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
   useEffect(() => {
     store.getItems(search, filter)
   }, [store, search, filter])
+
+  const onEditItem = async (id: number) => {
+    await store.getForm(id)
+
+    // TODO 개선 필요
+    store.pathName === StuffTalentPathName.STUFF ? route.stuffForm() : route.talentForm()
+  }
 
   const onDeleteItem = async (id: number) => {
     await store.deleteItem(id)
@@ -49,6 +57,7 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
                 loginUserId={$auth.user.id}
                 path={store.pathName}
                 item={item}
+                onEdit={onEditItem}
                 onDelete={onDeleteItem}
               />
             ))}

@@ -13,10 +13,17 @@ interface IStuffTalentIItem {
   loginUserId: number
   path: Path
   item: IStuffTalent
+  onEdit: (id: number) => void
   onDelete: (id: number) => void
 }
 
-export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ loginUserId, path, item, onDelete }) => {
+export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
+  loginUserId,
+  path,
+  item,
+  onEdit,
+  onDelete,
+}) => {
   const routeDetail =
     path === Path.STUFF ? (id: number) => route.stuffDetail(id) : (id: number) => route.talentDetail(id)
 
@@ -57,6 +64,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({ loginUserId, path
           <OverflowMenuIcon
             className='self-top'
             show={loginUserId === item.user.id}
+            onEdit={() => onEdit(item.id)}
             onDelete={() => onDelete(item.id)}
           />
         </div>
