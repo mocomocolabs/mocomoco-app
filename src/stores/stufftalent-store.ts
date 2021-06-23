@@ -54,6 +54,7 @@ export class StuffTalentStore {
   @observable.struct item: IStuffTalent = initState.item
   @observable.struct categories: IStuffTalentCategoryDto[] = initState.categories
   @observable.struct form: IStuffTalentForm = initState.form
+  @observable.struct updateForm: IStuffTalentForm = initState.form
 
   readonly statuses: StuffTalentStatus[] = Object.values(StuffTalentStatus)
   readonly types: StuffTalentType[] = Object.values(StuffTalentType)
@@ -184,19 +185,24 @@ export class StuffTalentStore {
       formData.append('files', v)
     })
 
-    isUpdate ? await api.put(this.url, formData) : await api.post(this.url, formData)
-    this.resetForm()
+    if (isUpdate) {
+      await api.put(this.url, formData)
+      this.resetUpdateForm()
+    } else {
+      await api.post(this.url, formData)
+      this.resetForm()
+    }
   }) as InsertStuffTalentTask
 
   @task
-  getForm = (async (_id: number) => {
+  getUpdateForm = (async (_id: number) => {
     await this.getItem(_id)
 
     const images: ImageUploadItem[] = (await Promise.all(
       this.item.imageUrls.map((v) => urlToFile(v))
     )) as ImageUploadItem[]
 
-    this.setForm({
+    this.setUpdateForm({
       ...this.item,
       communityId: this.item.community.id,
       categoryId: this.item.category.id,
@@ -213,15 +219,20 @@ export class StuffTalentStore {
   }
 
   @action
-  setFormImage(images: ImageUploadItem[]) {
-    this.form = {
-      ...this.form,
-      images,
+  resetForm() {
+    this.form = initState.form
+  }
+
+  @action
+  setUpdateForm(data: Partial<IStuffTalentForm>) {
+    this.updateForm = {
+      ...this.updateForm,
+      ...data,
     }
   }
 
   @action
-  resetForm() {
-    this.form = initState.form
+  resetUpdateForm() {
+    this.updateForm = initState.form
   }
 }
