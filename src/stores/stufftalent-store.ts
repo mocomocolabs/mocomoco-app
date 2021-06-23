@@ -145,7 +145,7 @@ export class StuffTalentStore {
   }) as TaskBy<number>
 
   @task.resolved
-  insertItem = (async (form: IStuffTalentForm) => {
+  insertItem = (async (form: IStuffTalentForm, isUpdate: boolean) => {
     const formData = new FormData()
 
     formData.append(
@@ -153,6 +153,7 @@ export class StuffTalentStore {
       new Blob(
         [
           JSON.stringify({
+            id: form.id,
             communityId: form.communityId,
             status: form.status,
             type: form.type,
@@ -164,6 +165,7 @@ export class StuffTalentStore {
             isExchangable: form.isExchangeable,
             isNegotiable: form.isNegotiable,
             isPublic: form.isPublic,
+            isUse: true,
           }),
         ],
         {
@@ -173,7 +175,8 @@ export class StuffTalentStore {
     )
 
     if (form.images.length === 0) {
-      // TODO: empty image 추가
+      // TODO: empty image 추가 => db에 넣지 말고, images 프로퍼티가 비어 있으면 화면에서 empty image를 표시하는게 어떨까?
+      // db에 넣어놓으면, 수정화면에서 empty image인지 구분할 방법이 없다.
       form.images = [(await urlToFile('/assets/img/stuff/stuff01.jpg')) as ImageUploadItem]
     }
 
@@ -181,9 +184,25 @@ export class StuffTalentStore {
       formData.append('files', v)
     })
 
-    await api.post(this.url, formData)
+    isUpdate ? await api.put(this.url, formData) : await api.post(this.url, formData)
     this.resetForm()
   }) as InsertStuffTalentTask
+
+  @task
+  getForm = (async (_id: number) => {
+    await this.getItem(_id)
+
+    const images: ImageUploadItem[] = (await Promise.all(
+      this.item.imageUrls.map((v) => urlToFile(v))
+    )) as ImageUploadItem[]
+
+    this.setForm({
+      ...this.item,
+      communityId: this.item.community.id,
+      categoryId: this.item.category.id,
+      images,
+    })
+  }) as TaskBy<number>
 
   @action
   setForm(data: Partial<IStuffTalentForm>) {
