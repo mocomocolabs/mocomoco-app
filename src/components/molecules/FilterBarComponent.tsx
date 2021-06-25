@@ -14,7 +14,7 @@ export const FilterBar: React.FC<IFilterBar> = ({ show = true, filters, onReset,
     {filters.map((filter) => (
       <div
         key={filter.name}
-        className={filter.length > 0 ? 'bg-yellow' : ''}
+        className={filter.length > 0 ? 'bg-primary' : ''}
         onClick={() => onClick(filter.name)}
       >
         {filter.name}

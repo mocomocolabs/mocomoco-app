@@ -19,9 +19,9 @@ export const Checkbox: FC<ICheckbox> = ({ label, defaultChecked, onChange }) => 
   return (
     <div className='flex items-center' onClick={() => setChecked(!checked)}>
       {checked ? (
-        <Icon name='check-solid' className='icon-yellow'></Icon>
+        <Icon name='check-solid' className='icon-primary'></Icon>
       ) : (
-        <Icon name='check' className='icon-yellow'></Icon>
+        <Icon name='check' className='icon-primary'></Icon>
       )}
       <TextBase className='ml-1'>{label}</TextBase>
     </div>

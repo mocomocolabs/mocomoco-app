@@ -24,7 +24,7 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community }) 
             <Profile url={v.profileUrl} className='mr-2 w-10 h-10'></Profile>
             <div className='flex-col'>
               <div className='flex items-center'>
-                {v.isAdmin && <Icon name='star-solid' className='icon-yellow mr-1'></Icon>}
+                {v.isAdmin && <Icon name='star-solid' className='icon-primary mr-1'></Icon>}
                 <TextBase>{v.nickname}</TextBase>
               </div>
               <TextSm className='gray'>{community.name}</TextSm>

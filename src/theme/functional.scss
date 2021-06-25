@@ -1014,24 +1014,24 @@
   line-height: 2.25rem;
 }
 
-.yellow {
-  color: $yellow;
+.primary {
+  color: $primary;
 }
-.m-yellow {
-  color: $m-yellow;
+.m-primary {
+  color: $m-primary;
 }
-.d-yellow {
-  color: $d-yellow;
+.s-primary {
+  color: $s-primary;
 }
 
-.green {
-  color: $green;
+.secondary {
+  color: $secondary;
 }
-.m-green {
-  color: $m-green;
+.m-secondary {
+  color: $m-secondary;
 }
-.d-green {
-  color: $d-green;
+.s-secondary {
+  color: $s-secondary;
 }
 
 .black {
@@ -1104,23 +1104,23 @@
   left: 0;
 }
 
-.bg-yellow {
-  background-color: $yellow;
+.bg-primary {
+  background-color: $primary;
 }
-.bg-m-yellow {
-  background-color: $m-yellow;
+.bg-m-primary {
+  background-color: $m-primary;
 }
-.bg-d-yellow {
-  background-color: $d-yellow;
+.bg-s-primary {
+  background-color: $s-primary;
 }
-.bg-green {
-  background-color: $green;
+.bg-secondary {
+  background-color: $secondary;
 }
-.bg-m-green {
-  background-color: $m-green;
+.bg-m-secondary {
+  background-color: $m-secondary;
 }
-.bg-d-green {
-  background-color: $d-green;
+.bg-s-secondary {
+  background-color: $s-secondary;
 }
 .bg-white {
   background-color: $white;
@@ -1206,23 +1206,23 @@
   border-color: gray;
 }
 
-.border-yellow {
-  border: 1px solid $yellow;
+.border-primary {
+  border: 1px solid $primary;
 }
-.border-m-yellow {
-  border: 1px solid $m-yellow;
+.border-m-primary {
+  border: 1px solid $m-primary;
 }
-.border-d-yellow {
-  border: 1px solid $d-yellow;
+.border-s-primary {
+  border: 1px solid $s-primary;
 }
-.border-green {
-  border: 1px solid $green;
+.border-secondary {
+  border: 1px solid $secondary;
 }
-.border-m-green {
-  border: 1px solid $m-green;
+.border-m-secondary {
+  border: 1px solid $m-secondary;
 }
-.border-d-green {
-  border: 1px solid $d-green;
+.border-s-secondary {
+  border: 1px solid $s-secondary;
 }
 .border-white {
   border: 1px solid $white;
@@ -1342,11 +1342,17 @@
   }
 }
 
-.icon-yellow {
+.icon-primary {
   rect,
   path,
   circle {
-    fill: $yellow;
+    fill: $primary;
+  }
+}
+
+.icon-rotate-180 {
+  svg {
+    transform: rotate(180deg);
   }
 }
 

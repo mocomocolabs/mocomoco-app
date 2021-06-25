@@ -216,7 +216,7 @@ export const StuffTalentFormPage: React.FC = () => {
           {/* TODO: 카메라 플러그인 추가 */}
           <Icon
             name={watchImages?.length ? 'image-solid' : 'image'}
-            className='icon-yellow'
+            className='icon-primary'
             onClick={() => uploader.current?.click()}
           ></Icon>
           <Checkbox
