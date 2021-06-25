@@ -66,7 +66,7 @@ export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
           ) : (
             <SubmitButton
               text='채팅 참여하기'
-              className='bg-m-green'
+              className='bg-m-secondary'
               // TODO: set chatRoom Id
               onClick={() => route.chatRoom(1)}
             ></SubmitButton>

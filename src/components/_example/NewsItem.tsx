@@ -9,7 +9,7 @@ export const NewsItem: React.FC<INews> = ({ title, user, domain, comments_count,
         <div className='ellipsis text-xxl'>
           <strong>{title}</strong>
         </div>
-        <div className='green'>{domain}</div>
+        <div className='secondary'>{domain}</div>
         <div className='flex-between-center'>
           <div className='flex-center'>
             <IonIcon icon={person} slot='start' />

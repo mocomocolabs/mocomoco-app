@@ -5,5 +5,5 @@ export interface IXDivider {
 }
 
 export const XDivider: FC<IXDivider> = ({ className }) => {
-  return <hr className={`bg-yellow min-h-1 w-full ${className}`}></hr>
+  return <hr className={`bg-primary min-h-1 w-full ${className}`}></hr>
 }

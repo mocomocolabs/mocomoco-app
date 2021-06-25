@@ -34,7 +34,9 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
                   <TextXs className='ml-1'>{v.meetingTime}</TextXs>
                 </div>
               </div>
-              {v.hashtagNames.length && <TextXs className='green mt-2'>#{v.hashtagNames.join(' #')}</TextXs>}
+              {v.hashtagNames.length && (
+                <TextXs className='secondary mt-2'>#{v.hashtagNames.join(' #')}</TextXs>
+              )}
             </div>
           </div>
         ))
