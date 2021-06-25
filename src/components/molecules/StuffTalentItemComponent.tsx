@@ -28,7 +28,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
     path === Path.STUFF ? (id: number) => route.stuffDetail(id) : (id: number) => route.talentDetail(id)
 
   return (
-    <li className='py-4'>
+    <li>
       <div className='flex'>
         <div className='flex-between-center w-full' onClick={() => routeDetail(item.id)}>
           <img className='w-20 h-20 mr-2' src={item.atchFiles[0].url} alt={item.title} />

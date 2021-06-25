@@ -3,21 +3,6 @@ import { IFeed } from './feed.d'
 
 export interface Feed extends IFeed {}
 
-// id: number
-// type: FeedType
-// scheduleDate: string // TODO: 임시
-// scheduleTitle: string
-// user: IUser
-// title: string
-// content: string
-// imageUrls: string[]
-// commentCount: number
-// likeCount: number
-// likeProflieUrls: string[]
-// comments: IComment[]
-// createdAt: string // TODO: 임시
-// isPublic: boolean
-
 export class Feed {
   static of(dto: IFeedDto, userId: number) {
     return Object.assign(new Feed(), {

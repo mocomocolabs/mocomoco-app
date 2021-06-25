@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { Icon } from '../../components/atoms/IconComponent'
 import { TextLg } from '../../components/atoms/TextLgComponent'
 import { ClubOurTownList } from '../../components/organisms/ClubOurTownListComponent'
-import { ClubPopularSlide } from '../../components/organisms/ClubPopularSlideComponent'
+import { ClubPopularSlider } from '../../components/organisms/ClubPopularSliderComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
@@ -17,7 +17,7 @@ export const ClubPage: React.FC = () => {
   })
 
   useEffect(() => {
-    $club.getPopularClubs()
+    $club.getPopularClubs(999)
     $club.getRecentClubs()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -40,7 +40,7 @@ export const ClubPage: React.FC = () => {
       </Header>
       <IonContent>
         <TextLg className='px-container mt-5 mb-4 text-bold'>인기 소모임</TextLg>
-        <ClubPopularSlide clubs={$club.popularClubs}></ClubPopularSlide>
+        <ClubPopularSlider clubs={$club.popularClubs}></ClubPopularSlider>
         <div className='mt-5 px-container'>
           <TextLg className='mb-4 text-bold'>우리동네 소모임</TextLg>
           <ClubOurTownList clubs={$club.recentClubs}></ClubOurTownList>

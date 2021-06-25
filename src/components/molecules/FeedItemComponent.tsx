@@ -1,5 +1,3 @@
-import { IonIcon } from '@ionic/react'
-import { calendar } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React, { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
@@ -53,7 +51,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
 
         {feed.type === 'SCHEDULE' && (
           <div className='flex'>
-            <IonIcon icon={calendar} size='large'></IonIcon>
+            <Icon name='calendar'></Icon>
             <div className='ml-2 flex-col flex-1'>
               <TextLg>{feed.scheduleTitle}</TextLg>
               <TextBase className='dim'>{feed.scheduleDate}</TextBase>
