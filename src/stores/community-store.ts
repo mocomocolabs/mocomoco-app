@@ -1,8 +1,10 @@
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
 import { ICommunity } from '../models/community'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
+import { AuthStore } from './auth-store'
 import { ICommunityDto } from './community-store.d'
 import { Task } from './task'
 
@@ -14,6 +16,12 @@ const initState = {
 export class CommunityStore {
   @observable.ref communities: ICommunity[] = initState.communities
   @observable selectedId: number = storage.communityId
+
+  $auth: AuthStore
+
+  constructor(rootStore: RootStore) {
+    this.$auth = rootStore.$auth
+  }
 
   @task
   getCommunities = (async () => {
@@ -36,5 +44,10 @@ export class CommunityStore {
   @computed
   get community() {
     return this.communities.find((v) => v.id === this.selectedId)
+  }
+
+  @computed
+  get myCommunity() {
+    return this.communities.find((v) => v.id === this.$auth.user.communityId)
   }
 }

@@ -22,6 +22,8 @@ const initState = {
 
 export class FeedStore {
   @observable.ref feeds: IFeed[] = initState.feeds
+  @observable.ref homeFeeds: IFeed[] = []
+  @observable.ref homeScheduleFeeds: IFeed[] = []
   @observable.ref feed: IFeed = initState.feed
   @observable.struct form: IFeedForm = initState.form
   @observable deleted = false
@@ -45,14 +47,37 @@ export class FeedStore {
 
   @task
   getMyFeeds = (async () => {
-    //TODO use query instead of filter
-    await api.get<{ feeds: IFeedDto[] }>('/v1/feeds').then(
+    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds?user-id=${this.$auth.user.id}`).then(
       action((data) => {
-        this.feeds = data.feeds
-          .filter((feed) => feed.user.id === this.$auth.user.id)
-          .map((v) => Feed.of(v, this.$auth.user.id))
+        this.feeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
       })
     )
+  }) as Task
+
+  @task
+  getHomeFeeds = (async () => {
+    await api
+      .get<{ feeds: IFeedDto[] }>(
+        `/v1/feeds?community-id=${this.$auth.user.communityId}&is-use=true&limit=10`
+      )
+      .then(
+        action((data) => {
+          this.homeFeeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
+        })
+      )
+  }) as Task
+
+  @task
+  getHomeScheduleFeeds = (async () => {
+    await api
+      .get<{ feeds: IFeedDto[] }>(
+        `/v1/feeds?type=${FEED_TYPE.SCHEDULE}&community-id=${this.$auth.user.communityId}&is-use=true&limit=3`
+      )
+      .then(
+        action((data) => {
+          this.homeScheduleFeeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
+        })
+      )
   }) as Task
 
   @task

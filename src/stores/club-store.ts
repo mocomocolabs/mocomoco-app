@@ -38,14 +38,14 @@ export class ClubStore {
   }
 
   @task
-  getPopularClubs = (async () => {
+  getPopularClubs = (async (limit: number) => {
     // TODO: 페이징 처리 추후 구현
-    await api.get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=popular&limit=999`).then(
+    await api.get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=popular&limit=${limit}`).then(
       action((data) => {
         this.popularClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
       })
     )
-  }) as Task
+  }) as TaskBy<number>
 
   @task
   getRecentClubs = (async () => {

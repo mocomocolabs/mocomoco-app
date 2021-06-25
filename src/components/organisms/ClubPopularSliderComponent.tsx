@@ -9,7 +9,7 @@ import { TextXs } from '../atoms/TextXsComponent'
 import { ImageWithCorner } from '../molecules/ImageWithCorner'
 import './ClubPopularSlideComponent.scss'
 
-export interface IClubPopularSlide {
+export interface IClubPopularSlider {
   clubs: Club[]
 }
 
@@ -20,7 +20,7 @@ const slideOpts = {
   speed: 400,
 }
 
-export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
+export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
   return clubs.length ? (
     <IonSlides
       key={clubs.map((v) => v.id).join('_')}
@@ -47,7 +47,7 @@ export const ClubPopularSlide: FC<IClubPopularSlide> = ({ clubs }) => {
                 <TextXs className='ml-1'>{v.meetingPlace}</TextXs>
               </div>
               {v.hashtagNames.length ? (
-                <TextXs className='green mt-2 ellipsis'>#{v.hashtagNames?.join(' #')}</TextXs>
+                <TextXs className='secondary mt-2 ellipsis'>#{v.hashtagNames?.join(' #')}</TextXs>
               ) : (
                 ''
               )}
