@@ -88,9 +88,7 @@ export class AuthStore {
           this.setUser(user)
         })
       } catch (e) {
-        console.log()
-
-        if (e.status === 405) {
+        if (e.status === 401) {
           const refreshToken = await storage.getRefreshToken()
           api.setAuthoriationBy(refreshToken)
           api.post<IAuthUserDto>(`/auth/refresh-token`, {}).then((user) => {
