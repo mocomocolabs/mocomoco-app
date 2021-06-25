@@ -31,6 +31,7 @@ export interface IStuffTalentFilter {
   categories: number[]
   notStatuses: StuffTalentStatus[]
   types: StuffTalentType[]
+  limit: number
 }
 
 export interface IStuffTalentForm {

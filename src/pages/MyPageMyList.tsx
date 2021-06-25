@@ -47,6 +47,8 @@ export const MyPageMyList: React.FC = () => {
     categories: [],
     notStatuses: [],
     types: [],
+    // TODO: 추후 페이징 처리
+    limit: 999,
   }
   const [filter, setFilter] = useState<IStuffTalentFilter>(initialFilter)
   const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
