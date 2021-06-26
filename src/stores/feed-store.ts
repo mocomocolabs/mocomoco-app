@@ -177,14 +177,17 @@ export class FeedStore {
 
   @action
   setFeedLike(id: number, isLike: boolean) {
-    let found = this.feeds.find((v) => v.id === id)
+    // TODO store의 현재 items와 item 데이터를 둘다 갱신해야 돼서 이렇게 구현했는데, 보기에 개운하지 않음.
+    const found = this.feed.id === id ? this.feed : this.feeds.find((v) => v.id === id)
 
     if (found) {
       const likeCount = isLike ? found.likeCount + 1 : found.likeCount - 1
-      // TODO: feeds의 일부 프로퍼티가 변경되어도 리렌더가 되지 않는다. 원인 파악 필요
+
       this.feeds = this.feeds.map((v) => {
-        return v.id === id ? { ...found!, isLike, likeCount } : v
+        return v.id === id ? { ...found!, isLike: isLike, likeCount: likeCount } : v
       })
+
+      this.feed = this.feed.id === id ? { ...this.feed, isLike: isLike, likeCount: likeCount } : this.feed
     }
   }
 

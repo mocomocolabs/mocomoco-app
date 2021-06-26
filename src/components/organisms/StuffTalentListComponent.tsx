@@ -27,7 +27,7 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
     await store.getUpdateForm(id)
 
     // TODO 개선 필요
-    store.pathName === StuffTalentPathName.STUFF ? route.stuffForm() : route.talentForm()
+    store.predefined.pathName === StuffTalentPathName.STUFF ? route.stuffForm() : route.talentForm()
   }
 
   const onDeleteItem = async (id: number) => {
@@ -55,7 +55,7 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
               <StuffTalentItem
                 key={item.id}
                 loginUserId={$auth.user.id}
-                path={store.pathName}
+                path={store.predefined.pathName}
                 item={item}
                 onEdit={onEditItem}
                 onDelete={onDeleteItem}
