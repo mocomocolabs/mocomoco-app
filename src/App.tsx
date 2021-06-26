@@ -1,7 +1,6 @@
 import { IonApp } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
-import './App.scss'
 import { Alert } from './components/atoms/AlertComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
 import { Toast } from './components/atoms/ToastComponent'
