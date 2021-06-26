@@ -1,4 +1,5 @@
 @import './theme/variable';
+@import './theme/functional';
 
 .badge {
   position: absolute;
@@ -8,4 +9,8 @@
   height: 0.8rem;
   background: $secondary;
   border-radius: 50%;
+}
+
+ion-tab-button.tab-selected {
+  @extend .icon-primary;
 }
