@@ -1,11 +1,11 @@
-import { IonApp, IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
+import { IonApp, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
-import { basket, beer, home, paperPlane, people, personCircle } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import './App.scss'
 import { Alert } from './components/atoms/AlertComponent'
+import { Icon } from './components/atoms/IconComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
 import { Toast } from './components/atoms/ToastComponent'
 import './global.scss'
@@ -36,10 +36,35 @@ import { StuffTalentPage } from './pages/StuffTalentPage'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 import { webSocket } from './services/web-socket-service'
+import { ValueOf } from './utils/type-util'
+
+type ITab = { [key: string]: { path: string; icon: string } }
+const TAB: ITab = {
+  HOME: {
+    path: 'home',
+    icon: 'home',
+  },
+  FEED: {
+    path: 'feed',
+    icon: 'group',
+  },
+  CHAT: {
+    path: 'chat',
+    icon: 'message',
+  },
+  MY_PAGE: {
+    path: 'my-page',
+    icon: 'setting',
+  },
+}
 
 export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()
   const [intialized, setInitailzed] = useState(false)
+  const [currentTab, setCurrentTab] = useState('')
+
+  // eslint-disable-next-line
+  const refTabbar = useRef<any>()
 
   useEffect(() => {
     init()
@@ -47,6 +72,14 @@ export const App: React.FC = () => {
   }, [])
 
   useEffect(() => {}, [$chat.unReadCountAll])
+
+  const getTabName = useCallback(
+    (tab: ValueOf<ITab>) => {
+      const activeName = '-solid'
+      return currentTab === tab.path ? tab.icon + activeName : tab.icon
+    },
+    [currentTab]
+  )
 
   const init = async () => {
     // 로그인
@@ -79,6 +112,7 @@ export const App: React.FC = () => {
       )
     }
 
+    setCurrentTab(refTabbar.current?.ionTabContextState.activeTab)
     setInitailzed(true)
   }
 
@@ -86,7 +120,7 @@ export const App: React.FC = () => {
     <IonApp>
       {intialized ? (
         <IonReactRouter history={route.history}>
-          <IonTabs>
+          <IonTabs ref={refTabbar}>
             <IonRouterOutlet id='main'>
               <Route path='/dev' component={DevPage} exact />
               <Route path='/sign-in' component={SignInPage} exact />
@@ -116,25 +150,31 @@ export const App: React.FC = () => {
               <GuardRoute path='/users/:id/edit' component={ProfileUpdatePage} exact />
               <Redirect from='/' to='/home' exact />
             </IonRouterOutlet>
-            <IonTabBar slot='bottom' hidden={!$ui.isBottomTab}>
-              <IonTabButton tab='home' href='/home'>
-                <IonIcon icon={home} />
+            <IonTabBar
+              slot='bottom'
+              hidden={!$ui.isBottomTab}
+              onIonTabsDidChange={(event: { detail: { tab: string } }) => {
+                setCurrentTab(event.detail.tab)
+              }}
+            >
+              <IonTabButton tab={TAB.HOME.path} href='/home'>
+                <Icon name={getTabName(TAB.HOME)}></Icon>
               </IonTabButton>
-              <IonTabButton tab='feed' href='/feed'>
-                <IonIcon icon={beer} />
+              <IonTabButton tab={TAB.FEED.path} href='/feed'>
+                <Icon name={getTabName(TAB.FEED)}></Icon>
               </IonTabButton>
-              <IonTabButton tab='stuff' href='/stuff'>
+              {/* <IonTabButton tab='stuff' href='/stuff'>
                 <IonIcon icon={basket} />
-              </IonTabButton>
-              <IonTabButton tab='chat' href='/chat'>
-                <IonIcon icon={paperPlane} />
+              </IonTabButton> */}
+              <IonTabButton tab={TAB.CHAT.path} href='/chat'>
+                <Icon name={getTabName(TAB.CHAT)}></Icon>
                 {$chat.unReadCountAll > 0 && <div className='badge'></div>}
               </IonTabButton>
-              <IonTabButton tab='club' href='/club'>
+              {/* <IonTabButton tab='club' href='/club'>
                 <IonIcon icon={people} />
-              </IonTabButton>
-              <IonTabButton tab='my-page' href='/my-page'>
-                <IonIcon icon={personCircle} />
+              </IonTabButton> */}
+              <IonTabButton tab={TAB.MY_PAGE.path} href='/my-page'>
+                <Icon name={getTabName(TAB.MY_PAGE)}></Icon>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
