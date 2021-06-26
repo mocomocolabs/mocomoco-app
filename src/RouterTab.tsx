@@ -24,6 +24,7 @@ import { SignUpCommunityPage } from './pages/sign-up/SignUpCommunityPage'
 import { SignUpFormPage } from './pages/sign-up/SignUpFormPage'
 import { SignUpPage } from './pages/sign-up/SignUpPage'
 import { SignInPage } from './pages/SignInPage'
+import { StuffTalentDetailPage } from './pages/StuffTalentDetailPage'
 import { StuffTalentFormPage } from './pages/StuffTalentFormPage'
 import { StuffTalentPage } from './pages/StuffTalentPage'
 import './RouterTab.scss'
@@ -127,10 +128,10 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <GuardRoute path='/feed/:id' component={FeedDetailPage} exact />
             <GuardRoute path='/feed-write' component={FeedWritePage} exact />
             <GuardRoute path='/stuff' component={StuffTalentPage} exact />
-            {/* <GuardRoute path='/stuff/:id' component={StuffTalentDetailPage} exact /> */}
+            <GuardRoute path='/stuff/:id' component={StuffTalentDetailPage} exact />
             <GuardRoute path='/stuff-form' component={StuffTalentFormPage} exact />
             <GuardRoute path='/talent' component={StuffTalentPage} exact />
-            {/* <GuardRoute path='/talent/:id' component={StuffTalentDetailPage} exact /> */}
+            <GuardRoute path='/talent/:id' component={StuffTalentDetailPage} exact />
             <GuardRoute path='/talent-form' component={StuffTalentFormPage} exact />
             <GuardRoute path='/club' component={ClubPage} exact />
             <GuardRoute path='/club-form' component={ClubFormPage} exact />

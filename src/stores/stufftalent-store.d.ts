@@ -1,7 +1,6 @@
 import { IUser } from '../models/user.d'
 import {
   IStuffTalentForm,
-  StuffTalentPathName as PathName,
   StuffTalentStatus as Status,
   StuffTalentType as Type,
 } from './../models/stufftalent.d'
@@ -56,5 +55,3 @@ export interface IStuffTalentCommunityDto {
   id: number
   name: string
 }
-
-export type StuffTalentPath = { [name in PathName]: string }

@@ -1,15 +1,18 @@
-import { IStuffTalentDto } from '../stores/stufftalent-store.d'
-import { IStuffTalent, StuffTalentPathName, StuffTalentStatus, StuffTalentType } from './stufftalent.d'
+import { IStuffTalentPredefined } from '../stores/stufftalent-store'
+import { IStuffTalentDto, IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
+import { getKeyValue } from '../utils/type-util'
+import { IStuffTalent, StuffTalentStatus, StuffTalentType } from './stufftalent.d'
 
 export interface StuffTalent extends IStuffTalent {}
 
 export class StuffTalent {
-  static of(payload: IStuffTalentDto, pathname: StuffTalentPathName) {
+  static of(payload: IStuffTalentDto, predefined: IStuffTalentPredefined) {
     return Object.assign(new StuffTalent(), {
       ...payload,
-      likeCount: (pathname === StuffTalentPathName.STUFF ? payload.stuffUsers : payload.talentUsers).filter(
-        (s) => s.isLike && s.isUse
-      ).length,
+      likeCount: (getKeyValue(
+        payload,
+        predefined.likeUsersProperty as keyof IStuffTalentDto
+      ) as IStuffTalentLikeUserDto[]).filter((likeUsers) => likeUsers.isLike && likeUsers.isUse).length,
       imageUrls: payload.atchFiles.map((v) => v.url),
       // chatroomId: payload.chatroom.id, // TODO
     })

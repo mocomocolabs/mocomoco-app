@@ -29,7 +29,8 @@ export const StuffTalentFormPage: React.FC = () => {
   const routeList = () => (pathname === '/stuff-form' ? route.stuff() : route.talent())
 
   const isUpdate = !!store.updateForm.id
-  const form = isUpdate ? store.updateForm : store.form
+  console.log('form enter', isUpdate, store.updateForm, 'store.form', store.form)
+  const form = Object.assign({}, isUpdate ? { ...store.updateForm } : { ...store.form })
 
   const {
     formState: { isValid, dirtyFields },
@@ -92,6 +93,7 @@ export const StuffTalentFormPage: React.FC = () => {
   })
 
   useIonViewWillLeave(() => {
+    console.log('useIonViewWillLeaveuseIonViewWillLeaveuseIonViewWillLeaveuseIonViewWillLeave')
     isUpdate ? store.resetUpdateForm() : store.resetForm()
 
     // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
@@ -111,12 +113,12 @@ export const StuffTalentFormPage: React.FC = () => {
       const [exchangeText, price] = getValues(['exchangeText', 'price'])
 
       // 불필요한 setValue 호출을 막기 위해 현재 빈 값인 필드는 그냥 둔다.
-      if (watchType === StuffTalentType.SHARE || watchType === StuffTalentType.WANT) {
+      if ([StuffTalentType.SHARE, StuffTalentType.WANT].includes(watchType)) {
         !!exchangeText && setValueCustom('exchangeText', undefined)
         !!price && setValueCustom('price', undefined)
-      } else if (watchType === StuffTalentType.SELL) {
+      } else if (StuffTalentType.SELL === watchType) {
         !!exchangeText && setValueCustom('exchangeText', undefined)
-      } else if (watchType === StuffTalentType.EXCHANGE) {
+      } else if (StuffTalentType.EXCHANGE === watchType) {
         !!price && setValueCustom('price', undefined)
       }
     },

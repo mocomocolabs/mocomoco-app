@@ -1,5 +1,4 @@
 import { AxiosRequestConfig } from 'axios'
-import _ from 'lodash'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
@@ -14,19 +13,14 @@ import {
 } from '../models/stufftalent.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
+import { getKeyValue } from '../utils/type-util'
 import {
   InsertStuffTalentTask,
   IStuffsTalentsDto,
   IStuffTalentCategoryDto,
   IStuffTalentDto,
-  StuffTalentPath,
 } from './stufftalent-store.d'
 import { TaskBy, TaskBy2 } from './task'
-
-const paths: StuffTalentPath = {
-  [PathName.STUFF]: 'stuffs',
-  [PathName.TALENT]: 'talents',
-}
 
 const initState = {
   items: [],
@@ -41,14 +35,39 @@ const initState = {
   } as IStuffTalentForm,
 }
 
-// TODO stuff, talent 차이점 모음 => class 분리하자
-/*
-  get data api path: /stuffs, /talents
-  response data name: stuffs, talents
-  like-users property name : stuffUsers, talentUsers
-  insert data file name: stuffReqDto, talentReqDto
-  toggle like api path: stuffs-users/likes, talents-users/likes
-  */
+export interface IStuffTalentPredefined {
+  pathName: PathName
+  baseApi: string
+  toggleLikeApi: string
+  toggleLikeIdProperty: string
+  likeUsersProperty: string
+  getItemsProperty: string
+  insertItemReqDto: string
+}
+
+const apiVer = 'v1'
+
+const predefined: IStuffTalentPredefined[] = [
+  {
+    pathName: PathName.STUFF,
+    baseApi: `/${apiVer}/stuffs`,
+    toggleLikeApi: `/${apiVer}/stuffs-users/likes`,
+    toggleLikeIdProperty: 'stuffId',
+    likeUsersProperty: 'stuffUsers',
+    getItemsProperty: 'stuffs',
+    insertItemReqDto: 'stuffReqDto',
+  },
+  {
+    pathName: PathName.TALENT,
+    baseApi: `/${apiVer}/talents`,
+    toggleLikeApi: `/${apiVer}/talents-users/likes`,
+    toggleLikeIdProperty: 'talentId',
+    likeUsersProperty: 'talentUsers',
+    getItemsProperty: 'talents',
+    insertItemReqDto: 'talentReqDto',
+  },
+]
+
 export class StuffTalentStore {
   @observable.struct items: IStuffTalent[] = initState.items
   @observable.struct item: IStuffTalent = initState.item
@@ -59,14 +78,12 @@ export class StuffTalentStore {
   readonly statuses: StuffTalentStatus[] = Object.values(StuffTalentStatus)
   readonly types: StuffTalentType[] = Object.values(StuffTalentType)
 
-  readonly url: string
-  readonly categoriesUrl = `/v1/categories`
+  readonly categoriesUrl = `/${apiVer}/categories`
 
-  readonly pathName: PathName
+  readonly predefined: IStuffTalentPredefined
 
   constructor(pathName: PathName) {
-    this.pathName = pathName
-    this.url = `/v1/${paths[pathName]}`
+    this.predefined = predefined.find((p) => p.pathName === pathName) || predefined[0]
     this.getCategoriesBy(pathName)
   }
 
@@ -88,11 +105,12 @@ export class StuffTalentStore {
 
   @task
   getItems = (async (search, filter) => {
-    await api.get<IStuffsTalentsDto>(this.url, this.config(search, filter)).then(
+    await api.get<IStuffsTalentsDto>(this.predefined.baseApi, this.config(search, filter)).then(
       action((data) => {
-        this.items = (this.pathName === PathName.STUFF ? data.stuffs : data.talents).map((item) =>
-          StuffTalent.of(item, this.pathName)
-        )
+        this.items = getKeyValue(
+          data,
+          this.predefined.getItemsProperty as keyof IStuffsTalentsDto
+        ).map((item) => StuffTalent.of(item, this.predefined))
       })
     )
   }) as TaskBy2<string, IStuffTalentFilter>
@@ -135,16 +153,16 @@ export class StuffTalentStore {
 
   @task
   getItem = (async (id: number) => {
-    await api.get<IStuffTalentDto>(`${this.url}/${id}`).then(
+    await api.get<IStuffTalentDto>(`${this.predefined.baseApi}/${id}`).then(
       action((data) => {
-        this.item = StuffTalent.of(data, this.pathName)
+        this.item = StuffTalent.of(data, this.predefined)
       })
     )
   }) as TaskBy<number>
 
   @task.resolved
   deleteItem = (async (id: number) => {
-    await api.patch(`${this.url}/${id}/is-use`) // WARN this is toggle
+    await api.patch(`${this.predefined.baseApi}/${id}/is-use`) // WARN this is toggle
   }) as TaskBy<number>
 
   @task.resolved
@@ -152,7 +170,7 @@ export class StuffTalentStore {
     const formData = new FormData()
 
     formData.append(
-      `${_.lowerCase(this.pathName)}ReqDto`,
+      this.predefined.insertItemReqDto,
       new Blob(
         [
           JSON.stringify({
@@ -188,13 +206,40 @@ export class StuffTalentStore {
     })
 
     if (isUpdate) {
-      await api.put(this.url, formData)
+      await api.put(this.predefined.baseApi, formData)
       this.resetUpdateForm()
     } else {
-      await api.post(this.url, formData)
+      await api.post(this.predefined.baseApi, formData)
       this.resetForm()
     }
   }) as InsertStuffTalentTask
+
+  @task.resolved
+  toggleLike = (async (id: number, isLike: boolean) => {
+    await api.post(this.predefined.toggleLikeApi, {
+      [`${this.predefined.toggleLikeIdProperty}`]: id,
+      isLike,
+      isUse: true,
+    })
+
+    this.setLike(id, isLike)
+  }) as TaskBy2<number, boolean>
+
+  @action
+  setLike(id: number, isLike: boolean) {
+    // TODO store의 현재 items와 item 데이터를 둘다 갱신해야 돼서 이렇게 구현했는데, 보기에 개운하지 않음.
+    const found = this.item.id === id ? this.item : this.items.find((v) => v.id === id)
+
+    if (found) {
+      const likeCount = isLike ? found.likeCount + 1 : found.likeCount - 1
+
+      this.items = this.items.map((v) => {
+        return v.id === id ? { ...found!, isLike, likeCount } : v
+      })
+
+      this.item = this.item.id === id ? { ...this.item, isLike, likeCount } : this.item
+    }
+  }
 
   @task
   getUpdateForm = (async (_id: number) => {
