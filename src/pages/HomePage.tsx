@@ -22,7 +22,7 @@ export const HomePage: React.FC = () => {
     const stufftalentFilter = {
       // TODO: isPublic테스트
       isPublic: false,
-      communityId: $community.myCommunity?.id,
+      communityId: $community.myCommunity?.id ?? null,
       userId: undefined,
       categories: [],
       notStatuses: [],

@@ -43,7 +43,7 @@ const feedTypes: IRadioItem[] = [
 export interface IFeedWrite {}
 
 export const FeedWritePage: FC<IFeedWrite> = () => {
-  const { $ui, $feed, $community } = useStore()
+  const { $ui, $feed, $auth } = useStore()
 
   const uploader = useRef<IImageUploaderRef>()
   const isUpdate = $feed.form.id !== undefined
@@ -80,7 +80,7 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
             await $feed.saveFeed(
               {
                 ...$feed.form,
-                communityId: $community.selectedId,
+                communityId: $auth.user.communityId,
               },
               isUpdate
             )

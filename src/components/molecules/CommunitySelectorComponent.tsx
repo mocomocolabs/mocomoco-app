@@ -1,9 +1,8 @@
-import { IonIcon } from '@ionic/react'
-import { chevronDown } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import { FC, useState } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { TextLg } from '../atoms/TextLgComponent'
+import { Icon } from '../atoms/IconComponent'
+import { TextXl } from '../atoms/TextXlComponent'
 import { CommunitySelectorModal } from '../modals/CommunitySelectorModalComponent'
 
 export interface ICommunitySelector {}
@@ -16,8 +15,8 @@ export const CommunitySelector: FC<ICommunitySelector> = () => {
   return useObserver(() => (
     <>
       <div className='flex items-center' onClick={() => setIsShowModal(true)}>
-        <IonIcon icon={chevronDown}></IonIcon>
-        <TextLg className='ml-2'>{$community.community?.name}</TextLg>
+        <Icon name='arrow' className='icon-rotate-270'></Icon>
+        <TextXl className='ml-2 text-bold'>{$community.community?.name}</TextXl>
       </div>
 
       <CommunitySelectorModal isShow={isShowModal} setIsShow={setIsShowModal}></CommunitySelectorModal>
