@@ -13,6 +13,10 @@ class RouteService {
     this.history.goBack()
   }
 
+  intro() {
+    this.history.push('/intro')
+  }
+
   home() {
     this.history.push('/home')
   }
