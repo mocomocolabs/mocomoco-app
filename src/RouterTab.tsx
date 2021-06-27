@@ -112,8 +112,11 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
   })
 
   useEffect(() => {
-    setCurrentTab(refTabbar.current?.ionTabContextState.activeTab)
-    setActiveMoreByPath()
+    // 최초진입시 activeTab정보가 없는 경우가 있어 지연을 둠
+    setTimeout(() => {
+      setCurrentTab(refTabbar.current?.ionTabContextState.activeTab)
+      setActiveMoreByPath()
+    }, 100)
   }, [])
 
   return (
