@@ -13,9 +13,16 @@ const initState = {
   communities: [],
 }
 
+export const allCommunity = {
+  id: null,
+  name: '모든 공동체',
+  userCount: 0,
+  bannerUrl: '',
+}
+
 export class CommunityStore {
   @observable.ref communities: ICommunity[] = initState.communities
-  @observable selectedId: number = storage.communityId
+  @observable selectedId: number | null = storage.communityId
 
   $auth: AuthStore
 
@@ -36,14 +43,14 @@ export class CommunityStore {
   }) as Task
 
   @action
-  setSelectedId(id: number) {
+  setSelectedId(id: number | null) {
     this.selectedId = id
     storage.setCommunityId(id)
   }
 
   @computed
   get community() {
-    return this.communities.find((v) => v.id === this.selectedId)
+    return this.communities.find((v) => v.id === this.selectedId) || allCommunity
   }
 
   @computed

@@ -1,8 +1,9 @@
 import { IonIcon } from '@ionic/react'
 import { checkmark } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
+import { allCommunity } from '../../stores/community-store'
 import { TextLg } from '../atoms/TextLgComponent'
 import { Modal } from './ModalComponent'
 
@@ -14,12 +15,14 @@ export interface ICommunitySelectorModal {
 export const CommunitySelectorModal: FC<ICommunitySelectorModal> = ({ isShow, setIsShow }) => {
   const { $community } = useStore()
 
+  const communites = useMemo(() => [allCommunity, ...$community.communities], [$community.communities])
+
   return useObserver(() => (
     <Modal isShow={isShow} setIsShow={setIsShow} title='지역 / 공동체 선택'>
       <ul className='px-container pt-2'>
-        {$community.communities.map((v) => (
+        {communites.map((v, i) => (
           <li
-            key={v.id}
+            key={i}
             className='py-2'
             onClick={() => {
               $community.setSelectedId(v.id)

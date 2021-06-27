@@ -1,7 +1,7 @@
-import { IonContent, IonHeader, IonIcon, IonModal, IonToolbar } from '@ionic/react'
-import { close } from 'ionicons/icons'
+import { IonContent, IonHeader, IonModal, IonToolbar } from '@ionic/react'
 import { Dispatch, FC, SetStateAction } from 'react'
-import { TextLg } from '../atoms/TextLgComponent'
+import { Icon } from '../atoms/IconComponent'
+import { TextXl } from '../atoms/TextXlComponent'
 
 export interface ModalProps {
   title: string
@@ -16,8 +16,8 @@ export const Modal: FC<ModalProps> = ({ isShow, setIsShow, title, children }) =>
       <IonHeader>
         <IonToolbar>
           <div slot='start' className='flex items-center'>
-            <IonIcon icon={close} onClick={() => setIsShow(false)}></IonIcon>{' '}
-            <TextLg className='ml-2'>{title}</TextLg>
+            <Icon name='close' onClick={() => setIsShow(false)}></Icon>
+            <TextXl className='ml-2 text-bold'>{title}</TextXl>
           </div>
         </IonToolbar>
       </IonHeader>
