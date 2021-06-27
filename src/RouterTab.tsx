@@ -72,7 +72,7 @@ const TAB: ITab = {
 export type IMoreTabName = 'stuff' | 'talent' | 'club' | ''
 
 export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
-  const [currentTab, setCurrentTab] = useState('')
+  const [currentTab, setCurrentTab] = useState(TAB_PATH.HOME as string)
   const [showsMore, setShowsMore] = useState(false)
   const [isActiveMore, setIsActiveMore] = useState(false)
   const [moreTabName, setMoreTabName] = useState<IMoreTabName>('')
