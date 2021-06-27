@@ -22,7 +22,7 @@ export const IntroPage: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <ImageSlider urls={['/assets/img/hama.svg']}></ImageSlider>
+        <ImageSlider urls={['/assets/img/hama.png']}></ImageSlider>
         <div className='px-8'>
           <TextXxl className='text-bold d-gray'>
             하나의 마을
