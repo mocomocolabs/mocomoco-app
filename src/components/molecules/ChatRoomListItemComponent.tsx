@@ -52,7 +52,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           <TextBase className='ellipsis max-width-270'>{lastChat?.message}</TextBase>
         </div>
         {_.isNumber(readCount) && readCount > 0 && (
-          <div className='flex-center br-full bg-m-red w-6 min-w-6 h-6 ml-2'>
+          <div className='flex-center br-full bg-red w-6 min-w-6 h-6 ml-2'>
             <TextSm>{readCount}</TextSm>
           </div>
         )}

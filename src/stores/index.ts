@@ -5,8 +5,6 @@ import { ChatStore } from './chat-store'
 import { ClubStore } from './club-store'
 import { CommentStore } from './comment-store'
 import { CommunityStore } from './community-store'
-import { News } from './example/news-store'
-import { TodoList } from './example/todo-list-store'
 import { FeedStore } from './feed-store'
 import { SegmentStore } from './segment-store'
 import { StuffTalentStore } from './stufftalent-store'
@@ -28,10 +26,6 @@ export class RootStore {
   $club: ClubStore
   $segment: SegmentStore
 
-  // example
-  todoList: TodoList
-  news: News
-
   constructor() {
     this.$auth = new AuthStore()
     this.$community = new CommunityStore(this)
@@ -44,9 +38,5 @@ export class RootStore {
     this.$chat = new ChatStore()
     this.$club = new ClubStore(this)
     this.$segment = new SegmentStore()
-
-    // example
-    this.todoList = new TodoList()
-    this.news = new News()
   }
 }

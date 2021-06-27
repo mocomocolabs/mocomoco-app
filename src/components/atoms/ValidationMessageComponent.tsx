@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { FieldErrors } from 'react-hook-form'
+import { TextXs } from './TextXsComponent'
 
 export interface IValidationMessage {
   isShow: boolean | undefined | FieldErrors
@@ -7,5 +8,5 @@ export interface IValidationMessage {
 }
 
 export const ValidationMessage: FC<IValidationMessage> = ({ isShow, message }) => {
-  return isShow ? <div className='m-red'>{message}</div> : <></>
+  return isShow ? <TextXs className='red -mt-3 mb-4'>{message}</TextXs> : <></>
 }
