@@ -3,7 +3,7 @@ import { close } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
-import { Profile } from '../atoms/ProfileComponent'
+import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
 export interface ICommentUpdateForm {
@@ -17,7 +17,7 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
   return useObserver(() => (
     <div className='px-container py-2 flex-col bg-white'>
       <div className='flex'>
-        <Profile url='assets/mock/profile1.jpeg'></Profile>
+        <ProfileImage url='assets/mock/profile1.jpeg'></ProfileImage>
 
         <IonTextarea
           className='ml-2 bg-m-gray br-lg px-3 black leading-8'

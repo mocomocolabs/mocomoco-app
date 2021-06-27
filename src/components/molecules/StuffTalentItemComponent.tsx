@@ -5,7 +5,7 @@ import { IStuffTalent, StuffTalentPageKey } from '../../models/stufftalent.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
-import { Profile } from '../atoms/ProfileComponent'
+import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 
@@ -45,7 +45,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
 
         <div className='flex-col items-end w-25'>
           <div className='flex items-center' onClick={() => route.profileDetail(item.user.id)}>
-            <Profile url={item.user.profileUrl}></Profile>
+            <ProfileImage url={item.user.profileUrl}></ProfileImage>
             <TextBase className='ml-1'>{item.user.nickname}</TextBase>
           </div>
 
