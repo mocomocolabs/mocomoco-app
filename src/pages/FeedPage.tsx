@@ -1,5 +1,5 @@
-import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
-import { create } from 'ionicons/icons'
+import { IonContent, IonHeader, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { Icon } from '../components/atoms/IconComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { useStore } from '../hooks/use-store'
@@ -45,15 +45,13 @@ export const FeedPage: React.FC = () => {
               route.feedForm()
             }}
           >
-            <IonIcon icon={create}></IonIcon>
+            <Icon name='pencil'></Icon>
           </div>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        <div className='px-container'>
-          <FeedList fetchTask={$feed.getFeeds} />
-        </div>
+        <FeedList fetchTask={$feed.getFeeds} />
       </IonContent>
     </IonPage>
   )

@@ -6,11 +6,11 @@ import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { Icon } from '../atoms/IconComponent'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
-import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { CommentItem } from './CommentItemComponent'
 import { ImageSlider } from './ImageSliderComponent'
+import { ProfileCard } from './ProfileCardComponent'
 
 interface IFeedItem {
   feed: IFeed
@@ -28,13 +28,12 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
       <div className='flex-col'>
         <TextBase>{feed.title}</TextBase>
         <div className='flex-between-center'>
-          <div className='flex'>
-            <ProfileImage url={feed.user.profileUrl}></ProfileImage>
-            <div className='flex-col'>
-              <TextBase className=''>{feed.user.nickname}</TextBase>
-              <TextBase className='dim'>{timeDiff(feed.createdAt)}</TextBase>
-            </div>
-          </div>
+          <ProfileCard
+            profileUrl={feed.user.profileUrl}
+            communityName={feed.user.communities[0].name}
+            nickname={feed.user.nickname}
+            extraText={timeDiff(feed.createdAt)}
+          ></ProfileCard>
 
           <OverflowMenuIcon show={$auth.user.id === feed.user.id} onDelete={onDelete} onEdit={onEdit} />
         </div>
