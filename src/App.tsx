@@ -19,7 +19,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     init()
     // eslint-disable-next-line
-  }, [])
+  }, [$auth.isLogin])
 
   // useEffect(() => {}, [$chat.unReadCountAll])
 
