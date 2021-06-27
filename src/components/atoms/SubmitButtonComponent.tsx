@@ -31,7 +31,7 @@ export const SubmitButton: FC<ISubmitButton> = ({
   return (
     <button
       type='submit'
-      className={`shadow w-full height-56 br-28 ${disabled ? 'bg-gray' : `bg-${color}`} ${className}`}
+      className={`shadow w-full height-56 br-28 ${disabled ? 'bg-gray' : `bg-${color}`}  ${className}`}
       disabled={disabled}
       onClick={onClick}
     >
