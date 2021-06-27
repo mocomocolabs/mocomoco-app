@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { IClubMember } from '../../models/club.d'
 import { ICommunity } from '../../models/community'
 import { Icon } from '../atoms/IconComponent'
-import { Profile } from '../atoms/ProfileComponent'
+import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextSm } from '../atoms/TextSmComponent'
 
@@ -21,7 +21,7 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community }) 
       {members.map((v) => (
         <div key={v.id} className='flex-between-center'>
           <div className='flex items-center'>
-            <Profile url={v.profileUrl} className='mr-2 w-10 h-10'></Profile>
+            <ProfileImage url={v.profileUrl} className='mr-2 w-10 h-10'></ProfileImage>
             <div className='flex-col'>
               <div className='flex items-center'>
                 {v.isAdmin && <Icon name='star-solid' className='icon-primary mr-1'></Icon>}

@@ -4,7 +4,7 @@ import { useStore } from '../../hooks/use-store'
 import { IComment } from '../../models/comment'
 import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
-import { Profile } from '../atoms/ProfileComponent'
+import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextSm } from '../atoms/TextSmComponent'
 import { XDivider } from '../atoms/XDividerComponent'
@@ -31,7 +31,7 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
   return useObserver(() => (
     <>
       <div className='flex'>
-        <Profile key={comment.id} url={comment.user.profileUrl}></Profile>
+        <ProfileImage key={comment.id} url={comment.user.profileUrl}></ProfileImage>
         <div className='flex-col flex-1'>
           <div className='flex-between-center'>
             <TextBase>{comment.user.nickname}</TextBase>

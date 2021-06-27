@@ -6,7 +6,7 @@ import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { Icon } from '../atoms/IconComponent'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
-import { Profile } from '../atoms/ProfileComponent'
+import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { CommentItem } from './CommentItemComponent'
@@ -29,7 +29,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
         <TextBase>{feed.title}</TextBase>
         <div className='flex-between-center'>
           <div className='flex'>
-            <Profile url={feed.user.profileUrl}></Profile>
+            <ProfileImage url={feed.user.profileUrl}></ProfileImage>
             <div className='flex-col'>
               <TextBase className=''>{feed.user.nickname}</TextBase>
               <TextBase className='dim'>{timeDiff(feed.createdAt)}</TextBase>
