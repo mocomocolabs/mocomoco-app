@@ -8,6 +8,7 @@ import './global.scss'
 import { useStore } from './hooks/use-store'
 import { ISubChat } from './models/chat'
 import { RouterTab } from './RouterTab'
+import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 import { webSocket } from './services/web-socket-service'
 
@@ -37,6 +38,7 @@ export const App: React.FC = () => {
       $community.setSelectedId($auth.user.communityId)
 
       // 챗방 리스트 조회
+      // TODO: SignInEmailComponent.tsx의 코드와 중복됌. 하나로 합칠 필요가 있을듯
       await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
       // 웹소켓 연결
       webSocket.init()
@@ -51,6 +53,12 @@ export const App: React.FC = () => {
           })
         }
       )
+    } else {
+      if (await storage.getHaveSeenIntro()) {
+        route.signIn()
+      } else {
+        route.intro()
+      }
     }
 
     setInitailzed(true)

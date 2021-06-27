@@ -15,6 +15,7 @@ import { FeedDetailPage } from './pages/FeedDetailPage'
 import { FeedPage } from './pages/FeedPage'
 import { FeedWritePage } from './pages/FeedWritePage'
 import { HomePage } from './pages/HomePage'
+import { IntroPage } from './pages/IntroPage'
 import { MyPage } from './pages/MyPage'
 import { MyPageMyList } from './pages/MyPageMyList'
 import { ProfileDetailPage } from './pages/ProfileDetailPage'
@@ -119,6 +120,7 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
         <IonTabs ref={refTabbar}>
           <IonRouterOutlet id='main'>
             <Route path='/dev' component={DevPage} exact />
+            <Route path='/intro' component={IntroPage} exact />
             <Route path='/sign-in' component={SignInPage} exact />
             <Route path='/sign-up' component={SignUpPage} exact />
             <Route path='/sign-up/community' component={SignUpCommunityPage} exact />

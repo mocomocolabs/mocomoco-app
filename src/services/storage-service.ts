@@ -8,10 +8,19 @@ class StorageService {
   private _communityId = 0
   accessTokenForSync = ''
 
+  private readonly HAVE_SEEN_INTRO = 'HAVE_SEEN_INTRO'
   private readonly COMMUNITY_ID = 'COMMUNITY_ID'
   private readonly ACCESS_TOKEN = 'ACCESS_TOKEN'
   private readonly REFRESH_TOKEN = 'REFRESH_TOKEN'
   private readonly STORE_CHAT_ROOM = 'STORE_CHAT_ROOM'
+
+  setHaveSeenIntro() {
+    return this.setObject(this.HAVE_SEEN_INTRO, true)
+  }
+
+  getHaveSeenIntro(): Promise<boolean> {
+    return this.getObject(this.HAVE_SEEN_INTRO)
+  }
 
   setCommunityId(id: number): Promise<void> {
     // ** 주의
@@ -44,6 +53,18 @@ class StorageService {
     return this.setObject(this.REFRESH_TOKEN, encrypt(refreshToken, config.KEY.ENCRYPT_SECRET))
   }
 
+  async setAccessTokenForSync() {
+    this.accessTokenForSync = await this.getAccessToken()
+  }
+
+  setStoreChatRoom(storeChatRoom: IStoreChatRoom[]) {
+    return this.setObject(this.STORE_CHAT_ROOM, storeChatRoom)
+  }
+
+  getStoreChatRoom(): Promise<IStoreChatRoom[]> {
+    return this.getObject(this.STORE_CHAT_ROOM)
+  }
+
   // eslint-disable-next-line
   private async setObject(key: string, value: any) {
     await Storage.set({
@@ -62,18 +83,6 @@ class StorageService {
 
   get communityId() {
     return this._communityId
-  }
-
-  async setAccessTokenForSync() {
-    this.accessTokenForSync = await this.getAccessToken()
-  }
-
-  setStoreChatRoom(storeChatRoom: IStoreChatRoom[]) {
-    return this.setObject(this.STORE_CHAT_ROOM, storeChatRoom)
-  }
-
-  getStoreChatRoom(): Promise<IStoreChatRoom[]> {
-    return this.getObject(this.STORE_CHAT_ROOM)
   }
 }
 
