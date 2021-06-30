@@ -1,7 +1,7 @@
 import { IonIcon } from '@ionic/react'
 import { chatbox, cloud } from 'ionicons/icons'
-import { getLabel, statusLabels, typeLabels } from '../../models/stufftalent'
-import { IStuffTalent, StuffTalentPathName as Path } from '../../models/stufftalent.d'
+import { getLabel, routeFunc, statusLabels, typeLabels } from '../../models/stufftalent'
+import { IStuffTalent, StuffTalentPageKey } from '../../models/stufftalent.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
@@ -11,7 +11,7 @@ import { TextLg } from '../atoms/TextLgComponent'
 
 interface IStuffTalentIItem {
   loginUserId: number
-  path: Path
+  pageKey: StuffTalentPageKey
   item: IStuffTalent
   onEdit: (id: number) => void
   onDelete: (id: number) => void
@@ -19,13 +19,12 @@ interface IStuffTalentIItem {
 
 export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
   loginUserId,
-  path,
+  pageKey,
   item,
   onEdit,
   onDelete,
 }) => {
-  const routeDetail =
-    path === Path.STUFF ? (id: number) => route.stuffDetail(id) : (id: number) => route.talentDetail(id)
+  const { routeDetail } = routeFunc[pageKey]
 
   return (
     <li>

@@ -14,22 +14,22 @@ import { CategorySelector } from '../components/molecules/CategorySelectorCompon
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
-import { typeLabels } from '../models/stufftalent'
-import { IStuffTalentForm, StuffTalentType } from '../models/stufftalent.d'
-import { route } from '../services/route-service'
+import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
+import { IStuffTalentForm, StuffTalentPageKey, StuffTalentType } from '../models/stufftalent.d'
 import { executeWithError } from '../utils/http-helper-util'
 
 export const StuffTalentFormPage: React.FC = () => {
   const { $ui, $stuff, $talent, $community } = useStore()
 
-  const { pathname } = useLocation()
-  // TODO fix here
-  const store = pathname === '/stuff-form' ? $stuff : $talent
-  const title = pathname === '/stuff-form' ? '물건' : '재능'
-  const routeList = () => (pathname === '/stuff-form' ? route.stuff() : route.talent())
+  const pageData = {
+    [StuffTalentPageKey.STUFF]: { store: $stuff, title: '물건' },
+    [StuffTalentPageKey.TALENT]: { store: $talent, title: '재능' },
+  }
+
+  const { store, title } = pageData[getPageKey(useLocation().pathname)]
+  const { routeList } = routeFunc[store.predefined.pageKey]
 
   const isUpdate = !!store.updateForm.id
-  console.log('form enter', isUpdate, store.updateForm, 'store.form', store.form)
   const form = Object.assign({}, isUpdate ? { ...store.updateForm } : { ...store.form })
 
   const {
@@ -93,7 +93,6 @@ export const StuffTalentFormPage: React.FC = () => {
   })
 
   useIonViewWillLeave(() => {
-    console.log('useIonViewWillLeaveuseIonViewWillLeaveuseIonViewWillLeaveuseIonViewWillLeave')
     isUpdate ? store.resetUpdateForm() : store.resetForm()
 
     // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등

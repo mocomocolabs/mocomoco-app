@@ -15,6 +15,7 @@ interface IStuffTalentDtoBase {
   status: Status
   category: IStuffTalentCategoryDto
   community: IStuffTalentCommunityDto
+  chatroom: IStuffTalentChatroomDto
   user: IUser
   title: string
   content: string
@@ -26,6 +27,22 @@ interface IStuffTalentDtoBase {
   isPublic: boolean
   createdAt: string
   atchFiles: IFileDto[]
+  isUse: boolean
+}
+
+interface IStuffTalentInsertReqDto {
+  id: number
+  type: Type
+  status: Status
+  categoryId: number
+  communityId: number
+  title: string
+  content: string
+  price: number
+  exchangeText: string
+  isExchangeable: boolean
+  isNegotiable: boolean
+  isPublic: boolean
   isUse: boolean
 }
 
@@ -54,4 +71,14 @@ export interface IStuffTalentCategoryDto {
 export interface IStuffTalentCommunityDto {
   id: number
   name: string
+}
+
+export interface IStuffTalentChatroomDto {
+  id: number
+}
+
+export interface ICreateChatDto {
+  stuffId?: number
+  talentId?: number
+  userId: number
 }

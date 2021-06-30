@@ -1,5 +1,5 @@
 import { configure } from 'mobx'
-import { StuffTalentPathName as PathName } from './../models/stufftalent.d'
+import { StuffTalentPageKey as PageKey } from './../models/stufftalent.d'
 import { AuthStore } from './auth-store'
 import { ChatStore } from './chat-store'
 import { ClubStore } from './club-store'
@@ -39,8 +39,8 @@ export class RootStore {
     this.$comment = new CommentStore()
     this.$ui = new UiStore()
     this.$user = new UserStore()
-    this.$stuff = new StuffTalentStore(PathName.STUFF)
-    this.$talent = new StuffTalentStore(PathName.TALENT)
+    this.$stuff = new StuffTalentStore(PageKey.STUFF)
+    this.$talent = new StuffTalentStore(PageKey.TALENT)
     this.$chat = new ChatStore()
     this.$club = new ClubStore(this)
     this.$segment = new SegmentStore()

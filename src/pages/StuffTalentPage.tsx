@@ -17,9 +17,8 @@ import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
-import { typeLabels } from '../models/stufftalent'
-import { IStuffTalentFilter, StuffTalentStatus } from '../models/stufftalent.d'
-import { route } from '../services/route-service'
+import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
+import { IStuffTalentFilter, StuffTalentPageKey, StuffTalentStatus } from '../models/stufftalent.d'
 
 interface SearchbarChangeEventDetail {
   value: string | undefined
@@ -32,13 +31,14 @@ const initialSearch = ''
 
 export const StuffTalentPage: React.FC = () => {
   const { $stuff, $talent, $ui, $community } = useStore()
-  const { pathname } = useLocation()
 
-  // TODO 경로명 하드코딩하지 않기
-  const store = pathname === '/stuff' ? $stuff : $talent
-  const routeForm = () => {
-    pathname === '/stuff' ? route.stuffForm() : route.talentForm()
+  const pageData = {
+    [StuffTalentPageKey.STUFF]: { store: $stuff },
+    [StuffTalentPageKey.TALENT]: { store: $talent },
   }
+
+  const { store } = pageData[getPageKey(useLocation().pathname)]
+  const { routeForm } = routeFunc[store.predefined.pageKey]
 
   const [searchMode, setSearchMode] = useState(false)
   const [search, setSearch] = useState(initialSearch)
