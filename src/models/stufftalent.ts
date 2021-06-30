@@ -2,7 +2,6 @@ import _ from 'lodash'
 import { route } from '../services/route-service'
 import { IStuffTalentPredefined } from '../stores/stufftalent-store'
 import { IStuffTalentDto, IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
-import { getKeyValue } from '../utils/type-util'
 import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus, StuffTalentType } from './stufftalent.d'
 
 export interface StuffTalent extends IStuffTalent {}
@@ -11,10 +10,9 @@ export class StuffTalent {
   static of(payload: IStuffTalentDto, predefined: IStuffTalentPredefined) {
     return Object.assign(new StuffTalent(), {
       ...payload,
-      likeCount: (getKeyValue(
-        payload,
+      likeCount: (payload[
         predefined.stuffTalentUsersProperty as keyof IStuffTalentDto
-      ) as IStuffTalentLikeUserDto[]).filter((likeUsers) => likeUsers.isLike && likeUsers.isUse).length,
+      ] as IStuffTalentLikeUserDto[]).filter((likeUsers) => likeUsers.isLike && likeUsers.isUse).length,
       imageUrls: payload.atchFiles.map((v) => v.url),
       chatroomId: payload.chatroom?.id, //TODO 서버 response에서 chatroom 정보 넘기도록 수정 후 ? 제거
     })

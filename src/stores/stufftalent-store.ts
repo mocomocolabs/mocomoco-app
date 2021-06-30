@@ -13,7 +13,6 @@ import {
 } from '../models/stufftalent.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
-import { getKeyValue } from '../utils/type-util'
 import {
   ICreateChatDto,
   InsertStuffTalentTask,
@@ -112,10 +111,9 @@ export class StuffTalentStore {
   getItems = (async (search, filter) => {
     await api.get<IStuffsTalentsDto>(this.predefined.baseApi, this.config(search, filter)).then(
       action((data) => {
-        this.items = getKeyValue(
-          data,
+        this.items = (data[
           this.predefined.getItemsProperty as keyof IStuffsTalentsDto
-        ).map((item) => StuffTalent.of(item, this.predefined))
+        ] as IStuffTalentDto[]).map((item) => StuffTalent.of(item, this.predefined))
       })
     )
   }) as TaskBy2<string, IStuffTalentFilter>
