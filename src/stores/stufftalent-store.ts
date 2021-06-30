@@ -7,7 +7,7 @@ import {
   IStuffTalent,
   IStuffTalentFilter,
   IStuffTalentForm,
-  StuffTalentPathName as PathName,
+  StuffTalentPageKey as PageKey,
   StuffTalentStatus,
   StuffTalentType,
 } from '../models/stufftalent.d'
@@ -15,10 +15,12 @@ import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { getKeyValue } from '../utils/type-util'
 import {
+  ICreateChatDto,
   InsertStuffTalentTask,
   IStuffsTalentsDto,
   IStuffTalentCategoryDto,
   IStuffTalentDto,
+  IStuffTalentInsertReqDto,
 } from './stufftalent-store.d'
 import { TaskBy, TaskBy2 } from './task'
 
@@ -36,11 +38,12 @@ const initState = {
 }
 
 export interface IStuffTalentPredefined {
-  pathName: PathName
+  pageKey: PageKey
   baseApi: string
   toggleLikeApi: string
-  toggleLikeIdProperty: string
-  likeUsersProperty: string
+  createChatApi: string
+  stuffTalentIdProperty: string
+  stuffTalentUsersProperty: string
   getItemsProperty: string
   insertItemReqDto: string
 }
@@ -49,20 +52,22 @@ const apiVer = 'v1'
 
 const predefined: IStuffTalentPredefined[] = [
   {
-    pathName: PathName.STUFF,
+    pageKey: PageKey.STUFF,
     baseApi: `/${apiVer}/stuffs`,
     toggleLikeApi: `/${apiVer}/stuffs-users/likes`,
-    toggleLikeIdProperty: 'stuffId',
-    likeUsersProperty: 'stuffUsers',
+    createChatApi: `/${apiVer}/stuffs-users/chatrooms`,
+    stuffTalentIdProperty: 'stuffId',
+    stuffTalentUsersProperty: 'stuffUsers',
     getItemsProperty: 'stuffs',
     insertItemReqDto: 'stuffReqDto',
   },
   {
-    pathName: PathName.TALENT,
+    pageKey: PageKey.TALENT,
     baseApi: `/${apiVer}/talents`,
     toggleLikeApi: `/${apiVer}/talents-users/likes`,
-    toggleLikeIdProperty: 'talentId',
-    likeUsersProperty: 'talentUsers',
+    createChatApi: `/${apiVer}/talents-users/chatrooms`,
+    stuffTalentIdProperty: 'talentId',
+    stuffTalentUsersProperty: 'talentUsers',
     getItemsProperty: 'talents',
     insertItemReqDto: 'talentReqDto',
   },
@@ -82,8 +87,8 @@ export class StuffTalentStore {
 
   readonly predefined: IStuffTalentPredefined
 
-  constructor(pathName: PathName) {
-    this.predefined = predefined.find((p) => p.pathName === pathName) || predefined[0]
+  constructor(pathName: PageKey) {
+    this.predefined = predefined.find((p) => p.pageKey === pathName) || predefined[0]
     this.getCategoriesBy(pathName)
   }
 
@@ -183,11 +188,11 @@ export class StuffTalentStore {
             content: form.content,
             price: form.price,
             exchangeText: form.exchangeText,
-            isExchangable: form.isExchangeable,
+            isExchangeable: form.isExchangeable,
             isNegotiable: form.isNegotiable,
             isPublic: form.isPublic,
             isUse: true,
-          }),
+          } as IStuffTalentInsertReqDto),
         ],
         {
           type: 'application/json',
@@ -217,7 +222,7 @@ export class StuffTalentStore {
   @task.resolved
   toggleLike = (async (id: number, isLike: boolean) => {
     await api.post(this.predefined.toggleLikeApi, {
-      [`${this.predefined.toggleLikeIdProperty}`]: id,
+      [`${this.predefined.stuffTalentIdProperty}`]: id,
       isLike,
       isUse: true,
     })
@@ -282,4 +287,14 @@ export class StuffTalentStore {
   resetUpdateForm() {
     this.updateForm = initState.form
   }
+
+  @task.resolved
+  createChat = (async (payload: ICreateChatDto) => {
+    await api
+      .post(this.predefined.createChatApi, {
+        ...payload,
+        isUse: true,
+      })
+      .catch(({ status }) => console.error('createChat response status:', status))
+  }) as TaskBy<ICreateChatDto>
 }

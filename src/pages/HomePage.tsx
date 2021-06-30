@@ -8,7 +8,7 @@ import { HomeTitle } from '../components/molecules/HomeTitleComponent'
 import { StuffTalentItem } from '../components/molecules/StuffTalentItemComponent'
 import { ClubPopularSlider } from '../components/organisms/ClubPopularSliderComponent'
 import { useStore } from '../hooks/use-store'
-import { StuffTalentPathName } from '../models/stufftalent.d'
+import { StuffTalentPageKey } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
 
 export const HomePage: React.FC = () => {
@@ -65,7 +65,7 @@ export const HomePage: React.FC = () => {
             <StuffTalentItem
               key={item.id}
               loginUserId={$auth.user.id}
-              path={StuffTalentPathName.STUFF}
+              pageKey={StuffTalentPageKey.STUFF}
               item={item}
               onEdit={() => {}}
               onDelete={() => {}}
@@ -76,7 +76,7 @@ export const HomePage: React.FC = () => {
             <StuffTalentItem
               key={item.id}
               loginUserId={$auth.user.id}
-              path={StuffTalentPathName.STUFF}
+              pageKey={StuffTalentPageKey.STUFF}
               item={item}
               onEdit={() => {}}
               onDelete={() => {}}

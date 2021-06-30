@@ -1,7 +1,7 @@
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IStuffTalentDto } from '../stores/stufftalent-store.d'
 
-export enum StuffTalentPathName {
+export enum StuffTalentPageKey {
   STUFF = 'STUFF',
   TALENT = 'TALENT',
 }
@@ -22,6 +22,7 @@ export enum StuffTalentStatus {
 export interface IStuffTalent extends IStuffTalentDto {
   likeCount: number
   imageUrls: string[]
+  chatroomId: number
 }
 
 export interface IStuffTalentFilter {

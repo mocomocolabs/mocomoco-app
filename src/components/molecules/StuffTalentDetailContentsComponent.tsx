@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useStore } from '../../hooks/use-store'
 import { IStuffTalent, StuffTalentType } from '../../models/stufftalent.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
@@ -25,6 +26,8 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
   onEdit,
   onDelete,
 }) => {
+  const { $ui } = useStore()
+
   return (
     <div>
       <ImageSlider urls={item.imageUrls}></ImageSlider>
@@ -77,7 +80,13 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
                 },
                 {
                   label: '삭제',
-                  onClick: () => onDelete(item.id),
+                  onClick: () => {
+                    $ui.showAlert({
+                      isOpen: true,
+                      message: '게시글을 삭제하시겠어요?',
+                      onSuccess: () => onDelete(item.id),
+                    })
+                  },
                 },
               ]}
             />

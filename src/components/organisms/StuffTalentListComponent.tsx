@@ -3,8 +3,8 @@ import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { IStuffTalentFilter, StuffTalentPathName } from '../../models/stufftalent.d'
-import { route } from '../../services/route-service'
+import { routeFunc } from '../../models/stufftalent'
+import { IStuffTalentFilter } from '../../models/stufftalent.d'
 import { StuffTalentStore } from '../../stores/stufftalent-store'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { StuffTalentItem } from '../molecules/StuffTalentItemComponent'
@@ -23,11 +23,11 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
     store.getItems(search, filter)
   }, [store, search, filter])
 
+  const { routeForm } = routeFunc[store.predefined.pageKey]
+
   const onEditItem = async (id: number) => {
     await store.getUpdateForm(id)
-
-    // TODO 개선 필요
-    store.predefined.pathName === StuffTalentPathName.STUFF ? route.stuffForm() : route.talentForm()
+    routeForm()
   }
 
   const onDeleteItem = async (id: number) => {
@@ -55,7 +55,7 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
               <StuffTalentItem
                 key={item.id}
                 loginUserId={$auth.user.id}
-                path={store.predefined.pathName}
+                pageKey={store.predefined.pageKey}
                 item={item}
                 onEdit={onEditItem}
                 onDelete={onDeleteItem}

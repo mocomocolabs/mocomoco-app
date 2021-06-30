@@ -1,7 +1,9 @@
+import _ from 'lodash'
+import { route } from '../services/route-service'
 import { IStuffTalentPredefined } from '../stores/stufftalent-store'
 import { IStuffTalentDto, IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
 import { getKeyValue } from '../utils/type-util'
-import { IStuffTalent, StuffTalentStatus, StuffTalentType } from './stufftalent.d'
+import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus, StuffTalentType } from './stufftalent.d'
 
 export interface StuffTalent extends IStuffTalent {}
 
@@ -11,10 +13,10 @@ export class StuffTalent {
       ...payload,
       likeCount: (getKeyValue(
         payload,
-        predefined.likeUsersProperty as keyof IStuffTalentDto
+        predefined.stuffTalentUsersProperty as keyof IStuffTalentDto
       ) as IStuffTalentLikeUserDto[]).filter((likeUsers) => likeUsers.isLike && likeUsers.isUse).length,
       imageUrls: payload.atchFiles.map((v) => v.url),
-      // chatroomId: payload.chatroom.id, // TODO
+      chatroomId: payload.chatroom?.id, //TODO 서버 response에서 chatroom 정보 넘기도록 수정 후 ? 제거
     })
   }
 }
@@ -39,3 +41,29 @@ export const statusLabels: ILabel[] = [
   { value: StuffTalentStatus.RESERVED, label: '예약중' },
   { value: StuffTalentStatus.FINISH, label: '거래완료' },
 ]
+
+export const getPageKey = (path: string) => {
+  const upperPath = path.toUpperCase()
+  return _.find(StuffTalentPageKey, (pageKey) => upperPath.includes(pageKey))!
+}
+
+interface IRouteFunc {
+  [index: string]: {
+    routeList: () => void
+    routeForm: () => void
+    routeDetail: (id: number) => void
+  }
+}
+
+export const routeFunc: IRouteFunc = {
+  [StuffTalentPageKey.STUFF]: {
+    routeList: () => route.stuff(),
+    routeForm: () => route.stuffForm(),
+    routeDetail: (id) => route.stuffDetail(id),
+  },
+  [StuffTalentPageKey.TALENT]: {
+    routeList: () => route.talent(),
+    routeForm: () => route.talentForm(),
+    routeDetail: (id) => route.talentDetail(id),
+  },
+}
