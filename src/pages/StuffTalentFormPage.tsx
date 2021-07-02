@@ -56,13 +56,13 @@ export const StuffTalentFormPage: React.FC = () => {
 
   const setValueCustom = useCallback(
     (name, value) => {
-      setValue(name, value, { shouldDirty: true, shouldValidate: true, shouldTouch: true })
+      // shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
+      setValue(name, value, { shouldDirty: true, shouldValidate: true })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
-  // TODO: 수정 모드인 경우, 데이터 변경이 있을 때만 완료 버튼 활성화되도록 조건 추가 필요. dirtyFields 활용해야 할 듯
   const submittable = useMemo(() => {
     const isValidType =
       watchType === StuffTalentType.SELL
