@@ -16,7 +16,6 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { Segment } from '../components/molecules/SegmentComponent'
-import { ClubOurTownList } from '../components/organisms/ClubOurTownListComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
@@ -29,23 +28,22 @@ const segments: ISegments = {
   [SEGMENT_KEYS.stuff]: { label: '물건창고' },
   [SEGMENT_KEYS.talent]: { label: '재능창고' },
   [SEGMENT_KEYS.feed]: { label: '이야기창고' },
-  [SEGMENT_KEYS.club]: { label: '소모임' },
 }
 
 const FilterMode = { none: 'none', type: '조건' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
-export const MyPageMyList: React.FC = () => {
-  const { $segment, $auth, $stuff, $talent, $feed, $club } = useStore()
+export const MyPageLikeList: React.FC = () => {
+  const { $segment, $stuff, $talent, $feed } = useStore()
 
-  const segment = useRef<SEGMENT_KEYS>($segment.myListSegment)
+  const segment = useRef<SEGMENT_KEYS>($segment.likeListSegment)
 
   const initialFilter: IStuffTalentFilter = {
     isPublic: false,
-    userId: $auth.user.id,
     categories: [],
     notStatuses: [],
     types: [],
+    isLike: true,
     // TODO: 추후 페이징 처리
     limit: 999,
   }
@@ -65,9 +63,7 @@ export const MyPageMyList: React.FC = () => {
       case SEGMENT_KEYS.talent:
         return <StuffTalentList store={$talent} search={''} filter={filter} />
       case SEGMENT_KEYS.feed:
-        return <FeedList fetchTask={$feed.getMyFeeds} />
-      case SEGMENT_KEYS.club:
-        return <ClubOurTownList clubs={$club.myClubs} />
+        return <FeedList fetchTask={$feed.getLikeFeeds} />
       default:
         return <></> // TODO error 발생시켜야 하나?
     }
@@ -76,15 +72,12 @@ export const MyPageMyList: React.FC = () => {
   useEffect(
     () => {
       const disposeReaction = reaction(
-        () => $segment.myListSegment,
+        () => $segment.likeListSegment,
         (selectedSegment) => {
           if (segment.current !== selectedSegment) {
             segment.current = selectedSegment
             onResetFilter()
           }
-
-          // TODO clublistcomponent 안으로 옮길지 고민해보자
-          selectedSegment === SEGMENT_KEYS.club && $club.getMyClubs()
         }
       )
 
@@ -103,7 +96,7 @@ export const MyPageMyList: React.FC = () => {
           <div slot='start'>
             <BackButton type='arrow' />
           </div>
-          <IonTitle slot='start'>내 목록</IonTitle>
+          <IonTitle slot='start'>관심 목록</IonTitle>
           <IonButtons slot='primary'>
             <IonButton slot='end' color='dark' routerLink='/settings'>
               <IonIcon slot='icon-only' icon={filterOutline} size='small' />
@@ -116,14 +109,14 @@ export const MyPageMyList: React.FC = () => {
             <>
               <Segment
                 segments={segments}
-                selected={$segment.myListSegment}
-                setSelected={$segment.setMyListSegment}
+                selected={$segment.likeListSegment}
+                setSelected={$segment.setLikeListSegment}
               />
 
               <FilterBar
                 show={
-                  $segment.myListSegment === SEGMENT_KEYS.stuff ||
-                  $segment.myListSegment === SEGMENT_KEYS.talent
+                  $segment.likeListSegment === SEGMENT_KEYS.stuff ||
+                  $segment.likeListSegment === SEGMENT_KEYS.talent
                 }
                 filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
                 onReset={onResetFilter}
@@ -155,7 +148,7 @@ export const MyPageMyList: React.FC = () => {
 
       <IonContent>
         <div className='px-container my-4'>
-          <Observer>{() => renderList($segment.myListSegment)}</Observer>
+          <Observer>{() => renderList($segment.likeListSegment)}</Observer>
         </div>
       </IonContent>
     </IonPage>

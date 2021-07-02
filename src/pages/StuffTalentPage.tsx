@@ -47,7 +47,6 @@ export const StuffTalentPage: React.FC = () => {
   const initialFilter: IStuffTalentFilter = {
     isPublic: false,
     communityId: $community.selectedId,
-    userId: undefined,
     categories: [],
     notStatuses: [],
     types: [],

@@ -111,9 +111,9 @@ export class StuffTalentStore {
   getItems = (async (search, filter) => {
     await api.get<IStuffsTalentsDto>(this.predefined.baseApi, this.config(search, filter)).then(
       action((data) => {
-        this.items = (data[
-          this.predefined.getItemsProperty as keyof IStuffsTalentsDto
-        ] as IStuffTalentDto[]).map((item) => StuffTalent.of(item, this.predefined))
+        this.items = (data[this.predefined.getItemsProperty as keyof IStuffsTalentsDto] as IStuffTalentDto[])
+          .filter((item) => filter.isLike === undefined || item.isLike === filter.isLike)
+          .map((item) => StuffTalent.of(item, this.predefined))
       })
     )
   }) as TaskBy2<string, IStuffTalentFilter>

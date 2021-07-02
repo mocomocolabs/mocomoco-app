@@ -55,6 +55,15 @@ export class FeedStore {
   }) as Task
 
   @task
+  getLikeFeeds = (async () => {
+    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds`).then(
+      action((data) => {
+        this.feeds = data.feeds.filter((v) => v.isLike).map((v) => Feed.of(v, this.$auth.user.id))
+      })
+    )
+  }) as Task
+
+  @task
   getHomeFeeds = (async () => {
     await api
       .get<{ feeds: IFeedDto[] }>(
