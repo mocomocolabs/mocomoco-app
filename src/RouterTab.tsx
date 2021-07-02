@@ -16,6 +16,7 @@ import { FeedPage } from './pages/FeedPage'
 import { FeedWritePage } from './pages/FeedWritePage'
 import { HomePage } from './pages/HomePage'
 import { MyPage } from './pages/MyPage'
+import { MyPageLikeList } from './pages/MyPageLikeList'
 import { MyPageMyList } from './pages/MyPageMyList'
 import { ProfileDetailPage } from './pages/ProfileDetailPage'
 import { ProfileUpdatePage } from './pages/ProfileUpdatePage'
@@ -140,7 +141,7 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <GuardRoute path='/chat/:id' component={ChatRoomPage} exact />
             <GuardRoute path='/my-page' component={MyPage} exact />
             <GuardRoute path='/my-page/my-list' component={MyPageMyList} exact />
-            <GuardRoute path='/my-page/like-list' component={MyPage} exact />
+            <GuardRoute path='/my-page/like-list' component={MyPageLikeList} exact />
             <GuardRoute path='/settings' component={SettingsPage} exact />
             <GuardRoute path='/users/:id' component={ProfileDetailPage} exact />
             <GuardRoute path='/users/:id/edit' component={ProfileUpdatePage} exact />
