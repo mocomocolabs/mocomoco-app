@@ -60,6 +60,10 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
           // TODO 목록 없을 때 표시할 공통컴포넌트 만들자
           <TextXs>목록이 없습니다</TextXs>
         ),
+      rejected: () => {
+        console.warn('rejected')
+        return <></>
+      },
     })
   )
 }

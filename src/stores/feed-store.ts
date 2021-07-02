@@ -108,8 +108,9 @@ export class FeedStore {
 
         this.setForm({
           ...data,
-          scheduleDate: data.scheduleDate.substr(0, 8),
-          scheduleTime: data.scheduleDate.substr(8),
+          // TODO 서버쪽 schedule관련 수정 후 코드 변경하기
+          scheduleDate: data.scheduleDate?.substr(0, 8),
+          scheduleTime: data.scheduleDate?.substr(8),
           images,
         })
       })

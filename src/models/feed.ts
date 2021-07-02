@@ -7,8 +7,9 @@ export class Feed {
   static of(dto: IFeedDto, userId: number) {
     return Object.assign(new Feed(), {
       ...dto,
-      scheduleDate: dto.scheduleDate.substr(0, 8),
-      scheduleTime: dto.scheduleDate.substr(8),
+      // TODO 서버쪽 schedule관련 수정 후 코드 변경하기
+      scheduleDate: dto.scheduleDate?.substr(0, 8),
+      scheduleTime: dto.scheduleDate?.substr(8),
       community: {
         ...dto.community,
         bannerUrl: dto.community.atchFiles[0]?.url,
