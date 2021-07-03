@@ -30,7 +30,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
         <div className='flex-between-center'>
           <ProfileCard
             profileUrl={feed.user.profileUrl}
-            communityName={feed.user.communities[0].name}
+            communityName={feed.user.communities[0]?.name}
             nickname={feed.user.nickname}
             extraText={timeDiff(feed.createdAt)}
           ></ProfileCard>
@@ -48,15 +48,14 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
           </div>
         )}
 
-        {feed.type === 'SCHEDULE' && (
-          <div className='flex'>
-            <Icon name='calendar'></Icon>
-            <div className='ml-2 flex-col flex-1'>
-              <TextLg>{feed.scheduleTitle}</TextLg>
-              <TextBase className='dim'>{feed.scheduleDate}</TextBase>
-            </div>
+        <div className='flex'>
+          <Icon name='calendar'></Icon>
+          <div className='ml-2 flex-col flex-1'>
+            <TextLg>{feed.schedule?.title}</TextLg>
+            {/* TODO: 디자인 확정후 재작업 필요 */}
+            <TextBase className='dim'>{feed.schedule?.startDate}</TextBase>
           </div>
-        )}
+        </div>
         {feed.imageUrls?.length > 0 && (
           <div>
             <ImageSlider urls={feed.imageUrls}></ImageSlider>

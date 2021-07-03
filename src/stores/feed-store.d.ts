@@ -12,8 +12,7 @@ export interface IFeedDto {
   nickname: string
   title: string
   content: string
-  scheduleTitle: string
-  scheduleDate: string
+  schedule: IFeedScheduleDto
   type: FeedType
   community: ICommunityDto
   atchFiles: IFileDto[]
@@ -23,4 +22,14 @@ export interface IFeedDto {
   createdAt: string
   feedComments: { id: number; isUse: boolean }[]
   feedUsers: { isLike: boolean }[]
+}
+
+export interface IFeedScheduleDto {
+  id: number
+  title: string
+  place: string
+  /** yyyymmddhhmmss */
+  startDateTime: string
+  /** yyyymmddhhmmss */
+  endDateTime: string
 }
