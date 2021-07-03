@@ -23,6 +23,15 @@ import { ISegments, SEGMENT_KEYS } from '../models/segment.d'
 import { typeLabels } from '../models/stufftalent'
 import { IStuffTalentFilter, StuffTalentStatus } from '../models/stufftalent.d'
 
+/* TODO 내목록 vs 관심목록 - 코드량이 많진 않지만 대부분 중복되는데, 어케 통합할지 각이 안 잡혀서 일단 둔다.
+segments : 소모임 OX
+$segment.myListSegment vs likeListSegment
+initialFilter : userId OX, isLike OX
+title : 내 목록 vs 관심 목록
+feed fetchTask : getMyFeeds vs getLikeFeeds
+club fetchTask : getMyClubs vs undefined
+*/
+
 // TODO segment_keys를 stufftalent용으로만 사용하고 있으니, segment.d 파일명을 바꾸던가 해야겠다
 const segments: ISegments = {
   [SEGMENT_KEYS.stuff]: { label: '물건창고' },
@@ -36,7 +45,9 @@ type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 export const MyPageLikeList: React.FC = () => {
   const { $segment, $stuff, $talent, $feed } = useStore()
 
+  const title = '관심 목록'
   const segment = useRef<SEGMENT_KEYS>($segment.likeListSegment)
+  const setSegment = $segment.setLikeListSegment
 
   const initialFilter: IStuffTalentFilter = {
     isPublic: false,
@@ -96,7 +107,7 @@ export const MyPageLikeList: React.FC = () => {
           <div slot='start'>
             <BackButton type='arrow' />
           </div>
-          <IonTitle slot='start'>관심 목록</IonTitle>
+          <IonTitle slot='start'>{title}</IonTitle>
           <IonButtons slot='primary'>
             <IonButton slot='end' color='dark' routerLink='/settings'>
               <IonIcon slot='icon-only' icon={filterOutline} size='small' />
@@ -104,27 +115,18 @@ export const MyPageLikeList: React.FC = () => {
           </IonButtons>
         </IonToolbar>
 
+        <Segment segments={segments} selected={segment.current} setSelected={setSegment} />
+
         <Observer>
           {() => (
-            <>
-              <Segment
-                segments={segments}
-                selected={$segment.likeListSegment}
-                setSelected={$segment.setLikeListSegment}
-              />
-
-              <FilterBar
-                show={
-                  $segment.likeListSegment === SEGMENT_KEYS.stuff ||
-                  $segment.likeListSegment === SEGMENT_KEYS.talent
-                }
-                filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
-                onReset={onResetFilter}
-                onClick={(name: string) => {
-                  setFilterMode(filterMode === name ? FilterMode.none : name)
-                }}
-              />
-            </>
+            <FilterBar
+              show={[SEGMENT_KEYS.stuff, SEGMENT_KEYS.talent].includes($segment.likeListSegment)}
+              filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
+              onReset={onResetFilter}
+              onClick={(name: string) => {
+                setFilterMode(filterMode === name ? FilterMode.none : name)
+              }}
+            />
           )}
         </Observer>
       </IonHeader>

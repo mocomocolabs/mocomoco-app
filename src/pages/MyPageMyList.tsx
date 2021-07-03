@@ -38,7 +38,9 @@ type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 export const MyPageMyList: React.FC = () => {
   const { $segment, $auth, $stuff, $talent, $feed, $club } = useStore()
 
+  const title = '내 목록'
   const segment = useRef<SEGMENT_KEYS>($segment.myListSegment)
+  const setSegment = $segment.setMyListSegment
 
   const initialFilter: IStuffTalentFilter = {
     isPublic: false,
@@ -49,6 +51,7 @@ export const MyPageMyList: React.FC = () => {
     // TODO: 추후 페이징 처리
     limit: 999,
   }
+
   const [filter, setFilter] = useState<IStuffTalentFilter>(initialFilter)
   const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
   const onCloseFilterPopup = () => setFilterMode(FilterMode.none)
@@ -103,7 +106,7 @@ export const MyPageMyList: React.FC = () => {
           <div slot='start'>
             <BackButton type='arrow' />
           </div>
-          <IonTitle slot='start'>내 목록</IonTitle>
+          <IonTitle slot='start'>{title}</IonTitle>
           <IonButtons slot='primary'>
             <IonButton slot='end' color='dark' routerLink='/settings'>
               <IonIcon slot='icon-only' icon={filterOutline} size='small' />
@@ -111,27 +114,18 @@ export const MyPageMyList: React.FC = () => {
           </IonButtons>
         </IonToolbar>
 
+        <Segment segments={segments} selected={segment.current} setSelected={setSegment} />
+
         <Observer>
           {() => (
-            <>
-              <Segment
-                segments={segments}
-                selected={$segment.myListSegment}
-                setSelected={$segment.setMyListSegment}
-              />
-
-              <FilterBar
-                show={
-                  $segment.myListSegment === SEGMENT_KEYS.stuff ||
-                  $segment.myListSegment === SEGMENT_KEYS.talent
-                }
-                filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
-                onReset={onResetFilter}
-                onClick={(name: string) => {
-                  setFilterMode(filterMode === name ? FilterMode.none : name)
-                }}
-              />
-            </>
+            <FilterBar
+              show={[SEGMENT_KEYS.stuff, SEGMENT_KEYS.talent].includes($segment.myListSegment)}
+              filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
+              onReset={onResetFilter}
+              onClick={(name: string) => {
+                setFilterMode(filterMode === name ? FilterMode.none : name)
+              }}
+            />
           )}
         </Observer>
       </IonHeader>
