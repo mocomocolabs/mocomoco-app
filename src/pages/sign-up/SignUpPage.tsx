@@ -53,15 +53,16 @@ export const SignUpPage: React.FC = () => {
             color='secondary'
             text='이메일로 시작하기'
             onClick={async () => {
+              $auth.setSignUpForm({ email: getValues().email })
+
               $auth
                 .checkEmail(getValues().email)
                 .then(() => {
-                  $auth.setSignUpForm({ email: getValues().email })
-                  route.signUpCommunity()
+                  route.signUpForm()
                 })
                 .catch((err) => {
                   if (err.status === 409) {
-                    $ui.showToastError({ message: '중복된 이메일입니다.' })
+                    route.signIn()
                   }
                 })
             }}
@@ -71,7 +72,6 @@ export const SignUpPage: React.FC = () => {
             <br />
             이용약관에 동의하신 것으로 간주합니다.
           </TextXs>
-          <button onClick={() => route.signIn()}>로그인</button>
         </div>
       </IonContent>
     </IonPage>

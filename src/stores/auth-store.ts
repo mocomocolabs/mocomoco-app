@@ -57,7 +57,7 @@ export class AuthStore {
     }
 
     // TODO: 제거필요
-    param.mobile = '123456789'
+    param.mobile = '_'
 
     return http.post(`/auth/sign-up`, param)
   }) as SignUpTask
@@ -89,13 +89,18 @@ export class AuthStore {
         })
       } catch (e) {
         if (e.status === 401) {
+          // TODO: action 분리
           const refreshToken = await storage.getRefreshToken()
           api.setAuthoriationBy(refreshToken)
-          api.post<IAuthUserDto>(`/auth/refresh-token`, {}).then((user) => {
-            this.setAuth(user)
-          })
-        } else {
-          route.signIn()
+          api
+            .post<IAuthUserDto>(`/auth/refresh-token`, {})
+            .then((user) => {
+              this.setAuth(user)
+            })
+            .catch(() => {
+              // TODO: 컴포넌트단에서 라우팅하는 것이 코드파악에 용이함
+              route.signUp()
+            })
         }
       }
     }
@@ -112,8 +117,8 @@ export class AuthStore {
 
   @action
   setUser(user: IAuthUserDto) {
-    const { id, communities, chatroomUserIds } = user
-    this.user = { id, communityId: communities[0].id, chatroomIds: chatroomUserIds }
+    const { id, communities, chatroomUserIds, status } = user
+    this.user = { id, communityId: communities[0].id, chatroomIds: chatroomUserIds, status }
     this.setIsLogin()
   }
 }

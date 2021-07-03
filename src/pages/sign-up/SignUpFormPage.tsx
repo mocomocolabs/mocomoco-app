@@ -1,5 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
-import { BackButton } from '../../components/molecules/BackButtonComponent'
+import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
+import { BackButtonIntro } from '../../components/molecules/BackButtonIntroComponent'
 import { SignUpForm } from '../../components/organisms/SignUpFormComponent'
 import { useStore } from '../../hooks/use-store'
 
@@ -12,16 +12,15 @@ export const SignUpFormPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <div slot='start'>
-            <BackButton type='arrow'></BackButton>
-          </div>
-        </IonToolbar>
-      </IonHeader>
       <IonContent>
-        <div className='px-container'>회원가입</div>
-        <SignUpForm></SignUpForm>
+        <div className='px-container'>
+          <BackButtonIntro>
+            환영합니다!
+            <br />
+            하마는 처음이신가요?
+          </BackButtonIntro>
+          <SignUpForm></SignUpForm>
+        </div>
       </IonContent>
     </IonPage>
   )
