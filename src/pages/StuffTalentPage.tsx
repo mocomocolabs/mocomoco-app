@@ -79,7 +79,6 @@ export const StuffTalentPage: React.FC = () => {
     return () => {
       disposeReaction()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

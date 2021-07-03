@@ -37,7 +37,6 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
 
   useEffect(() => {
     setImages(images.map((v, i) => assignPreview(v, i)))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useIonViewWillLeave(() => {

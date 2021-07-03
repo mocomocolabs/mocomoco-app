@@ -82,25 +82,21 @@ export const MyPageLikeList: React.FC = () => {
     }
   }
 
-  useEffect(
-    () => {
-      const disposeReaction = reaction(
-        () => $segment.likeListSegment,
-        (selectedSegment) => {
-          if (segment.current !== selectedSegment) {
-            segment.current = selectedSegment
-            onResetFilter()
-          }
+  useEffect(() => {
+    const disposeReaction = reaction(
+      () => $segment.likeListSegment,
+      (selectedSegment) => {
+        if (segment.current !== selectedSegment) {
+          segment.current = selectedSegment
+          onResetFilter()
         }
-      )
-
-      return () => {
-        disposeReaction()
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+    )
+
+    return () => {
+      disposeReaction()
+    }
+  }, [])
 
   return (
     <IonPage>

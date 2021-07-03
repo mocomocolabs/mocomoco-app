@@ -42,7 +42,6 @@ export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticCo
         readChatId: lastReadChatId,
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useIonViewWillEnter(() => {

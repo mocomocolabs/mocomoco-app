@@ -35,7 +35,6 @@ export const HomePage: React.FC = () => {
     $club.getPopularClubs(10)
     $feed.getHomeFeeds()
     $feed.getHomeScheduleFeeds()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // TODO: loader compositie or height fixed
