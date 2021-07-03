@@ -5,7 +5,7 @@ import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { Description } from '../atoms/DescriptionComponent'
 import { Pad } from '../atoms/PadComponent'
-import { Profile } from '../atoms/ProfileComponent'
+import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { TextSm } from '../atoms/TextSmComponent'
@@ -59,7 +59,7 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
               route.profileDetail(item.user.id)
             }}
           >
-            <Profile url={item.user.profileUrl} className='mr-2 w-10 h-10'></Profile>
+            <ProfileImage url={item.user.profileUrl} className='mr-2 w-10 h-10'></ProfileImage>
             <div className='flex-col'>
               <TextBase>{item.user.nickname}</TextBase>
 
