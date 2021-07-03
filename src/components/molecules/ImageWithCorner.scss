@@ -1,6 +1,10 @@
 @import '../../theme/variable';
 
 .corner {
-  width: 1.4rem !important;
-  height: 1.4rem !important;
+  width: 4rem !important;
+  height: 4rem !important;
+}
+
+.bottom-radius {
+  border-top-left-radius: 4rem;
 }
