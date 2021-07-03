@@ -22,6 +22,7 @@ import { ProfileDetailPage } from './pages/ProfileDetailPage'
 import { ProfileUpdatePage } from './pages/ProfileUpdatePage'
 import { SettingsPage } from './pages/SettingsPage'
 import { SignUpCommunityPage } from './pages/sign-up/SignUpCommunityPage'
+import { SignUpCompletePage } from './pages/sign-up/SignUpCompletePage'
 import { SignUpFormPage } from './pages/sign-up/SignUpFormPage'
 import { SignUpPage } from './pages/sign-up/SignUpPage'
 import { SignInPage } from './pages/SignInPage'
@@ -123,8 +124,9 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <Route path='/intro' component={IntroPage} exact />
             <Route path='/sign-in' component={SignInPage} exact />
             <Route path='/sign-up' component={SignUpPage} exact />
-            <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
             <Route path='/sign-up/form' component={SignUpFormPage} exact />
+            <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
+            <Route path='/sign-up/complete' component={SignUpCompletePage} exact />
             <GuardRoute path='/home' component={HomePage} exact />
             <GuardRoute path='/feed' component={FeedPage} exact />
             <GuardRoute path='/feed/:id' component={FeedDetailPage} exact />

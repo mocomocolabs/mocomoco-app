@@ -7,8 +7,12 @@ export const InputPassword: FC<IInput> = (props) => {
   const [showsPassword, setShowsPassword] = useState(false)
 
   return (
-    <div className='relative'>
-      <Input {...props} className='w-full h-10 my-1' type={showsPassword ? 'text' : 'password'}></Input>
+    <div className='relative mb-4'>
+      <Input
+        {...props}
+        className='w-full px-4 py-3 br-base border-gray'
+        type={showsPassword ? 'text' : 'password'}
+      ></Input>
       <IonIcon
         onClick={() => setShowsPassword(!showsPassword)}
         icon={showsPassword ? eyeOff : eyeOutline}

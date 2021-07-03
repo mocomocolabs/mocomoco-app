@@ -7,6 +7,7 @@ import { Toast } from './components/atoms/ToastComponent'
 import './global.scss'
 import { useStore } from './hooks/use-store'
 import { ISubChat } from './models/chat'
+import { SIGN_UP_STATUS } from './models/sign-up.d'
 import { RouterTab } from './RouterTab'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
@@ -31,11 +32,13 @@ export const App: React.FC = () => {
       $community.getCommunities(),
     ])
 
-    // $auth.setIsLogin()
-
-    // TODO: login 이후 실행할 공통 호출들
-    if ($auth.isLogin && $auth.user.communityId && !storage.communityId) {
+    // login 이후 실행할 공통 호출들
+    if ($auth.isLogin && $auth.user.communityId) {
       $community.setSelectedId($auth.user.communityId)
+
+      if ($auth.user.status === SIGN_UP_STATUS.대기) {
+        route.signUpComplete()
+      }
 
       // 챗방 리스트 조회
       // TODO: SignInEmailComponent.tsx의 코드와 중복됌. 하나로 합칠 필요가 있을듯
@@ -55,7 +58,7 @@ export const App: React.FC = () => {
       )
     } else {
       if (await storage.getHaveSeenIntro()) {
-        route.signIn()
+        route.signUp()
       } else {
         route.intro()
       }

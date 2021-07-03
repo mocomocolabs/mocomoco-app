@@ -1,5 +1,5 @@
 import { Task as TaskType } from 'mobx-task'
-import { ISignUpForm } from '../models/sign-up.d'
+import { ISignUpForm, SIGN_UP_STATUS } from '../models/sign-up.d'
 
 export type SignUpTask = TaskType<[Partial<ISignUpForm>], void>
 export type SignInTask = TaskType<[string, string], void>
@@ -12,4 +12,5 @@ export interface IAuthUserDto {
     id: number
   }[]
   chatroomUserIds: []
+  status: SIGN_UP_STATUS
 }

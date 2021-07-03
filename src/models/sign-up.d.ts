@@ -14,3 +14,8 @@ export interface ISignUpForm {
   fcmToken?: string
   profileUrl?: string
 }
+
+export enum SIGN_UP_STATUS {
+  대기 = 'PENDING',
+  승인 = 'APPROVAL',
+}

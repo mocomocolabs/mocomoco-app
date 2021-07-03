@@ -41,6 +41,10 @@ class RouteService {
     this.history.push('/sign-up/community')
   }
 
+  signUpComplete() {
+    this.history.push('/sign-up/complete')
+  }
+
   feed() {
     this.history.push('/feed')
   }

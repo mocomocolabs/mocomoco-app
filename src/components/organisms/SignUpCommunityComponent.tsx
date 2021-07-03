@@ -1,19 +1,23 @@
-import { IonIcon } from '@ionic/react'
-import { checkmark } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
+import { TaskGroup } from 'mobx-task'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
+import { executeWithError } from '../../utils/http-helper-util'
+import { Icon } from '../atoms/IconComponent'
+import { Pad } from '../atoms/PadComponent'
+import { Spinner } from '../atoms/SpinnerComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
-import { TextLg } from '../atoms/TextLgComponent'
-import { TextXxl } from '../atoms/TextXxlComponent'
+import { TextBase } from '../atoms/TextBaseComponent'
 
 export const SignUpCommunity: FC = () => {
   const { $community, $auth } = useStore()
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const observableTaskGroup = TaskGroup<any[], void | boolean>([$auth.signUp, $auth.signIn])
+
   return useObserver(() => (
     <>
-      <TextXxl>소속되신 공동체는 어디신가요?</TextXxl>
       <ul className='px-container pt-2'>
         {$community.communities.map((v) => (
           <li
@@ -25,19 +29,36 @@ export const SignUpCommunity: FC = () => {
             }}
           >
             <div className='flex-between-center'>
-              <TextLg>{v.name}</TextLg>
-              {v.id === $community.selectedId && <IonIcon icon={checkmark}></IonIcon>}
+              <TextBase className='gray'>{v.name}</TextBase>
+              {v.id === $community.selectedId && <Icon name='check-solid' className='icon-secondary'></Icon>}
             </div>
           </li>
         ))}
       </ul>
-      <SubmitButton
-        disabled={!$community.selectedId}
-        text='가입하기'
-        onClick={() => {
-          route.signUpForm()
-        }}
-      ></SubmitButton>
+
+      <Pad className='height-50'></Pad>
+
+      {observableTaskGroup.match({
+        pending: () => <Spinner></Spinner>,
+        resolved: () => (
+          <SubmitButton
+            disabled={!$community.selectedId}
+            text='가입하기'
+            onClick={() => {
+              executeWithError(async () => {
+                await $auth.signUp($auth.signUpForm)
+                await $auth.signIn($auth.signUpForm.email!, $auth.signUpForm.password!)
+                route.signUpComplete()
+              })
+            }}
+          ></SubmitButton>
+        ),
+        rejected: () => {
+          $auth.signUp.reset()
+          $auth.signIn.reset()
+          return <></>
+        },
+      })}
     </>
   ))
 }
