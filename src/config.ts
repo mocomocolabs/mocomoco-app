@@ -7,6 +7,7 @@ interface Config {
   KEY: {
     ENCRYPT_SECRET: string
   }
+  IS_PROD: boolean /** 프로덕션 빌드 여부 */
 }
 
 interface ConfigByEnv {
@@ -23,6 +24,7 @@ const configEnv: ConfigByEnv = {
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },
+    IS_PROD: false,
   },
   production: {
     API_URL: 'http://localhost:8080/api',
@@ -30,6 +32,7 @@ const configEnv: ConfigByEnv = {
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },
+    IS_PROD: true,
   },
   /* eslint-disable */
   test: {} as any,
