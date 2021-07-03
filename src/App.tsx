@@ -1,4 +1,5 @@
 import { IonApp } from '@ionic/react'
+import { when } from 'mobx'
 import { useObserver } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import { Alert } from './components/atoms/AlertComponent'
@@ -17,13 +18,6 @@ import { webSocket } from './services/web-socket-service'
 export const App: React.FC = () => {
   const { $community, $ui, $chat, $auth } = useStore()
   const [intialized, setInitailzed] = useState(false)
-
-  useEffect(() => {
-    init()
-    // eslint-disable-next-line
-  }, [$auth.isLogin])
-
-  // useEffect(() => {}, [$chat.unReadCountAll])
 
   const init = async () => {
     // 로그인
@@ -67,6 +61,19 @@ export const App: React.FC = () => {
 
     setInitailzed(true)
   }
+
+  useEffect(() => {
+    const mobxWhen = when(
+      () => $auth.isLogin === false,
+      () => {
+        init()
+      }
+    )
+
+    return () => {
+      mobxWhen()
+    }
+  }, [])
 
   return useObserver(() => (
     <IonApp>
