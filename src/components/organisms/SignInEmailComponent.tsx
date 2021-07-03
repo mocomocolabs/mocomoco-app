@@ -31,7 +31,6 @@ export const SignInEmail: FC = () => {
     if (!$auth.signUpForm.email) {
       route.signUp()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onSubmit = handleSubmit((form) => {
