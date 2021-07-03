@@ -1,10 +1,12 @@
 import { FC } from 'react'
 
 export interface IProfileImageComponent {
-  url: string
+  url?: string
   className?: string
 }
 
-export const ProfileImage: FC<IProfileImageComponent> = ({ url, className }) => {
-  return <img className={`br-full w-8 h-8 ${className}`} src={url} alt='' />
+const avatarUrl = '/assets/img/avatar.png'
+
+export const ProfileImage: FC<IProfileImageComponent> = ({ url = avatarUrl, className }) => {
+  return <img className={`shadow br-full w-10 h-10 ${className}`} src={url} alt='' />
 }
