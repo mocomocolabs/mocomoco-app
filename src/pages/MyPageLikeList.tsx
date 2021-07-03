@@ -50,6 +50,8 @@ export const MyPageLikeList: React.FC = () => {
   const setSegment = $segment.setLikeListSegment
 
   const initialFilter: IStuffTalentFilter = {
+    communityId: null,
+    userId: undefined,
     isPublic: false,
     categories: [],
     notStatuses: [],
