@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Alert } from './components/atoms/AlertComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
 import { Toast } from './components/atoms/ToastComponent'
+import { config } from './config'
 import './global.scss'
 import { useStore } from './hooks/use-store'
 import { ISubChat } from './models/chat'
@@ -36,7 +37,7 @@ export const App: React.FC = () => {
     if ($auth.isLogin && $auth.user.communityId) {
       $community.setSelectedId($auth.user.communityId)
 
-      if ($auth.user.status === SIGN_UP_STATUS.대기) {
+      if ($auth.user.status === SIGN_UP_STATUS.대기 && config.IS_PROD) {
         route.signUpComplete()
       }
 
