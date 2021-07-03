@@ -7,13 +7,11 @@ export type FeedType = 'SCHEDULE' | 'NORMAL'
 export interface IFeed {
   id: number
   type: FeedType
-  scheduleDate: string
-  scheduleTime: string
-  scheduleTitle: string
   user: IUser
   title: string
   content: string
   imageUrls: string[]
+  schedule?: IFeedSchedule
   commentCount: number
   likeCount: number
   likeProflieUrls: string[]
@@ -28,16 +26,23 @@ export interface IFeedForm {
   id?: number
   communityId: number
   type: FeedType
-  scheduleDate: string
-  scheduleTime: string
-  scheduleTitle: string
   title: string
   content: string
   images: ImageUploadItem[]
+  schedule: IFeedSchedule
   isPublic: boolean
+}
+
+export interface IFeedSchedule {
+  id: number
+  place: string
+  title: string
+  startDate: string /** yyyymmdd */
+  startTime: string /** hhmmss */
+  endDate: string /** yyyymmdd */
+  endTime: string /** hhmmss */
 }
 
 export enum FEED_TYPE {
   NORMAL = 'NORMAL',
-  SCHEDULE = 'SCHEDULE',
 }

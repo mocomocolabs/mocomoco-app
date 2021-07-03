@@ -1,11 +1,11 @@
 import dayjs from 'dayjs'
 import { FC } from 'react'
-import { Feed } from '../../models/feed'
+import { IFeedSchedule } from '../../models/feed.d'
 import { Icon } from '../atoms/IconComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 
 export interface IHomeSchedule {
-  items: Feed[]
+  items: IFeedSchedule[]
   className?: string
 }
 
@@ -18,9 +18,9 @@ export const HomeSchedule: FC<IHomeSchedule> = ({ items, className }) => {
         <li key={v.id} className='flex-between-center'>
           <div className='flex items-center w-3/4'>
             <Icon name='calendar' className='icon-secondary'></Icon>
-            <TextBase className='ml-2 ellipsis'>{v.scheduleTitle}</TextBase>
+            <TextBase className='ml-2 ellipsis'>{v.title}</TextBase>
           </div>
-          <TextBase className='gray'>{formatSchedule(v.scheduleDate)}</TextBase>
+          <TextBase className='gray'>{formatSchedule(v.startDate)}</TextBase>
         </li>
       ))}
     </ul>

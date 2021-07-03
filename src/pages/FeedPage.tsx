@@ -24,10 +24,7 @@ export const FeedPage: React.FC = () => {
             slot='end'
             onClick={() => {
               const isWriting =
-                $feed.form.title ||
-                $feed.form.content ||
-                $feed.form.images?.length ||
-                $feed.form.scheduleTitle
+                $feed.form.title || $feed.form.content || $feed.form.images?.length || $feed.form.schedule
 
               if (isWriting) {
                 return $ui.showAlert({
