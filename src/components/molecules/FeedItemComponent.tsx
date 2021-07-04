@@ -110,12 +110,12 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
               }
             }}
           >
-            {feed.comments?.map((v) => (
+            {feed.comments?.slice(0, isDetail ? undefined : 3).map((v) => (
               <CommentItem
                 key={v.id}
                 comment={v}
                 feedId={feed.id}
-                showOverlowMenu={isDetail && $auth.user.id === v.id}
+                showOverlowMenu={isDetail && $auth.user.id === v.user.id}
               ></CommentItem>
             ))}
           </div>
