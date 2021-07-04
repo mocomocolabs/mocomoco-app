@@ -41,9 +41,9 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
           Submit={() => (
             <Icon
               name='send-solid'
-              className={$comment.updateForm[commentId]?.content ? 'icon-secondary' : 'icon-gray'}
+              className='icon-secondary'
               onClick={() => {
-                if ($comment.insertForm[feedId]?.content) {
+                if ($comment.updateForm[commentId]?.content) {
                   executeWithError(async () => {
                     await $comment.updateComment({
                       id: commentId,
