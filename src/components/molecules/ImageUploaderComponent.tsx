@@ -1,8 +1,8 @@
-import { IonIcon, useIonViewWillLeave } from '@ionic/react'
-import { closeCircle } from 'ionicons/icons'
+import { useIonViewWillLeave } from '@ionic/react'
 import { FC, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { compress } from '../../utils/image-compressor'
+import { Icon } from '../atoms/IconComponent'
 import './ImageUploaderComponent.scss'
 
 // eslint-disable-next-line
@@ -51,11 +51,11 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
       </div>
       {images?.map((image) => (
         <div className={`${className} uploader-item relative mr-1`} key={image.name}>
-          <IonIcon
-            icon={closeCircle}
-            className='absolute right-0 top-0'
+          <Icon
+            name='delete'
+            className='absolute mr-2 mt-2 right-0 top-0 icon-24'
             onClick={() => setImages(images.filter((v) => v.id !== image.id))}
-          ></IonIcon>
+          ></Icon>
           <img src={image.preview} alt='' className='h-full w-auto br-md' />
         </div>
       ))}
