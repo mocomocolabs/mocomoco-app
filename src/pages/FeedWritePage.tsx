@@ -76,7 +76,10 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
               },
               isUpdate
             )
-            route.feed()
+
+            isUpdate ? route.feedDetail($feed.form.id!, undefined, true) : route.feed()
+
+            $feed.resetForm()
           })
         }
       >
