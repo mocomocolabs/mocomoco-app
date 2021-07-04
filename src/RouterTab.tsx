@@ -58,7 +58,7 @@ const TAB: ITab = {
   },
   MORE: {
     path: TAB_PATH.MORE,
-    icon: 'send',
+    icon: 'more',
   },
   CHAT: {
     path: TAB_PATH.CHAT,
@@ -161,8 +161,8 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <IonTabButton tab={TAB.FEED.path} href='/feed'>
               <Icon name={getTabIcon(TAB.FEED)}></Icon>
             </IonTabButton>
-            <IonTabButton tab={TAB.MORE.path} selected={isActiveMore}>
-              <Icon name={isActiveMore ? TAB.MORE.icon + '-solid' : TAB.MORE.icon}></Icon>
+            <IonTabButton tab={TAB.MORE.path} selected={isActiveMore} className='no-active-color'>
+              <Icon name={isActiveMore ? TAB.MORE.icon + '-solid' : TAB.MORE.icon} className='icon-24'></Icon>
             </IonTabButton>
             <IonTabButton tab={TAB.CHAT.path} href='/chat'>
               <Icon name={getTabIcon(TAB.CHAT)}></Icon>
