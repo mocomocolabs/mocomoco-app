@@ -29,6 +29,7 @@ export const MorePopoverButton: React.FC<IMorePopoverButton> = ({ items }) => {
       onClick={(e) =>
         present({
           event: e.nativeEvent,
+          animated: false,
         })
       }
       alt=''
