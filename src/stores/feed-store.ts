@@ -151,6 +151,7 @@ export class FeedStore {
             title: form.title,
             content: form.content,
             isPublic: form.isPublic,
+            isUse: true,
           }),
         ],
         {

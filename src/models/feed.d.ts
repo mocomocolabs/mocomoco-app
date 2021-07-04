@@ -41,6 +41,7 @@ export interface IFeedSchedule {
   startTime: string /** hhmmss */
   endDate: string /** yyyymmdd */
   endTime: string /** hhmmss */
+  formatScheduleTime: string /** 12월 29일 오후 8:00 - 오후 10:00 */
 }
 
 export enum FEED_TYPE {

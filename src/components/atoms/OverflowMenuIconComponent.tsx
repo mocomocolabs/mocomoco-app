@@ -1,5 +1,5 @@
 import { IonIcon } from '@ionic/react'
-import { ellipsisVertical } from 'ionicons/icons'
+import { ellipsisHorizontal } from 'ionicons/icons'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 
@@ -16,7 +16,7 @@ export interface IOverflowMenuIcon {
 export const OverflowMenuIcon: FC<IOverflowMenuIcon> = ({
   show = true,
   className = '',
-  icon = ellipsisVertical,
+  icon = ellipsisHorizontal,
   onDelete = () => {},
   onEdit = () => {},
 }) => {

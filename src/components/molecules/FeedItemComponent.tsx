@@ -6,8 +6,10 @@ import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { Icon } from '../atoms/IconComponent'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
+import { Pad } from '../atoms/PadComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
+import { XDivider } from '../atoms/XDividerComponent'
 import { CommentItem } from './CommentItemComponent'
 import { ImageSlider } from './ImageSliderComponent'
 import { ProfileCard } from './ProfileCardComponent'
@@ -24,10 +26,15 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
   const { $auth, $feed } = useStore()
 
   return useObserver(() => (
-    <li className='py-4'>
-      <div className='flex-col'>
-        <TextBase>{feed.title}</TextBase>
-        <div className='flex-between-center'>
+    <li>
+      {feed.imageUrls?.length > 0 ? (
+        <ImageSlider urls={feed.imageUrls}></ImageSlider>
+      ) : (
+        <Pad className='h-6'></Pad>
+      )}
+      <div className='px-container flex-col'>
+        {feed.title && <TextLg className='text-bold mb-5'>{feed.title}</TextLg>}
+        <div className='flex-between-center mb-5'>
           <ProfileCard
             profileUrl={feed.user.profileUrl}
             communityName={feed.user.communities[0]?.name}
@@ -40,28 +47,35 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
 
         {isDetail ? (
           <div>
-            <TextBase>{feed.content}</TextBase>
+            <TextBase className='pre-line'>{feed.content}</TextBase>
           </div>
         ) : (
           <div onClick={() => route.feedDetail(feed.id)}>
-            <TextBase>{feed.content}</TextBase>
+            <TextBase className='pre-line'>{feed.content}</TextBase>
           </div>
         )}
 
-        <div className='flex'>
-          <Icon name='calendar'></Icon>
-          <div className='ml-2 flex-col flex-1'>
-            <TextLg>{feed.schedule?.title}</TextLg>
-            {/* TODO: 디자인 확정후 재작업 필요 */}
-            <TextBase className='dim'>{feed.schedule?.startDate}</TextBase>
-          </div>
-        </div>
-        {feed.imageUrls?.length > 0 && (
-          <div>
-            <ImageSlider urls={feed.imageUrls}></ImageSlider>
+        {feed.schedule && (
+          <div className='br-lg shadow p-3 mt-5'>
+            <div className='flex items-center'>
+              <Icon name='calendar' className='icon-secondary'></Icon>
+              <TextBase className='ml-2 text-bold'>{feed.schedule?.title}wpwpwp</TextBase>
+            </div>
+            <div className='flex items-center mt-1'>
+              <Icon name='time' className='icon-secondary'></Icon>
+              <TextBase className='ml-2'>{feed.schedule?.formatScheduleTime}</TextBase>
+            </div>
+            <div className='flex items-center mt-1'>
+              <Icon name='location' className='icon-secondary'></Icon>
+              <TextBase className='ml-2'>{feed.schedule?.place}</TextBase>
+            </div>
           </div>
         )}
-        <div className='flex'>
+
+        <Pad className='h-5'></Pad>
+        <XDivider></XDivider>
+
+        <div className='flex py-3'>
           <div
             className='flex items-center mr-4'
             onClick={async () => {
@@ -86,24 +100,30 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
             <TextBase>{feed.comments?.length}</TextBase>
           </div>
         </div>
-        <div
-          className='py-4'
-          onClick={() => {
-            if (!isDetail) {
-              route.feedDetail(feed.id)
-            }
-          }}
-        >
-          {feed.comments?.map((v) => (
-            <CommentItem
-              key={v.id}
-              comment={v}
-              feedId={feed.id}
-              showOverlowMenu={isDetail && $auth.user.id === v.id}
-            ></CommentItem>
-          ))}
-        </div>
+
+        {feed.comments.length ? (
+          <div
+            className='py-4'
+            onClick={() => {
+              if (!isDetail) {
+                route.feedDetail(feed.id)
+              }
+            }}
+          >
+            {feed.comments?.map((v) => (
+              <CommentItem
+                key={v.id}
+                comment={v}
+                feedId={feed.id}
+                showOverlowMenu={isDetail && $auth.user.id === v.id}
+              ></CommentItem>
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
+      <Pad className='h-2 bg-s-gray w-full'></Pad>
     </li>
   ))
 }
