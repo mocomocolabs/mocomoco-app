@@ -104,7 +104,7 @@ export const FeedWritePage: FC<IFeedWrite> = () => {
         <IonContent>
           <div className='px-container'>
             <ImageUploader
-              className='mb-6'
+              className='mt-5'
               images={$feed.form.images}
               setImages={(param) => $feed.setFormImage(param)}
               refUploader={uploader as IImageUploaderRef}

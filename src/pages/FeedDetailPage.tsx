@@ -1,19 +1,11 @@
-import {
-  IonContent,
-  IonFooter,
-  IonHeader,
-  IonPage,
-  IonToolbar,
-  useIonViewWillEnter,
-  useIonViewWillLeave,
-} from '@ionic/react'
+import { IonContent, IonFooter, IonPage, useIonViewWillEnter, useIonViewWillLeave } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
 import { StaticContext } from 'react-router'
 import { RouteComponentProps } from 'react-router-dom'
 import { Spinner } from '../components/atoms/SpinnerComponent'
-import { BackButton } from '../components/molecules/BackButtonComponent'
+import { BackFloatingButton } from '../components/molecules/BackFloatingButtonComponent'
 import { FeedItem } from '../components/molecules/FeedItemComponent'
 import { CommentInsertForm } from '../components/organisms/CommentInsertFormComponent'
 import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
@@ -63,29 +55,19 @@ export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
 
   return useObserver(() => (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <div slot='start'>
-            <BackButton type='arrow'></BackButton>
-          </div>
-          <div slot='end'></div>
-        </IonToolbar>
-      </IonHeader>
-
       <IonContent>
-        <div className='px-container'>
-          {taskGroup.match({
-            pending: () => <Spinner isFull={true}></Spinner>,
-            resolved: () => (
-              <FeedItem
-                feed={$feed.feed}
-                isDetail={true}
-                onDelete={() => onDelete($feed.feed.id)}
-                onEdit={() => onEdit($feed.feed.id)}
-              ></FeedItem>
-            ),
-          })}
-        </div>
+        <BackFloatingButton></BackFloatingButton>
+        {taskGroup.match({
+          pending: () => <Spinner isFull={true}></Spinner>,
+          resolved: () => (
+            <FeedItem
+              feed={$feed.feed}
+              isDetail={true}
+              onDelete={() => onDelete($feed.feed.id)}
+              onEdit={() => onEdit($feed.feed.id)}
+            ></FeedItem>
+          ),
+        })}
         <ContentPopover></ContentPopover>
       </IonContent>
 
