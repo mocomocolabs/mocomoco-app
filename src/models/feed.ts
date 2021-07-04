@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { IFeedDto, IFeedScheduleDto } from '../stores/feed-store.d'
 import { IFeed, IFeedSchedule } from './feed.d'
 
@@ -25,10 +26,13 @@ export class Feed {
         id: dto.id,
         title: dto.title,
         place: dto.place,
-        startDate: dto.startDateTime?.substr(0, 8),
-        startTime: dto.startDateTime?.substr(0, 8),
-        endDate: dto.endDateTime?.substr(0, 8),
-        endTime: dto.endDateTime?.substr(0, 8),
+        startDate: dto.startDateTime.substr(0, 8),
+        startTime: dto.startDateTime.substr(0, 8),
+        endDate: dto.endDateTime.substr(0, 8),
+        endTime: dto.endDateTime.substr(0, 8),
+        formatScheduleTime: `${dayjs(dto.startDateTime).format('M월 D일 A h:mm')} - ${dayjs(
+          dto.endDateTime
+        ).format('A h:mm')}`,
       }
     )
   }
