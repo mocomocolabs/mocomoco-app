@@ -16,7 +16,7 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
   const { $comment, $feed, $auth } = useStore()
 
   return useObserver(() => (
-    <div className='px-container py-2 flex items-center bg-white'>
+    <div className='px-container py-2 flex items-center'>
       <ProfileImage url={$auth.userInfo?.profileUrl}></ProfileImage>
 
       <IonTextarea
@@ -37,11 +37,10 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
           Submit={() => (
             <Icon
               name='send-solid'
-              className='icon-secondary'
+              className={$comment.insertForm[feedId]?.content ? 'icon-secondary' : 'icon-gray'}
               onClick={() => {
                 if ($comment.insertForm[feedId]?.content) {
                   executeWithError(async () => {
-                    // TODO: 댓글입력 api 의존성 분리
                     await $comment.insertComment({ feedId, content: $comment.insertForm[feedId]?.content })
                     await $feed.getFeed(feedId)
                     $comment.resetInsertFormBy(feedId)
