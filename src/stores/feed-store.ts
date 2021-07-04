@@ -169,7 +169,6 @@ export class FeedStore {
     } else {
       await api.post(`/v1/feeds`, formData)
     }
-    this.resetForm()
   }) as SaveFeedTask
 
   @task.resolved
