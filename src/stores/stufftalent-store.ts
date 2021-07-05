@@ -227,6 +227,29 @@ export class StuffTalentStore {
   }) as TaskBy<Partial<IStuffTalentForm>>
 
   @task.resolved
+  updateItemStatus = (async (id: number, status: StuffTalentStatus) => {
+    const formData = new FormData()
+
+    formData.append(
+      this.predefined.insertItemReqDto,
+      new Blob(
+        [
+          JSON.stringify({
+            id: id,
+            status: status,
+            isUse: true,
+          } as IStuffTalentInsertReqDto),
+        ],
+        {
+          type: 'application/json',
+        }
+      )
+    )
+
+    await api.patch(`${this.predefined.baseApi}`, formData)
+  }) as TaskBy2<number, StuffTalentStatus>
+
+  @task.resolved
   toggleLike = (async (id: number, isLike: boolean) => {
     await api.post(this.predefined.toggleLikeApi, {
       [`${this.predefined.stuffTalentIdProperty}`]: id,

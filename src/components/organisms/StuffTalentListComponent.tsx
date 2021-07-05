@@ -4,11 +4,10 @@ import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { routeFunc } from '../../models/stufftalent'
-import { IStuffTalentFilter } from '../../models/stufftalent.d'
+import { IStuffTalentFilter, StuffTalentStatus } from '../../models/stufftalent.d'
 import { StuffTalentStore } from '../../stores/stufftalent-store'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { StuffTalentItem } from '../molecules/StuffTalentItemComponent'
-import { ContentPopover } from './ContentPopoverComponent'
 
 interface IStuffTalentList {
   store: StuffTalentStore
@@ -32,6 +31,11 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
 
   const onDeleteItem = async (id: number) => {
     await store.deleteItem(id)
+    await store.getItems(search, filter)
+  }
+
+  const onUpdateStatus = async (id: number, status: StuffTalentStatus) => {
+    await store.updateItemStatus(id, status)
     await store.getItems(search, filter)
   }
 
@@ -60,10 +64,10 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
                 item={item}
                 onEdit={onEditItem}
                 onDelete={onDeleteItem}
+                onUpdateStatus={onUpdateStatus}
               />
             ))}
           </ul>
-          <ContentPopover></ContentPopover>
         </>
       ),
       rejected: () => {
