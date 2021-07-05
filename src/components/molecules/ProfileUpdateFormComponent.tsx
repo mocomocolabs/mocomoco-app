@@ -71,8 +71,9 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
     [$ui, $user]
   )
 
+  const taskGroup = [$user.getUser, $user.updateUser]
   // eslint-disable-next-line
-  const observableTaskGroup = TaskGroup<any[], void | boolean>([$user.getUser, $user.updateUser])
+  const observableTaskGroup = TaskGroup<any[], void | boolean>(taskGroup)
 
   useEffect(() => {
     $user.getUser(userId)
@@ -90,6 +91,10 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
             <ProfileUpdateInput fields={{ control, errors, register, getValues }} />
           </form>
         )
+      },
+      rejected: () => {
+        taskGroup.forEach((task) => task.reset())
+        return <></>
       },
     })
   )

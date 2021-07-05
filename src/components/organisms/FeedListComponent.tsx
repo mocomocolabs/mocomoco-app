@@ -20,8 +20,9 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
     fetchTask()
   }, [fetchTask])
 
+  const taskGroup = [fetchTask, $feed.deleteFeed]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const taskGroup = TaskGroup<any[], void>([fetchTask, $feed.deleteFeed])
+  const observableTaskGroup = TaskGroup<any[], void>(taskGroup)
 
   const onDelete = async (id: number) => {
     await $feed.deleteFeed(id)
@@ -35,7 +36,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
   }
 
   return useObserver(() =>
-    taskGroup.match({
+    observableTaskGroup.match({
       pending: () => (
         <div className='height-150 flex-center'>
           <IonSpinner color='tertiary' name='crescent' />
@@ -61,7 +62,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
           <TextXs>목록이 없습니다</TextXs>
         ),
       rejected: () => {
-        console.warn('rejected')
+        taskGroup.forEach((task) => task.reset())
         return <></>
       },
     })
