@@ -17,6 +17,7 @@ export const BottomTabMorePopover: FC<IBottomTabMorePopover> = ({ isOpen, setIsO
       cssClass='bottom-tab-more-popover'
       isOpen={isOpen}
       showBackdrop={false}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onDidDismiss={(e: any) => setIsOpen(e)}
     >
       <ul className='p-4'>
