@@ -7,14 +7,18 @@ import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus, StuffTalentType } 
 export interface StuffTalent extends IStuffTalent {}
 
 export class StuffTalent {
-  static of(payload: IStuffTalentDto, predefined: IStuffTalentPredefined) {
+  static of(payload: IStuffTalentDto, predefined: IStuffTalentPredefined, loginUserId: number) {
     return Object.assign(new StuffTalent(), {
       ...payload,
       likeCount: (payload[
         predefined.stuffTalentUsersProperty as keyof IStuffTalentDto
       ] as IStuffTalentLikeUserDto[]).filter((likeUsers) => likeUsers.isLike && likeUsers.isUse).length,
       imageUrls: payload.atchFiles.map((v) => v.url),
-      chatroomId: payload.chatroom?.id, //TODO 서버 response에서 chatroom 정보 넘기도록 수정 후 ? 제거
+      chatroomId: (payload[
+        predefined.stuffTalentUsersProperty as keyof IStuffTalentDto
+      ] as IStuffTalentLikeUserDto[]).find(
+        (likeUsers) => likeUsers.isUse && likeUsers.user?.id === loginUserId
+      )?.chatroom?.id,
     })
   }
 }
