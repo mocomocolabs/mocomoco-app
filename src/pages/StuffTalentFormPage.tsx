@@ -76,7 +76,13 @@ export const StuffTalentFormPage: React.FC = () => {
 
   const onSubmit = handleSubmit(async (form) => {
     executeWithError(async () => {
-      await store.insertItem(form, isUpdate)
+      if (isUpdate) {
+        await store.updateItem(form)
+        store.resetUpdateForm()
+      } else {
+        await store.insertItem(form)
+        store.resetForm()
+      }
 
       isSubmitCompleted.current = true
       routeList()

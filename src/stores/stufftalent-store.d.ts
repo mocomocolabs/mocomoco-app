@@ -1,13 +1,6 @@
 import { IUser } from '../models/user.d'
-import {
-  IStuffTalentForm,
-  StuffTalentStatus as Status,
-  StuffTalentType as Type,
-} from './../models/stufftalent.d'
+import { StuffTalentStatus as Status, StuffTalentType as Type } from './../models/stufftalent.d'
 import { IFileDto } from './common/file.d'
-import { TaskBy2 } from './task'
-
-export type InsertStuffTalentTask = TaskBy2<Partial<IStuffTalentForm>, boolean>
 
 interface IStuffTalentDtoBase {
   id: number
