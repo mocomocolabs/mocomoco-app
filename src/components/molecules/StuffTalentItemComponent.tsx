@@ -1,14 +1,18 @@
-import { IonIcon } from '@ionic/react'
-import { chatbox, cloud } from 'ionicons/icons'
 import _ from 'lodash'
 import { useStore } from '../../hooks/use-store'
 import { getLabel, routeFunc, statusLabels, typeLabels } from '../../models/stufftalent'
-import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus } from '../../models/stufftalent.d'
-import { route } from '../../services/route-service'
+import {
+  IStuffTalent,
+  StuffTalentPageKey,
+  StuffTalentStatus,
+  StuffTalentType,
+} from '../../models/stufftalent.d'
 import { timeDiff } from '../../utils/datetime-util'
-import { ProfileImage } from '../atoms/ProfileImageComponent'
-import { TextBase } from '../atoms/TextBaseComponent'
-import { TextLg } from '../atoms/TextLgComponent'
+import { Icon } from '../atoms/IconComponent'
+import { SquareWithCorner } from '../atoms/SquareWithCornerComponent'
+import { TextSm } from '../atoms/TextSmComponent'
+import { TextXs } from '../atoms/TextXsComponent'
+import { ImageWithCorner } from './ImageWithCorner'
 import { MorePopoverButton } from './MorePopoverButtonComponent'
 
 interface IStuffTalentIItem {
@@ -70,45 +74,62 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
 
   return (
     <li>
-      <div className='flex'>
-        <div className='flex-between-center w-full' onClick={() => routeDetail(item.id)}>
-          <img className='w-20 h-20 mr-2' src={item.atchFiles[0].url} alt={item.title} />
-
-          <div className='flex-col flex-1'>
-            <TextBase>
-              [{getLabel(statusLabels, item.status)}] {item.title}
-            </TextBase>
-            <TextBase>{item.user.communities.map((community) => community.name).join('/')}</TextBase>
-            <TextBase>
-              [{getLabel(typeLabels, item.type)}] {item.price}원
-            </TextBase>
+      <div className='flex br-xxlg shadow mb-4 pr-1'>
+        <div className='flex' onClick={() => routeDetail(item.id)}>
+          <div
+            hidden={item.status === StuffTalentStatus.AVAILABLE}
+            className='flex-center absolute z-20 text-bold text-sm white'
+            style={{ width: 114, height: 124 }}
+          >
+            {getLabel(statusLabels, item.status)}
           </div>
+          <ImageWithCorner
+            height={124}
+            width={138}
+            url={item.imageUrls[0]}
+            radiusSize={20}
+            tailRight={true}
+            dark={item.status !== StuffTalentStatus.AVAILABLE}
+          ></ImageWithCorner>
         </div>
 
-        <div className='flex-col items-end w-25'>
-          <div className='flex items-center' onClick={() => route.profileDetail(item.user.id)}>
-            <ProfileImage url={item.user.profileUrl}></ProfileImage>
-            <TextBase className='ml-1'>{item.user.nickname}</TextBase>
+        <div className='flex-col flex-1 min-w-0 -ml-1 z-10 mr-1 py-2' onClick={() => routeDetail(item.id)}>
+          <div className='flex justify-between items-center'>
+            <div className='flex-none'>
+              <SquareWithCorner
+                color={item.type === StuffTalentType.WANT ? 'primary' : 'secondary'}
+                fill={true}
+              >
+                {getLabel(typeLabels, item.type)}
+              </SquareWithCorner>
+            </div>
+            <TextSm className='ellipsis min-w-0 ml-1 flex-grow'>{item.title}</TextSm>
+            <div className='flex flex-none h-full' onClick={(e) => e.stopPropagation()}>
+              {loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
+            </div>
           </div>
-
-          <div className='flex'>
-            <IonIcon icon={cloud} className='mr-1'></IonIcon>
-            <TextBase className='dim mr-1'>{item.likeCount}</TextBase>
-            <IonIcon icon={chatbox} className='mr-1'></IonIcon>
-            {/* <TextBase className='dim'>{item.chatCount}</TextBase> */}
+          <div className='flex-grow gray ellipsis pt-0_5 text-xxs'>
+            {item.community.name} / {timeDiff(undefined, item.createdAt)}
           </div>
-
-          <TextBase className='dim'>{timeDiff(undefined, item.createdAt)}</TextBase>
-        </div>
-
-        <div className='flex justify-end w-4'>
-          {loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
-        </div>
-      </div>
-
-      <div className='flex-col'>
-        <div className='flex flex-wrap items-center'>
-          <TextLg className='gray w-12'>씨앗들</TextLg>
+          <div className='inline-flex' style={{ gap: '0 0.2rem' }}>
+            {item.isExchangeable && <SquareWithCorner>교환 가능</SquareWithCorner>}
+            {item.isNegotiable && <SquareWithCorner>가격제안 가능</SquareWithCorner>}
+          </div>
+          <div className='flex justify-between self-bottom mt-1'>
+            <TextSm className='text-bold ellipsis'>
+              {item.type === StuffTalentType.SELL && `${item.price}원`}
+              {item.type === StuffTalentType.EXCHANGE && item.exchangeText}
+              {item.type === StuffTalentType.SHARE && '무료나눔'}
+            </TextSm>
+            <div className='flex-center self-end ml-1'>
+              <Icon
+                name={item.isLike ? 'heart-solid' : 'heart'}
+                className='icon-secondary mr-1'
+                small={true}
+              />
+              <TextXs className='secondary'>{item.likeCount}</TextXs>
+            </div>
+          </div>
         </div>
       </div>
     </li>

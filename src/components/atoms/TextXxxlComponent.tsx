@@ -1,5 +1,7 @@
 import { IText } from './TextBaseComponent'
 
-export const TextXxxl: React.FC<IText> = ({ children, className = '' }) => (
-  <div className={`${className ? className : ''}  text-xxxl`}>{children}</div>
+export const TextXxxl: React.FC<IText> = ({ children, className = '', style = {} }) => (
+  <div className={`${className} text-xxxl`} style={style}>
+    {children}
+  </div>
 )

@@ -8,3 +8,11 @@
 .bottom-radius {
   border-top-left-radius: 4rem;
 }
+
+.right-radius {
+  border-bottom-left-radius: 4rem;
+}
+
+.dark {
+  filter: brightness(60%);
+}
