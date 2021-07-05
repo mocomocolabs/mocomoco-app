@@ -1,16 +1,9 @@
-import {
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonPage,
-  IonSearchbar,
-  IonToolbar,
-  useIonViewWillEnter,
-} from '@ionic/react'
-import { create, filter as filterIcon, search as searchIcon } from 'ionicons/icons'
+import { IonContent, IonHeader, IonPage, IonSearchbar, IonToolbar, useIonViewWillEnter } from '@ionic/react'
 import { reaction } from 'mobx'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
+import { Icon } from '../components/atoms/IconComponent'
+import { Pad } from '../components/atoms/PadComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { FilterBar } from '../components/molecules/FilterBarComponent'
@@ -24,7 +17,7 @@ interface SearchbarChangeEventDetail {
   value: string | undefined
 }
 
-const FilterMode = { none: 'none', category: '카테고리', type: '조건' }
+const FilterMode = { none: 'none', category: '카테고리', type: '거래유형' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 const initialSearch = ''
@@ -97,11 +90,8 @@ export const StuffTalentPage: React.FC = () => {
             <div slot='start'>
               <CommunitySelector></CommunitySelector>
             </div>
-            <div slot='end'>
-              <IonIcon icon={filterIcon} size='large' />
-              <IonIcon
-                icon={create}
-                size='large'
+            <div className='flex' slot='end'>
+              <div
                 onClick={() => {
                   const isWriting = store.form.title || store.form.content || store.form.images?.length
 
@@ -121,8 +111,12 @@ export const StuffTalentPage: React.FC = () => {
 
                   routeForm()
                 }}
-              />
-              <IonIcon icon={searchIcon} size='large' onClick={() => setSearchMode(true)} />
+              >
+                <Icon name='pencil' className='ml-4 icon-24'></Icon>
+              </div>
+              <div onClick={() => setSearchMode(true)}>
+                <Icon name='search' className='ml-4 icon-24'></Icon>
+              </div>
             </div>
           </div>
 
@@ -139,17 +133,21 @@ export const StuffTalentPage: React.FC = () => {
           </div>
         </IonToolbar>
 
-        <FilterBar
-          filters={[
-            { name: FilterMode.category, length: filter.categories.length },
-            { name: FilterMode.type, length: filter.types.length + filter.notStatuses.length },
-          ]}
-          onReset={onResetFilter}
-          onClick={(name: string) => {
-            setFilterMode(filterMode === name ? FilterMode.none : name)
-          }}
-        />
+        <div className='px-container mt-1'>
+          <FilterBar
+            filters={[
+              { name: FilterMode.category, length: filter.categories.length },
+              { name: FilterMode.type, length: filter.types.length + filter.notStatuses.length },
+            ]}
+            onReset={onResetFilter}
+            onClick={(name: string) => {
+              setFilterMode(filterMode === name ? FilterMode.none : name)
+            }}
+          />
+        </div>
       </IonHeader>
+
+      <Pad className='h-3' />
 
       <FilterPopup
         show={filterMode === FilterMode.category}
@@ -181,7 +179,7 @@ export const StuffTalentPage: React.FC = () => {
       />
 
       <IonContent>
-        <div className='px-container'>
+        <div className='px-container mt-1'>
           <StuffTalentList store={store} search={search} filter={filter} />
         </div>
       </IonContent>

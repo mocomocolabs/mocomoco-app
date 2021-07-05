@@ -23,6 +23,7 @@ $padding-container: 1.6rem;
 }
 $padding-bottom-extra-space: 6rem;
 
+$text-xxs-size: 1rem;
 $text-xs-size: 1.2rem;
 $text-sm-size: 1.4rem;
 $text-base-size: 1.6rem;
@@ -31,6 +32,10 @@ $text-xl-size: 2.2rem;
 $text-xxl-size: 2.4rem;
 $text-xxxl-size: 3rem;
 
+%text-xxs {
+  font-size: $text-xxs-size;
+  line-height: 140%;
+}
 %text-xs {
   font-size: $text-xs-size;
   line-height: 140%;
