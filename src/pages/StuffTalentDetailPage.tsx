@@ -86,14 +86,18 @@ export const StuffTalentDetailPage: React.FC<RouteComponentProps<{ id: string },
                   <SpinnerWrapper
                     task={store.createChat}
                     Submit={() => (
+                      // TODO 내가 등록한 물품이면, "채팅 목록 보기"가 표시돼야 함
                       <SubmitButton
                         text='채팅으로 거래하기'
-                        onClick={() => {
+                        onClick={async () => {
                           // TODO 예외처리: 채팅방 생성 실패하면 에러메시지 띄우기
-                          store.createChat({
+                          await store.createChat({
                             [store.predefined.stuffTalentIdProperty]: store.item.id,
-                            userId: $auth.user.id,
                           })
+
+                          await store.getItem(store.item.id)
+
+                          // TODO 채팅방 진입 후 메시지 전송해도 화면에 표시되지 않음. 앱을 새로고침 한 다음에는 표시됨.
                           route.chatRoom(store.item.chatroomId)
                         }}
                       ></SubmitButton>
