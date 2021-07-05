@@ -13,8 +13,9 @@ import { TextBase } from '../atoms/TextBaseComponent'
 export const SignUpCommunity: FC = () => {
   const { $community, $auth } = useStore()
 
+  const taskGroup = [$auth.signUp, $auth.signIn]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const observableTaskGroup = TaskGroup<any[], void | boolean>([$auth.signUp, $auth.signIn])
+  const observableTaskGroup = TaskGroup<any[], void | boolean>(taskGroup)
 
   return useObserver(() => (
     <>
@@ -54,8 +55,7 @@ export const SignUpCommunity: FC = () => {
           ></SubmitButton>
         ),
         rejected: () => {
-          $auth.signUp.reset()
-          $auth.signIn.reset()
+          taskGroup.forEach((task) => task.reset())
           return <></>
         },
       })}

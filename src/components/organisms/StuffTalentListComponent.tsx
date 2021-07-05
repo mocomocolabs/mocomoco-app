@@ -35,11 +35,12 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
     await store.getItems(search, filter)
   }
 
+  const taskGroup = [store.getItems, store.deleteItem]
   // eslint-disable-next-line
-  const taskGroup = TaskGroup<any[], void>([store.getItems, store.deleteItem])
+  const observableTaskGroup = TaskGroup<any[], void>(taskGroup)
 
   return useObserver(() =>
-    taskGroup.match({
+    observableTaskGroup.match({
       pending: () => (
         <div className='height-150 flex-center'>
           <IonSpinner color='tertiary' name='crescent' />
@@ -65,6 +66,10 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
           <ContentPopover></ContentPopover>
         </>
       ),
+      rejected: () => {
+        taskGroup.forEach((task) => task.reset())
+        return <></>
+      },
     })
   )
 }
