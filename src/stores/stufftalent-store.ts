@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { StuffTalent } from '../models/stufftalent'
 import {
@@ -13,6 +14,7 @@ import {
 } from '../models/stufftalent.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
+import { AuthStore } from './auth-store'
 import {
   ICreateChatDto,
   IStuffsTalentsDto,
@@ -85,7 +87,10 @@ export class StuffTalentStore {
 
   readonly predefined: IStuffTalentPredefined
 
-  constructor(pathName: PageKey) {
+  $auth: AuthStore
+
+  constructor(pathName: PageKey, rootStore: RootStore) {
+    this.$auth = rootStore.$auth
     this.predefined = predefined.find((p) => p.pageKey === pathName) || predefined[0]
     this.getCategoriesBy(pathName)
   }
@@ -112,7 +117,7 @@ export class StuffTalentStore {
       action((data) => {
         this.items = (data[this.predefined.getItemsProperty as keyof IStuffsTalentsDto] as IStuffTalentDto[])
           .filter((item) => filter.isLike === undefined || item.isLike === filter.isLike)
-          .map((item) => StuffTalent.of(item, this.predefined))
+          .map((item) => StuffTalent.of(item, this.predefined, this.$auth.user.id))
       })
     )
   }) as TaskBy2<string, IStuffTalentFilter>
@@ -157,7 +162,7 @@ export class StuffTalentStore {
   getItem = (async (id: number) => {
     await api.get<IStuffTalentDto>(`${this.predefined.baseApi}/${id}`).then(
       action((data) => {
-        this.item = StuffTalent.of(data, this.predefined)
+        this.item = StuffTalent.of(data, this.predefined, this.$auth.user.id)
       })
     )
   }) as TaskBy<number>

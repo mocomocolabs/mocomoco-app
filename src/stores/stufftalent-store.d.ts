@@ -1,3 +1,4 @@
+import { IChatRoom } from '../models/chat'
 import { IUser } from '../models/user.d'
 import { StuffTalentStatus as Status, StuffTalentType as Type } from './../models/stufftalent.d'
 import { IFileDto } from './common/file.d'
@@ -42,8 +43,9 @@ interface IStuffTalentInsertReqDto {
 export interface IStuffTalentLikeUserDto {
   id: number
   isLike: boolean
-  user: IUser[]
+  user: IUser
   isUse: boolean
+  chatroom: IChatRoom
 }
 
 export interface IStuffTalentDto extends IStuffTalentDtoBase {
@@ -73,5 +75,4 @@ export interface IStuffTalentChatroomDto {
 export interface ICreateChatDto {
   stuffId?: number
   talentId?: number
-  userId: number
 }
