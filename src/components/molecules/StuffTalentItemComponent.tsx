@@ -1,20 +1,23 @@
 import { IonIcon } from '@ionic/react'
 import { chatbox, cloud } from 'ionicons/icons'
+import _ from 'lodash'
+import { useStore } from '../../hooks/use-store'
 import { getLabel, routeFunc, statusLabels, typeLabels } from '../../models/stufftalent'
-import { IStuffTalent, StuffTalentPageKey } from '../../models/stufftalent.d'
+import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus } from '../../models/stufftalent.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
-import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
+import { MorePopoverButton } from './MorePopoverButtonComponent'
 
 interface IStuffTalentIItem {
   loginUserId: number
   pageKey: StuffTalentPageKey
   item: IStuffTalent
-  onEdit: (id: number) => void
-  onDelete: (id: number) => void
+  onEdit?: (id: number) => void
+  onDelete?: (id: number) => void
+  onUpdateStatus?: (id: number, status: StuffTalentStatus) => void
 }
 
 export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
@@ -23,8 +26,47 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
   item,
   onEdit,
   onDelete,
+  onUpdateStatus,
 }) => {
+  const { $ui } = useStore()
+
   const { routeDetail } = routeFunc[pageKey]
+
+  const [popoverEdit, popoverDelete, popoverFinish, popoverAvailable, popoverReserved] = [
+    {
+      label: '수정',
+      onClick: () => onEdit && onEdit(item.id),
+    },
+    {
+      label: '삭제',
+      onClick: () => {
+        $ui.showAlert({
+          isOpen: true,
+          message: '게시글을 삭제하시겠어요?',
+          onSuccess: () => onDelete && onDelete(item.id),
+        })
+      },
+    },
+    {
+      label: '거래완료로 변경',
+      onClick: () => onUpdateStatus && onUpdateStatus(item.id, StuffTalentStatus.FINISH),
+    },
+    {
+      label: '판매중으로 변경',
+      onClick: () => onUpdateStatus && onUpdateStatus(item.id, StuffTalentStatus.AVAILABLE),
+    },
+    {
+      label: '예약중으로 변경',
+      onClick: () => onUpdateStatus && onUpdateStatus(item.id, StuffTalentStatus.RESERVED),
+    },
+  ]
+
+  const popoverItems = _.concat(
+    [popoverEdit, popoverDelete],
+    item.status !== StuffTalentStatus.FINISH && popoverFinish,
+    item.status !== StuffTalentStatus.AVAILABLE && popoverAvailable,
+    item.status !== StuffTalentStatus.RESERVED && popoverReserved
+  ).filter(Boolean) as { label: string; onClick: () => void }[]
 
   return (
     <li>
@@ -60,12 +102,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
         </div>
 
         <div className='flex justify-end w-4'>
-          <OverflowMenuIcon
-            className='self-top'
-            show={loginUserId === item.user.id}
-            onEdit={() => onEdit(item.id)}
-            onDelete={() => onDelete(item.id)}
-          />
+          {loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
         </div>
       </div>
 

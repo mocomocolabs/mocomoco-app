@@ -67,8 +67,6 @@ export const HomePage: React.FC = () => {
               loginUserId={$auth.user.id}
               pageKey={StuffTalentPageKey.STUFF}
               item={item}
-              onEdit={() => {}}
-              onDelete={() => {}}
             />
           ))}
           <HomeTitle title='재능 창고' route={() => route.talent()}></HomeTitle>
@@ -78,8 +76,6 @@ export const HomePage: React.FC = () => {
               loginUserId={$auth.user.id}
               pageKey={StuffTalentPageKey.TALENT}
               item={item}
-              onEdit={() => {}}
-              onDelete={() => {}}
             />
           ))}
         </div>
