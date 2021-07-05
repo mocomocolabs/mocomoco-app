@@ -15,7 +15,6 @@ import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import {
   ICreateChatDto,
-  InsertStuffTalentTask,
   IStuffsTalentsDto,
   IStuffTalentCategoryDto,
   IStuffTalentDto,
@@ -168,8 +167,7 @@ export class StuffTalentStore {
     await api.patch(`${this.predefined.baseApi}/${id}/is-use`) // WARN this is toggle
   }) as TaskBy<number>
 
-  @task.resolved
-  insertItem = (async (form: IStuffTalentForm, isUpdate: boolean) => {
+  createInsertFormData = async (form: IStuffTalentForm) => {
     const formData = new FormData()
 
     formData.append(
@@ -208,14 +206,20 @@ export class StuffTalentStore {
       formData.append('files', v)
     })
 
-    if (isUpdate) {
-      await api.put(this.predefined.baseApi, formData)
-      this.resetUpdateForm()
-    } else {
-      await api.post(this.predefined.baseApi, formData)
-      this.resetForm()
-    }
-  }) as InsertStuffTalentTask
+    return formData
+  }
+
+  @task.resolved
+  insertItem = (async (form: IStuffTalentForm) => {
+    const formData = await this.createInsertFormData(form)
+    await api.post(this.predefined.baseApi, formData)
+  }) as TaskBy<Partial<IStuffTalentForm>>
+
+  @task.resolved
+  updateItem = (async (form: IStuffTalentForm) => {
+    const formData = await this.createInsertFormData(form)
+    await api.put(this.predefined.baseApi, formData)
+  }) as TaskBy<Partial<IStuffTalentForm>>
 
   @task.resolved
   toggleLike = (async (id: number, isLike: boolean) => {
