@@ -70,12 +70,12 @@ export const HomePage: React.FC = () => {
               onDelete={() => {}}
             />
           ))}
-          <HomeTitle title='재능 창고' route={route.talent}></HomeTitle>
+          <HomeTitle title='재능 창고' route={() => route.talent()}></HomeTitle>
           {$talent.items.map((item) => (
             <StuffTalentItem
               key={item.id}
               loginUserId={$auth.user.id}
-              pageKey={StuffTalentPageKey.STUFF}
+              pageKey={StuffTalentPageKey.TALENT}
               item={item}
               onEdit={() => {}}
               onDelete={() => {}}
@@ -84,7 +84,7 @@ export const HomePage: React.FC = () => {
         </div>
 
         <div className='px-container'>
-          <HomeTitle title='소모임' route={route.clubs}></HomeTitle>
+          <HomeTitle title='소모임' route={() => route.clubs()}></HomeTitle>
         </div>
         <ClubPopularSlider clubs={$club.popularClubs}></ClubPopularSlider>
       </IonContent>
