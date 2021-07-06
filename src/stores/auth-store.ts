@@ -1,14 +1,17 @@
 import Inko from 'inko'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
 import { IAuthUser } from '../models/auth'
 import { ISignUpForm } from '../models/sign-up'
+import { IUser } from '../models/user.d'
 import { api } from '../services/api-service'
 import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy } from './task'
+import { UserStore } from './user-store'
 
 const inko = new Inko()
 
@@ -18,12 +21,20 @@ const initState = {
     roles: 'ROLE_USER',
   } as Partial<ISignUpForm>,
   user: {} as IAuthUser,
+  userInfo: {} as IUser,
 }
 
 export class AuthStore {
   @observable.struct signUpForm: Partial<ISignUpForm> = initState.signUpForm
   @observable isLogin = false
   @observable.struct user: IAuthUser = initState.user
+  @observable.struct userInfo: IUser = initState.userInfo
+
+  $user: UserStore
+
+  constructor(rootStore: RootStore) {
+    this.$user = rootStore.$user
+  }
 
   @action
   setIsLogin() {
@@ -69,9 +80,12 @@ export class AuthStore {
         email,
         password: inko.ko2en(password),
       })
-      .then((user: IAuthUserDto) => {
+      .then(async (user: IAuthUserDto) => {
         this.setAuth(user)
         this.setUser(user)
+
+        await this.$user.getUser(user.id)
+        this.setUserInfo(this.$user.user)
       })
   }) as SignInTask
 
@@ -84,8 +98,11 @@ export class AuthStore {
       api.setAuthoriationBy(hasToken)
       await storage.setAccessTokenForSync()
       try {
-        await api.get<IAuthUserDto>(`/auth/account`).then((user) => {
+        await api.get<IAuthUserDto>(`/auth/account`).then(async (user) => {
           this.setUser(user)
+
+          await this.$user.getUser(user.id)
+          this.setUserInfo(this.$user.user)
         })
       } catch (e) {
         if (e.status === 401) {
@@ -120,5 +137,10 @@ export class AuthStore {
     const { id, communities, chatroomUserIds, status } = user
     this.user = { id, communityId: communities[0].id, chatroomIds: chatroomUserIds, status }
     this.setIsLogin()
+  }
+
+  @action
+  setUserInfo(user: IUser) {
+    this.userInfo = user
   }
 }

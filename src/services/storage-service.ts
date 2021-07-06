@@ -5,7 +5,7 @@ import { decrypt, encrypt } from '../utils/encrypt-util'
 const { Storage } = Plugins
 
 class StorageService {
-  private _communityId = 0
+  private _communityId: number | null = 0
   accessTokenForSync = ''
 
   private readonly HAVE_SEEN_INTRO = 'HAVE_SEEN_INTRO'
@@ -22,9 +22,7 @@ class StorageService {
     return this.getObject(this.HAVE_SEEN_INTRO)
   }
 
-  setCommunityId(id: number): Promise<void> {
-    // ** 주의
-    // community-store.ts의 selectedId도 함께 셋팅해줄것
+  setCommunityId(id: number | null): Promise<void> {
     this._communityId = id
     return this.setObject(this.COMMUNITY_ID, id)
   }

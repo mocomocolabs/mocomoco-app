@@ -36,13 +36,9 @@ export const StuffTalentDetailPage: React.FC<RouteComponentProps<{ id: string },
     $ui.setIsBottomTab(false)
   })
 
-  useEffect(
-    () => {
-      store.getItem(id)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+  useEffect(() => {
+    store.getItem(id)
+  }, [])
 
   // TODO ERROR: 수정화면 진입 시, getUpdateForm 안에서 getItem이 호출되는데
   // 이 때문에 unmount된 detail component가 rerender되면서 에러 발생함.

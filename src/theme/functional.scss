@@ -950,6 +950,9 @@
 .ml-8 {
   margin-left: 3.2rem;
 }
+.ml-13 {
+  margin-left: 5.2rem;
+}
 .ml-auto {
   margin-left: auto;
 }
@@ -1187,6 +1190,9 @@
 .bg-red {
   background-color: $red;
 }
+.bg-s-gray {
+  background-color: $s-gray;
+}
 .bg-image {
   background-size: cover;
   background-position: center;
@@ -1224,6 +1230,9 @@
   border-radius: 1.4rem;
 }
 // TODO: 추후 디자인 가이드에 맞게 radius 통일
+.br-20 {
+  border-radius: 2rem;
+}
 .br-28 {
   border-radius: 2.8rem;
 }

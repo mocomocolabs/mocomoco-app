@@ -101,6 +101,18 @@ export type TaskByNumber = TaskType<[number], void>
 
 > 따라서, 파라미터를 받을 경우 `feed-store.d.ts` 처럼 타입을 따로 만들어서 import 하여 사용한다.
 
+## useStore 사용시 react-hook 동작하지 않음
+
+현재 아래 예제에서 isLogin이 변경되도 useEffect가 재실행되지 않는다. 어떤 이유인지는 파악해야함!
+
+```
+  useEffect(() => {
+    console.log('init')
+
+    init()
+  }, [$auth.isLogin])
+
+```
 
 ## react-svg
 

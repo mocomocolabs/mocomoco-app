@@ -46,12 +46,7 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
   const submittable = useMemo(
     () => isValid && Object.keys(dirtyFields).length > 0,
 
-    [
-      isValid,
-      dirtyFields,
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      Object.keys(dirtyFields).length,
-    ]
+    [isValid, dirtyFields, Object.keys(dirtyFields).length]
   )
 
   useEffect(() => {

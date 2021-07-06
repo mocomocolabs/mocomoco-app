@@ -35,7 +35,7 @@ export class CommentStore {
 
   @task.resolved
   updateComment = (async (payload: IUpdateComment) => {
-    await api.put(`/v1/feed-comments`, payload)
+    await api.put(`/v1/feed-comments`, { ...payload, isUse: true })
   }) as UpdateCommentTask
 
   @task.resolved

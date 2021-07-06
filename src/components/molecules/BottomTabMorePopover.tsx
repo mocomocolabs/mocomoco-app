@@ -1,5 +1,5 @@
 import { IonPopover } from '@ionic/react'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { FC } from 'react'
 import { IMoreTabName } from '../../RouterTab'
 import { route } from '../../services/route-service'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -8,7 +8,8 @@ import './BottomTabMorePopover.scss'
 export interface IBottomTabMorePopover {
   isOpen: boolean
   activeTab: IMoreTabName
-  setIsOpen: Dispatch<SetStateAction<boolean>>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setIsOpen: any
 }
 
 export const BottomTabMorePopover: FC<IBottomTabMorePopover> = ({ isOpen, setIsOpen, activeTab }) => {
@@ -17,8 +18,7 @@ export const BottomTabMorePopover: FC<IBottomTabMorePopover> = ({ isOpen, setIsO
       cssClass='bottom-tab-more-popover'
       isOpen={isOpen}
       showBackdrop={false}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onDidDismiss={(e: any) => setIsOpen(e)}
+      onDidDismiss={(e) => setIsOpen(e)}
     >
       <ul className='p-4'>
         <li

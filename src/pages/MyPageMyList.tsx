@@ -45,6 +45,7 @@ export const MyPageMyList: React.FC = () => {
 
   const initialFilter: IStuffTalentFilter = {
     isPublic: false,
+    communityId: null,
     userId: $auth.user.id,
     categories: [],
     notStatuses: [],

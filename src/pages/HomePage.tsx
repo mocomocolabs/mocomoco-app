@@ -22,7 +22,7 @@ export const HomePage: React.FC = () => {
     const stufftalentFilter = {
       // TODO: isPublic테스트
       isPublic: false,
-      communityId: $community.myCommunity?.id,
+      communityId: $community.myCommunity?.id ?? null,
       userId: undefined,
       categories: [],
       notStatuses: [],
@@ -35,7 +35,6 @@ export const HomePage: React.FC = () => {
     $club.getPopularClubs(10)
     $feed.getHomeFeeds()
     $feed.getHomeScheduleFeeds()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // TODO: loader compositie or height fixed

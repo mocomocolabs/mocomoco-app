@@ -58,7 +58,7 @@ const TAB: ITab = {
   },
   MORE: {
     path: TAB_PATH.MORE,
-    icon: 'send',
+    icon: 'more',
   },
   CHAT: {
     path: TAB_PATH.CHAT,
@@ -72,7 +72,7 @@ const TAB: ITab = {
 export type IMoreTabName = 'stuff' | 'talent' | 'club' | ''
 
 export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
-  const [currentTab, setCurrentTab] = useState('')
+  const [currentTab, setCurrentTab] = useState(TAB_PATH.HOME as string)
   const [showsMore, setShowsMore] = useState(false)
   const [isActiveMore, setIsActiveMore] = useState(false)
   const [moreTabName, setMoreTabName] = useState<IMoreTabName>('')
@@ -112,8 +112,11 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
   })
 
   useEffect(() => {
-    setCurrentTab(refTabbar.current?.ionTabContextState.activeTab)
-    setActiveMoreByPath()
+    // 최초진입시 activeTab정보가 없는 경우가 있어 지연을 둠
+    setTimeout(() => {
+      setCurrentTab(refTabbar.current?.ionTabContextState.activeTab)
+      setActiveMoreByPath()
+    }, 100)
   }, [])
 
   return (
@@ -158,8 +161,8 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <IonTabButton tab={TAB.FEED.path} href='/feed'>
               <Icon name={getTabIcon(TAB.FEED)}></Icon>
             </IonTabButton>
-            <IonTabButton tab={TAB.MORE.path} selected={isActiveMore}>
-              <Icon name={isActiveMore ? TAB.MORE.icon + '-solid' : TAB.MORE.icon}></Icon>
+            <IonTabButton tab={TAB.MORE.path} selected={isActiveMore} className='no-active-color'>
+              <Icon name={isActiveMore ? TAB.MORE.icon + '-solid' : TAB.MORE.icon} className='icon-24'></Icon>
             </IonTabButton>
             <IonTabButton tab={TAB.CHAT.path} href='/chat'>
               <Icon name={getTabIcon(TAB.CHAT)}></Icon>

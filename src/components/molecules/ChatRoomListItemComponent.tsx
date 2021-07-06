@@ -4,7 +4,7 @@ import { useStore } from '../../hooks/use-store'
 import { ChatRoomType, IChatRoom } from '../../models/chat.d'
 import { IUser } from '../../models/user'
 import { route } from '../../services/route-service'
-import { Profile } from '../atoms/ProfileComponent'
+import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { TextSm } from '../atoms/TextSmComponent'
@@ -43,7 +43,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           }
         }}
       >
-        <Profile url={imageUrl}></Profile>
+        <ProfileImage url={imageUrl}></ProfileImage>
       </div>
       <div className='flex-between-center flex-1' onClick={() => route.chatRoom(room.id)}>
         <div className='flex-col'>

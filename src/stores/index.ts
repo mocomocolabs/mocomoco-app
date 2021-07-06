@@ -27,12 +27,12 @@ export class RootStore {
   $segment: SegmentStore
 
   constructor() {
-    this.$auth = new AuthStore()
+    this.$user = new UserStore()
+    this.$auth = new AuthStore(this)
     this.$community = new CommunityStore(this)
     this.$feed = new FeedStore(this)
     this.$comment = new CommentStore()
     this.$ui = new UiStore()
-    this.$user = new UserStore()
     this.$stuff = new StuffTalentStore(PageKey.STUFF, this)
     this.$talent = new StuffTalentStore(PageKey.TALENT, this)
     this.$chat = new ChatStore()

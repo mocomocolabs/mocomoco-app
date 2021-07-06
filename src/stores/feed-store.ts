@@ -3,27 +3,24 @@ import { task } from 'mobx-task'
 import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { Feed } from '../models/feed'
-import { FEED_TYPE, IFeed, IFeedForm } from '../models/feed.d'
+import { IFeed, IFeedForm, IFeedSchedule } from '../models/feed.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
-import { IFeedDto, SaveFeedTask } from './feed-store.d'
+import { IFeedDto, IFeedScheduleDto, SaveFeedTask } from './feed-store.d'
 import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
   feeds: [],
   /* eslint-disable */
   feed: {} as any,
-  form: {
-    title: '',
-    content: '',
-  } as IFeedForm,
+  form: {} as IFeedForm,
 }
 
 export class FeedStore {
   @observable.ref feeds: IFeed[] = initState.feeds
   @observable.ref homeFeeds: IFeed[] = []
-  @observable.ref homeScheduleFeeds: IFeed[] = []
+  @observable.ref homeScheduleFeeds: IFeedSchedule[] = []
   @observable.ref feed: IFeed = initState.feed
   @observable.struct form: IFeedForm = initState.form
   @observable deleted = false
@@ -79,12 +76,10 @@ export class FeedStore {
   @task
   getHomeScheduleFeeds = (async () => {
     await api
-      .get<{ feeds: IFeedDto[] }>(
-        `/v1/feeds?type=${FEED_TYPE.SCHEDULE}&community-id=${this.$auth.user.communityId}&is-use=true&limit=3`
-      )
+      .get<{ schedules: IFeedScheduleDto[] }>(`/v1/schedules?sort-order=start-date-time_asc&limit=3`)
       .then(
         action((data) => {
-          this.homeScheduleFeeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
+          this.homeScheduleFeeds = data.schedules.map((v) => Feed.scheduleOf(v)!)
         })
       )
   }) as Task
@@ -101,16 +96,12 @@ export class FeedStore {
   @task
   getFeedForm = (async (id: number) => {
     await api.get<IFeedDto>(`/v1/feeds/${id}`).then(
-      action(async (data) => {
-        console.log(data)
-
-        const images: any = await Promise.all(data.atchFiles?.map((v) => urlToFile(v.url)))
+      action(async (dto) => {
+        const images: any = await Promise.all(dto.atchFiles?.map((v) => urlToFile(v.url)))
 
         this.setForm({
-          ...data,
-          // TODO 서버쪽 schedule관련 수정 후 코드 변경하기
-          scheduleDate: data.scheduleDate?.substr(0, 8),
-          scheduleTime: data.scheduleDate?.substr(8),
+          ...dto,
+          schedule: Feed.scheduleOf(dto.schedule),
           images,
         })
       })
@@ -151,10 +142,12 @@ export class FeedStore {
             id: form.id,
             communityId: form.communityId,
             type: form.type,
-            ...(form.type === FEED_TYPE.SCHEDULE && {
-              scheduleTitle: form.scheduleTitle,
-              scheduleDate: form.scheduleDate + form.scheduleTime,
-            }),
+            schedule: form.schedule && {
+              title: form.schedule.title,
+              place: form.schedule.place,
+              startDateTime: form.schedule.startDate + form.schedule.startTime,
+              endDateTime: form.schedule.endDate + form.schedule.endTime,
+            },
             title: form.title,
             content: form.content,
             isPublic: form.isPublic,
@@ -176,7 +169,6 @@ export class FeedStore {
     } else {
       await api.post(`/v1/feeds`, formData)
     }
-    this.resetForm()
   }) as SaveFeedTask
 
   @task.resolved
@@ -205,6 +197,14 @@ export class FeedStore {
   setForm(data: Partial<IFeedForm>) {
     this.form = {
       ...this.form,
+      ...data,
+    }
+  }
+
+  @action
+  setFormSchedule(data: Partial<IFeedSchedule>) {
+    this.form.schedule = {
+      ...this.form.schedule,
       ...data,
     }
   }

@@ -54,14 +54,10 @@ export const StuffTalentFormPage: React.FC = () => {
 
   const uploader = useRef<IImageUploaderRef>()
 
-  const setValueCustom = useCallback(
-    (name, value) => {
-      // shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
-      setValue(name, value, { shouldDirty: true, shouldValidate: true })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+  const setValueCustom = useCallback((name, value) => {
+    // shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
+    setValue(name, value, { shouldDirty: true, shouldValidate: true })
+  }, [])
 
   const submittable = useMemo(() => {
     const isValidType =
@@ -74,7 +70,6 @@ export const StuffTalentFormPage: React.FC = () => {
     const isChangedFromDefaultValues = Object.keys(dirtyFields).length > 0
 
     return isValid && isValidType && isChangedFromDefaultValues
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isValid, watchType, watchPrice, watchExchangeText, Object.keys(dirtyFields)])
 
   const isSubmitCompleted = useRef(false)
@@ -113,23 +108,19 @@ export const StuffTalentFormPage: React.FC = () => {
     }
   })
 
-  useEffect(
-    () => {
-      const [exchangeText, price] = getValues(['exchangeText', 'price'])
+  useEffect(() => {
+    const [exchangeText, price] = getValues(['exchangeText', 'price'])
 
-      // 불필요한 setValue 호출을 막기 위해 현재 빈 값인 필드는 그냥 둔다.
-      if ([StuffTalentType.SHARE, StuffTalentType.WANT].includes(watchType)) {
-        !!exchangeText && setValueCustom('exchangeText', undefined)
-        !!price && setValueCustom('price', undefined)
-      } else if (StuffTalentType.SELL === watchType) {
-        !!exchangeText && setValueCustom('exchangeText', undefined)
-      } else if (StuffTalentType.EXCHANGE === watchType) {
-        !!price && setValueCustom('price', undefined)
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [watchType]
-  )
+    // 불필요한 setValue 호출을 막기 위해 현재 빈 값인 필드는 그냥 둔다.
+    if ([StuffTalentType.SHARE, StuffTalentType.WANT].includes(watchType)) {
+      !!exchangeText && setValueCustom('exchangeText', undefined)
+      !!price && setValueCustom('price', undefined)
+    } else if (StuffTalentType.SELL === watchType) {
+      !!exchangeText && setValueCustom('exchangeText', undefined)
+    } else if (StuffTalentType.EXCHANGE === watchType) {
+      !!price && setValueCustom('price', undefined)
+    }
+  }, [watchType])
 
   return (
     <IonPage>
