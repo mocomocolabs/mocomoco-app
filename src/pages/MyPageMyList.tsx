@@ -12,6 +12,7 @@ import { filterOutline } from 'ionicons/icons'
 import { reaction } from 'mobx'
 import { Observer } from 'mobx-react-lite'
 import React, { useEffect, useRef, useState } from 'react'
+import { Pad } from '../components/atoms/PadComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
@@ -32,7 +33,7 @@ const segments: ISegments = {
   [SEGMENT_KEYS.club]: { label: '소모임' },
 }
 
-const FilterMode = { none: 'none', type: '조건' }
+const FilterMode = { none: 'none', type: '거래상태' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 export const MyPageMyList: React.FC = () => {
@@ -118,37 +119,44 @@ export const MyPageMyList: React.FC = () => {
 
         <Observer>
           {() => (
-            <FilterBar
-              show={[SEGMENT_KEYS.stuff, SEGMENT_KEYS.talent].includes($segment.myListSegment)}
-              filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
-              onReset={onResetFilter}
-              onClick={(name: string) => {
-                setFilterMode(filterMode === name ? FilterMode.none : name)
-              }}
-            />
+            <div
+              className='px-container mt-1'
+              hidden={![SEGMENT_KEYS.stuff, SEGMENT_KEYS.talent].includes($segment.myListSegment)}
+            >
+              <FilterBar
+                filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
+                onReset={onResetFilter}
+                onClick={(name: string) => {
+                  setFilterMode(filterMode === name ? FilterMode.none : name)
+                }}
+              />
+
+              <Pad className='h-3' />
+            </div>
           )}
         </Observer>
       </IonHeader>
 
-      <FilterPopup
-        show={filterMode === FilterMode.type}
-        filterInfos={[
-          {
-            filter: filter.types,
-            items: typeLabels,
-            onSelect: (newFilter) => setFilter({ ...filter, types: newFilter }),
-          },
-          {
-            filter: filter.notStatuses,
-            items: [{ value: StuffTalentStatus.FINISH, label: '거래완료 안보기' }],
-            onSelect: (newFilter) => setFilter({ ...filter, notStatuses: newFilter }),
-          },
-        ]}
-        onClose={onCloseFilterPopup}
-      />
+      <div className='-mt-3' hidden={filterMode !== FilterMode.type}>
+        <FilterPopup
+          filterInfos={[
+            {
+              filter: filter.types,
+              items: typeLabels,
+              onSelect: (newFilter) => setFilter({ ...filter, types: newFilter }),
+            },
+            {
+              filter: filter.notStatuses,
+              items: [{ value: StuffTalentStatus.FINISH, label: '거래완료 안보기' }],
+              onSelect: (newFilter) => setFilter({ ...filter, notStatuses: newFilter }),
+            },
+          ]}
+          onClose={onCloseFilterPopup}
+        />
+      </div>
 
       <IonContent>
-        <div className='px-container my-4'>
+        <div className='px-container mt-1 mb-4'>
           <Observer>{() => renderList($segment.myListSegment)}</Observer>
         </div>
       </IonContent>
