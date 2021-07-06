@@ -144,42 +144,44 @@ export const StuffTalentPage: React.FC = () => {
               setFilterMode(filterMode === name ? FilterMode.none : name)
             }}
           />
+
+          <Pad className='h-3' />
         </div>
       </IonHeader>
 
-      <Pad className='h-3' />
+      <div className='-mt-3' hidden={filterMode !== FilterMode.category}>
+        <FilterPopup
+          filterInfos={[
+            {
+              filter: filter.categories,
+              items: store.categories.map((c) => ({ value: c.id, label: c.name })),
+              onSelect: (newFilter) => setFilter({ ...filter, categories: newFilter }),
+            },
+          ]}
+          onClose={onCloseFilterPopup}
+        />
+      </div>
 
-      <FilterPopup
-        show={filterMode === FilterMode.category}
-        filterInfos={[
-          {
-            filter: filter.categories,
-            items: store.categories.map((c) => ({ value: c.id, label: c.name })),
-            onSelect: (newFilter) => setFilter({ ...filter, categories: newFilter }),
-          },
-        ]}
-        onClose={onCloseFilterPopup}
-      />
-
-      <FilterPopup
-        show={filterMode === FilterMode.type}
-        filterInfos={[
-          {
-            filter: filter.types,
-            items: typeLabels,
-            onSelect: (newFilter) => setFilter({ ...filter, types: newFilter }),
-          },
-          {
-            filter: filter.notStatuses,
-            items: [{ value: StuffTalentStatus.FINISH, label: '거래완료 안보기' }],
-            onSelect: (newFilter) => setFilter({ ...filter, notStatuses: newFilter }),
-          },
-        ]}
-        onClose={onCloseFilterPopup}
-      />
+      <div className='-mt-3' hidden={filterMode !== FilterMode.type}>
+        <FilterPopup
+          filterInfos={[
+            {
+              filter: filter.types,
+              items: typeLabels,
+              onSelect: (newFilter) => setFilter({ ...filter, types: newFilter }),
+            },
+            {
+              filter: filter.notStatuses,
+              items: [{ value: StuffTalentStatus.FINISH, label: '거래완료 안보기' }],
+              onSelect: (newFilter) => setFilter({ ...filter, notStatuses: newFilter }),
+            },
+          ]}
+          onClose={onCloseFilterPopup}
+        />
+      </div>
 
       <IonContent>
-        <div className='px-container mt-1'>
+        <div className='px-container mt-1 mb-4'>
           <StuffTalentList store={store} search={search} filter={filter} />
         </div>
       </IonContent>
