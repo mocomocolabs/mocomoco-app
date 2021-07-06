@@ -21,7 +21,7 @@ export const CategorySelectorModal: FC<ICategorySelectorModal> = ({
   onSelect,
 }) => {
   return useObserver(() => (
-    <Modal isShow={isShow} setIsShow={setIsShow} title='지역 / 공동체 선택'>
+    <Modal isShow={isShow} setIsShow={setIsShow} title='카테고리 선택'>
       <ul className='px-container pt-2'>
         {categories.map((v) => (
           <li
