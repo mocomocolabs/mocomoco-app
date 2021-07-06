@@ -8,14 +8,13 @@ interface IFilterInfo {
 }
 
 interface IFilterPopup {
-  show: boolean
   filterInfos: IFilterInfo[]
   onClose: () => void
 }
 
-export const FilterPopup: React.FC<IFilterPopup> = ({ show, filterInfos, onClose }) => (
-  <div className='justify-around' hidden={!show}>
-    <div className='grid grid-cols-2 absolute z-10 w-full bg-white gap-4 px-4 pt-1 pb-4'>
+export const FilterPopup: React.FC<IFilterPopup> = ({ filterInfos, onClose }) => (
+  <div className='justify-around'>
+    <div className='grid grid-cols-2 absolute z-10 w-full bg-white gap-4 px-4 pt-4 pb-4'>
       {filterInfos.map(({ filter, items, onSelect }) =>
         items.map(({ value, label }) => (
           <div

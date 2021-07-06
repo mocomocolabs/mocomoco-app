@@ -104,7 +104,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
               </SquareWithCorner>
             </div>
             <TextSm className='ellipsis min-w-0 ml-1 flex-grow'>{item.title}</TextSm>
-            <div className='flex flex-none h-full' onClick={(e) => e.stopPropagation()}>
+            <div className='flex flex-none h-full ml-1' onClick={(e) => e.stopPropagation()}>
               {loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
             </div>
           </div>
