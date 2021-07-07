@@ -108,7 +108,7 @@ export const MyPageLikeList: React.FC = () => {
           </div>
           <IonTitle slot='start'>{title}</IonTitle>
           <IonButtons slot='primary'>
-            <IonButton slot='end' color='dark' routerLink='/settings'>
+            <IonButton slot='end' color='dark' routerLink='/tabs/my-page/settings'>
               <IonIcon slot='icon-only' icon={filterOutline} size='small' />
             </IonButton>
           </IonButtons>

@@ -14,7 +14,7 @@ export const MypageColumnList: React.FC = () => {
       <MypageColumnItem icon={cloudOutline} title='구름씨가이드' href='' />
       <MypageColumnItem icon={cloudUploadOutline} title='자주 묻는 질문' href='' />
       <MypageColumnItem icon={cloudDoneOutline} title='공지사항' href='' />
-      <MypageColumnItem icon={settingsOutline} title='설정' href='/settings' />
+      <MypageColumnItem icon={settingsOutline} title='설정' href='/tabs/my-page/settings' />
     </div>
   )
 }

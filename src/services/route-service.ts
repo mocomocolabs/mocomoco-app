@@ -54,39 +54,63 @@ class RouteService {
   }
 
   feed() {
-    this.route('/feed')
+    this.route('/tabs/feed')
   }
 
   feedForm() {
-    this.route('/feed-write')
+    this.route('/tabs/feed/form')
   }
 
   feedDetail(feedId: number, param?: { autoFocus?: boolean }, isReplace = false) {
-    this.route(`/feed/${feedId}`, { autoFocus: param?.autoFocus }, isReplace)
+    this.route(`/tabs/feed/${feedId}`, { autoFocus: param?.autoFocus }, isReplace)
   }
 
   stuff() {
-    this.route('/stuff')
+    this.route('/tabs/stuff')
   }
 
   stuffForm() {
-    this.route('/stuff-form')
+    this.route('/tabs/stuff/form')
   }
 
   stuffDetail(stuffId: number) {
-    this.route(`/stuff/${stuffId}`)
+    this.route(`/tabs/stuff/${stuffId}`)
   }
 
   talent() {
-    this.route('/talent')
+    this.route('/tabs/talent')
   }
 
   talentForm() {
-    this.route('/talent-form')
+    this.route('/tabs/talent/form')
   }
 
   talentDetail(talentId: number) {
-    this.route(`/talent/${talentId}`)
+    this.route(`/tabs/talent/${talentId}`)
+  }
+
+  chatRoom(roomId: number) {
+    this.route(`/tabs/chat/${roomId}`)
+  }
+
+  clubs() {
+    this.route(`/tabs/club`)
+  }
+
+  clubForm() {
+    this.route(`/tabs/club/form`)
+  }
+
+  clubDetail(clubId: number) {
+    this.route(`/tabs/club/${clubId}`)
+  }
+
+  myPageMyList() {
+    this.route('/tabs/my-page/my-list')
+  }
+
+  myPageLikeList() {
+    this.route('/tabs/my-page/like-list')
   }
 
   profileDetail(userId: number) {
@@ -95,30 +119,6 @@ class RouteService {
 
   profileDetailEdit(userId: number) {
     this.route(`/users/${userId}/edit`)
-  }
-
-  chatRoom(roomId: number) {
-    this.route(`/chat/${roomId}`)
-  }
-
-  clubs() {
-    this.route(`/club`)
-  }
-
-  clubForm() {
-    this.route(`/club-form`)
-  }
-
-  clubDetail(clubId: number) {
-    this.route(`/club/${clubId}`)
-  }
-
-  myPageMyList() {
-    this.route('/my-page/my-list')
-  }
-
-  myPageLikeList() {
-    this.route('/my-page/like-list')
   }
 
   get history() {

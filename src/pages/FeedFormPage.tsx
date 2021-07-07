@@ -29,9 +29,9 @@ import { route } from '../services/route-service'
 import { DT_FORMAT } from '../utils/datetime-util'
 import { executeWithError } from '../utils/http-helper-util'
 
-export interface IFeedWrite {}
+export interface IFeedForm {}
 
-export const FeedWritePage: FC<IFeedWrite> = () => {
+export const FeedFormPage: FC<IFeedForm> = () => {
   const { $ui, $feed, $auth } = useStore()
 
   const uploader = useRef<IImageUploaderRef>()

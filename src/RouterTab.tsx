@@ -12,8 +12,8 @@ import { ClubFormPage } from './pages/club/ClubFormPage'
 import { ClubPage } from './pages/club/ClubPage'
 import { DevPage } from './pages/DevPage'
 import { FeedDetailPage } from './pages/FeedDetailPage'
+import { FeedFormPage } from './pages/FeedFormPage'
 import { FeedPage } from './pages/FeedPage'
-import { FeedWritePage } from './pages/FeedWritePage'
 import { HomePage } from './pages/HomePage'
 import { IntroPage } from './pages/IntroPage'
 import { MyPage } from './pages/MyPage'
@@ -101,19 +101,19 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
 
   const onTabChange = useCallback((event: { detail: { tab: string } }) => {
     setCurrentTab(event.detail.tab)
-    setActiveMoreByPath()
+    setActiveTabByPath()
 
     if (event.detail.tab === 'more') {
       setShowsMore(!showsMore)
     }
   }, [])
 
-  const setActiveMoreByPath = () => {
-    const activeTab: IMoreTabName =
+  const setActiveTabByPath = () => {
+    const activeMoreTabName: IMoreTabName =
       (['club', 'talent', 'stuff'] as IMoreTabName[]).find((v) => location.pathname.includes(v)) || ''
 
-    setIsActiveMore(!!activeTab)
-    setMoreTabName(activeTab)
+    setIsActiveMore(!!activeMoreTabName)
+    setMoreTabName(activeMoreTabName)
   }
 
   const routeGuard = useCallback(async (path) => {
@@ -129,14 +129,14 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
     routeGuard(route.history.location.pathname)
 
     route.history.listen((v) => {
-      setActiveMoreByPath()
+      setActiveTabByPath()
       routeGuard(v.pathname)
     })
 
     // 최초진입시 activeTab정보가 없는 경우가 있어 지연을 둠
     setTimeout(() => {
       setCurrentTab(refTabbar.current?.ionTabContextState.activeTab)
-      setActiveMoreByPath()
+      setActiveTabByPath()
     }, 100)
   }, [])
 
@@ -152,27 +152,39 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <Route path='/sign-up/form' component={SignUpFormPage} exact />
             <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
             <Route path='/sign-up/complete' component={SignUpCompletePage} exact />
-            <Route path='/home' component={HomePage} exact />
-            <Route path='/feed' component={FeedPage} exact />
-            <Route path='/feed/:id' component={FeedDetailPage} exact />
-            <Route path='/feed-write' component={FeedWritePage} exact />
-            <Route path='/stuff' component={StuffTalentPage} exact />
-            <Route path='/stuff/:id' component={StuffTalentDetailPage} exact />
-            <Route path='/stuff-form' component={StuffTalentFormPage} exact />
-            <Route path='/talent' component={StuffTalentPage} exact />
-            <Route path='/talent/:id' component={StuffTalentDetailPage} exact />
-            <Route path='/talent-form' component={StuffTalentFormPage} exact />
-            <Route path='/club' component={ClubPage} exact />
-            <Route path='/club-form' component={ClubFormPage} exact />
-            <Route path='/club/:id' component={ClubDetailPage} exact />
-            <Route path='/chat' component={ChatPage} exact />
-            <Route path='/chat/:id' component={ChatRoomPage} exact />
-            <Route path='/my-page' component={MyPage} exact />
-            <Route path='/my-page/my-list' component={MyPageMyList} exact />
-            <Route path='/my-page/like-list' component={MyPageLikeList} exact />
-            <Route path='/settings' component={SettingsPage} exact />
+
+            {/* Login 필요 */}
+            {/* TABS */}
+            <Route path='/tabs/home' component={HomePage} exact />
+
+            <Route path='/tabs/feed' component={FeedPage} exact />
+            <Route path='/tabs/feed/form' component={FeedFormPage} exact />
+            <Route path='/tabs/feed/:id' component={FeedDetailPage} exact />
+
+            <Route path='/tabs/stuff' component={StuffTalentPage} exact />
+            <Route path='/tabs/stuff/form' component={StuffTalentFormPage} exact />
+            <Route path='/tabs/stuff/:id' component={StuffTalentDetailPage} exact />
+
+            <Route path='/tabs/talent' component={StuffTalentPage} exact />
+            <Route path='/tabs/talent/form' component={StuffTalentFormPage} exact />
+            <Route path='/tabs/talent/:id' component={StuffTalentDetailPage} exact />
+
+            <Route path='/tabs/club' component={ClubPage} exact />
+            <Route path='/tabs/club/form' component={ClubFormPage} exact />
+            <Route path='/tabs/club/:id' component={ClubDetailPage} exact />
+
+            <Route path='/tabs/chat' component={ChatPage} exact />
+            <Route path='/tabs/chat/:id' component={ChatRoomPage} exact />
+
+            <Route path='/tabs/my-page' component={MyPage} exact />
+            <Route path='/tabs/my-page/my-list' component={MyPageMyList} exact />
+            <Route path='/tabs/my-page/like-list' component={MyPageLikeList} exact />
+            <Route path='/tabs/my-page/settings' component={SettingsPage} exact />
+
+            {/* TABS 독립 */}
             <Route path='/users/:id' component={ProfileDetailPage} exact />
             <Route path='/users/:id/edit' component={ProfileUpdatePage} exact />
+
             <Redirect from='/' to='/home' exact />
           </IonRouterOutlet>
           <IonTabBar slot='bottom' hidden={!isShow} onIonTabsDidChange={onTabChange}>

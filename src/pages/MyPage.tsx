@@ -29,7 +29,7 @@ export const MyPage: React.FC = () => {
         <IonToolbar>
           <IonTitle slot='start'>마이페이지</IonTitle>
           <IonButtons slot='primary'>
-            <IonButton slot='end' color='dark' routerLink='/settings'>
+            <IonButton slot='end' color='dark' routerLink='/tabs/my-page/settings'>
               <IonIcon slot='icon-only' icon={settingsOutline} size='small' />
             </IonButton>
           </IonButtons>
