@@ -21,7 +21,12 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
             key={v.id}
             onClick={() => route.clubDetail(v.id)}
           >
-            <ImageWithCorner height={160} url={v.imageUrls[0]} isRoundTop={true}></ImageWithCorner>
+            <ImageWithCorner
+              height={160}
+              url={v.imageUrls[0]}
+              isRoundTop={true}
+              radiusSize={12}
+            ></ImageWithCorner>
             <div className='flex-col px-3 ml-0 br-b-xxlg text-left'>
               <TextBase className='text-bold'>{v.name}</TextBase>
               <div className='flex'>

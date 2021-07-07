@@ -16,13 +16,12 @@ export const SignUpCompletePage: React.FC = () => {
 
   useEffect(() => {
     $auth.user.status === SIGN_UP_STATUS.승인 && route.home()
-    // eslint-disable-next-line
   }, [])
 
   return (
     <IonPage>
       <IonContent>
-        <ImageSlider urls={['/assets/img/hama.svg']}></ImageSlider>
+        <ImageSlider urls={['/assets/img/hama.png']}></ImageSlider>
         <div className='px-8'>
           <TextXxl className='text-bold d-gray text-center'>회원가입이 완료되었어요!</TextXxl>
           <TextSm className='d-gray mt-8'>관리자 승인 후 연락드릴게요 :)</TextSm>

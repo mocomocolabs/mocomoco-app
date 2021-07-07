@@ -33,6 +33,7 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
           <div className='flex-col width-160 br-xxlg shadow pb-2'>
             <ImageWithCorner
               height={130}
+              radiusSize={12}
               url={v.imageUrls?.slice(-1).pop()}
               isRoundTop={true}
             ></ImageWithCorner>

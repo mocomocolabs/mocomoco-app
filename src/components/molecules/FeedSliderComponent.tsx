@@ -32,12 +32,13 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
           <div className='flex-col width-308 br-xxlg shadow pb-3'>
             <ImageWithCorner
               height={162}
-              url={v.imageUrls?.slice(-1).pop()}
+              url={v.imageUrls?.slice(-1).pop() ?? '/assets/img/no-image.png'}
+              radiusSize={12}
               isRoundTop={true}
             ></ImageWithCorner>
-            <div className='flex-col w-full bg-white px-3 br-b-xxlg text-left'>
-              <TextBase className='text-bold'>{v.title}</TextBase>
-              <TextXs className='ellipsis'>{v.content}</TextXs>
+            <div className='flex-col w-full h-10 bg-white px-3 br-b-xxlg text-left'>
+              <TextBase className='text-bold ellipsis'>{v.title ?? v.content}</TextBase>
+              {v.title && <TextXs className='ellipsis'>{v.content}</TextXs>}
             </div>
           </div>
         </IonSlide>

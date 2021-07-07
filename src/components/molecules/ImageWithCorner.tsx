@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import { ReactSVG } from 'react-svg'
 import { ImageBackground } from '../atoms/ImageBackgroundComponent'
 import './ImageWithCorner.scss'
 
@@ -58,7 +57,7 @@ export const ImageWithCorner: FC<IImageWithCorner> = ({
   return (
     <div className={outerDivClass}>
       <ImageBackground style={{ height, width }} url={url} className={imageClass} />
-      <ReactSVG src='/assets/img/corner.svg' style={cornerStyle} className={cornerClass} alt='' />
+      <img src='/assets/img/corner.svg' style={cornerStyle} className={cornerClass} alt='' />
       <div className={tailDivClass} style={tailDivStyle} />
     </div>
   )

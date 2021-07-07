@@ -120,9 +120,8 @@ export class ClubStore {
     )
 
     if (form.images.length === 0) {
-      // TODO: empty image 추가
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      form.images = [(await urlToFile('/assets/img/club/club01.jpg')) as any]
+      form.images = [(await urlToFile('/assets/img/no-image.png')) as any]
     }
 
     form.images?.forEach((v) => {

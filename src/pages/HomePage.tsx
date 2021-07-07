@@ -3,7 +3,6 @@ import { useObserver } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { FeedSlider } from '../components/molecules/FeedSliderComponent'
 import { HomeHeader } from '../components/molecules/HomeHeaderComponent'
-import { HomeSchedule } from '../components/molecules/HomeScheduleComponent'
 import { HomeTitle } from '../components/molecules/HomeTitleComponent'
 import { StuffTalentItem } from '../components/molecules/StuffTalentItemComponent'
 import { ClubPopularSlider } from '../components/organisms/ClubPopularSliderComponent'
@@ -57,8 +56,8 @@ export const HomePage: React.FC = () => {
         <FeedSlider items={$feed.homeFeeds}></FeedSlider>
 
         <div className='px-container'>
-          <HomeTitle title='다가오는 일정'></HomeTitle>
-          <HomeSchedule items={$feed.homeScheduleFeeds} className='pb-2'></HomeSchedule>
+          {/* <HomeTitle title='다가오는 일정'></HomeTitle>
+          <HomeSchedule items={$feed.homeScheduleFeeds} className='pb-2'></HomeSchedule> */}
           <HomeTitle title='물건 창고' route={() => route.stuff()}></HomeTitle>
           {$stuff.items.map((item) => (
             <StuffTalentItem
