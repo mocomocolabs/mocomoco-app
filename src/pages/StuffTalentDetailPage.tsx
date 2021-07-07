@@ -12,14 +12,16 @@ import { BackFloatingButton } from '../components/molecules/BackFloatingButtonCo
 import { StuffTalentDetailContents } from '../components/molecules/StuffTalentDetailContentsComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
+import { ISubChat } from '../models/chat'
 import { getPageKey, routeFunc } from '../models/stufftalent'
 import { StuffTalentPageKey } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
+import { webSocket } from '../services/web-socket-service'
 
 export const StuffTalentDetailPage: React.FC = () => {
   const id = parseInt(useParams<{ id: string }>().id)
 
-  const { $ui, $stuff, $talent, $auth } = useStore()
+  const { $ui, $stuff, $talent, $auth, $chat } = useStore()
 
   const pageData = {
     [StuffTalentPageKey.STUFF]: { store: $stuff },
@@ -52,7 +54,6 @@ export const StuffTalentDetailPage: React.FC = () => {
 
   const createChatButton = useMemo(
     () => (
-      // TODO 내가 등록한 물품이면, "채팅 목록 보기"가 표시돼야 함
       <SubmitButton
         text='채팅으로 거래하기'
         onClick={async () => {
@@ -62,13 +63,23 @@ export const StuffTalentDetailPage: React.FC = () => {
           })
 
           await store.getItem(store.item.id)
+          // TODO 채팅방을 생성했으니 getRooms 호출을 해주는 게 맞겠지?
+          await $chat.getRooms({ roomIds: [...$chat.rooms.map((room) => room.id), store.item.chatroomId] })
 
-          // TODO 채팅방 진입 후 메시지 전송해도 화면에 표시되지 않음. 앱을 새로고침 한 다음에는 표시됨.
+          webSocket.subscribeRoom(store.item.chatroomId, (data) => {
+            const subChat = JSON.parse(data.body) as ISubChat
+            $chat.setChat(subChat)
+            $chat.setLastChatId({
+              roomId: subChat.chatroom.id,
+              readChatId: subChat.id,
+            })
+          })
+
           route.chatRoom(store.item.chatroomId)
         }}
       />
     ),
-    [store]
+    [store, $chat]
   )
 
   return useObserver(() =>
@@ -110,7 +121,12 @@ export const StuffTalentDetailPage: React.FC = () => {
                     text='채팅 목록 보기'
                     color='secondary'
                     // TODO 채팅 목록 보기 팝업 구현하기
-                    onClick={() => console.log('채팅 목록 보기')}
+                    onClick={() => {
+                      console.log(
+                        '채팅 목록 보기',
+                        store.item.stuffUsers?.map((user) => user.chatroom.id)
+                      )
+                    }}
                   ></SubmitButton>
                 ) : !store.item?.chatroomId ? (
                   <SpinnerWrapper task={store.createChat} Submit={() => createChatButton} />
