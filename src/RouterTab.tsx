@@ -39,12 +39,15 @@ export interface IRouterTab {
   isShow: boolean
 }
 
-enum TAB_PATH {
-  HOME = 'home',
-  FEED = 'feed',
-  MORE = 'more',
-  CHAT = 'chat',
-  MY_PAGE = 'my-page',
+export enum TAB_PATH {
+  HOME = '/tabs/home',
+  FEED = '/tabs/feed',
+  CHAT = '/tabs/chat',
+  MY_PAGE = '/tabs/my-page',
+
+  STUFF = '/tabs/stuff',
+  CLUB = '/tabs/club',
+  TALENT = '/tabs/talent',
 }
 type ITab = { [key: string]: { path: TAB_PATH; icon: string } }
 const TAB: ITab = {
@@ -57,7 +60,7 @@ const TAB: ITab = {
     icon: 'group',
   },
   MORE: {
-    path: TAB_PATH.MORE,
+    path: TAB_PATH.STUFF, // more 대표 STUFF로 셋팅
     icon: 'more',
   },
   CHAT: {
@@ -69,7 +72,7 @@ const TAB: ITab = {
     icon: 'setting',
   },
 }
-export type IMoreTabName = 'stuff' | 'talent' | 'club' | ''
+const morePaths = [TAB_PATH.STUFF, TAB_PATH.TALENT, TAB_PATH.CLUB]
 
 const publicPaths = [
   //
@@ -84,8 +87,6 @@ const publicPaths = [
 export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
   const [currentTab, setCurrentTab] = useState(TAB_PATH.HOME as string)
   const [showsMore, setShowsMore] = useState(false)
-  const [isActiveMore, setIsActiveMore] = useState(false)
-  const [moreTabName, setMoreTabName] = useState<IMoreTabName>('')
   const { $auth } = useStore()
 
   // eslint-disable-next-line
@@ -100,20 +101,29 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
   )
 
   const onTabChange = useCallback((event: { detail: { tab: string } }) => {
-    setCurrentTab(event.detail.tab)
-    setActiveTabByPath()
-
-    if (event.detail.tab === 'more') {
+    if (event.detail.tab === TAB.MORE.path) {
       setShowsMore(!showsMore)
     }
   }, [])
 
   const setActiveTabByPath = () => {
-    const activeMoreTabName: IMoreTabName =
-      (['club', 'talent', 'stuff'] as IMoreTabName[]).find((v) => location.pathname.includes(v)) || ''
-
-    setIsActiveMore(!!activeMoreTabName)
-    setMoreTabName(activeMoreTabName)
+    switch (true) {
+      case location.pathname.startsWith(TAB_PATH.HOME):
+        setCurrentTab(TAB_PATH.HOME)
+        break
+      case location.pathname.startsWith(TAB_PATH.FEED):
+        setCurrentTab(TAB_PATH.FEED)
+        break
+      case location.pathname.startsWith(TAB_PATH.CHAT):
+        setCurrentTab(TAB_PATH.CHAT)
+        break
+      case location.pathname.startsWith(TAB_PATH.MY_PAGE):
+        setCurrentTab(TAB_PATH.MY_PAGE)
+        break
+      case morePaths.some((v: TAB_PATH) => location.pathname.startsWith(v)):
+        setCurrentTab(TAB_PATH.STUFF)
+        break
+    }
   }
 
   const routeGuard = useCallback(async (path) => {
@@ -127,17 +137,12 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
 
   useEffect(() => {
     routeGuard(route.history.location.pathname)
+    setActiveTabByPath()
 
     route.history.listen((v) => {
       setActiveTabByPath()
       routeGuard(v.pathname)
     })
-
-    // 최초진입시 activeTab정보가 없는 경우가 있어 지연을 둠
-    setTimeout(() => {
-      setCurrentTab(refTabbar.current?.ionTabContextState.activeTab)
-      setActiveTabByPath()
-    }, 100)
   }, [])
 
   return (
@@ -185,23 +190,34 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <Route path='/users/:id' component={ProfileDetailPage} exact />
             <Route path='/users/:id/edit' component={ProfileUpdatePage} exact />
 
-            <Redirect from='/' to='/home' exact />
+            <Redirect from='/' to='/tabs/home' exact />
           </IonRouterOutlet>
           <IonTabBar slot='bottom' hidden={!isShow} onIonTabsDidChange={onTabChange}>
-            <IonTabButton tab={TAB.HOME.path} href='/home'>
+            <IonTabButton tab={TAB.HOME.path} selected={currentTab === TAB_PATH.HOME} href='/tabs/home'>
               <Icon name={getTabIcon(TAB.HOME)}></Icon>
             </IonTabButton>
-            <IonTabButton tab={TAB.FEED.path} href='/feed'>
+            <IonTabButton tab={TAB.FEED.path} selected={currentTab === TAB_PATH.FEED} href='/tabs/feed'>
               <Icon name={getTabIcon(TAB.FEED)}></Icon>
             </IonTabButton>
-            <IonTabButton tab={TAB.MORE.path} selected={isActiveMore} className='no-active-color'>
-              <Icon name={isActiveMore ? TAB.MORE.icon + '-solid' : TAB.MORE.icon} className='icon-24'></Icon>
+            <IonTabButton
+              tab={TAB.MORE.path}
+              selected={currentTab === TAB_PATH.STUFF}
+              className='no-active-color'
+            >
+              <Icon
+                name={currentTab === TAB_PATH.STUFF ? TAB.MORE.icon + '-solid' : TAB.MORE.icon}
+                className='icon-24'
+              ></Icon>
             </IonTabButton>
-            <IonTabButton tab={TAB.CHAT.path} href='/chat'>
+            <IonTabButton tab={TAB.CHAT.path} selected={currentTab === TAB_PATH.CHAT} href='/tabs/chat'>
               <Icon name={getTabIcon(TAB.CHAT)}></Icon>
               {chatUnreadCount > 0 && <div className='badge'></div>}
             </IonTabButton>
-            <IonTabButton tab={TAB.MY_PAGE.path} href='/my-page'>
+            <IonTabButton
+              tab={TAB.MY_PAGE.path}
+              selected={currentTab === TAB_PATH.MY_PAGE}
+              href='/tabs/my-page'
+            >
               <Icon name={getTabIcon(TAB.MY_PAGE)}></Icon>
             </IonTabButton>
           </IonTabBar>
@@ -210,7 +226,7 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
       <BottomTabMorePopover
         isOpen={showsMore}
         setIsOpen={setShowsMore}
-        activeTab={moreTabName}
+        activeTab={currentTab as TAB_PATH}
       ></BottomTabMorePopover>
     </>
   )

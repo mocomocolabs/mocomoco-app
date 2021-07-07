@@ -25,10 +25,6 @@ class RouteService {
     this.route('/intro')
   }
 
-  home() {
-    this.route('/home')
-  }
-
   signIn() {
     this.route('/sign-in')
   }
@@ -51,6 +47,10 @@ class RouteService {
 
   signUpComplete() {
     this.route('/sign-up/complete')
+  }
+
+  home() {
+    this.route('/tabs/home')
   }
 
   feed() {
