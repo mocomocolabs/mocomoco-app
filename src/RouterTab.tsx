@@ -4,7 +4,7 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import { Icon } from './components/atoms/IconComponent'
 import { BottomTabMorePopover } from './components/molecules/BottomTabMorePopover'
-import { GuardRoute } from './GuardRoute'
+import { useStore } from './hooks/use-store'
 import { ChatPage } from './pages/ChatPage'
 import { ChatRoomPage } from './pages/ChatRoomPage'
 import { ClubDetailPage } from './pages/club/ClubDetailPage'
@@ -71,11 +71,22 @@ const TAB: ITab = {
 }
 export type IMoreTabName = 'stuff' | 'talent' | 'club' | ''
 
+const publicPaths = [
+  //
+  '/dev',
+  '/intro',
+  '/sign-in',
+  '/sign-up',
+  '/sign-up/form',
+  '/sign-up/community',
+]
+
 export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
   const [currentTab, setCurrentTab] = useState(TAB_PATH.HOME as string)
   const [showsMore, setShowsMore] = useState(false)
   const [isActiveMore, setIsActiveMore] = useState(false)
   const [moreTabName, setMoreTabName] = useState<IMoreTabName>('')
+  const { $auth } = useStore()
 
   // eslint-disable-next-line
   const refTabbar = useRef<any>()
@@ -95,8 +106,6 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
     if (event.detail.tab === 'more') {
       setShowsMore(!showsMore)
     }
-
-    // eslint-disable-next-line
   }, [])
 
   const setActiveMoreByPath = () => {
@@ -107,11 +116,23 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
     setMoreTabName(activeTab)
   }
 
-  route.history.listen(() => {
-    setActiveMoreByPath()
-  })
+  const routeGuard = useCallback(async (path) => {
+    if (!$auth.isLogin && !publicPaths.includes(path)) {
+      route.signUp()
+    }
+    if ($auth.isLogin && publicPaths.includes(path)) {
+      route.home()
+    }
+  }, [])
 
   useEffect(() => {
+    routeGuard(route.history.location.pathname)
+
+    route.history.listen((v) => {
+      setActiveMoreByPath()
+      routeGuard(v.pathname)
+    })
+
     // 최초진입시 activeTab정보가 없는 경우가 있어 지연을 둠
     setTimeout(() => {
       setCurrentTab(refTabbar.current?.ionTabContextState.activeTab)
@@ -131,27 +152,27 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <Route path='/sign-up/form' component={SignUpFormPage} exact />
             <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
             <Route path='/sign-up/complete' component={SignUpCompletePage} exact />
-            <GuardRoute path='/home' component={HomePage} exact />
-            <GuardRoute path='/feed' component={FeedPage} exact />
-            <GuardRoute path='/feed/:id' component={FeedDetailPage} exact />
-            <GuardRoute path='/feed-write' component={FeedWritePage} exact />
-            <GuardRoute path='/stuff' component={StuffTalentPage} exact />
-            <GuardRoute path='/stuff/:id' component={StuffTalentDetailPage} exact />
-            <GuardRoute path='/stuff-form' component={StuffTalentFormPage} exact />
-            <GuardRoute path='/talent' component={StuffTalentPage} exact />
-            <GuardRoute path='/talent/:id' component={StuffTalentDetailPage} exact />
-            <GuardRoute path='/talent-form' component={StuffTalentFormPage} exact />
-            <GuardRoute path='/club' component={ClubPage} exact />
-            <GuardRoute path='/club-form' component={ClubFormPage} exact />
-            <GuardRoute path='/club/:id' component={ClubDetailPage} exact />
-            <GuardRoute path='/chat' component={ChatPage} exact />
-            <GuardRoute path='/chat/:id' component={ChatRoomPage} exact />
-            <GuardRoute path='/my-page' component={MyPage} exact />
-            <GuardRoute path='/my-page/my-list' component={MyPageMyList} exact />
-            <GuardRoute path='/my-page/like-list' component={MyPageLikeList} exact />
-            <GuardRoute path='/settings' component={SettingsPage} exact />
-            <GuardRoute path='/users/:id' component={ProfileDetailPage} exact />
-            <GuardRoute path='/users/:id/edit' component={ProfileUpdatePage} exact />
+            <Route path='/home' component={HomePage} exact />
+            <Route path='/feed' component={FeedPage} exact />
+            <Route path='/feed/:id' component={FeedDetailPage} exact />
+            <Route path='/feed-write' component={FeedWritePage} exact />
+            <Route path='/stuff' component={StuffTalentPage} exact />
+            <Route path='/stuff/:id' component={StuffTalentDetailPage} exact />
+            <Route path='/stuff-form' component={StuffTalentFormPage} exact />
+            <Route path='/talent' component={StuffTalentPage} exact />
+            <Route path='/talent/:id' component={StuffTalentDetailPage} exact />
+            <Route path='/talent-form' component={StuffTalentFormPage} exact />
+            <Route path='/club' component={ClubPage} exact />
+            <Route path='/club-form' component={ClubFormPage} exact />
+            <Route path='/club/:id' component={ClubDetailPage} exact />
+            <Route path='/chat' component={ChatPage} exact />
+            <Route path='/chat/:id' component={ChatRoomPage} exact />
+            <Route path='/my-page' component={MyPage} exact />
+            <Route path='/my-page/my-list' component={MyPageMyList} exact />
+            <Route path='/my-page/like-list' component={MyPageLikeList} exact />
+            <Route path='/settings' component={SettingsPage} exact />
+            <Route path='/users/:id' component={ProfileDetailPage} exact />
+            <Route path='/users/:id/edit' component={ProfileUpdatePage} exact />
             <Redirect from='/' to='/home' exact />
           </IonRouterOutlet>
           <IonTabBar slot='bottom' hidden={!isShow} onIonTabsDidChange={onTabChange}>

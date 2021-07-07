@@ -52,9 +52,7 @@ export const App: React.FC = () => {
         }
       )
     } else {
-      if (await storage.getHaveSeenIntro()) {
-        route.signUp()
-      } else {
+      if (!(await storage.getHaveSeenIntro())) {
         route.intro()
       }
     }
