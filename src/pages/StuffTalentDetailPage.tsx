@@ -1,6 +1,8 @@
 import { IonContent, IonPage } from '@ionic/react'
+import _ from 'lodash'
+import { when } from 'mobx'
 import { useObserver } from 'mobx-react-lite'
-import { useEffect, useMemo } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Icon } from '../components/atoms/IconComponent'
 import { Pad } from '../components/atoms/PadComponent'
@@ -9,14 +11,17 @@ import { SubmitButton } from '../components/atoms/SubmitButtonComponent'
 import { TextXs } from '../components/atoms/TextXsComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackFloatingButton } from '../components/molecules/BackFloatingButtonComponent'
+import { BottomPopup } from '../components/molecules/BottomPopupComponent'
+import { ChatRoomListItem } from '../components/molecules/ChatRoomListItemComponent'
 import { StuffTalentDetailContents } from '../components/molecules/StuffTalentDetailContentsComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
 import { ISubChat } from '../models/chat'
 import { getPageKey, routeFunc } from '../models/stufftalent'
-import { StuffTalentPageKey } from '../models/stufftalent.d'
+import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
 import { webSocket } from '../services/web-socket-service'
+import { IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
 
 export const StuffTalentDetailPage: React.FC = () => {
   const id = parseInt(useParams<{ id: string }>().id)
@@ -40,17 +45,25 @@ export const StuffTalentDetailPage: React.FC = () => {
     store.getItem(id)
   }, [])
 
-  // TODO ERROR: 수정화면 진입 시, getUpdateForm 안에서 getItem이 호출되는데
-  // 이 때문에 unmount된 detail component가 rerender되면서 에러 발생함.
-  const onEdit = async (id: number) => {
-    await store.getUpdateForm(id)
-    routeForm()
-  }
+  const [showChatList, setShowChatList] = useState(false)
+  const [chatList, setChatList] = useState<ReactNode>()
 
-  const onDelete = async (id: number) => {
-    await store.deleteItem(id)
-    route.goBack()
-  }
+  useEffect(() => {
+    const dispose = when(
+      () => store.getItem.state === 'resolved' && store.item?.user?.id === $auth.user.id,
+      () => {
+        const _chatList = (store.item[
+          store.predefined.stuffTalentUsersProperty as keyof IStuffTalent
+        ] as IStuffTalentLikeUserDto[])?.map(
+          (user, index) => user.chatroom && <ChatRoomListItem key={index} room={user.chatroom} />
+        )
+
+        _chatList && setChatList(_chatList)
+      }
+    )
+
+    return () => dispose()
+  }, [])
 
   const createChatButton = useMemo(
     () => (
@@ -79,8 +92,23 @@ export const StuffTalentDetailPage: React.FC = () => {
         }}
       />
     ),
-    [store, $chat]
+    []
   )
+
+  const onEdit = async (id: number) => {
+    await store.getUpdateForm(id)
+    routeForm()
+  }
+
+  const onDelete = async (id: number) => {
+    await store.deleteItem(id)
+    route.goBack()
+  }
+
+  const onUpdateStatus = async (id: number, status: StuffTalentStatus) => {
+    await store.updateItemStatus(id, status)
+    await store.getItem(id)
+  }
 
   return useObserver(() =>
     store.getItem.match({
@@ -95,9 +123,14 @@ export const StuffTalentDetailPage: React.FC = () => {
               loginUserId={$auth.user.id}
               onEdit={onEdit}
               onDelete={onDelete}
+              onUpdateStatus={onUpdateStatus}
             />
             <Pad className='pb-extra-space'></Pad>
           </IonContent>
+
+          <BottomPopup show={showChatList} title='채팅 목록 보기' onClose={() => setShowChatList(false)}>
+            {chatList}
+          </BottomPopup>
 
           <Footer>
             <div className='flex-between-center mx-4'>
@@ -120,12 +153,10 @@ export const StuffTalentDetailPage: React.FC = () => {
                   <SubmitButton
                     text='채팅 목록 보기'
                     color='secondary'
-                    // TODO 채팅 목록 보기 팝업 구현하기
                     onClick={() => {
-                      console.log(
-                        '채팅 목록 보기',
-                        store.item.stuffUsers?.map((user) => user.chatroom.id)
-                      )
+                      !!chatList && !_.isEmpty(chatList)
+                        ? setShowChatList(!showChatList)
+                        : $ui.showToastError({ message: '채팅 목록이 없습니다' })
                     }}
                   ></SubmitButton>
                 ) : !store.item?.chatroomId ? (

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { getLabel, statusLabels, typeLabels } from '../../models/stufftalent'
@@ -19,6 +20,7 @@ export interface IStuffTalentDetailContents {
   loginUserId: number
   onEdit: (id: number) => void
   onDelete: (id: number) => void
+  onUpdateStatus: (id: number, status: StuffTalentStatus) => void
 }
 
 export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
@@ -26,8 +28,45 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
   loginUserId,
   onEdit,
   onDelete,
+  onUpdateStatus,
 }) => {
   const { $ui } = useStore()
+
+  const [popoverEdit, popoverDelete, popoverFinish, popoverAvailable, popoverReserved] = [
+    {
+      label: '수정',
+      onClick: () => onEdit(item.id),
+    },
+    {
+      label: '삭제',
+      onClick: () => {
+        $ui.showAlert({
+          isOpen: true,
+          message: '게시글을 삭제하시겠어요?',
+          onSuccess: () => onDelete(item.id),
+        })
+      },
+    },
+    {
+      label: '거래완료로 변경',
+      onClick: () => onUpdateStatus && onUpdateStatus(item.id, StuffTalentStatus.FINISH),
+    },
+    {
+      label: '판매중으로 변경',
+      onClick: () => onUpdateStatus && onUpdateStatus(item.id, StuffTalentStatus.AVAILABLE),
+    },
+    {
+      label: '예약중으로 변경',
+      onClick: () => onUpdateStatus && onUpdateStatus(item.id, StuffTalentStatus.RESERVED),
+    },
+  ]
+
+  const popoverItems = _.concat(
+    [popoverEdit, popoverDelete],
+    item.status !== StuffTalentStatus.FINISH && popoverFinish,
+    item.status !== StuffTalentStatus.AVAILABLE && popoverAvailable,
+    item.status !== StuffTalentStatus.RESERVED && popoverReserved
+  ).filter(Boolean) as { label: string; onClick: () => void }[]
 
   return (
     <div>
@@ -102,26 +141,7 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
             </div>
           </div>
 
-          {loginUserId === item.user.id && (
-            <MorePopoverButton
-              items={[
-                {
-                  label: '수정',
-                  onClick: () => onEdit(item.id),
-                },
-                {
-                  label: '삭제',
-                  onClick: () => {
-                    $ui.showAlert({
-                      isOpen: true,
-                      message: '게시글을 삭제하시겠어요?',
-                      onSuccess: () => onDelete(item.id),
-                    })
-                  },
-                },
-              ]}
-            />
-          )}
+          {loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
         </div>
 
         <Pad className='mt-4' />
