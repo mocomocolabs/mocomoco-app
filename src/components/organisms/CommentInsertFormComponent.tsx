@@ -17,7 +17,7 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
 
   return useObserver(() => (
     <div className='px-container py-2 flex items-center'>
-      <ProfileImage url={$auth.userInfo?.profileUrl}></ProfileImage>
+      <ProfileImage url={$auth.user?.profileUrl}></ProfileImage>
 
       <IonTextarea
         className='ml-2 br-20 pl-4 px-3 black leading-8 border-primary'

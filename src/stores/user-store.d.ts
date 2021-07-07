@@ -1,9 +1,5 @@
 import { ICommunity } from '../models/community.d'
-
-export enum USER_STATUS {
-  APPROVAL = 'APPROVAL',
-  PENDING = 'PENDING',
-}
+import { SIGN_UP_STATUS } from '../models/sign-up.d'
 
 export enum USER_ROLE {
   USER = 'ROLE_USER',
@@ -21,7 +17,7 @@ export type IUserDto = {
   isPublicMobile: boolean
   role: USER_ROLE
   isUse: boolean
-  status: string
+  status: SIGN_UP_STATUS
   profileUrl: string
   communities: ICommunity[]
   createdAt: string

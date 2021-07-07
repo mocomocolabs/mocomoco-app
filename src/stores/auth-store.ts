@@ -4,7 +4,7 @@ import { task } from 'mobx-task'
 import { RootStore } from '.'
 import { IAuthUser } from '../models/auth'
 import { ISignUpForm } from '../models/sign-up'
-import { IUser } from '../models/user.d'
+import { IUser } from '../models/user'
 import { api } from '../services/api-service'
 import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
@@ -21,14 +21,12 @@ const initState = {
     roles: 'ROLE_USER',
   } as Partial<ISignUpForm>,
   user: {} as IAuthUser,
-  userInfo: {} as IUser,
 }
 
 export class AuthStore {
   @observable.struct signUpForm: Partial<ISignUpForm> = initState.signUpForm
   @observable isLogin = false
   @observable.struct user: IAuthUser = initState.user
-  @observable.struct userInfo: IUser = initState.userInfo
 
   $user: UserStore
 
@@ -80,12 +78,14 @@ export class AuthStore {
         email,
         password: inko.ko2en(password),
       })
-      .then(async (user: IAuthUserDto) => {
-        this.setAuth(user)
-        this.setUser(user)
+      .then(async (authUser: IAuthUserDto) => {
+        await this.$user.getUser(authUser.id)
+        this.setUser({
+          ...authUser,
+          ...this.$user.user,
+        })
 
-        await this.$user.getUser(user.id)
-        this.setUserInfo(this.$user.user)
+        this.setAuth(authUser)
       })
   }) as SignInTask
 
@@ -98,11 +98,12 @@ export class AuthStore {
       api.setAuthoriationBy(hasToken)
       await storage.setAccessTokenForSync()
       try {
-        await api.get<IAuthUserDto>(`/auth/account`).then(async (user) => {
-          this.setUser(user)
-
-          await this.$user.getUser(user.id)
-          this.setUserInfo(this.$user.user)
+        await api.get<IAuthUserDto>(`/auth/account`).then(async (authUser) => {
+          await this.$user.getUser(authUser.id)
+          this.setUser({
+            ...authUser,
+            ...this.$user.user,
+          })
         })
       } catch (e) {
         if (e.status === 401) {
@@ -133,14 +134,13 @@ export class AuthStore {
   }
 
   @action
-  setUser(user: IAuthUserDto) {
-    const { id, communities, chatroomUserIds, status } = user
-    this.user = { id, communityId: communities[0].id, chatroomIds: chatroomUserIds, status }
+  setUser(user: IAuthUserDto & IUser) {
+    const { communities, chatroomUserIds } = user
+    this.user = {
+      ...user,
+      communityId: communities[0].id,
+      chatroomIds: chatroomUserIds,
+    }
     this.setIsLogin()
-  }
-
-  @action
-  setUserInfo(user: IUser) {
-    this.userInfo = user
   }
 }

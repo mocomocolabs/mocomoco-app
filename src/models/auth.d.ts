@@ -1,8 +1,6 @@
-import { SIGN_UP_STATUS } from './sign-up.d'
+import { IUser } from './user.d'
 
-export interface IAuthUser {
-  id: number
+export interface IAuthUser extends IUser {
   communityId: number
   chatroomIds: []
-  status: SIGN_UP_STATUS
 }

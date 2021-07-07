@@ -1,5 +1,5 @@
-import { USER_STATUS } from '../stores/user-store.d'
 import { ICommunity } from './community'
+import { SIGN_UP_STATUS } from './sign-up.d'
 
 export interface IUser {
   id: number
@@ -11,5 +11,5 @@ export interface IUser {
   mobile: string
   isPublicMobile: boolean
   profileUrl: string
-  status: USER_STATUS
+  status: SIGN_UP_STATUS
 }
