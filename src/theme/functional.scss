@@ -327,6 +327,11 @@
 .height-30 {
   height: 3rem;
 }
+
+.height-33_6 {
+  height: 3.36rem;
+}
+
 .height-50 {
   height: 5rem;
 }
@@ -1379,6 +1384,17 @@
     width: 1.2rem;
     height: 1.2rem;
     min-width: 1.2rem;
+  }
+}
+
+.icon-16 {
+  width: 1.6rem;
+  height: 1.6rem;
+  min-width: 1.6rem;
+  svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    min-width: 1.6rem;
   }
 }
 

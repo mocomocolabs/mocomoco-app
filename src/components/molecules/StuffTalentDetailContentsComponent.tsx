@@ -1,13 +1,14 @@
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { IStuffTalent, StuffTalentType } from '../../models/stufftalent.d'
+import { getLabel, statusLabels, typeLabels } from '../../models/stufftalent'
+import { IStuffTalent, StuffTalentStatus, StuffTalentType } from '../../models/stufftalent.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { Description } from '../atoms/DescriptionComponent'
 import { Pad } from '../atoms/PadComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
+import { SquareWithCorner } from '../atoms/SquareWithCornerComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { TextLg } from '../atoms/TextLgComponent'
 import { TextSm } from '../atoms/TextSmComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { ImageSlider } from './ImageSliderComponent'
@@ -30,24 +31,54 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
 
   return (
     <div>
-      <ImageSlider urls={item.imageUrls}></ImageSlider>
-      <div className='px-container pt-2'>
-        <div className='flex items-center'>
-          <TextLg className='mr-2'>{item.type}</TextLg>
-          <TextLg className='text-bold'>{item.title}</TextLg>
+      <div className='relative'>
+        <div
+          hidden={item.status === StuffTalentStatus.AVAILABLE}
+          className='flex-center w-full absolute z-20 text-bold text-base white'
+          style={{ height: 337 }}
+        >
+          {getLabel(statusLabels, item.status)}
         </div>
-
-        <div className='flex items-center mt-1'>
-          <TextSm>{item.isExchangeable && '교환 가능'}</TextSm>
-          <TextSm>{item.isNegotiable && '가격제안 가능'}</TextSm>
-          <TextSm>{item.category.name}</TextSm>
+        <div className='relative z-10'>
+          <ImageSlider urls={item.imageUrls} dark={item.status !== StuffTalentStatus.AVAILABLE}></ImageSlider>
+        </div>
+      </div>
+      <div className='px-container relative z-20' style={{ marginTop: '-20px' }}>
+        <div className='flex items-center'>
+          <SquareWithCorner
+            width={55}
+            height={24}
+            color={item.type === StuffTalentType.WANT ? 'primary' : 'secondary'}
+            fill={true}
+          >
+            {getLabel(typeLabels, item.type)}
+          </SquareWithCorner>
+          <TextBase className='text-bold ml-2'>{item.title}</TextBase>
+        </div>
+        <Pad className='h-2' />
+        <div className='flex items-center gap-1'>
+          {item.isExchangeable && (
+            <SquareWithCorner width={55} height={24}>
+              교환 가능
+            </SquareWithCorner>
+          )}
+          {item.isNegotiable && (
+            <SquareWithCorner width={55} height={24}>
+              가격제안 가능
+            </SquareWithCorner>
+          )}
+          <SquareWithCorner width={55} height={24}>
+            {item.category.name}
+          </SquareWithCorner>
         </div>
 
         <div
           className='flex items-center mt-1'
           hidden={[StuffTalentType.SHARE, StuffTalentType.WANT].includes(item.type)}
         >
-          <TextBase>{item.type === StuffTalentType.SELL ? item.price + '원' : item.exchangeText}</TextBase>
+          <TextBase className='text-bold'>
+            {item.type === StuffTalentType.SELL ? item.price.toLocaleString() + '원' : item.exchangeText}
+          </TextBase>
         </div>
 
         <XDivider className='mt-4 mb-6'></XDivider>

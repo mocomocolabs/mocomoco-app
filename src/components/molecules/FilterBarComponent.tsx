@@ -13,7 +13,7 @@ export const FilterBar: React.FC<IFilterBar> = ({ show = true, filters, onReset,
   <div className='inline-flex gap-1' hidden={!show}>
     <div hidden={filters.every((filter) => filter.length === 0)} onClick={onReset}>
       <SquareWithCorner width={79} height={24} color='secondary'>
-        <Icon name='reset' className='mr-1' small={true} />
+        <Icon name='reset' className='mr-1' size='small' />
         <TextXs>초기화</TextXs>
       </SquareWithCorner>
     </div>
@@ -32,7 +32,7 @@ export const FilterBar: React.FC<IFilterBar> = ({ show = true, filters, onReset,
             <Icon
               name='arrow'
               className={`icon-${isFilterSet ? 'white' : 'gray'} icon-rotate-270 mr-1`}
-              small={true}
+              size='small'
             />
             <TextXs>{filter.name}</TextXs>
           </SquareWithCorner>
