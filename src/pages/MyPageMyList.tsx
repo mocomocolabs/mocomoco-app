@@ -33,7 +33,7 @@ const segments: ISegments = {
   [SEGMENT_KEYS.club]: { label: '소모임' },
 }
 
-const FilterMode = { none: 'none', type: '거래상태' }
+const FilterMode = { none: 'none', type: '거래유형' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 export const MyPageMyList: React.FC = () => {
