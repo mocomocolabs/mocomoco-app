@@ -114,6 +114,73 @@ export type TaskByNumber = TaskType<[number], void>
 
 ```
 
+observable값의 변경을 추적하는 방법은 다음과 같다.
+
+1. render되는 부분에서는 useObserver(() => ...) 또는 \<Observer\>\</Observer\> 를 이용하면 변경사항이 추적되고 적용됨
+2. render 이외에 side effect 시점에서는 autorun, reaction, when 등 mobx에서 제공하는 hook을 사용해서 추적함
+
+- 관련 문서 : https://mobx.js.org/reactions.html
+- 예제
+
+```typescript
+useEffect(() => {
+    // 컴포넌트에 새로 진입할 때, observable 추적용 reaction을 등록해둔다.
+    // 이 때, reaction을 해제(dispose)시킬 수 있는 메서드를 리턴받는다.
+    const disposeReaction = reaction(
+      () => $community.selectedId,
+      (selectedId) => {
+        setFilter({ ...filter, communityId: selectedId })
+      }
+    )
+
+    // cleanup 함수로 설정해 두면 컴포넌트를 떠나는 시점에 reaction을 해제시킨다.
+    return () => disposeReaction()
+  }, [])
+
+// 축약 버젼
+useEffect(() => reaction(
+      () => $community.selectedId,
+      (selectedId) => {
+        setFilter({ ...filter, communityId: selectedId })
+      }
+    )
+  }, [])
+```
+
 ## react-svg
 
 react-svg library ^12 이상으로 사용할시에, svg가 잘 로드되지 않는 현상이 발생한다. 우선 v11 으로 고정하여 사용하도록 함
+
+## IonPopover의 dismiss animation 관련 이슈 수정
+
+```
+index.js:1 Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
+    at MorePopoverButton (http://localhost:3000/static/js/main.chunk.js:10276:3)
+    at div
+    at div
+    at div
+    at div
+    at li
+    at StuffTalentItem (http://localhost:3000/static/js/main.chunk.js:12615:3)
+    at ul
+    at StuffTalentList (http://localhost:3000/static/js/main.chunk.js:15806:3)
+    at div
+    at ion-content
+    at ReactComponent (http://localhost:3000/static/js/vendors~main.chunk.js:12738:7)
+    at IonContent
+    at div
+    at PageManager (http://localhost:3000/static/js/vendors~main.chunk.js:13127:5)
+    at IonPageInternal (http://localhost:3000/static/js/vendors~main.chunk.js:13199:5)
+    at IonPage
+    at StuffTalentPage (http://localhost:3000/static/js/main.chunk.js:22339:73)
+```
+
+- 관련 수정 사항 : https://github.com/mocomocolabs/mocomoco-app/pull/100/commits/31097100471fd32fb2ead4fc6e60d69e3c08cadb
+
+- 추정원인 : popover가 dismiss될 때 animation이 동작하는게 기본값인데, 다른 페이지로 전환되는 과정과 맞물리면 컴포넌트(popover 컴포넌트, StuffList/ClubList 등)가 사라지고 있으므로 animation이 동작하다가 실패해서 에러 발생함.
+
+- 해결안1. animated=false로 설정하기. useIonPopover 쓰는 한 이 방법 뿐인 듯. (이 방안을 적용했음)
+
+- 해결안2. animated=true를 유지하고 싶다면, IonPopover component를 사용해서 해결 가능함. 그러나 제약이 있다.
+  onClick에서 popoverState를 변경시키면 animation이 발동되므로 동일한 이슈가 발생한다. 따라서, onClick에선 setPopoverState호출하지 말고 useEffect의 cleanup 함수에서 popoverState를 reset하면 된다. 이 타이밍에는 아마도 animation이 발동되지 않는 듯 싶다.
+  이렇게 구현할 경우, 페이지전환하지 않을 때는 useEffect cleanup이 호출되지 않으니 팝업이 닫히지 않게 된다는 것이 치명적인 제약사항이다.
