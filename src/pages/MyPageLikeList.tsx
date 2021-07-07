@@ -40,7 +40,7 @@ const segments: ISegments = {
   [SEGMENT_KEYS.feed]: { label: '이야기창고' },
 }
 
-const FilterMode = { none: 'none', type: '조건' }
+const FilterMode = { none: 'none', type: '거래유형' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 export const MyPageLikeList: React.FC = () => {
