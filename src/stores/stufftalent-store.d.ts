@@ -9,7 +9,6 @@ interface IStuffTalentDtoBase {
   status: Status
   category: IStuffTalentCategoryDto
   community: IStuffTalentCommunityDto
-  chatroom: IStuffTalentChatroomDto
   user: IUser
   title: string
   content: string
