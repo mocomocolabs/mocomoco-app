@@ -120,8 +120,14 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
       case location.pathname.startsWith(TAB_PATH.MY_PAGE):
         setCurrentTab(TAB_PATH.MY_PAGE)
         break
-      case morePaths.some((v: TAB_PATH) => location.pathname.startsWith(v)):
+      case location.pathname.startsWith(TAB_PATH.STUFF):
         setCurrentTab(TAB_PATH.STUFF)
+        break
+      case location.pathname.startsWith(TAB_PATH.TALENT):
+        setCurrentTab(TAB_PATH.TALENT)
+        break
+      case location.pathname.startsWith(TAB_PATH.CLUB):
+        setCurrentTab(TAB_PATH.CLUB)
         break
     }
   }
@@ -199,13 +205,9 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <IonTabButton tab={TAB.FEED.path} selected={currentTab === TAB_PATH.FEED} href='/tabs/feed'>
               <Icon name={getTabIcon(TAB.FEED)}></Icon>
             </IonTabButton>
-            <IonTabButton
-              tab={TAB.MORE.path}
-              selected={currentTab === TAB_PATH.STUFF}
-              className='no-active-color'
-            >
+            <IonTabButton tab={TAB.MORE.path} className='no-active-color'>
               <Icon
-                name={currentTab === TAB_PATH.STUFF ? TAB.MORE.icon + '-solid' : TAB.MORE.icon}
+                name={morePaths.includes(currentTab as TAB_PATH) ? TAB.MORE.icon + '-solid' : TAB.MORE.icon}
                 className='icon-24'
               ></Icon>
             </IonTabButton>
