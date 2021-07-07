@@ -47,7 +47,7 @@ export const ImageWithCorner: FC<IImageWithCorner> = ({
       }
     : {
         outerDivClass: 'relative w-full',
-        imageClass: `${isRoundTop && 'br-t-xxlg'}`,
+        imageClass: `${isRoundTop && 'br-t-xxlg'} ${dark && 'dark'}`,
         cornerClass: 'absolute right-0',
         cornerStyle: { top: height - radiusSize * 2, width: radiusSize, height: radiusSize },
         tailDivClass: 'z-10 w-full bg-white absolute bottom-0 bottom-radius',

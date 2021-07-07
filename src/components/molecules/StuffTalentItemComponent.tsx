@@ -117,7 +117,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
           </div>
           <div className='flex justify-between self-bottom mt-1'>
             <TextSm className='text-bold ellipsis'>
-              {item.type === StuffTalentType.SELL && `${item.price}원`}
+              {item.type === StuffTalentType.SELL && `${item.price.toLocaleString()}원`}
               {item.type === StuffTalentType.EXCHANGE && item.exchangeText}
               {item.type === StuffTalentType.SHARE && '무료나눔'}
             </TextSm>
@@ -125,7 +125,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
               <Icon
                 name={item.isLike ? 'heart-solid' : 'heart'}
                 className='icon-secondary mr-1'
-                small={true}
+                size='small'
               />
               <TextXs className='secondary'>{item.likeCount}</TextXs>
             </div>
