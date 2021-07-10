@@ -32,7 +32,7 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
           <div className='flex-col width-308 br-xxlg shadow pb-3'>
             <ImageWithCorner
               height={162}
-              url={v.imageUrls?.slice(-1).pop() ?? '/assets/img/no-image.png'}
+              url={v.imageUrls?.slice(-1).pop() ?? '/assets/img/no-image-wide.png'}
               radiusSize={12}
               isRoundTop={true}
             ></ImageWithCorner>
