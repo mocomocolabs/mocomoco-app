@@ -1,5 +1,6 @@
-import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
 import { Pad } from '../../components/atoms/PadComponent'
@@ -14,9 +15,9 @@ import { route } from '../../services/route-service'
 export const SignUpPage: React.FC = () => {
   const { $ui, $auth } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(false)
-  })
+  }, [])
 
   const {
     register,

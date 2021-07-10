@@ -1,18 +1,18 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
-import { useCallback, useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { useCallback, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ProfileUpdateFormComponent } from '../components/molecules/ProfileUpdateFormComponent'
 import { useStore } from '../hooks/use-store'
 
-export const ProfileUpdatePage: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
-  const userId: number = parseInt(match.params.id)
+export const ProfileUpdatePage: React.FC = () => {
+  const userId = parseInt(useParams<{ id: string }>().id)
 
   const { $ui } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(false)
-  })
+  }, [])
 
   const [submittable, setSubmittable] = useState(false)
   const onSubmittableChange = useCallback((available: boolean) => setSubmittable(available), [])

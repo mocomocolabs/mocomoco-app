@@ -1,8 +1,7 @@
-import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
-import { StaticContext } from 'react-router'
-import { RouteComponentProps } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Pad } from '../../components/atoms/PadComponent'
 import { Spinner } from '../../components/atoms/SpinnerComponent'
 import { SubmitButton } from '../../components/atoms/SubmitButtonComponent'
@@ -14,16 +13,13 @@ import { Footer } from '../../components/organisms/FooterComponent'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
 
-export const ClubDetailPage: React.FC<RouteComponentProps<{ id: string }, StaticContext>> = ({ match }) => {
-  const id = parseInt(match.params.id)
+export const ClubDetailPage: React.FC = () => {
+  const id = parseInt(useParams<{ id: string }>().id)
   const { $ui, $club, $auth } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     // TODO: statusbar 투명 체크
     $ui.setIsBottomTab(false)
-  })
-
-  useEffect(() => {
     $club.getClub(id)
   }, [])
 

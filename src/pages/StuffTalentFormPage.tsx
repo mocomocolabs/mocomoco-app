@@ -1,4 +1,4 @@
-import { IonContent, IonFooter, IonPage, useIonViewWillEnter, useIonViewWillLeave } from '@ionic/react'
+import { IonContent, IonFooter, IonPage } from '@ionic/react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation } from 'react-router-dom'
@@ -89,24 +89,24 @@ export const StuffTalentFormPage: React.FC = () => {
     })
   })
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(false)
-  })
 
-  useIonViewWillLeave(() => {
-    isUpdate ? store.resetUpdateForm() : store.resetForm()
+    return () => {
+      isUpdate ? store.resetUpdateForm() : store.resetForm()
 
-    // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
-    if (isUpdate || isSubmitCompleted.current) return
+      // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
+      if (isUpdate || isSubmitCompleted.current) return
 
-    // TODO 임시저장할 조건 확인 필요
-    const [title, content, images] = getValues(['title', 'content', 'images'])
+      // TODO 임시저장할 조건 확인 필요
+      const [title, content, images] = getValues(['title', 'content', 'images'])
 
-    if (title || content || images?.length) {
-      store.setForm(getValues())
-      console.log('cleanup', '임시저장 완료')
+      if (title || content || images?.length) {
+        store.setForm(getValues())
+        console.log('cleanup', '임시저장 완료')
+      }
     }
-  })
+  }, [])
 
   useEffect(() => {
     const [exchangeText, price] = getValues(['exchangeText', 'price'])

@@ -1,17 +1,8 @@
-import {
-  IonContent,
-  IonFooter,
-  IonHeader,
-  IonIcon,
-  IonPage,
-  IonToolbar,
-  useIonViewWillEnter,
-  useIonViewWillLeave,
-} from '@ionic/react'
+import { IonContent, IonFooter, IonHeader, IonIcon, IonPage, IonToolbar } from '@ionic/react'
 import dayjs from 'dayjs'
 import { calendar } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import { FC, useCallback, useRef } from 'react'
+import { FC, useCallback, useEffect, useRef } from 'react'
 import { Checkbox } from '../components/atoms/CheckboxComponent'
 import { Icon } from '../components/atoms/IconComponent'
 import { InputNormal } from '../components/atoms/InputNormalComponent'
@@ -49,16 +40,13 @@ export const FeedFormPage: FC<IFeedForm> = () => {
   //   // },
   // })
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(false)
-  })
 
-  useIonViewWillLeave(() => {
-    $ui.setIsBottomTab(true)
-    if (isUpdate) {
-      $feed.resetForm()
+    return () => {
+      isUpdate && $feed.resetForm()
     }
-  })
+  }, [])
 
   const SubmitBtn = useCallback(
     () => (

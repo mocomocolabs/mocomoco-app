@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonSearchbar, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonSearchbar, IonToolbar } from '@ionic/react'
 import { reaction } from 'mobx'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
@@ -55,9 +55,9 @@ export const StuffTalentPage: React.FC = () => {
     setFilterMode(FilterMode.none)
   }
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   useEffect(() => {
     //TODO 상세보기 들어갔다가 돌아올 때 기존 filter값 유지되는지 확인할 것

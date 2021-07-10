@@ -1,4 +1,3 @@
-import { useIonViewWillLeave } from '@ionic/react'
 import { FC, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { compress } from '../../utils/image-compressor'
@@ -37,12 +36,12 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
 
   useEffect(() => {
     setImages(images.map((v, i) => assignPreview(v, i)))
-  }, [])
 
-  useIonViewWillLeave(() => {
-    // revokeObjectURL을 통해 해제하지 않으면 기존 URL를 유효하다고 판단하고 자바스크립트 엔진에서 GC 되지 않습니다
-    images.forEach((image) => URL.revokeObjectURL(image.preview))
-  })
+    return () => {
+      // revokeObjectURL을 통해 해제하지 않으면 기존 URL를 유효하다고 판단하고 자바스크립트 엔진에서 GC 되지 않습니다
+      images.forEach((image) => URL.revokeObjectURL(image.preview))
+    }
+  }, [])
 
   return (
     <section>

@@ -37,7 +37,7 @@ const FilterMode = { none: 'none', type: '거래상태' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 export const MyPageMyList: React.FC = () => {
-  const { $segment, $auth, $stuff, $talent, $feed, $club } = useStore()
+  const { $segment, $auth, $ui, $stuff, $talent, $feed, $club } = useStore()
 
   const title = '내 목록'
   const segment = useRef<SEGMENT_KEYS>($segment.myListSegment)
@@ -77,6 +77,10 @@ export const MyPageMyList: React.FC = () => {
         return <></> // TODO error 발생시켜야 하나?
     }
   }
+
+  useEffect(() => {
+    $ui.setIsBottomTab(true)
+  }, [])
 
   useEffect(
     () => {

@@ -1,4 +1,4 @@
-import { IonContent, IonFooter, IonPage, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonFooter, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { SubmitButton } from '../components/atoms/SubmitButtonComponent'
 import { TextSm } from '../components/atoms/TextSmComponent'
@@ -11,11 +11,8 @@ import { storage } from '../services/storage-service'
 export const IntroPage: React.FC = () => {
   const { $ui } = useStore()
 
-  useIonViewWillEnter(() => {
-    $ui.setIsBottomTab(false)
-  })
-
   useEffect(() => {
+    $ui.setIsBottomTab(false)
     storage.setHaveSeenIntro()
   }, [])
 

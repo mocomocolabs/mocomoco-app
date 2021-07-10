@@ -1,4 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import { useEffect } from 'react'
 import { Icon } from '../components/atoms/IconComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
@@ -8,9 +9,9 @@ import { route } from '../services/route-service'
 export const FeedPage: React.FC = () => {
   const { $ui, $feed } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   return (
     <IonPage>

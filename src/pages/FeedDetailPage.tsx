@@ -1,9 +1,8 @@
-import { IonContent, IonFooter, IonPage, useIonViewWillEnter, useIonViewWillLeave } from '@ionic/react'
+import { IonContent, IonFooter, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
-import { StaticContext } from 'react-router'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Spinner } from '../components/atoms/SpinnerComponent'
 import { BackFloatingButton } from '../components/molecules/BackFloatingButtonComponent'
 import { FeedItem } from '../components/molecules/FeedItemComponent'
@@ -17,28 +16,18 @@ interface ILocationState {
   autoFocus?: boolean
 }
 
-export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, StaticContext, ILocationState>> = ({
-  match,
-  location,
-}) => {
-  const id = parseInt(match.params.id)
+export const FeedDetailPage: React.FC = () => {
+  const id = parseInt(useParams<{ id: string }>().id)
+  const autoFocus = useHistory<ILocationState>().location.state?.autoFocus
 
   const { $feed, $ui, $comment } = useStore()
 
   useEffect(() => {
     // TODO : 게시글 접근제한 테스트 필요
-    $feed.getFeed(id)
-    // eslint-disable-next-line
-  }, [])
-
-  useIonViewWillEnter(() => {
     $ui.setIsBottomTab(false)
+    $feed.getFeed(id)
     $comment.setUpdateCommentId(null)
-  })
-
-  useIonViewWillLeave(() => {
-    $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   const onDelete = async (id: number) => {
     await $feed.deleteFeed(id)
@@ -78,7 +67,7 @@ export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
 
       <IonFooter>
         {$comment.updateCommentId === null && (
-          <CommentInsertForm feedId={id} autoFocus={location?.state?.autoFocus}></CommentInsertForm>
+          <CommentInsertForm feedId={id} autoFocus={autoFocus}></CommentInsertForm>
         )}
         {$comment.updateCommentId !== null && (
           <CommentUpdateForm commentId={$comment.updateCommentId} feedId={$feed.feed.id}></CommentUpdateForm>

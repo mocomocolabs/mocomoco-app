@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { FeedSlider } from '../components/molecules/FeedSliderComponent'
@@ -13,9 +13,9 @@ import { route } from '../services/route-service'
 export const HomePage: React.FC = () => {
   const { $ui, $community, $auth, $feed, $stuff, $talent, $club } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   useEffect(() => {
     const stufftalentFilter = {

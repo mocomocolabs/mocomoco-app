@@ -11,6 +11,10 @@
   border-radius: 50%;
 }
 
-ion-tab-button.tab-selected:not(.no-active-color) {
+.active-style {
   @extend .icon-primary;
+}
+
+.no-active-style {
+  @extend .icon-gray;
 }

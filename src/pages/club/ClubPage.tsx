@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { Icon } from '../../components/atoms/IconComponent'
@@ -12,9 +12,9 @@ import { route } from '../../services/route-service'
 export const ClubPage: React.FC = () => {
   const { $ui, $club } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   useEffect(() => {
     $club.getPopularClubs(999)

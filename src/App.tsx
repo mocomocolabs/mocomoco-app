@@ -1,6 +1,5 @@
 import { IonApp } from '@ionic/react'
 import { when } from 'mobx'
-import { useObserver } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import { Alert } from './components/atoms/AlertComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
@@ -16,7 +15,7 @@ import { storage } from './services/storage-service'
 import { webSocket } from './services/web-socket-service'
 
 export const App: React.FC = () => {
-  const { $community, $ui, $chat, $auth } = useStore()
+  const { $community, $chat, $auth } = useStore()
   const [intialized, setInitailzed] = useState(false)
 
   const init = async () => {
@@ -73,16 +72,12 @@ export const App: React.FC = () => {
     }
   }, [])
 
-  return useObserver(() => (
+  return (
     <IonApp>
-      {intialized ? (
-        <RouterTab chatUnreadCount={$chat.unReadCountAll} isShow={$ui.isBottomTab}></RouterTab>
-      ) : (
-        <Spinner isFull={true} color='white'></Spinner>
-      )}
+      {intialized ? <RouterTab /> : <Spinner isFull={true} color='white' />}
 
       <Alert></Alert>
       <Toast></Toast>
     </IonApp>
-  ))
+  )
 }

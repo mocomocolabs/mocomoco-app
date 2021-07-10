@@ -44,7 +44,7 @@ const FilterMode = { none: 'none', type: '조건' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 export const MyPageLikeList: React.FC = () => {
-  const { $segment, $stuff, $talent, $feed } = useStore()
+  const { $segment, $stuff, $talent, $feed, $ui } = useStore()
 
   const title = '관심 목록'
   const segment = useRef<SEGMENT_KEYS>($segment.likeListSegment)
@@ -82,6 +82,10 @@ export const MyPageLikeList: React.FC = () => {
         return <></> // TODO error 발생시켜야 하나?
     }
   }
+
+  useEffect(() => {
+    $ui.setIsBottomTab(true)
+  }, [])
 
   useEffect(() => {
     const disposeReaction = reaction(

@@ -1,4 +1,4 @@
-import { IonContent, IonPage, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { TextSm } from '../../components/atoms/TextSmComponent'
 import { TextXxl } from '../../components/atoms/TextXxlComponent'
@@ -10,9 +10,9 @@ import { route } from '../../services/route-service'
 export const SignUpCompletePage: React.FC = () => {
   const { $ui, $auth } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(false)
-  })
+  }, [])
 
   useEffect(() => {
     $auth.user.status === SIGN_UP_STATUS.승인 && route.home()

@@ -1,7 +1,8 @@
-import { IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react'
-import { IonReactRouter } from '@ionic/react-router'
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { Redirect, Route } from 'react-router-dom'
+import { IonContent, IonFooter } from '@ionic/react'
+import _ from 'lodash'
+import { Observer } from 'mobx-react-lite'
+import { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
+import { NavLink, Redirect, Route, Router, Switch } from 'react-router-dom'
 import { Icon } from './components/atoms/IconComponent'
 import { BottomTabMorePopover } from './components/molecules/BottomTabMorePopover'
 import { useStore } from './hooks/use-store'
@@ -33,11 +34,6 @@ import { StuffTalentPage } from './pages/StuffTalentPage'
 import './RouterTab.scss'
 import { route } from './services/route-service'
 import { ValueOf } from './utils/type-util'
-
-export interface IRouterTab {
-  chatUnreadCount: number
-  isShow: boolean
-}
 
 export enum TAB_PATH {
   HOME = '/tabs/home',
@@ -84,13 +80,61 @@ const publicPaths = [
   '/sign-up/community',
 ]
 
-export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
+const routingInfo: { path: string; children: ReactElement; exact: boolean }[] = [
+  { path: '/dev', children: <DevPage />, exact: true },
+  { path: '/intro', children: <IntroPage />, exact: true },
+  { path: '/sign-in', children: <SignInPage />, exact: true },
+  { path: '/sign-up', children: <SignUpPage />, exact: true },
+  { path: '/sign-up/form', children: <SignUpFormPage />, exact: true },
+  { path: '/sign-up/community', children: <SignUpCommunityPage />, exact: true },
+  { path: '/sign-up/complete', children: <SignUpCompletePage />, exact: true },
+
+  // Login 필요
+  // TABS
+  { path: `${TAB_PATH.HOME}`, children: <HomePage />, exact: true },
+  { path: `${TAB_PATH.FEED}`, children: <FeedPage />, exact: true },
+  { path: `${TAB_PATH.FEED}/form`, children: <FeedFormPage />, exact: true },
+  { path: `${TAB_PATH.FEED}/:id(\\d+)`, children: <FeedDetailPage />, exact: true },
+
+  { path: `${TAB_PATH.STUFF}`, children: <StuffTalentPage />, exact: true },
+  { path: `${TAB_PATH.STUFF}/form`, children: <StuffTalentFormPage />, exact: true },
+  { path: `${TAB_PATH.STUFF}/:id(\\d+)`, children: <StuffTalentDetailPage />, exact: true },
+
+  { path: `${TAB_PATH.TALENT}`, children: <StuffTalentPage />, exact: true },
+  { path: `${TAB_PATH.TALENT}/form`, children: <StuffTalentFormPage />, exact: true },
+  { path: `${TAB_PATH.TALENT}/:id(\\d+)`, children: <StuffTalentDetailPage />, exact: true },
+
+  { path: `${TAB_PATH.CLUB}`, children: <ClubPage />, exact: true },
+  { path: `${TAB_PATH.CLUB}/form`, children: <ClubFormPage />, exact: true },
+  { path: `${TAB_PATH.CLUB}/:id(\\d+)`, children: <ClubDetailPage />, exact: true },
+
+  { path: `${TAB_PATH.CHAT}`, children: <ChatPage />, exact: true },
+  { path: `${TAB_PATH.CHAT}/:id(\\d+)`, children: <ChatRoomPage />, exact: true },
+
+  { path: `${TAB_PATH.MY_PAGE}`, children: <MyPage />, exact: true },
+  { path: `${TAB_PATH.MY_PAGE}/my-list`, children: <MyPageMyList />, exact: true },
+  { path: `${TAB_PATH.MY_PAGE}/like-list`, children: <MyPageLikeList />, exact: true },
+  { path: `${TAB_PATH.MY_PAGE}/settings`, children: <SettingsPage />, exact: true },
+
+  // TABS 독립
+  { path: '/users/:id(\\d+)', children: <ProfileDetailPage />, exact: true },
+  { path: '/users/:id(\\d+)/edit', children: <ProfileUpdatePage />, exact: true },
+]
+
+export const RouterTab: FC = () => {
   const [currentTab, setCurrentTab] = useState(TAB_PATH.HOME as string)
   const [showsMore, setShowsMore] = useState(false)
-  const { $auth } = useStore()
+  const { $auth, $ui, $chat } = useStore()
 
-  // eslint-disable-next-line
-  const refTabbar = useRef<any>()
+  const renderredRoutes = useMemo(
+    () =>
+      routingInfo.map((r) => (
+        <Route key={r.path} path={r.path} exact={r.exact}>
+          {r.children}
+        </Route>
+      )),
+    []
+  )
 
   const getTabIcon = useCallback(
     (tab: ValueOf<ITab>) => {
@@ -100,37 +144,14 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
     [currentTab]
   )
 
-  const onTabChange = useCallback((event: { detail: { tab: string } }) => {
-    if (event.detail.tab === TAB.MORE.path) {
-      setShowsMore(!showsMore)
-    }
+  const onTabClick = useCallback((path: TAB_PATH) => {
+    path === TAB.MORE.path && setShowsMore(!showsMore)
   }, [])
 
-  const setActiveTabByPath = () => {
-    switch (true) {
-      case location.pathname.startsWith(TAB_PATH.HOME):
-        setCurrentTab(TAB_PATH.HOME)
-        break
-      case location.pathname.startsWith(TAB_PATH.FEED):
-        setCurrentTab(TAB_PATH.FEED)
-        break
-      case location.pathname.startsWith(TAB_PATH.CHAT):
-        setCurrentTab(TAB_PATH.CHAT)
-        break
-      case location.pathname.startsWith(TAB_PATH.MY_PAGE):
-        setCurrentTab(TAB_PATH.MY_PAGE)
-        break
-      case location.pathname.startsWith(TAB_PATH.STUFF):
-        setCurrentTab(TAB_PATH.STUFF)
-        break
-      case location.pathname.startsWith(TAB_PATH.TALENT):
-        setCurrentTab(TAB_PATH.TALENT)
-        break
-      case location.pathname.startsWith(TAB_PATH.CLUB):
-        setCurrentTab(TAB_PATH.CLUB)
-        break
-    }
-  }
+  const setActiveTabByPath = useCallback(() => {
+    const found = _.find(TAB_PATH, (tab_path) => tab_path === location.pathname)
+    found && setCurrentTab(found)
+  }, [])
 
   const routeGuard = useCallback(async (path) => {
     if (!$auth.isLogin && !publicPaths.includes(path)) {
@@ -141,95 +162,69 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
     }
   }, [])
 
+  const renderredTabs = useMemo(
+    () =>
+      _.map(TAB, (tab) =>
+        tab.path === TAB.MORE.path ? (
+          <div key={tab.path} onClick={() => onTabClick(TAB.MORE.path)}>
+            <Icon
+              name={morePaths.includes(currentTab as TAB_PATH) ? TAB.MORE.icon + '-solid' : TAB.MORE.icon}
+              className={`icon-24 ${
+                morePaths.includes(currentTab as TAB_PATH) ? 'active-style' : 'no-active-style'
+              }`}
+            ></Icon>
+          </div>
+        ) : (
+          <NavLink key={tab.path} to={tab.path} onClick={() => onTabClick(tab.path)}>
+            <Icon
+              name={getTabIcon(tab)}
+              className={currentTab === tab.path ? 'active-style' : 'no-active-style'}
+            />
+            {tab === TAB.CHAT && <div hidden={$chat.unReadCountAll <= 0} className='badge' />}
+          </NavLink>
+        )
+      ),
+    [currentTab]
+  )
+
   useEffect(() => {
     routeGuard(route.history.location.pathname)
     setActiveTabByPath()
 
-    route.history.listen((v) => {
-      setActiveTabByPath()
+    const dismissListen = route.history.listen((v) => {
       routeGuard(v.pathname)
+      setActiveTabByPath()
     })
+
+    return () => dismissListen()
   }, [])
 
   return (
     <>
-      <IonReactRouter history={route.history}>
-        <IonTabs ref={refTabbar}>
-          <IonRouterOutlet id='main'>
-            <Route path='/dev' component={DevPage} exact />
-            <Route path='/intro' component={IntroPage} exact />
-            <Route path='/sign-in' component={SignInPage} exact />
-            <Route path='/sign-up' component={SignUpPage} exact />
-            <Route path='/sign-up/form' component={SignUpFormPage} exact />
-            <Route path='/sign-up/community' component={SignUpCommunityPage} exact />
-            <Route path='/sign-up/complete' component={SignUpCompletePage} exact />
-
-            {/* Login 필요 */}
-            {/* TABS */}
-            <Route path='/tabs/home' component={HomePage} exact />
-
-            <Route path='/tabs/feed' component={FeedPage} exact />
-            <Route path='/tabs/feed/:id' component={FeedDetailPage} exact />
-            <Route path='/tabs/feed/form' component={FeedFormPage} exact />
-
-            <Route path='/tabs/stuff' component={StuffTalentPage} exact />
-            <Route path='/tabs/stuff/:id' component={StuffTalentDetailPage} exact />
-            <Route path='/tabs/stuff/form' component={StuffTalentFormPage} exact />
-
-            <Route path='/tabs/talent' component={StuffTalentPage} exact />
-            <Route path='/tabs/talent/:id' component={StuffTalentDetailPage} exact />
-            <Route path='/tabs/talent/form' component={StuffTalentFormPage} exact />
-
-            <Route path='/tabs/club' component={ClubPage} exact />
-            <Route path='/tabs/club/:id' component={ClubDetailPage} exact />
-            <Route path='/tabs/club/form' component={ClubFormPage} exact />
-
-            <Route path='/tabs/chat' component={ChatPage} exact />
-            <Route path='/tabs/chat/:id' component={ChatRoomPage} exact />
-
-            <Route path='/tabs/my-page' component={MyPage} exact />
-            <Route path='/tabs/my-page/my-list' component={MyPageMyList} exact />
-            <Route path='/tabs/my-page/like-list' component={MyPageLikeList} exact />
-            <Route path='/tabs/my-page/settings' component={SettingsPage} exact />
-
-            {/* TABS 독립 */}
-            <Route path='/users/:id' component={ProfileDetailPage} exact />
-            <Route path='/users/:id/edit' component={ProfileUpdatePage} exact />
-
+      <Router history={route.history}>
+        <IonContent>
+          <Switch>
+            {renderredRoutes}
             <Redirect from='/' to='/tabs/home' exact />
-          </IonRouterOutlet>
-          <IonTabBar slot='bottom' hidden={!isShow} onIonTabsDidChange={onTabChange}>
-            <IonTabButton tab={TAB.HOME.path} selected={currentTab === TAB_PATH.HOME} href='/tabs/home'>
-              <Icon name={getTabIcon(TAB.HOME)}></Icon>
-            </IonTabButton>
-            <IonTabButton tab={TAB.FEED.path} selected={currentTab === TAB_PATH.FEED} href='/tabs/feed'>
-              <Icon name={getTabIcon(TAB.FEED)}></Icon>
-            </IonTabButton>
-            <IonTabButton tab={TAB.MORE.path} className='no-active-color'>
-              <Icon
-                name={morePaths.includes(currentTab as TAB_PATH) ? TAB.MORE.icon + '-solid' : TAB.MORE.icon}
-                className='icon-24'
-              ></Icon>
-            </IonTabButton>
-            <IonTabButton tab={TAB.CHAT.path} selected={currentTab === TAB_PATH.CHAT} href='/tabs/chat'>
-              <Icon name={getTabIcon(TAB.CHAT)}></Icon>
-              {chatUnreadCount > 0 && <div className='badge'></div>}
-            </IonTabButton>
-            <IonTabButton
-              tab={TAB.MY_PAGE.path}
-              selected={currentTab === TAB_PATH.MY_PAGE}
-              href='/tabs/my-page'
-            >
-              <Icon name={getTabIcon(TAB.MY_PAGE)}></Icon>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
-      </IonReactRouter>
-      <BottomTabMorePopover
-        isOpen={showsMore}
-        setIsOpen={setShowsMore}
-        activeTab={currentTab as TAB_PATH}
-      ></BottomTabMorePopover>
+          </Switch>
+        </IonContent>
+
+        <IonFooter>
+          <Observer>
+            {() => (
+              // TODO 이 부분도 info 객체로 분리하자
+              <div hidden={!$ui.isBottomTab} className='px-container flex-between-center height-56 shadow-sm'>
+                {renderredTabs}
+              </div>
+            )}
+          </Observer>
+          <BottomTabMorePopover
+            isOpen={showsMore}
+            setIsOpen={setShowsMore}
+            activeTab={currentTab as TAB_PATH}
+          ></BottomTabMorePopover>
+        </IonFooter>
+      </Router>
     </>
   )
 }
