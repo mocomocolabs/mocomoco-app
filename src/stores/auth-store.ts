@@ -79,13 +79,13 @@ export class AuthStore {
         password: inko.ko2en(password),
       })
       .then(async (authUser: IAuthUserDto) => {
+        this.setAuth(authUser)
+
         await this.$user.getUser(authUser.id)
         this.setUser({
           ...authUser,
           ...this.$user.user,
         })
-
-        this.setAuth(authUser)
       })
   }) as SignInTask
 
