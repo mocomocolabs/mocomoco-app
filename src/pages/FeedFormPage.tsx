@@ -24,7 +24,6 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { DatetimePicker } from '../components/molecules/DatetimePickerComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { useStore } from '../hooks/use-store'
-import { FEED_TYPE } from '../models/feed.d'
 import { route } from '../services/route-service'
 import { DT_FORMAT } from '../utils/datetime-util'
 import { executeWithError } from '../utils/http-helper-util'
@@ -40,16 +39,15 @@ export const FeedFormPage: FC<IFeedForm> = () => {
   const initYMD = $feed.form.schedule?.startDate ?? dayjs().format(DT_FORMAT.YMD)
   const initHM = $feed.form.schedule?.startTime ?? dayjs().add(1, 'hour').startOf('hour').format(DT_FORMAT.HM)
 
-  $feed.setForm({
-    type: FEED_TYPE.NORMAL,
-    // schedule: {
-    //   ...$feed.form.schedule,
-    //   startDate: initYMD,
-    //   startTime: initHM,
-    //   endDate: initYMD,
-    //   endTime: initHM,
-    // },
-  })
+  // $feed.setForm({
+  //   // schedule: {
+  //   //   ...$feed.form.schedule,
+  //   //   startDate: initYMD,
+  //   //   startTime: initHM,
+  //   //   endDate: initYMD,
+  //   //   endTime: initHM,
+  //   // },
+  // })
 
   useIonViewWillEnter(() => {
     $ui.setIsBottomTab(false)
@@ -76,6 +74,8 @@ export const FeedFormPage: FC<IFeedForm> = () => {
               },
               isUpdate
             )
+
+            await $feed.getFeeds()
 
             isUpdate ? route.feedDetail($feed.form.id!, undefined, true) : route.feed()
 
