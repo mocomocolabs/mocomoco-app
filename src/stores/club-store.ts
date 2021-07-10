@@ -129,7 +129,6 @@ export class ClubStore {
     })
 
     await api.post(`/v1/clubs`, formData)
-    this.resetForm()
   }) as InsertClubTask
 
   @task.resolved
@@ -159,6 +158,10 @@ export class ClubStore {
 
   @action
   resetForm() {
-    this.form = initState.form
+    console.log('reset??')
+
+    this.form = {
+      ...initState.form,
+    }
   }
 }

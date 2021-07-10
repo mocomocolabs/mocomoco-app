@@ -18,7 +18,7 @@ import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubFormPage: React.FC = () => {
   const { $auth, $ui, $club } = useStore()
-  const { register, handleSubmit, formState } = useForm<IClubForm>({
+  const { register, handleSubmit, formState, reset } = useForm<IClubForm>({
     mode: 'onChange',
     defaultValues: {
       ...$club.form,
@@ -41,6 +41,12 @@ export const ClubFormPage: React.FC = () => {
         ...$club.form,
         communityId: $auth.user.communityId,
       })
+
+      await Promise.all([$club.getPopularClubs(999), $club.getRecentClubs()])
+
+      $club.resetForm()
+      reset()
+
       route.clubs()
     })
   })
