@@ -3,6 +3,7 @@ import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
 import { executeWithError } from '../../utils/http-helper-util'
+import { scrollToBottom } from '../../utils/scroll-util'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
@@ -44,6 +45,7 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
                     await $comment.insertComment({ feedId, content: $comment.insertForm[feedId]?.content })
                     await $feed.getFeed(feedId)
                     $comment.resetInsertFormBy(feedId)
+                    scrollToBottom()
                   })
                 }
               }}
