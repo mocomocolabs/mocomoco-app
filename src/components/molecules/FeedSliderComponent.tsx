@@ -37,7 +37,7 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
               isRoundTop={true}
             ></ImageWithCorner>
             <div className='flex-col w-full h-10 bg-white px-3 br-b-xxlg text-left'>
-              <TextBase className='text-bold ellipsis'>{v.title ?? v.content}</TextBase>
+              <TextBase className='text-bold ellipsis'>{v.title ? v.title : v.content}</TextBase>
               {v.title && <TextXs className='ellipsis'>{v.content}</TextXs>}
             </div>
           </div>
