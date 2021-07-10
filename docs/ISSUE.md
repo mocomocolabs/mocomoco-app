@@ -184,3 +184,50 @@ index.js:1 Warning: Can't perform a React state update on an unmounted component
 - 해결안2. animated=true를 유지하고 싶다면, IonPopover component를 사용해서 해결 가능함. 그러나 제약이 있다.
   onClick에서 popoverState를 변경시키면 animation이 발동되므로 동일한 이슈가 발생한다. 따라서, onClick에선 setPopoverState호출하지 말고 useEffect의 cleanup 함수에서 popoverState를 reset하면 된다. 이 타이밍에는 아마도 animation이 발동되지 않는 듯 싶다.
   이렇게 구현할 경우, 페이지전환하지 않을 때는 useEffect cleanup이 호출되지 않으니 팝업이 닫히지 않게 된다는 것이 치명적인 제약사항이다.
+
+## IonReactRouter 사용 시 라우팅이 중복 발생하는 이슈
+
+- 기존 routing 구조 : IonReactRouter + IonRouterOutlet + IonTabs
+- 이 구조에서 발생하는 문제 :
+
+1. tabbar를 통해 페이지 전환 시, 기존에 표시되던 페이지가 호출된 후 새 페이지가 이어서 호출된다.
+2. 기존 페이지가 호출될 때 history.pathname값은 새로 갱신된 상태라서, 페이지와 pathname이 일치하지 않는 문제가 생긴다. 이때문에 pathname으로 뭔가 구분하는 코드가 있다면 오작동하게 된다.
+
+- 진단 : IonReactRouter + IonRouterOutlet 구조로는 답이 없다. IonTabs와는 무관하다. IonReactRouter 사용시 라우팅이 여러번 발생하는 문제는 ionic 프레임웤쪽에 이슈로 올라가 있던데, 횟수를 줄이려는 노력을 해온 모양이지만 여전히 2~3차례씩 라우팅되는 듯 하다.
+- 해결책 : react-router-dom.Router 를 쓰자. 일단 Router + Switch + NavLink(이건 자유) 구조로 바꿔봤다. 이때, IonRouterOutlet을 사용하지 않으니 useIonViewWillEnter/Leave, ...DidEnter/Leave 등 ionic lifecycle hook들이 trigger되지 않게 된다. 해당 hook들은 React.useEffect로 변경하면 된다. 타이밍에 약간의 차이는 있겠으나, 동작에 문제를 초래하진 않아 보인다.
+
+```typescript
+// before
+useIonViewWillEnter(() => {
+  doWhenEnter()
+})
+
+useIonViewWillLeave(() => {
+  doWhenLeave()
+})
+
+// after
+useEffect(() => {
+  doWhenEnter()
+}, [])
+
+useEffect(() => {
+  return () => doWhenLeave()
+}, [])
+
+// 합쳐도 된다
+useEffect(() => {
+  doWhenEnter()
+
+  return () => doWhenLeave()
+}, [])
+```
+
+- 기타 문제 : useLocation().history.pathname 값은 location.history.pathname 및 useHistory().pathname 값에 비해 갱신이 느리다. 그래서 새 페이지가 라우팅됐는데도 pathname은 이전 값으로 남아 있는 떄가 있다. 아마, IonReactRouter의 버그인듯 하다. 아무튼, 되도록 useLocation()은 사용하지 말자.
+
+```typescript
+// 아래 값들을 쓰면 된다
+useHistory().pathname
+
+location.history.pathname
+```
