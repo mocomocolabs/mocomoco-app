@@ -32,6 +32,7 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
       <div className='flex-col'>
         <div className='flex-between-center mb-2'>
           <ProfileCard
+            userId={comment.user.id}
             profileUrl={comment.user.profileUrl}
             communityName={comment.user.communities[0]?.name}
             nickname={comment.user.nickname}

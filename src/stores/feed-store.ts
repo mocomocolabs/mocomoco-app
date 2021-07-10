@@ -12,7 +12,7 @@ import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
   feeds: [],
-  /* eslint-disable */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   feed: {} as any,
   form: {
     type: FEED_TYPE.NORMAL,
@@ -20,7 +20,6 @@ const initState = {
     title: '',
     content: '',
     images: [],
-    schedule: {} as any,
     isPublic: false,
   } as IFeedForm,
 }
@@ -142,6 +141,16 @@ export class FeedStore {
   saveFeed = (async (form: IFeedForm, isUpdate: boolean) => {
     const formData = new FormData()
 
+    if (
+      form.schedule &&
+      (!form.schedule.startDate ||
+        !form.schedule.startTime ||
+        !form.schedule.endDate ||
+        !form.schedule.endTime)
+    ) {
+      throw new Error('일정 입력을 완성해주세요')
+    }
+
     formData.append(
       'feedReqDto',
       new Blob(
@@ -153,8 +162,8 @@ export class FeedStore {
             schedule: form.schedule && {
               title: form.schedule.title,
               place: form.schedule.place,
-              startDateTime: form.schedule.startDate + form.schedule.startTime,
-              endDateTime: form.schedule.endDate + form.schedule.endTime,
+              startDateTime: form.schedule.startDate + form.schedule.startTime!,
+              endDateTime: form.schedule.endDate + form.schedule.endTime!,
             },
             title: form.title,
             content: form.content,

@@ -29,7 +29,7 @@ export interface IFeedForm {
   title: string
   content: string
   images: ImageUploadItem[]
-  schedule: IFeedSchedule
+  schedule?: Partial<IFeedSchedule>
   isPublic: boolean
 }
 

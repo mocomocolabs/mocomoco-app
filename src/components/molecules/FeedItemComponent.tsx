@@ -36,6 +36,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
         {feed.title && <TextLg className='text-bold mb-5'>{feed.title}</TextLg>}
         <div className='flex-between-center mb-5'>
           <ProfileCard
+            userId={feed.user.id}
             profileUrl={feed.user.profileUrl}
             communityName={feed.user.communities[0]?.name}
             nickname={feed.user.nickname}
