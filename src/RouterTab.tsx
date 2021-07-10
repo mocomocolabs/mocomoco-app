@@ -169,20 +169,20 @@ export const RouterTab: FC<IRouterTab> = ({ isShow, chatUnreadCount }) => {
             <Route path='/tabs/home' component={HomePage} exact />
 
             <Route path='/tabs/feed' component={FeedPage} exact />
-            <Route path='/tabs/feed/form' component={FeedFormPage} exact />
             <Route path='/tabs/feed/:id' component={FeedDetailPage} exact />
+            <Route path='/tabs/feed/form' component={FeedFormPage} exact />
 
             <Route path='/tabs/stuff' component={StuffTalentPage} exact />
-            <Route path='/tabs/stuff/form' component={StuffTalentFormPage} exact />
             <Route path='/tabs/stuff/:id' component={StuffTalentDetailPage} exact />
+            <Route path='/tabs/stuff/form' component={StuffTalentFormPage} exact />
 
             <Route path='/tabs/talent' component={StuffTalentPage} exact />
-            <Route path='/tabs/talent/form' component={StuffTalentFormPage} exact />
             <Route path='/tabs/talent/:id' component={StuffTalentDetailPage} exact />
+            <Route path='/tabs/talent/form' component={StuffTalentFormPage} exact />
 
             <Route path='/tabs/club' component={ClubPage} exact />
-            <Route path='/tabs/club/form' component={ClubFormPage} exact />
             <Route path='/tabs/club/:id' component={ClubDetailPage} exact />
+            <Route path='/tabs/club/form' component={ClubFormPage} exact />
 
             <Route path='/tabs/chat' component={ChatPage} exact />
             <Route path='/tabs/chat/:id' component={ChatRoomPage} exact />
