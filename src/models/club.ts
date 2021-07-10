@@ -13,7 +13,7 @@ export class Club {
       },
       members: payload.clubUsers.map((v) => ({
         ...v.user,
-        isAdmin: payload.adminUsers.some((a) => a.id === v.user.id),
+        isAdmin: payload.adminUsers.some((au) => au.id === v.user.id),
       })),
       imageUrls: payload.atchFiles.map((v) => v.url),
       hashtagNames: payload.clubHashtags.map((v) => v.hashtag.name),

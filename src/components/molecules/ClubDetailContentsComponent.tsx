@@ -24,17 +24,19 @@ export const ClubDetailContents: FC<IClubDetailContents> = ({ club }) => {
       <div className='px-container pt-2'>
         <div className='flex-between-center'>
           <TextLg className='text-bold'>{club.name}</TextLg>
-          <MorePopoverButton
-            items={[
-              {
-                label: '수정',
-                onClick: async () => {
-                  await $club.getClubForm(club.id)
-                  route.clubForm()
+          {$club.club.isAdmin && (
+            <MorePopoverButton
+              items={[
+                {
+                  label: '수정',
+                  onClick: async () => {
+                    await $club.getClubForm(club.id)
+                    route.clubForm()
+                  },
                 },
-              },
-            ]}
-          ></MorePopoverButton>
+              ]}
+            ></MorePopoverButton>
+          )}
         </div>
         <TextSm className='mt-1 gray'>{club.community?.name}</TextSm>
         <div className='flex items-center mt-4'>

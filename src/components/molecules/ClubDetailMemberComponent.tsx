@@ -19,18 +19,18 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community }) 
         <TextBase className='ml-1'>{members.length}명</TextBase>
       </div>
       {members.map((v) => (
-        <div key={v.id} className='flex-between-center'>
+        <div key={v.id} className='flex-between-center mb-4'>
           <div className='flex items-center'>
             <ProfileImage url={v.profileUrl} className='mr-2 w-10 h-10'></ProfileImage>
             <div className='flex-col'>
               <div className='flex items-center'>
                 {v.isAdmin && <Icon name='star-solid' className='icon-primary mr-1'></Icon>}
-                <TextBase>{v.nickname}</TextBase>
+                <TextBase className='mt-1'>{v.nickname}</TextBase>
               </div>
               <TextSm className='gray'>{community.name}</TextSm>
             </div>
           </div>
-          {v.isAdmin && <Icon name='chat'></Icon>}
+          {v.isAdmin && <Icon name='chat' className='icon-secondary'></Icon>}
         </div>
       ))}
     </div>
