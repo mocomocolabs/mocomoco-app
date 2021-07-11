@@ -14,7 +14,7 @@ export class Club {
       members: payload.clubUsers.map((v) => ({
         ...v.user,
         // TODO: api업데이트 후 체크 필요
-        isAdmin: v.user.role === 'ROLE_ADMIN',
+        isAdmin: v.user.roles === 'ROLE_ADMIN',
       })),
       imageUrls: payload.atchFiles.map((v) => v.url),
       hashtagNames: payload.clubHashtags.map((v) => v.hashtag.name),
