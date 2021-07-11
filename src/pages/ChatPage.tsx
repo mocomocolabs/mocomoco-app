@@ -1,5 +1,7 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
 import { useEffect } from 'react'
+import { Icon } from '../components/atoms/IconComponent'
+import { TextXl } from '../components/atoms/TextXlComponent'
 import { ChatRoomList } from '../components/organisms/ChatRoomListComponent'
 import { useStore } from '../hooks/use-store'
 
@@ -14,7 +16,10 @@ export const ChatPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>쪽지보내기</IonTitle>
+          <div className='flex items-center'>
+            <Icon name='arrow' className='icon-rotate-270'></Icon>
+            <TextXl className='ml-2 text-bold'>전체 채팅</TextXl>
+          </div>
         </IonToolbar>
       </IonHeader>
 
