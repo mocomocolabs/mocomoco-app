@@ -1,5 +1,6 @@
-import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { IonContent, IonFooter, IonHeader, IonPage, IonToolbar } from '@ionic/react'
 import _ from 'lodash'
+import { Observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -46,7 +47,7 @@ export const ChatRoomPage: React.FC = () => {
           <div slot='start'>
             <BackButton type='arrow' />
           </div>
-          <IonTitle slot='start'>쪽지 보내기</IonTitle>
+          <Observer>{() => <div className='text-header text-center'>{$chat.room?.name}</div>}</Observer>
         </IonToolbar>
       </IonHeader>
 

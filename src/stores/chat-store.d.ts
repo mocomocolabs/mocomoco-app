@@ -1,4 +1,7 @@
 import { Task } from 'mobx-task'
+import { ChatRoomType, IChat } from '../models/chat'
+import { IUser } from '../models/user'
+import { IClubDto } from './club-store.d'
 
 export interface IInsertChatMessage {
   roomId: number
@@ -13,6 +16,17 @@ export interface IGetChatMessages {
 export interface ISetReadChatId {
   roomId: number
   readChatId: number
+}
+
+export interface IChatRoomDto {
+  id: number
+  type: ChatRoomType
+  name: string
+  users: IUser[]
+  chats: IChat[]
+  readChatId: number
+  unReadChatCount: number
+  club: IClubDto
 }
 
 export type InsertChatMessageTask = Task<[IInsertChatMessage], void>
