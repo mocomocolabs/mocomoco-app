@@ -1,5 +1,7 @@
 import { useObserver } from 'mobx-react-lite'
 import { FC, useState } from 'react'
+import { Icon } from '../atoms/IconComponent'
+import { TextSm } from '../atoms/TextSmComponent'
 import { CategorySelectorModal } from '../modals/CategorySelectorModalComponent'
 
 export interface ICategorySelector {
@@ -14,13 +16,12 @@ export const CategorySelector: FC<ICategorySelector> = ({ categories, selectedId
 
   return useObserver(() => (
     <>
-      <button
-        className='w-full px-4 mb-4 py-3 br-base border-gray bg-white text-left text-sm'
-        type='button'
-        onClick={() => setIsShowModal(true)}
-      >
-        {selectedId > 0 ? categories.find((c) => c.id === selectedId)?.name : '카테고리 선택'}
-      </button>
+      <div className='flex justify-between items-center px-3' onClick={() => setIsShowModal(true)}>
+        <TextSm>
+          {selectedId > 0 ? categories.find((c) => c.id === selectedId)?.name : '카테고리 선택'}
+        </TextSm>
+        <Icon name='arrow' className='icon-rotate-180' />
+      </div>
 
       <CategorySelectorModal
         categories={categories}
