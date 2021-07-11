@@ -7,11 +7,7 @@ export const InputPassword: FC<IInput> = (props) => {
 
   return (
     <div className='relative'>
-      <Input
-        {...props}
-        className='w-full px-3 py-1 text-sm'
-        type={showsPassword ? 'text' : 'password'}
-      ></Input>
+      <Input {...props} className='inputpassword' type={showsPassword ? 'text' : 'password'}></Input>
       <Icon
         onClick={() => setShowsPassword(!showsPassword)}
         name={showsPassword ? 'eyeOff' : 'eyeOn'}
