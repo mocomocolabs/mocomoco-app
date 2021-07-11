@@ -16,7 +16,7 @@ import { webSocket } from './services/web-socket-service'
 
 export const App: React.FC = () => {
   const { $community, $chat, $auth } = useStore()
-  const [intialized, setInitailzed] = useState(false)
+  const [initialized, setInitailzed] = useState(false)
 
   const init = async () => {
     // 로그인
@@ -74,7 +74,7 @@ export const App: React.FC = () => {
 
   return (
     <IonApp>
-      {intialized ? <RouterTab /> : <Spinner isFull={true} color='white' />}
+      {initialized ? <RouterTab /> : <Spinner isFull={true} color='white' />}
 
       <Alert></Alert>
       <Toast></Toast>
