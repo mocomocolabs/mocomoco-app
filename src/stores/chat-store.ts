@@ -2,21 +2,27 @@ import _ from 'lodash'
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { RootStore } from '.'
+import { ChatRoom } from '../models/chat-room'
 import {
   ChatRoomType,
   ChatType,
   IChat,
   IChatForm,
   IChatRoom,
-  IChatRoomsDto,
   IStoreChatRoom,
-  ISubChat,
+  ISubscribeChat,
 } from '../models/chat.d'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { webSocket } from '../services/web-socket-service'
 import { AuthStore } from './auth-store'
-import { IInsertChatMessage, InsertChatMessageTask, ISetReadChatId, SetReadChatIdTask } from './chat-store.d'
+import {
+  IChatRoomDto,
+  IInsertChatMessage,
+  InsertChatMessageTask,
+  ISetReadChatId,
+  SetReadChatIdTask,
+} from './chat-store.d'
 import { TaskBy } from './task'
 
 const initState = {
@@ -27,7 +33,7 @@ const initState = {
 }
 
 export class ChatStore {
-  @observable.shallow rooms: IChatRoom[] = initState.rooms
+  @observable.shallow rooms: ChatRoom[] = initState.rooms
   @observable currentRoomId: number | null = initState.currentRoomId
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
   @observable form: { [roomId: number]: IChatForm } = initState.form
@@ -53,7 +59,7 @@ export class ChatStore {
       {
         roomIds: this.rooms.map((v) => v.id),
         cb: (data) => {
-          const subChat = JSON.parse(data.body) as ISubChat
+          const subChat = JSON.parse(data.body) as ISubscribeChat
           this.setChat(subChat)
           this.setLastChatId({
             roomId: subChat.chatroom.id,
@@ -66,10 +72,10 @@ export class ChatStore {
         userId: this.$auth.user.id,
         cb: (data) => {
           // 첫 채팅을 받는 경우
-          const subChat = JSON.parse(data.body) as ISubChat
+          const subChat = JSON.parse(data.body) as ISubscribeChat
           // 새로 만들어진 채팅방을 구독상태로 한다.
           webSocket.subscribeRoom(subChat.chatroom.id, (data) => {
-            const subChat = JSON.parse(data.body) as ISubChat
+            const subChat = JSON.parse(data.body) as ISubscribeChat
             this.setChat(subChat)
             this.setLastChatId({
               roomId: subChat.chatroom.id,
@@ -95,12 +101,12 @@ export class ChatStore {
     }
 
     await api
-      .get<IChatRoomsDto>('/v1/chatrooms', {
+      .get<{ chatrooms: IChatRoomDto[] }>('/v1/chatrooms?limit=999', {
         params: { ids: roomIds.toString() },
       })
       .then(
         action(async (data) => {
-          this.rooms = data.chatrooms
+          this.rooms = data.chatrooms.map((v) => ChatRoom.of(v, this.$auth.user.id))
 
           // TODO: 앱 재설치시, 모든 채팅이 unread 상태인데 추후 대안 필요
           const orgStoreChatRooms = await storage.getStoreChatRoom()
@@ -197,9 +203,8 @@ export class ChatStore {
   insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
     const room = _.find(this.rooms, (v) => v.id === roomId)
 
-    await new Promise((r) => setTimeout(() => r(true), 1000))
     await api
-      .post<ISubChat>('/v1/chats', {
+      .post<ISubscribeChat>('/v1/chats', {
         type: ChatType.TALK,
         message,
         chatroomId: roomId,
@@ -208,6 +213,7 @@ export class ChatStore {
       .then((data) => {
         if (room !== undefined) room.readChatId = data.id
         webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
+        this.setForm(roomId, '')
       })
   }) as InsertChatMessageTask
 
@@ -222,7 +228,7 @@ export class ChatStore {
   }
 
   @action
-  setChat(subChat: ISubChat) {
+  setChat(subChat: ISubscribeChat) {
     const chat = _.omit(subChat, ['chatroom']) as IChat
 
     this.rooms = this.rooms.map((v) => ({

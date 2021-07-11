@@ -1,4 +1,4 @@
-import { IClubDto } from '../stores/club-store.d'
+import { IChatRoomDto } from '../stores/chat-store.d'
 import { IUser } from './user'
 
 export interface IChat {
@@ -9,8 +9,10 @@ export interface IChat {
   createdAt: string // TODO : 논의 필요
 }
 
-export interface ISubChat extends IChat {
-  chatroom: IChatRoom
+export interface IChatRoom extends IChatRoomDto {}
+
+export interface ISubscribeChat extends IChat {
+  chatroom: IChatRoomDto
 }
 
 export interface IChatForm {
@@ -18,27 +20,11 @@ export interface IChatForm {
   message: string
 }
 
-export interface IChatRoom {
-  id: number
-  type: ChatRoomType
-  name: string
-  users: IUser[]
-  chats: IChat[]
-  readChatId: number
-  unReadChatCount: number
-  club: IClubDto
-}
-
 export interface IStoreChatRoom {
   id: number
   readChatId: number
   // TODO: unreadCount인 것이 더 직관적인 이름일듯
   readCount: number
-}
-
-export interface IChatRoomsDto {
-  count: number
-  chatrooms: IChatRoom[]
 }
 
 export enum ChatRoomType {
