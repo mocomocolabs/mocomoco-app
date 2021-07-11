@@ -6,7 +6,7 @@ export interface IChat {
   type: ChatType
   user: IUser
   message: string
-  createdAt: string // TODO : 논의 필요
+  createdAt: string
 }
 
 export interface IChatRoom extends IChatRoomDto {}

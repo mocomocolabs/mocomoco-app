@@ -1,36 +1,70 @@
+import _ from 'lodash'
 import { useObserver } from 'mobx-react-lite'
-import { useEffect } from 'react'
+import { useCallback } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { useStore } from '../../hooks/use-store'
+import { timeDiff } from '../../utils/datetime-util'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
+import { TextSm } from '../atoms/TextSmComponent'
+import { TextXs } from '../atoms/TextXsComponent'
 
-interface IChatRoomDetail {
-  roomId: number
-}
+interface IChatRoomDetail {}
 
-// TODO: roomId is defined but never used
-export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({ roomId }) => {
+export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({}) => {
   const { $chat, $auth } = useStore()
 
-  useEffect(() => {}, [$chat.room?.chats])
+  const loadMore = useCallback(async () => {
+    // TODO: lastId 적용 안되는 버그 수정 필요
+    await $chat.getChatMessages($chat.currentRoomId!, _.min($chat.room?.chats.map((v) => v.id))!)
+  }, [])
 
   return useObserver(() => {
     return (
-      <>
-        <ul className='pl-0'>
-          {$chat.room?.chats?.map((v, i) => (
-            <li key={i} className={`flex my-2 ${v.user.id === $auth.user.id && 'flex-row-reverse'}`}>
-              <ProfileImage url={v.user.profileUrl}></ProfileImage>
-              <div
-                className={`py-2 px-3 mx-2 br-xlg pre-line ${
-                  v.user.id === $auth.user.id ? 'bg-m-secondary' : 'bg-m-gray'
-                }`}
-              >
-                {v.message}
+      <section
+        id='scrollable'
+        className='px-container'
+        style={{
+          height: 'calc(100vh - 130px)',
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column-reverse',
+        }}
+      >
+        <InfiniteScroll
+          dataLength={$chat.room?.chats.length ?? 0}
+          next={loadMore}
+          style={{ display: 'flex', flexDirection: 'column-reverse' }}
+          inverse={true}
+          hasMore={true}
+          scrollableTarget='scrollable'
+          loader={<></>}
+        >
+          {$chat.room?.chats.map((v, i) => {
+            const isMe = v.user.id === $auth.user.id
+            return (
+              <div key={i} className={`flex my-3 ${v.user.id === $auth.user.id && 'flex-row-reverse'}`}>
+                {!isMe && <ProfileImage url={v.user.profileUrl}></ProfileImage>}
+                <div className='flex-col ml-2'>
+                  {!isMe && (
+                    <div className='flex'>
+                      <TextXs className='text-bold'>{v.user.nickname}</TextXs>
+                      <TextXs className='gray ml-1'>{v.user.communities[0].name}</TextXs>
+                    </div>
+                  )}
+                  <div className={`flex items-end mt-1 ${isMe ? 'flex-row-reverse' : ''}`}>
+                    <TextSm
+                      className={`py-2 px-3 br-xlg pre-line ${isMe ? 'bg-s-secondary' : 'bg-s-primary'}`}
+                    >
+                      {v.message}
+                    </TextSm>
+                    <TextXs className='mx-1 gray no-wrap'>{timeDiff(v.createdAt)}</TextXs>
+                  </div>
+                </div>
               </div>
-            </li>
-          ))}
-        </ul>
-      </>
+            )
+          })}
+        </InfiniteScroll>
+      </section>
     )
   })
 }

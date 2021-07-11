@@ -23,7 +23,7 @@ import {
   ISetReadChatId,
   SetReadChatIdTask,
 } from './chat-store.d'
-import { TaskBy } from './task'
+import { TaskBy, TaskBy2 } from './task'
 
 const initState = {
   rooms: [],
@@ -33,7 +33,7 @@ const initState = {
 }
 
 export class ChatStore {
-  @observable.shallow rooms: ChatRoom[] = initState.rooms
+  @observable rooms: ChatRoom[] = initState.rooms
   @observable currentRoomId: number | null = initState.currentRoomId
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
   @observable form: { [roomId: number]: IChatForm } = initState.form
@@ -163,6 +163,41 @@ export class ChatStore {
     return roomId
   }
 
+  @task.resolved
+  insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
+    const room = _.find(this.rooms, (v) => v.id === roomId)
+
+    await api
+      .post<ISubscribeChat>('/v1/chats', {
+        type: ChatType.TALK,
+        message,
+        chatroomId: roomId,
+        isUse: true,
+      })
+      .then((data) => {
+        if (room !== undefined) room.readChatId = data.id
+        webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
+        this.setForm(roomId, '')
+      })
+  }) as InsertChatMessageTask
+
+  /**
+   *
+   * @param lastId 현재 화면의 마지막 chat id
+   */
+  @task.resolved
+  getChatMessages = (async (chatRoomId: number, lastId: number) => {
+    const { chats } = await api.get<{ chats: IChat[] }>('/v1/chats', {
+      params: {
+        'chat-room-id': chatRoomId,
+        'last-id': lastId,
+        'limit': 20,
+      },
+    })
+
+    this.setChats(chatRoomId, chats)
+  }) as TaskBy2<number, number>
+
   /**
    * 새로 생성된 roomId를 리턴합니다
    * TODO : 추후 서버와 협의후 chat insert후 바로 roomId를 리턴하도록 수정
@@ -199,24 +234,6 @@ export class ChatStore {
     storage.setStoreChatRoom(this.storeRooms)
   }) as SetReadChatIdTask
 
-  @task.resolved
-  insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
-    const room = _.find(this.rooms, (v) => v.id === roomId)
-
-    await api
-      .post<ISubscribeChat>('/v1/chats', {
-        type: ChatType.TALK,
-        message,
-        chatroomId: roomId,
-        isUse: true,
-      })
-      .then((data) => {
-        if (room !== undefined) room.readChatId = data.id
-        webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
-        this.setForm(roomId, '')
-      })
-  }) as InsertChatMessageTask
-
   @action
   setCurrentRoomId(roomId: number | null) {
     this.currentRoomId = roomId
@@ -233,7 +250,15 @@ export class ChatStore {
 
     this.rooms = this.rooms.map((v) => ({
       ...v,
-      chats: v.id === subChat.chatroom.id ? [...v.chats, chat] : v.chats,
+      chats: v.id === subChat.chatroom.id ? [chat, ...v.chats] : v.chats,
+    }))
+  }
+
+  @action
+  setChats(roomId: number, chats: IChat[]) {
+    this.rooms = this.rooms.map((v) => ({
+      ...v,
+      chats: v.id === roomId ? [...v.chats, ...chats] : v.chats,
     }))
   }
 

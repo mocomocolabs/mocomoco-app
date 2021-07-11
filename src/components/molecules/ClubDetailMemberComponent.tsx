@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useStore } from '../../hooks/use-store'
 import { IClubMember } from '../../models/club.d'
 import { ICommunity } from '../../models/community'
 import { route } from '../../services/route-service'
@@ -15,6 +16,8 @@ export interface IClubDetailMember {
 }
 
 export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community, createChat }) => {
+  const { $auth } = useStore()
+
   return members?.length ? (
     <div className='flex-col px-container'>
       <div className='flex mb-2'>
@@ -33,7 +36,7 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community, cr
               <TextSm className='gray'>{community.name}</TextSm>
             </div>
           </div>
-          {v.isAdmin && (
+          {v.isAdmin && v.id !== $auth.user.id && (
             <Icon
               name='chat'
               className='icon-secondary'
