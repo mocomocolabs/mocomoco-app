@@ -2,13 +2,13 @@ import { IonContent, IonFooter, IonHeader, IonIcon, IonPage, IonToolbar } from '
 import dayjs from 'dayjs'
 import { calendar } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import { FC, useCallback, useEffect, useRef } from 'react'
+import { FC, useEffect, useMemo, useRef } from 'react'
 import { Checkbox } from '../components/atoms/CheckboxComponent'
+import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { Icon } from '../components/atoms/IconComponent'
 import { InputNormal } from '../components/atoms/InputNormalComponent'
 import { Pad } from '../components/atoms/PadComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
-import { TextLg } from '../components/atoms/TextLgComponent'
 import { TextXl } from '../components/atoms/TextXlComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -48,12 +48,11 @@ export const FeedFormPage: FC<IFeedForm> = () => {
     }
   }, [])
 
-  const SubmitBtn = useCallback(
+  const SubmitBtn = useMemo(
     () => (
-      <div
-        slot='end'
-        onClick={() =>
-          $feed.form.content &&
+      <HeaderSubmitText
+        isSubmittable={!!$feed.form.content}
+        onSubmit={() =>
           executeWithError(async () => {
             await $feed.saveFeed(
               {
@@ -70,9 +69,7 @@ export const FeedFormPage: FC<IFeedForm> = () => {
             $feed.resetForm()
           })
         }
-      >
-        <TextLg className={$feed.form.content ? '' : 'gray'}>완료</TextLg>
-      </div>
+      />
     ),
     [$feed.form.content, $auth.user.communityId, $feed.form]
   )

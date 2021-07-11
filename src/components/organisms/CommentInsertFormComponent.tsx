@@ -35,7 +35,7 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
       <div className='ml-2'>
         <SpinnerWrapper
           task={$comment.insertComment}
-          Submit={() => (
+          Submit={
             <Icon
               name='send-solid'
               className={$comment.insertForm[feedId]?.content ? 'icon-secondary' : 'icon-gray'}
@@ -50,7 +50,7 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
                 }
               }}
             ></Icon>
-          )}
+          }
         ></SpinnerWrapper>
       </div>
     </div>

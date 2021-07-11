@@ -3,6 +3,7 @@ import { useObserver } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Checkbox } from '../../components/atoms/CheckboxComponent'
+import { HeaderSubmitText } from '../../components/atoms/HeaderSubmitText'
 import { Icon } from '../../components/atoms/IconComponent'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
 import { Textarea } from '../../components/atoms/TextareaComponent'
@@ -62,11 +63,7 @@ export const ClubFormPage: React.FC = () => {
         <div slot='end'>
           <SpinnerWrapper
             task={$club.insertClub}
-            Submit={() => (
-              <div className={formState.isValid ? '' : 'gray'} slot='end' onClick={() => onSubmit()}>
-                완료
-              </div>
-            )}
+            Submit={<HeaderSubmitText isSubmittable={formState.isValid} onSubmit={onSubmit} />}
           ></SpinnerWrapper>
         </div>
       </Header>
