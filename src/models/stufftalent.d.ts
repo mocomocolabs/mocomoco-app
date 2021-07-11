@@ -26,7 +26,7 @@ export interface IStuffTalent extends IStuffTalentDto {
 }
 
 export interface IStuffTalentFilter {
-  isPublic: boolean
+  isPublic: boolean | undefined
   communityId: number | null
   userId: number | undefined
   categories: number[]

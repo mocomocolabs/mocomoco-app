@@ -38,7 +38,7 @@ export const StuffTalentPage: React.FC = () => {
   const onSearchSubmit = (e: CustomEvent<SearchbarChangeEventDetail>) => setSearch(e.detail.value!)
 
   const initialFilter: IStuffTalentFilter = {
-    isPublic: false,
+    isPublic: $community.selectedId !== store.$auth.user.communityId ? true : undefined,
     userId: undefined,
     communityId: $community.selectedId,
     categories: [],
@@ -65,7 +65,11 @@ export const StuffTalentPage: React.FC = () => {
       () => $community.selectedId,
       (selectedId) => {
         // TODO 모든 공동체 선택 시 isPublic=true 처리 필요
-        setFilter({ ...filter, communityId: selectedId })
+        setFilter({
+          ...filter,
+          communityId: selectedId,
+          isPublic: selectedId !== store.$auth.user.communityId ? true : undefined,
+        })
       }
     )
 
