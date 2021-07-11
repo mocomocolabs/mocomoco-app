@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { TextXxs } from './TextXxsComponent'
 
 export interface ISquareWithCorner {
-  color?: 'primary' | 'secondary' | 'gray'
+  color?: 'primary' | 'secondary' | 'gray' | undefined
   width?: number
   height?: number
   fill?: boolean

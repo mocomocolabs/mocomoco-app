@@ -48,7 +48,9 @@ export const SignUpPage: React.FC = () => {
               },
             })}
           ></InputNormal>
-          <ValidationMessage isShow={errors.email} message={errors.email?.message}></ValidationMessage>
+          <div className='h-10 pt-1 px-3'>
+            <ValidationMessage isShow={errors.email} message={errors.email?.message}></ValidationMessage>
+          </div>
           <SubmitButton
             disabled={!isValid}
             color='secondary'

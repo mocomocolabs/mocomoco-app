@@ -12,7 +12,7 @@ export interface ITextarea extends Omit<TextareaHTMLAttributes<HTMLTextAreaEleme
 export const Textarea: FC<ITextarea> = ({ onChange, register, ...props }) => {
   return (
     <textarea
-      className='br-base border-gray leading-8 w-full px-4 py-3 text-base'
+      className='w-full px-3 py-4'
       onChange={(e) => onChange && onChange(e.target.value!)}
       {...props}
       {...register}

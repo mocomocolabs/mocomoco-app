@@ -8,5 +8,5 @@ export interface IValidationMessage {
 }
 
 export const ValidationMessage: FC<IValidationMessage> = ({ isShow, message }) => {
-  return isShow ? <TextXs className='red -mt-3 mb-4'>{message}</TextXs> : <></>
+  return isShow ? <TextXs className='red'>{message}</TextXs> : <></>
 }

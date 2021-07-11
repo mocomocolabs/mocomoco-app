@@ -1,0 +1,25 @@
+@import '../../theme/variable';
+@import '../../theme/functional';
+
+.input-border-bottom-primary {
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  border-color: $primary;
+  border-radius: 0;
+}
+.input-border-bottom-gray {
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  border-color: $gray;
+  border-radius: 0;
+}
+
+input {
+  @extend .input-border-bottom-gray;
+  outline: none;
+
+  &:focus {
+    @extend .input-border-bottom-primary;
+    outline: none;
+  }
+}

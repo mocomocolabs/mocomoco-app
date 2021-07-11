@@ -1,15 +1,21 @@
 import { FC, HTMLAttributes, useEffect, useState } from 'react'
 import { Icon } from './IconComponent'
-import { TextBase } from './TextBaseComponent'
-
 // TODO CheckBox, InputNormal, TextArea, Radio component 마다 react-hook-form register를 처리하는 방식이 다름.
 export interface ICheckbox extends Omit<HTMLAttributes<HTMLElement>, 'onChange'> {
   label: string
   defaultChecked: boolean
   onChange?: (checked: boolean) => void
+  size?: 'small' | 'medium' | 'large'
+  color?: 'primary' | 'secondary'
 }
 
-export const Checkbox: FC<ICheckbox> = ({ label, defaultChecked, onChange }) => {
+export const Checkbox: FC<ICheckbox> = ({
+  label,
+  defaultChecked,
+  onChange,
+  size = 'medium',
+  color = 'secondary',
+}) => {
   const [checked, setChecked] = useState(!!defaultChecked)
 
   useEffect(() => {
@@ -18,12 +24,10 @@ export const Checkbox: FC<ICheckbox> = ({ label, defaultChecked, onChange }) => 
 
   return (
     <div className='flex items-center' onClick={() => setChecked(!checked)}>
-      {checked ? (
-        <Icon name='check-solid' className='icon-secondary'></Icon>
-      ) : (
-        <Icon name='check' className='icon-secondary'></Icon>
-      )}
-      <TextBase className='ml-1'>{label}</TextBase>
+      <Icon name={`check${checked ? '-solid' : ''}`} className={`icon-${color}`} size={size} />
+      <div className={`ml-1 ${size === 'small' ? 'text-xs' : size === 'medium' ? 'text-sm' : 'text-base'}`}>
+        {label}
+      </div>
     </div>
   )
 }

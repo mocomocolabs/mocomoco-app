@@ -6,6 +6,7 @@ import { Checkbox } from '../../components/atoms/CheckboxComponent'
 import { HeaderSubmitText } from '../../components/atoms/HeaderSubmitText'
 import { Icon } from '../../components/atoms/IconComponent'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
+import { Pad } from '../../components/atoms/PadComponent'
 import { Textarea } from '../../components/atoms/TextareaComponent'
 import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
@@ -68,14 +69,15 @@ export const ClubFormPage: React.FC = () => {
         </div>
       </Header>
       <IonContent>
-        <div className='px-container py-5'>
+        <div className='px-container'>
           <form onSubmit={onSubmit}>
             <ImageUploader
-              className='mb-6'
+              className='mt-5'
               images={$club.form.images}
               setImages={(param) => $club.setFormImage(param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
+            <Pad className='h-2'></Pad>
             <InputNormal
               placeholder='모임 이름'
               register={register('name', { required: true })}
@@ -101,7 +103,7 @@ export const ClubFormPage: React.FC = () => {
         </div>
       </IonContent>
       <IonFooter>
-        <div className='px-container flex-between-center height-56 shadow-sm'>
+        <div className='px-container flex-between-center h-11 shadow-sm'>
           {/* TODO: 카메라 플러그인 추가 */}
           <Icon
             name={$club.form.images.length ? 'image-solid' : 'image'}

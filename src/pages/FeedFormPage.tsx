@@ -97,7 +97,7 @@ export const FeedFormPage: FC<IFeedForm> = () => {
               setImages={(param) => $feed.setFormImage(param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
-            <Pad className='h-5'></Pad>
+            <Pad className='h-2'></Pad>
             <InputNormal
               value={$feed.form.title}
               placeholder='제목(선택사항)'
@@ -134,7 +134,7 @@ export const FeedFormPage: FC<IFeedForm> = () => {
         </IonContent>
 
         <IonFooter>
-          <div className='px-container flex-between-center height-56 shadow-sm'>
+          <div className='px-container flex-between-center h-11 shadow-sm'>
             {/* TODO: 카메라 플러그인 추가 */}
             <Icon
               name={$feed.form.images?.length ? 'image-solid' : 'image'}

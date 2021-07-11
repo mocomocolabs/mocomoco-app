@@ -7,8 +7,10 @@ import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { Icon } from '../components/atoms/IconComponent'
 import { InputNormal } from '../components/atoms/InputNormalComponent'
 import { Pad } from '../components/atoms/PadComponent'
-import { Radio } from '../components/atoms/RadioComponent'
+import { SquareWithCorner } from '../components/atoms/SquareWithCornerComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
+import { TextXs } from '../components/atoms/TextXsComponent'
+import { XDivider } from '../components/atoms/XDividerComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CategorySelector } from '../components/molecules/CategorySelectorComponent'
@@ -148,23 +150,50 @@ export const StuffTalentFormPage: React.FC = () => {
             <input type='hidden' {...register('isExchangeable')} />
             <input type='hidden' {...register('isNegotiable')} />
             <input type='hidden' {...register('isPublic')} />
-
             <ImageUploader
-              className='mb-6'
+              className='mb-4'
               images={watchImages}
               setImages={(param) => setValueCustom('images', param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
-            <div className='w-full'>
-              <Radio
-                items={typeLabels}
-                selected={watchType ?? ''}
-                setSelected={(type) => {
-                  setValueCustom('type', type as StuffTalentType)
-                }}
-              ></Radio>
+            <div className='flex gap-1 w-full'>
+              {typeLabels.map((t, i) => (
+                <div
+                  key={i}
+                  className='flex-grow'
+                  onClick={() => setValueCustom('type', t.value as StuffTalentType)}
+                >
+                  <SquareWithCorner
+                    height={36}
+                    key={i}
+                    color={t.value !== watchType ? 'gray' : undefined}
+                    fill={t.value === watchType}
+                  >
+                    <TextXs className={t.value !== watchType ? 'gray' : undefined}>{t.label}</TextXs>
+                  </SquareWithCorner>
+                </div>
+              ))}
             </div>
-            <Pad className='h-5'></Pad>
+            <Pad className='h-4' />
+            <div className='flex gap-4'>
+              <Checkbox
+                label='교환 가능'
+                defaultChecked={form.isExchangeable}
+                onChange={(checked) => setValueCustom('isExchangeable', checked)}
+                size='small'
+                color='primary'
+              ></Checkbox>
+              <Checkbox
+                label='가격제안 가능'
+                defaultChecked={form.isNegotiable}
+                onChange={(checked) => setValueCustom('isNegotiable', checked)}
+                size='small'
+                color='primary'
+              ></Checkbox>
+            </div>
+            <XDivider className='bg-gray mt-4' />
+            <InputNormal placeholder='제목' register={register('title', { required: true })}></InputNormal>
+            <Pad className='h-4' />
             <CategorySelector
               categories={store.categories}
               selectedId={watchCategoryId}
@@ -172,8 +201,7 @@ export const StuffTalentFormPage: React.FC = () => {
                 setValueCustom('categoryId', id)
               }}
             />
-
-            <InputNormal placeholder='제목' register={register('title', { required: true })}></InputNormal>
+            <XDivider className='bg-gray mt-4' />
             <InputNormal
               hidden={watchType !== StuffTalentType.SELL}
               type='number'
@@ -185,19 +213,6 @@ export const StuffTalentFormPage: React.FC = () => {
               placeholder='무엇과 교환하고 싶으신가요?'
               register={register('exchangeText')}
             ></InputNormal>
-            <div className='flex-between-center'>
-              <Checkbox
-                label='교환 가능'
-                defaultChecked={form.isExchangeable}
-                onChange={(checked) => setValueCustom('isExchangeable', checked)}
-              ></Checkbox>
-              <Checkbox
-                label='가격제안 가능'
-                defaultChecked={form.isNegotiable}
-                onChange={(checked) => setValueCustom('isNegotiable', checked)}
-              ></Checkbox>
-            </div>
-            <Pad className='h-5'></Pad>
             <Textarea
               rows={10}
               placeholder='물건/재능이 새로운 활용처를 찾을 수 있도록 자유롭게 소개해주세요 :)'
@@ -207,11 +222,11 @@ export const StuffTalentFormPage: React.FC = () => {
         </div>
       </IonContent>
       <IonFooter>
-        <div className='px-container flex-between-center height-56 shadow-sm'>
+        <div className='px-container flex-between-center h-11 shadow-sm'>
           {/* TODO: 카메라 플러그인 추가 */}
           <Icon
             name={watchImages?.length ? 'image-solid' : 'image'}
-            className='icon-primary'
+            className='icon-secondary'
             onClick={() => uploader.current?.click()}
           ></Icon>
           <Checkbox

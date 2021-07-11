@@ -7,7 +7,6 @@ import { route } from '../../services/route-service'
 import { webSocket } from '../../services/web-socket-service'
 import { executeWithError } from '../../utils/http-helper-util'
 import { InputPassword } from '../atoms/InputPasswordComponent'
-import { Pad } from '../atoms/PadComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
@@ -70,8 +69,9 @@ export const SignInEmail: FC = () => {
           minLength: { value: 6, message: '6자 이상 입력해주세요' },
         })}
       ></InputPassword>
-      <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
-      <Pad className='h-4'></Pad>
+      <div className='h-10 pt-1 px-3'>
+        <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
+      </div>
       <SpinnerWrapper
         task={$auth.signUp}
         Submit={<SubmitButton disabled={!formState.isValid} text='로그인'></SubmitButton>}

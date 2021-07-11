@@ -8,7 +8,7 @@ interface IIcon extends HTMLAttributes<HTMLElement> {
   size?: 'small' | 'medium' | 'large'
 }
 
-export const Icon = ({ name, className = '', onClick = () => {}, size = 'large' }: IIcon) => {
+export const Icon = ({ name, className = '', onClick = () => {}, size = 'medium' }: IIcon) => {
   return (
     <ReactSVG
       onClick={($evt: React.MouseEvent<HTMLElement, MouseEvent>) => onClick($evt)}
