@@ -137,16 +137,14 @@ export class StuffTalentStore {
       this.addParam(config, 'status', notStatuses.map((s) => 'not:' + s).join('_OR_'))
     types?.length > 0 && this.addParam(config, 'type', types.join('_OR_'))
 
-    if (isPublic) {
-      this.addParam(config, 'is-public', isPublic)
-    } else {
-      !!communityId && this.addParam(config, 'community-id', communityId)
-    }
+    this.addParam(config, 'is-public', isPublic)
+    !!communityId && this.addParam(config, 'community-id', communityId)
 
     !!search && this.addParam(config, 'title', 'like:' + search)
 
     this.addParam(config, 'limit', filter.limit)
 
+    console.log('storeeeeeeee', config)
     return config
   }
 
