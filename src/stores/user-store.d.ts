@@ -15,7 +15,7 @@ export type IUserDto = {
   mobile: string
   isPublicEmail: boolean
   isPublicMobile: boolean
-  role: USER_ROLE
+  roles: USER_ROLE
   isUse: boolean
   status: SIGN_UP_STATUS
   profileUrl: string
