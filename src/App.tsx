@@ -7,12 +7,10 @@ import { Toast } from './components/atoms/ToastComponent'
 import { config } from './config'
 import './global.scss'
 import { useStore } from './hooks/use-store'
-import { ISubChat } from './models/chat'
 import { SIGN_UP_STATUS } from './models/sign-up.d'
 import { RouterTab } from './RouterTab'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
-import { webSocket } from './services/web-socket-service'
 
 export const App: React.FC = () => {
   const { $community, $chat, $auth } = useStore()
@@ -34,22 +32,7 @@ export const App: React.FC = () => {
         route.signUpComplete()
       }
 
-      // 챗방 리스트 조회
-      // TODO: SignInEmailComponent.tsx의 코드와 중복됌. 하나로 합칠 필요가 있을듯
-      await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
-      // 웹소켓 연결
-      webSocket.init()
-      webSocket.connectRooms(
-        $chat.rooms.map((v) => v.id),
-        (data) => {
-          const subChat = JSON.parse(data.body) as ISubChat
-          $chat.setChat(subChat)
-          $chat.setLastChatId({
-            roomId: subChat.chatroom.id,
-            readChatId: subChat.id,
-          })
-        }
-      )
+      $chat.connectRooms()
     } else {
       if (!(await storage.getHaveSeenIntro())) {
         route.intro()

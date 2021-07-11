@@ -1,7 +1,9 @@
 import _ from 'lodash'
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
 import {
+  ChatRoomType,
   ChatType,
   IChat,
   IChatForm,
@@ -13,14 +15,9 @@ import {
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { webSocket } from '../services/web-socket-service'
-import {
-  GetChatRoomsTask,
-  IGetRooms,
-  IInsertChatMessage,
-  InsertChatMessageTask,
-  ISetReadChatId,
-  SetReadChatIdTask,
-} from './chat-store.d'
+import { AuthStore } from './auth-store'
+import { IInsertChatMessage, InsertChatMessageTask, ISetReadChatId, SetReadChatIdTask } from './chat-store.d'
+import { TaskBy } from './task'
 
 const initState = {
   rooms: [],
@@ -40,8 +37,63 @@ export class ChatStore {
    */
   @observable storeRooms: IStoreChatRoom[] = initState.storeRooms
 
+  $auth: AuthStore
+
+  constructor(rootStore: RootStore) {
+    this.$auth = rootStore.$auth
+  }
+
+  connectRooms = async () => {
+    await this.getRooms(this.$auth.user.chatroomIds)
+
+    // 웹소켓 연결
+    webSocket.init()
+    webSocket.connectRooms(
+      // 기존 채팅방
+      {
+        roomIds: this.rooms.map((v) => v.id),
+        cb: (data) => {
+          const subChat = JSON.parse(data.body) as ISubChat
+          this.setChat(subChat)
+          this.setLastChatId({
+            roomId: subChat.chatroom.id,
+            readChatId: subChat.id,
+          })
+        },
+      },
+      // 새로운 채팅방
+      {
+        userId: this.$auth.user.id,
+        cb: (data) => {
+          // 첫 채팅을 받는 경우
+          const subChat = JSON.parse(data.body) as ISubChat
+          // 새로 만들어진 채팅방을 구독상태로 한다.
+          webSocket.subscribeRoom(subChat.chatroom.id, (data) => {
+            const subChat = JSON.parse(data.body) as ISubChat
+            this.setChat(subChat)
+            this.setLastChatId({
+              roomId: subChat.chatroom.id,
+              readChatId: subChat.id,
+            })
+          })
+          // 기존 채팅방에 새로운 채팅룸 공간을 생성.
+          // 첫 채팅 데이터를 스토어에 저장한다.
+          this.setChat(subChat)
+          this.setLastChatId({
+            roomId: subChat.chatroom.id,
+            readChatId: subChat.id,
+          })
+        },
+      }
+    )
+  }
+
   @task
-  getRooms = (async ({ roomIds }: IGetRooms) => {
+  getRooms = (async (roomIds) => {
+    if (roomIds.length === 0) {
+      return
+    }
+
     await api
       .get<IChatRoomsDto>('/v1/chatrooms', {
         params: { ids: roomIds.toString() },
@@ -76,7 +128,49 @@ export class ChatStore {
           }
         })
       )
-  }) as GetChatRoomsTask
+  }) as TaskBy<number[]>
+
+  /**
+   * 해당 유저와 1:1 채팅을 생성합니다.
+   * @param targetUserId 상대방의 userId
+   */
+  @action
+  createChat = async (targetUserId: number) => {
+    const createdRoom = this.rooms.find(
+      (v) => v.type === ChatRoomType.NORMAL && v.users.some((user) => user.id === targetUserId)
+    )
+    if (createdRoom) {
+      return createdRoom.id
+    }
+
+    await api.post('/v1/chatrooms', {
+      type: ChatRoomType.NORMAL,
+      name: '-',
+      relationUserIds: [targetUserId, this.$auth.user.id].join(','),
+    })
+
+    const roomId = await this.getRoomIdBy(targetUserId)
+
+    if (!roomId) {
+      throw new Error('채팅 생성에 문제가 발생했습니다. 관리자에게 문의해주실래요?')
+    }
+    return roomId
+  }
+
+  /**
+   * 새로 생성된 roomId를 리턴합니다
+   * TODO : 추후 서버와 협의후 chat insert후 바로 roomId를 리턴하도록 수정
+   * @param targetUserId 1:1 채팅의 상대방 userId
+   */
+  async getRoomIdBy(targetUserId: number) {
+    await this.$auth.signInWithToken()
+    await this.getRooms(this.$auth.user.chatroomIds)
+    const newRoom = this.rooms.find(
+      (v) => v.type === ChatRoomType.NORMAL && v.users.some((u) => u.id === targetUserId)
+    )
+
+    return newRoom?.id
+  }
 
   @action
   setLastChatId = (async ({ roomId, readChatId }: ISetReadChatId) => {
