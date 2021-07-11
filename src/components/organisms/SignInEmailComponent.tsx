@@ -74,7 +74,7 @@ export const SignInEmail: FC = () => {
       <Pad className='h-4'></Pad>
       <SpinnerWrapper
         task={$auth.signUp}
-        Submit={() => <SubmitButton disabled={!formState.isValid} text='로그인'></SubmitButton>}
+        Submit={<SubmitButton disabled={!formState.isValid} text='로그인'></SubmitButton>}
       ></SpinnerWrapper>
     </form>
   ))

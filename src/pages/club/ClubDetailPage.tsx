@@ -47,7 +47,7 @@ export const ClubDetailPage: React.FC = () => {
           {!$club.club?.isMember ? (
             <SpinnerWrapper
               task={$club.joinClub}
-              Submit={() => (
+              Submit={
                 <SubmitButton
                   text='소모임 참여하기'
                   className='h-10'
@@ -57,7 +57,7 @@ export const ClubDetailPage: React.FC = () => {
                     // route.chatRoom($club.club.chatroomId)
                   }}
                 ></SubmitButton>
-              )}
+              }
             ></SpinnerWrapper>
           ) : (
             <SubmitButton

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation } from 'react-router-dom'
 import { Checkbox } from '../components/atoms/CheckboxComponent'
+import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { Icon } from '../components/atoms/IconComponent'
 import { InputNormal } from '../components/atoms/InputNormalComponent'
 import { Pad } from '../components/atoms/PadComponent'
@@ -22,8 +23,8 @@ export const StuffTalentFormPage: React.FC = () => {
   const { $ui, $stuff, $talent, $community } = useStore()
 
   const pageData = {
-    [StuffTalentPageKey.STUFF]: { store: $stuff, title: '물건' },
-    [StuffTalentPageKey.TALENT]: { store: $talent, title: '재능' },
+    [StuffTalentPageKey.STUFF]: { store: $stuff, title: '물건창고' },
+    [StuffTalentPageKey.TALENT]: { store: $talent, title: '재능창고' },
   }
 
   const { store, title } = pageData[getPageKey(useLocation().pathname)]
@@ -133,11 +134,7 @@ export const StuffTalentFormPage: React.FC = () => {
         <div slot='end'>
           <SpinnerWrapper
             task={store.insertItem}
-            Submit={() => (
-              <button slot='end' form='stufftalent-form' type='submit' disabled={!submittable}>
-                완료
-              </button>
-            )}
+            Submit={<HeaderSubmitText isSubmittable={submittable} onSubmit={onSubmit} />}
           ></SpinnerWrapper>
         </div>
       </Header>

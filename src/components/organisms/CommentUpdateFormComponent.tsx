@@ -38,7 +38,7 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
       <div className='ml-2'>
         <SpinnerWrapper
           task={$comment.updateComment}
-          Submit={() => (
+          Submit={
             <Icon
               name='send-solid'
               className='icon-secondary'
@@ -57,7 +57,7 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
                 }
               }}
             ></Icon>
-          )}
+          }
         ></SpinnerWrapper>
       </div>
     </div>

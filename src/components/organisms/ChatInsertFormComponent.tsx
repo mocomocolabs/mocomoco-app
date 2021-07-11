@@ -31,7 +31,7 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
       <div className='ml-2'>
         <SpinnerWrapper
           task={$chat.insertChatMessage}
-          Submit={() => (
+          Submit={
             <IonIcon
               icon={paperPlane}
               className='black'
@@ -41,7 +41,7 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
                 }
               }}
             ></IonIcon>
-          )}
+          }
         ></SpinnerWrapper>
       </div>
     </div>
