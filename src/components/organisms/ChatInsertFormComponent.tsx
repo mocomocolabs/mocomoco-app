@@ -1,8 +1,8 @@
-import { IonIcon, IonTextarea } from '@ionic/react'
-import { paperPlane } from 'ionicons/icons'
+import { IonTextarea } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
+import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
@@ -12,13 +12,14 @@ export interface IChatInsertForm {
 }
 
 export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = false }) => {
-  const { $chat } = useStore()
+  const { $chat, $user } = useStore()
 
   return useObserver(() => (
-    <div className='px-container py-2 flex items-center bg-white'>
-      <ProfileImage url='assets/mock/profile1.jpeg'></ProfileImage>
+    <div className='px-container py-2 flex items-center'>
+      <ProfileImage url={$user.user.profileUrl}></ProfileImage>
       <IonTextarea
-        className='ml-2 bg-m-gray br-lg px-3 black leading-8'
+        className='ml-2 br-20 pl-4 px-3 black leading-8 border-primary'
+        placeholder='내용을 입력해주세요'
         autoGrow={true}
         rows={1}
         value={$chat.form[roomId]?.message}
@@ -32,15 +33,15 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
         <SpinnerWrapper
           task={$chat.insertChatMessage}
           Submit={
-            <IonIcon
-              icon={paperPlane}
-              className='black'
+            <Icon
+              name='send-solid'
+              className={$chat.form[roomId]?.message ? 'icon-secondary' : 'icon-gray'}
               onClick={async () => {
                 if ($chat.form[roomId]?.message) {
-                  $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
+                  await $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
                 }
               }}
-            ></IonIcon>
+            ></Icon>
           }
         ></SpinnerWrapper>
       </div>

@@ -52,9 +52,7 @@ export const ChatRoomPage: React.FC = () => {
       </IonHeader>
 
       <IonContent>
-        <div className='px-container flex-col justify-end'>
-          <ChatRoomDetail roomId={roomId}></ChatRoomDetail>
-        </div>
+        <ChatRoomDetail></ChatRoomDetail>
       </IonContent>
 
       <IonFooter>
