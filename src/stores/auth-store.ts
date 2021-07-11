@@ -80,12 +80,7 @@ export class AuthStore {
       })
       .then(async (authUser: IAuthUserDto) => {
         this.setAuth(authUser)
-
-        await this.$user.getUser(authUser.id)
-        this.setUser({
-          ...authUser,
-          ...this.$user.user,
-        })
+        this.setUser(authUser)
       })
   }) as SignInTask
 
@@ -99,11 +94,7 @@ export class AuthStore {
       await storage.setAccessTokenForSync()
       try {
         await api.get<IAuthUserDto>(`/auth/account`).then(async (authUser) => {
-          await this.$user.getUser(authUser.id)
-          this.setUser({
-            ...authUser,
-            ...this.$user.user,
-          })
+          this.setUser(authUser)
         })
       } catch (e) {
         if (e.status === 401) {
