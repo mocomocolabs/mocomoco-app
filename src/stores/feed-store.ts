@@ -104,6 +104,7 @@ export class FeedStore {
   getFeedForm = (async (id: number) => {
     await api.get<IFeedDto>(`/v1/feeds/${id}`).then(
       action(async (dto) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const images: any = await Promise.all(dto.atchFiles?.map((v) => urlToFile(v.url)))
 
         this.setForm({
