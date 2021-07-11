@@ -23,3 +23,11 @@ input {
     outline: none;
   }
 }
+
+.inputnormal,
+.inputpassword {
+  @extend .w-full;
+  @extend .px-3;
+  @extend .py-3;
+  @extend .text-sm;
+}
