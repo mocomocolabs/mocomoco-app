@@ -3,11 +3,11 @@ import { TaskMethods } from 'mobx-task'
 import { ReactElement } from 'react'
 import { Spinner } from '../atoms/SpinnerComponent'
 
-// eslint-disable-next-line
 export const SpinnerWrapper = ({
   task,
   Submit,
 }: {
+  // eslint-disable-next-line
   task: TaskMethods<any, any>
   Submit: ReactElement
 }): JSX.Element =>
