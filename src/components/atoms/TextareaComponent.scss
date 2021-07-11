@@ -1,5 +1,13 @@
 @import '../../theme/variable';
 
-textarea::placeholder {
-  @extend %text-base;
+textarea {
+  @extend %text-sm;
+  border: 0;
+  outline: none;
+  line-height: 2rem;
+
+  &::placeholder {
+    margin: 0px;
+    padding: 0px;
+  }
 }
