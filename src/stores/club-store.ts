@@ -153,7 +153,6 @@ export class ClubStore {
     await api.post(`/v1/clubs-users`, {
       ...payload,
       role: 'ROLE_USER',
-      isUse: true,
     })
   }) as JoinClubTask
 

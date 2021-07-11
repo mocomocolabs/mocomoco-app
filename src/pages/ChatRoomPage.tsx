@@ -12,6 +12,7 @@ interface ILocationState {
 }
 
 export const ChatRoomPage: React.FC = () => {
+  // TODO: 1:1 개인 채팅시, 첫 채팅 후 채팅방이 생성되도록 수정 필요
   const roomId = parseInt(useParams<{ id: string }>().id)
   const autoFocus = useHistory<ILocationState>().location.state?.autoFocus
 
