@@ -13,17 +13,35 @@ class WebSocketService {
     this.stompClient.debug = (str) => console.log(str)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  connectRooms(roomIds: number[], cb: (data: any) => void) {
-    this.stompClient?.connect({ Authorization: storage.accessTokenForSync }, () =>
-      roomIds.forEach((v) => this.subscribeRoom(v, cb))
-    )
+  /**
+   * 채팅방을 구독합니다
+   * @param subscribeRooms 기존 채팅방을 구독
+   * @param subscribeNewChat 새로운 채팅방을 구독
+   */
+  connectRooms(
+    subscribeRooms: {
+      roomIds: number[]
+      cb: (data: any) => void
+    },
+    subscribeNewChat: {
+      userId: number
+      cb: (data: any) => void
+    }
+  ) {
+    this.stompClient?.connect({ Authorization: storage.accessTokenForSync }, () => {
+      subscribeRooms.roomIds.forEach((v) => this.subscribeRoom(v, subscribeRooms.cb))
+      this.subscribeFirstChat(subscribeNewChat.userId, subscribeNewChat.cb)
+    })
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscribeRoom(roomId: number, cb: (data: any) => void) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.stompClient?.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  subscribeFirstChat(userId: number, cb: (data: any) => void) {
+    this.stompClient?.subscribe(`/sub/chat/users/${userId}`, (data: any) => cb(data))
   }
 
   sendMessageForRoom(roomId: number, message: string) {

@@ -1,6 +1,8 @@
 import { FC } from 'react'
 import { IClubMember } from '../../models/club.d'
 import { ICommunity } from '../../models/community'
+import { route } from '../../services/route-service'
+import { executeWithError } from '../../utils/http-helper-util'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -9,9 +11,10 @@ import { TextSm } from '../atoms/TextSmComponent'
 export interface IClubDetailMember {
   members: IClubMember[]
   community: ICommunity
+  createChat: (userId: number) => Promise<number>
 }
 
-export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community }) => {
+export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community, createChat }) => {
   return members?.length ? (
     <div className='flex-col px-container'>
       <div className='flex mb-2'>
@@ -30,7 +33,18 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community }) 
               <TextSm className='gray'>{community.name}</TextSm>
             </div>
           </div>
-          {v.isAdmin && <Icon name='chat' className='icon-secondary'></Icon>}
+          {v.isAdmin && (
+            <Icon
+              name='chat'
+              className='icon-secondary'
+              onClick={async () => {
+                executeWithError(async () => {
+                  const roomId = await createChat(v.id)
+                  route.chatRoom(roomId)
+                })
+              }}
+            ></Icon>
+          )}
         </div>
       ))}
     </div>

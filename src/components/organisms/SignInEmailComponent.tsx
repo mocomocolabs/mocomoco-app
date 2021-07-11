@@ -2,9 +2,7 @@ import { useObserver } from 'mobx-react-lite'
 import { FC, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
-import { ISubChat } from '../../models/chat'
 import { route } from '../../services/route-service'
-import { webSocket } from '../../services/web-socket-service'
 import { executeWithError } from '../../utils/http-helper-util'
 import { InputPassword } from '../atoms/InputPasswordComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
@@ -37,22 +35,7 @@ export const SignInEmail: FC = () => {
       $auth
         .signIn($auth.signUpForm.email!, form.password)
         .then(async () => {
-          // TODO: App.tsx의 코드와 중복됌. 하나로 합칠 필요가 있을듯
-          // 챗방 리스트 조회
-          await $chat.getRooms({ roomIds: $auth.user.chatroomIds })
-          // websocket 연결
-          webSocket.init()
-          webSocket.connectRooms(
-            $chat.rooms.map((v) => v.id),
-            (data) => {
-              const subChat = JSON.parse(data.body) as ISubChat
-              $chat.setChat(subChat)
-              $chat.setLastChatId({
-                roomId: subChat.chatroom.id,
-                readChatId: subChat.id,
-              })
-            }
-          )
+          $chat.connectRooms()
         })
         .then(() => {
           route.home()
