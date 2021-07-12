@@ -4,7 +4,6 @@ import { task } from 'mobx-task'
 import { RootStore } from '.'
 import { IAuthUser } from '../models/auth'
 import { ISignUpForm } from '../models/sign-up'
-import { IUser } from '../models/user'
 import { api } from '../services/api-service'
 import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
@@ -125,12 +124,11 @@ export class AuthStore {
   }
 
   @action
-  setUser(user: IAuthUserDto & IUser) {
-    const { communities, chatroomUserIds } = user
+  setUser(user: IAuthUserDto) {
+    const { communities } = user
     this.user = {
       ...user,
       communityId: communities[0].id,
-      chatroomIds: chatroomUserIds,
     }
     this.setIsLogin()
   }
