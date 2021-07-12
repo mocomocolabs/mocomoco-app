@@ -1457,14 +1457,10 @@
 }
 
 .icon-rotate-180 {
-  svg {
-    transform: rotate(180deg);
-  }
+  transform: rotate(180deg);
 }
 .icon-rotate-270 {
-  svg {
-    transform: rotate(270deg);
-  }
+  transform: rotate(270deg);
 }
 
 .ripple-parent {
