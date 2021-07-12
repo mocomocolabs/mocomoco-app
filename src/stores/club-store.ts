@@ -8,7 +8,7 @@ import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
 import { IClubDto, IJoinClubDto, InsertClubTask, JoinClubTask } from './club-store.d'
-import { Task, TaskBy } from './task'
+import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
   club: {},
@@ -164,4 +164,31 @@ export class ClubStore {
       ...initState.form,
     }
   }
+
+  @task.resolved
+  toggleLike = (async (id: number, isLike: boolean) => {
+    await api.post('/v1/clubs-users/likes', {
+      clubId: id,
+      isLike,
+      isUse: true,
+    })
+
+    this.setLike(id, isLike)
+  }) as TaskBy2<number, boolean>
+
+  @action
+  setLike(clubId: number, isLike: boolean) {
+    this.club = this.updateMatchedClubsLike([this.club], clubId, isLike)[0]
+    this.popularClubs = this.updateMatchedClubsLike(this.popularClubs, clubId, isLike)
+    this.recentClubs = this.updateMatchedClubsLike(this.recentClubs, clubId, isLike)
+  }
+
+  updateMatchedClubsLike = (clubs: Club[], findClubId: number, isLike: boolean) =>
+    clubs.map((v) => (v.id === findClubId ? this.updateClubLike(v, isLike) : v))
+
+  updateClubLike = (v: Club, isLike: boolean) => ({
+    ...v,
+    isLike,
+    likeCount: isLike ? v.likeCount + 1 : v.likeCount - 1,
+  })
 }

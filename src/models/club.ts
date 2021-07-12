@@ -20,6 +20,9 @@ export class Club {
       hashtagNames: payload.clubHashtags.map((v) => v.hashtag.name),
       isMember: payload.clubUsers.some((v) => v.user.id === userId),
       isAdmin: payload.adminUsers.some((v) => v.id === userId),
+      // TODO: 임시 적용임. 서버 응답에 isLike 추가되면 이 부분 삭제하기.
+      isLike: payload.clubUsers.find((v) => v.user.id === userId)?.isLike || false,
+      likeCount: payload.clubUsers.filter((clubUser) => clubUser.isLike).length,
       chatroomId: payload.chatroom.id,
     })
   }

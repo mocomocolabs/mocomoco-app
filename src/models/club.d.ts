@@ -15,6 +15,8 @@ export interface IClub {
   isMember: boolean
   isAdmin: boolean
   isPublic: boolean
+  isLike: boolean
+  likeCount: number
   createdAt: string
   chatroomId: number
 }
