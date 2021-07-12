@@ -28,6 +28,7 @@ export class ClubStore {
   @observable.ref popularClubs: Club[] = []
   @observable.ref recentClubs: Club[] = []
   @observable.ref myClubs: Club[] = []
+  @observable.ref likeClubs: Club[] = []
   @observable.ref club: Club
   @observable.struct form: IClubForm = initState.form
 
@@ -69,6 +70,22 @@ export class ClubStore {
       .then(
         action((data) => {
           this.myClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
+        })
+      )
+  }) as Task
+
+  @task
+  getLikeClubs = (async () => {
+    // TODO: 페이징 처리 추후 구현
+    await api
+      .get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=created_at_desc&limit=999`)
+      .then(
+        action((data) => {
+          // TODO clubs api 바뀌면, 이 부분 교체하기
+          // this.likeClubs = data.clubs.filter((v) => v.isLike).map((v) => Club.of(v, this.$auth.user.id))
+          this.likeClubs = data.clubs
+            .filter((v) => v.clubUsers.some((cu) => cu.user.id === this.$auth.user.id && cu.isLike))
+            .map((v) => Club.of(v, this.$auth.user.id))
         })
       )
   }) as Task
@@ -178,17 +195,19 @@ export class ClubStore {
 
   @action
   setLike(clubId: number, isLike: boolean) {
-    this.club = this.updateMatchedClubsLike([this.club], clubId, isLike)[0]
-    this.popularClubs = this.updateMatchedClubsLike(this.popularClubs, clubId, isLike)
-    this.recentClubs = this.updateMatchedClubsLike(this.recentClubs, clubId, isLike)
+    this.club = this.updateClubLike(this.club, clubId, isLike)
+    this.popularClubs = this.popularClubs.map((club) => this.updateClubLike(club, clubId, isLike))
+    this.recentClubs = this.recentClubs.map((club) => this.updateClubLike(club, clubId, isLike))
+    this.myClubs = this.myClubs.map((club) => this.updateClubLike(club, clubId, isLike))
+    this.likeClubs = this.likeClubs.map((club) => this.updateClubLike(club, clubId, isLike))
   }
 
-  updateMatchedClubsLike = (clubs: Club[], findClubId: number, isLike: boolean) =>
-    clubs.map((v) => (v.id === findClubId ? this.updateClubLike(v, isLike) : v))
-
-  updateClubLike = (v: Club, isLike: boolean) => ({
-    ...v,
-    isLike,
-    likeCount: isLike ? v.likeCount + 1 : v.likeCount - 1,
-  })
+  updateClubLike = (club: Club, clubId: number, isLike: boolean) =>
+    club.id === clubId
+      ? {
+          ...club,
+          isLike,
+          likeCount: isLike ? club.likeCount + 1 : club.likeCount - 1,
+        }
+      : club
 }
