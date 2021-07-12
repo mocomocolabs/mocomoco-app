@@ -5,16 +5,16 @@ import { ISegments, SEGMENT_KEYS } from '../../models/segment'
 interface ISegment {
   segments: ISegments
   selected: SEGMENT_KEYS
-  setSelected: (segment: SEGMENT_KEYS) => void
+  onChange: (segment: SEGMENT_KEYS) => void
 }
 
 interface SegmentChangeEventDetail {
   value: string | undefined
 }
 
-export const Segment: React.FC<ISegment> = ({ segments, selected, setSelected }) => {
+export const Segment: React.FC<ISegment> = ({ segments, selected, onChange }) => {
   const onSegmentChanged = (e: CustomEvent<SegmentChangeEventDetail>) => {
-    setSelected(e.detail.value! as SEGMENT_KEYS)
+    onChange(e.detail.value! as SEGMENT_KEYS)
   }
 
   const segmentButtons = Object.entries(segments).map(([segmentKey, { label }]) => (
