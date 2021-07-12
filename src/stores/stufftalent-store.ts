@@ -143,8 +143,6 @@ export class StuffTalentStore {
     !!search && this.addParam(config, 'title', 'like:' + search)
 
     this.addParam(config, 'limit', filter.limit)
-
-    console.log('storeeeeeeee', config)
     return config
   }
 
