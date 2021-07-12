@@ -17,6 +17,7 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { Segment } from '../components/molecules/SegmentComponent'
+import { ClubOurTownList } from '../components/organisms/ClubOurTownListComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
@@ -38,13 +39,14 @@ const segments: ISegments = {
   [SEGMENT_KEYS.stuff]: { label: '물건창고' },
   [SEGMENT_KEYS.talent]: { label: '재능창고' },
   [SEGMENT_KEYS.feed]: { label: '이야기창고' },
+  [SEGMENT_KEYS.club]: { label: '소모임' },
 }
 
 const FilterMode = { none: 'none', type: '거래유형' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 export const MyPageLikeList: React.FC = () => {
-  const { $segment, $stuff, $talent, $feed, $ui } = useStore()
+  const { $segment, $stuff, $talent, $feed, $club, $ui } = useStore()
 
   const title = '관심 목록'
   const segment = useRef<SEGMENT_KEYS>($segment.likeListSegment)
@@ -61,6 +63,7 @@ export const MyPageLikeList: React.FC = () => {
     // TODO: 추후 페이징 처리
     limit: 999,
   }
+
   const [filter, setFilter] = useState<IStuffTalentFilter>(initialFilter)
   const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
   const onCloseFilterPopup = () => setFilterMode(FilterMode.none)
@@ -78,6 +81,8 @@ export const MyPageLikeList: React.FC = () => {
         return <StuffTalentList store={$talent} search={''} filter={filter} />
       case SEGMENT_KEYS.feed:
         return <FeedList fetchTask={$feed.getLikeFeeds} />
+      case SEGMENT_KEYS.club:
+        return <ClubOurTownList clubs={$club.likeClubs} />
       default:
         return <></> // TODO error 발생시켜야 하나?
     }
@@ -88,6 +93,8 @@ export const MyPageLikeList: React.FC = () => {
   }, [])
 
   useEffect(() => {
+    $segment.likeListSegment === SEGMENT_KEYS.club && $club.getLikeClubs()
+
     const disposeReaction = reaction(
       () => $segment.likeListSegment,
       (selectedSegment) => {
@@ -95,10 +102,14 @@ export const MyPageLikeList: React.FC = () => {
           segment.current = selectedSegment
           onResetFilter()
         }
+
+        // TODO clublistcomponent 안으로 옮길지 고민해보자
+        selectedSegment === SEGMENT_KEYS.club && $club.getLikeClubs()
       }
     )
 
     return () => {
+      console.log('관심목록 cleanup')
       disposeReaction()
     }
   }, [])

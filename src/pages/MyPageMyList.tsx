@@ -82,28 +82,26 @@ export const MyPageMyList: React.FC = () => {
     $ui.setIsBottomTab(true)
   }, [])
 
-  useEffect(
-    () => {
-      const disposeReaction = reaction(
-        () => $segment.myListSegment,
-        (selectedSegment) => {
-          if (segment.current !== selectedSegment) {
-            segment.current = selectedSegment
-            onResetFilter()
-          }
+  useEffect(() => {
+    $segment.myListSegment === SEGMENT_KEYS.club && $club.getLikeClubs()
 
-          // TODO clublistcomponent 안으로 옮길지 고민해보자
-          selectedSegment === SEGMENT_KEYS.club && $club.getMyClubs()
+    const disposeReaction = reaction(
+      () => $segment.myListSegment,
+      (selectedSegment) => {
+        if (segment.current !== selectedSegment) {
+          segment.current = selectedSegment
+          onResetFilter()
         }
-      )
 
-      return () => {
-        disposeReaction()
+        // TODO clublistcomponent 안으로 옮길지 고민해보자
+        selectedSegment === SEGMENT_KEYS.club && $club.getMyClubs()
       }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+    )
+
+    return () => {
+      disposeReaction()
+    }
+  }, [])
 
   return (
     <IonPage>
