@@ -12,7 +12,7 @@ export class StuffTalent {
       ...payload,
       likeCount: (payload[
         predefined.stuffTalentUsersProperty as keyof IStuffTalentDto
-      ] as IStuffTalentLikeUserDto[]).filter((likeUsers) => likeUsers.isLike && likeUsers.isUse).length,
+      ] as IStuffTalentLikeUserDto[]).filter((likeUsers) => likeUsers.isLike).length,
       imageUrls: payload.atchFiles.map((v) => v.url),
       chatroomId: (payload[
         predefined.stuffTalentUsersProperty as keyof IStuffTalentDto

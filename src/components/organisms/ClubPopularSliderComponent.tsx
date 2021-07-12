@@ -47,11 +47,23 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
                 <Icon name='time' className=''></Icon>
                 <TextXs className='ml-1'>{v.meetingPlace}</TextXs>
               </div>
-              {v.hashtagNames.length ? (
-                <TextXs className='secondary mt-2 ellipsis'>#{v.hashtagNames?.join(' #')}</TextXs>
-              ) : (
-                ''
-              )}
+              <div className='flex justify-between mt-2'>
+                <div className='ellipsis'>
+                  {v.hashtagNames.length ? (
+                    <TextXs className='secondary ellipsis'>#{v.hashtagNames.join(' #')}</TextXs>
+                  ) : (
+                    ''
+                  )}
+                </div>
+                <div className='flex-center self-end ml-1'>
+                  <Icon
+                    name={v.isLike ? 'heart-solid' : 'heart'}
+                    className='icon-secondary mr-1'
+                    size='small'
+                  />
+                  <TextXs className='secondary'>{v.likeCount}</TextXs>
+                </div>
+              </div>
             </div>
           </div>
         </IonSlide>

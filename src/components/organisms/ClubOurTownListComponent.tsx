@@ -39,9 +39,23 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
                   <TextXs className='ml-1'>{v.meetingTime}</TextXs>
                 </div>
               </div>
-              {v.hashtagNames.length && (
-                <TextXs className='secondary mt-2'>#{v.hashtagNames.join(' #')}</TextXs>
-              )}
+              <div className='flex justify-between mt-2'>
+                <div className='ellipsis'>
+                  {v.hashtagNames.length ? (
+                    <TextXs className='secondary ellipsis'>#{v.hashtagNames.join(' #')}</TextXs>
+                  ) : (
+                    ''
+                  )}
+                </div>
+                <div className='flex-center self-end ml-1'>
+                  <Icon
+                    name={v.isLike ? 'heart-solid' : 'heart'}
+                    className='icon-secondary mr-1'
+                    size='small'
+                  />
+                  <TextXs className='secondary'>{v.likeCount}</TextXs>
+                </div>
+              </div>
             </div>
           </div>
         ))

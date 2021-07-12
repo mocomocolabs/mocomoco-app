@@ -19,7 +19,7 @@ export interface IClubDto {
   description: string
   meetingTime: string
   meetingPlace: string
-  clubUsers: { user: IUserDto }[]
+  clubUsers: { user: IUserDto; isLike: boolean; isUse: boolean }[]
   chatroom: {
     id: number
   }
@@ -27,6 +27,7 @@ export interface IClubDto {
   community: ICommunityDto
   atchFiles: IFileDto[]
   isPublic: boolean
+  isLike: boolean
   clubHashtags: { hashtag: { name: string } }[]
   createdAt: string
 }
