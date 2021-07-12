@@ -8,5 +8,5 @@ export type SignInTask = TaskType<[string, string], void>
 export interface IAuthUserDto extends IUserDto {
   accessToken: string
   refreshToken: string
-  chatroomUserIds: []
+  chatroomIds: []
 }
