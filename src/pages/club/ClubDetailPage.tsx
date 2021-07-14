@@ -71,6 +71,7 @@ export const ClubDetailPage: React.FC = () => {
                           executeWithError(async () => {
                             await $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })
                             await $club.getClub(id)
+                            $chat.subscribeNewRoom($club.club.chatroomId)
                             route.chatRoom($club.club.chatroomId)
                           })
                         }}
@@ -81,7 +82,11 @@ export const ClubDetailPage: React.FC = () => {
                   <SubmitButton
                     text='채팅 참여하기'
                     className='bg-m-secondary'
-                    onClick={() => route.chatRoom($club.club.chatroomId)}
+                    onClick={() => {
+                      // 첫 채팅참여일 수 있음
+                      $chat.subscribeNewRoom($club.club.chatroomId)
+                      route.chatRoom($club.club.chatroomId)
+                    }}
                   ></SubmitButton>
                 )}
               </div>

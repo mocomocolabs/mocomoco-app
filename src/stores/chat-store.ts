@@ -60,11 +60,7 @@ export class ChatStore {
         roomIds: this.rooms.map((v) => v.id),
         cb: (data) => {
           const subChat = JSON.parse(data.body) as ISubscribeChat
-          this.setChat(subChat)
-          this.setLastChatId({
-            roomId: subChat.chatroom.id,
-            readChatId: subChat.id,
-          })
+          this.setChatAndMeta(subChat)
         },
       },
       // 새로운 채팅방
@@ -74,21 +70,11 @@ export class ChatStore {
           // 첫 채팅을 받는 경우
           const subChat = JSON.parse(data.body) as ISubscribeChat
           // 새로 만들어진 채팅방을 구독상태로 한다.
-          webSocket.subscribeRoom(subChat.chatroom.id, (data) => {
-            const subChat = JSON.parse(data.body) as ISubscribeChat
-            this.setChat(subChat)
-            this.setLastChatId({
-              roomId: subChat.chatroom.id,
-              readChatId: subChat.id,
-            })
-          })
+          this.subscribeNewRoom(subChat.chatroom.id)
+
           // 기존 채팅방에 새로운 채팅룸 공간을 생성.
           // 첫 채팅 데이터를 스토어에 저장한다.
-          this.setChat(subChat)
-          this.setLastChatId({
-            roomId: subChat.chatroom.id,
-            readChatId: subChat.id,
-          })
+          this.setChatAndMeta(subChat)
         },
       }
     )
@@ -96,7 +82,8 @@ export class ChatStore {
 
   @task
   getRooms = (async (roomIds) => {
-    if (roomIds.length === 0) {
+    console.log(roomIds)
+    if (!roomIds || roomIds.length === 0) {
       return
     }
 
@@ -160,6 +147,9 @@ export class ChatStore {
     if (!roomId) {
       throw new Error('채팅 생성에 문제가 발생했습니다. 관리자에게 문의해주실래요?')
     }
+
+    this.subscribeNewRoom(roomId)
+
     return roomId
   }
 
@@ -233,6 +223,32 @@ export class ChatStore {
 
     storage.setStoreChatRoom(this.storeRooms)
   }) as SetReadChatIdTask
+
+  @action
+  setChatAndMeta = (chat: ISubscribeChat) => {
+    // 기존 채팅방에 새로운 채팅룸 공간을 생성.
+    // 첫 채팅 데이터를 스토어에 저장한다.
+    this.setChat(chat)
+    this.setLastChatId({
+      roomId: chat.chatroom.id,
+      readChatId: chat.id,
+    })
+  }
+
+  subscribeRoom = (roomId: number) => {
+    webSocket.subscribeRoom(roomId, (data) => {
+      const subChat = JSON.parse(data.body) as ISubscribeChat
+      this.setChatAndMeta(subChat)
+    })
+  }
+
+  subscribeNewRoom = (roomId: number) => {
+    this.subscribeRoom(roomId)
+    const currentRoomIds = [...this.rooms.map((v) => v.id)]
+    if (!currentRoomIds.includes(roomId)) {
+      this.getRooms([roomId, ...currentRoomIds])
+    }
+  }
 
   @action
   setCurrentRoomId(roomId: number | null) {
