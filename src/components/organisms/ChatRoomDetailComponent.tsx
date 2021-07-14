@@ -14,7 +14,6 @@ export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({}) => {
   const { $chat, $auth } = useStore()
 
   const loadMore = useCallback(async () => {
-    // TODO: lastId 적용 안되는 버그 수정 필요
     await $chat.getChatMessages($chat.currentRoomId!, _.min($chat.room?.chats.map((v) => v.id))!)
   }, [])
 
