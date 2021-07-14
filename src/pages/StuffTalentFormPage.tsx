@@ -72,7 +72,7 @@ export const StuffTalentFormPage: React.FC = () => {
 
     const isChangedFromDefaultValues = Object.keys(dirtyFields).length > 0
 
-    return isValid && isValidType && isChangedFromDefaultValues
+    return isValid && isValidType && !(isUpdate && !isChangedFromDefaultValues)
   }, [isValid, watchType, watchPrice, watchExchangeText, Object.keys(dirtyFields)])
 
   const isSubmitCompleted = useRef(false)
