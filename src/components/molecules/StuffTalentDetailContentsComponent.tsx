@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { getLabel, statusLabels, typeLabels } from '../../models/stufftalent'
+import { getLabel, typeLabels } from '../../models/stufftalent'
 import { IStuffTalent, StuffTalentStatus, StuffTalentType } from '../../models/stufftalent.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
@@ -70,18 +70,8 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
 
   return (
     <div>
-      <div className='relative'>
-        <div
-          hidden={item.status === StuffTalentStatus.AVAILABLE}
-          className='flex-center w-full absolute z-20 text-bold text-base white'
-          style={{ height: 337 }}
-        >
-          {getLabel(statusLabels, item.status)}
-        </div>
-        <div className='relative z-10'>
-          <ImageSlider urls={item.imageUrls} dark={item.status !== StuffTalentStatus.AVAILABLE}></ImageSlider>
-        </div>
-      </div>
+      <ImageSlider urls={item.imageUrls} />
+      <Pad className='h-4' />
       <div className='px-container relative z-20' style={{ marginTop: '-20px' }}>
         <div className='flex items-center'>
           <SquareWithCorner
