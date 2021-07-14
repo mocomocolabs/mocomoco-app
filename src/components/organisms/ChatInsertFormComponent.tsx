@@ -2,6 +2,7 @@ import { IonTextarea } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
+import { scrollToBottom } from '../../utils/scroll-util'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
@@ -39,6 +40,7 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
               onClick={async () => {
                 if ($chat.form[roomId]?.message) {
                   await $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
+                  scrollToBottom()
                 }
               }}
             ></Icon>

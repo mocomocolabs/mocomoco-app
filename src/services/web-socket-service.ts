@@ -7,6 +7,7 @@ import { storage } from './storage-service'
 class WebSocketService {
   private wsUrl = config.SOCKET_URL
   private stompClient: CompatClient | null = null
+  private savedRoomIds: number[] = []
 
   init() {
     this.stompClient = Stomp.over(() => new SockJS(this.wsUrl))
@@ -36,11 +37,17 @@ class WebSocketService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscribeRoom(roomId: number, cb: (data: any) => void) {
-    this.stompClient?.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
+    if (!this.savedRoomIds.some((v) => v === roomId)) {
+      console.log('📡 subscribe roomId ', roomId)
+
+      this.savedRoomIds.push(roomId)
+      this.stompClient?.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscribeFirstChat(userId: number, cb: (data: any) => void) {
+    console.log('🗿 subscribe userId ', userId)
     this.stompClient?.subscribe(`/sub/chat/users/${userId}`, (data: any) => cb(data))
   }
 
