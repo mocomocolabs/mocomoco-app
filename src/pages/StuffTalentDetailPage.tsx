@@ -50,11 +50,11 @@ export const StuffTalentDetailPage: React.FC = () => {
     const dispose = when(
       () => store.getItem.state === 'resolved' && store.item?.user?.id === $auth.user.id,
       () => {
-        const _chatList = (store.item[
-          store.predefined.stuffTalentUsersProperty as keyof IStuffTalent
-        ] as IStuffTalentLikeUserDto[])?.map(
-          (user, index) => user.chatroom && <ChatRoomListItem key={index} room={user.chatroom} />
-        )
+        const _chatList = (
+          store.item[
+            store.predefined.stuffTalentUsersProperty as keyof IStuffTalent
+          ] as IStuffTalentLikeUserDto[]
+        )?.map((user, index) => user.chatroom && <ChatRoomListItem key={index} room={user.chatroom} />)
 
         _chatList && setChatList(_chatList)
       }

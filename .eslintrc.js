@@ -15,6 +15,7 @@ module.exports = {
     },
   },
   rules: {
+    'prettier/prettier': 'off', // eslint rule과 출돌하는 부분이 있음
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'off',
 

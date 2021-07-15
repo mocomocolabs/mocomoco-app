@@ -10,15 +10,13 @@ export class StuffTalent {
   static of(payload: IStuffTalentDto, predefined: IStuffTalentPredefined, loginUserId: number) {
     return Object.assign(new StuffTalent(), {
       ...payload,
-      likeCount: (payload[
-        predefined.stuffTalentUsersProperty as keyof IStuffTalentDto
-      ] as IStuffTalentLikeUserDto[]).filter((likeUsers) => likeUsers.isLike).length,
+      likeCount: (
+        payload[predefined.stuffTalentUsersProperty as keyof IStuffTalentDto] as IStuffTalentLikeUserDto[]
+      ).filter((likeUsers) => likeUsers.isLike).length,
       imageUrls: payload.atchFiles.map((v) => v.url),
-      chatroomId: (payload[
-        predefined.stuffTalentUsersProperty as keyof IStuffTalentDto
-      ] as IStuffTalentLikeUserDto[]).find(
-        (likeUsers) => likeUsers.isUse && likeUsers.user?.id === loginUserId
-      )?.chatroom?.id,
+      chatroomId: (
+        payload[predefined.stuffTalentUsersProperty as keyof IStuffTalentDto] as IStuffTalentLikeUserDto[]
+      ).find((likeUsers) => likeUsers.isUse && likeUsers.user?.id === loginUserId)?.chatroom?.id,
     })
   }
 }
