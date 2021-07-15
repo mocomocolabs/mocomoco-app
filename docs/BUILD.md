@@ -24,9 +24,10 @@ https://capacitorjs.com/docs/ios
 - build & sync
 
 ```
+// 소스파일 빌드
 $ yarn build
 
-// ios platform 추가
+// ios or android platform 추가
 $ npx cap add ios
 
 // update dependencies and copies any web assets to your project
@@ -60,17 +61,9 @@ https://www.joshmorony.com/deploying-capacitor-applications-to-android-developme
 
 - ios distribution key : 
 
-- keystore 파일이 필요하면 저한테 문의해주세요.
+- keystore 파일은 배포담당자에게 문의
 
 - 빌드 결과 파일은 `mocomoco-app/android/app/release` 에 위치
-
-# npx cap sync, npx cap copy, npx cap update 차이
-
-- copy : 소스 변경시
-
-- update : capacitor 및 cordova 플러그인 변경시
-
-- sync : copy + update
 
 # 스플래시 스크린 생성
 
@@ -79,3 +72,7 @@ https://apetools.webprofusion.com/#/tools/imagegorilla
 # 아이콘/Splash screen 등록
 
 https://www.joshmorony.com/adding-icons-splash-screens-launch-images-to-capacitor-projects/
+
+# 디버깅
+- Android - 크롬 브라우저에서 `chrome://inspect` 입력
+- iOS - 사파리 브라우저의 develop을 통해 가능 
