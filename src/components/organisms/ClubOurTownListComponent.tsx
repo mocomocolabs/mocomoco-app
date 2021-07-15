@@ -21,7 +21,12 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
             key={v.id}
             onClick={() => route.clubDetail(v.id)}
           >
-            <ImageWithCorner height={160} url={v.imageUrls[0]} isRoundTop={true}></ImageWithCorner>
+            <ImageWithCorner
+              height={160}
+              url={v.imageUrls[0]}
+              isRoundTop={true}
+              radiusSize={12}
+            ></ImageWithCorner>
             <div className='flex-col px-3 ml-0 br-b-xxlg text-left'>
               <TextBase className='text-bold'>{v.name}</TextBase>
               <div className='flex'>
@@ -34,7 +39,23 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
                   <TextXs className='ml-1'>{v.meetingTime}</TextXs>
                 </div>
               </div>
-              {v.hashtagNames.length && <TextXs className='green mt-2'>#{v.hashtagNames.join(' #')}</TextXs>}
+              <div className='flex justify-between mt-2'>
+                <div className='ellipsis'>
+                  {v.hashtagNames.length ? (
+                    <TextXs className='secondary ellipsis'>#{v.hashtagNames.join(' #')}</TextXs>
+                  ) : (
+                    ''
+                  )}
+                </div>
+                <div className='flex-center self-end ml-1'>
+                  <Icon
+                    name={v.isLike ? 'heart-solid' : 'heart'}
+                    className='icon-secondary mr-1'
+                    size='small'
+                  />
+                  <TextXs className='secondary'>{v.likeCount}</TextXs>
+                </div>
+              </div>
             </div>
           </div>
         ))

@@ -3,25 +3,31 @@ import { task } from 'mobx-task'
 import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { Feed } from '../models/feed'
-import { FEED_TYPE, IFeed, IFeedForm } from '../models/feed.d'
+import { FEED_TYPE, IFeed, IFeedForm, IFeedSchedule } from '../models/feed.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
-import { IFeedDto, SaveFeedTask } from './feed-store.d'
+import { IFeedDto, IFeedScheduleDto, SaveFeedTask } from './feed-store.d'
 import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
   feeds: [],
-  /* eslint-disable */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   feed: {} as any,
   form: {
+    type: FEED_TYPE.NORMAL,
+    communityId: 0,
     title: '',
     content: '',
+    images: [],
+    isPublic: false,
   } as IFeedForm,
 }
 
 export class FeedStore {
   @observable.ref feeds: IFeed[] = initState.feeds
+  @observable.ref homeFeeds: IFeed[] = []
+  @observable.ref homeScheduleFeeds: IFeedSchedule[] = []
   @observable.ref feed: IFeed = initState.feed
   @observable.struct form: IFeedForm = initState.form
   @observable deleted = false
@@ -35,7 +41,7 @@ export class FeedStore {
   @task
   getFeeds = (async () => {
     await api
-      .get<{ feeds: IFeedDto[] }>(`/feeds?community-id=${this.$auth.user.communityId}&is-use=true`)
+      .get<{ feeds: IFeedDto[] }>(`/v1/feeds?community-id=${this.$auth.user.communityId}&is-use=true`)
       .then(
         action((data) => {
           this.feeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
@@ -45,19 +51,49 @@ export class FeedStore {
 
   @task
   getMyFeeds = (async () => {
-    //TODO use query instead of filter
-    await api.get<{ feeds: IFeedDto[] }>('/feeds').then(
+    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds?user-id=${this.$auth.user.id}`).then(
       action((data) => {
-        this.feeds = data.feeds
-          .filter((feed) => feed.user.id === this.$auth.user.id)
-          .map((v) => Feed.of(v, this.$auth.user.id))
+        this.feeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
       })
     )
   }) as Task
 
   @task
+  getLikeFeeds = (async () => {
+    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds`).then(
+      action((data) => {
+        this.feeds = data.feeds.filter((v) => v.isLike).map((v) => Feed.of(v, this.$auth.user.id))
+      })
+    )
+  }) as Task
+
+  @task
+  getHomeFeeds = (async () => {
+    await api
+      .get<{ feeds: IFeedDto[] }>(
+        `/v1/feeds?community-id=${this.$auth.user.communityId}&is-use=true&limit=10`
+      )
+      .then(
+        action((data) => {
+          this.homeFeeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
+        })
+      )
+  }) as Task
+
+  @task
+  getHomeScheduleFeeds = (async () => {
+    await api
+      .get<{ schedules: IFeedScheduleDto[] }>(`/v1/schedules?sort-order=start-date-time_asc&limit=3`)
+      .then(
+        action((data) => {
+          this.homeScheduleFeeds = data.schedules.map((v) => Feed.scheduleOf(v)!)
+        })
+      )
+  }) as Task
+
+  @task
   getFeed = (async (id: number) => {
-    await api.get<IFeedDto>(`/feeds/${id}`).then(
+    await api.get<IFeedDto>(`/v1/feeds/${id}`).then(
       action((v) => {
         this.feed = Feed.of(v, this.$auth.user.id)
       })
@@ -66,16 +102,14 @@ export class FeedStore {
 
   @task
   getFeedForm = (async (id: number) => {
-    await api.get<IFeedDto>(`/feeds/${id}`).then(
-      action(async (data) => {
-        console.log(data)
-
-        const images: any = await Promise.all(data.atchFiles?.map((v) => urlToFile(v.url)))
+    await api.get<IFeedDto>(`/v1/feeds/${id}`).then(
+      action(async (dto) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const images: any = await Promise.all(dto.atchFiles?.map((v) => urlToFile(v.url)))
 
         this.setForm({
-          ...data,
-          scheduleDate: data.scheduleDate.substr(0, 8),
-          scheduleTime: data.scheduleDate.substr(8),
+          ...dto,
+          schedule: Feed.scheduleOf(dto.schedule),
           images,
         })
       })
@@ -101,12 +135,22 @@ export class FeedStore {
       )
     )
 
-    await api.patch(`/feeds/${id}/is-use`, formData)
+    await api.patch(`/v1/feeds/${id}/is-use`, formData)
   }) as TaskBy<number>
 
   @task.resolved
   saveFeed = (async (form: IFeedForm, isUpdate: boolean) => {
     const formData = new FormData()
+
+    if (
+      form.schedule &&
+      (!form.schedule.startDate ||
+        !form.schedule.startTime ||
+        !form.schedule.endDate ||
+        !form.schedule.endTime)
+    ) {
+      throw new Error('일정 입력을 완성해주세요')
+    }
 
     formData.append(
       'feedReqDto',
@@ -116,10 +160,12 @@ export class FeedStore {
             id: form.id,
             communityId: form.communityId,
             type: form.type,
-            ...(form.type === FEED_TYPE.SCHEDULE && {
-              scheduleTitle: form.scheduleTitle,
-              scheduleDate: form.scheduleDate + form.scheduleTime,
-            }),
+            schedule: form.schedule && {
+              title: form.schedule.title,
+              place: form.schedule.place,
+              startDateTime: form.schedule.startDate + form.schedule.startTime!,
+              endDateTime: form.schedule.endDate + form.schedule.endTime!,
+            },
             title: form.title,
             content: form.content,
             isPublic: form.isPublic,
@@ -137,29 +183,31 @@ export class FeedStore {
     })
 
     if (isUpdate) {
-      await api.put('/feeds', formData)
+      await api.put('/v1/feeds', formData)
     } else {
-      await api.post(`/feeds`, formData)
+      await api.post(`/v1/feeds`, formData)
     }
-    this.resetForm()
   }) as SaveFeedTask
 
   @task.resolved
   toggleFeedLike = (async (feedId: number, isLike: boolean) => {
-    await api.post('/feeds-users/likes', { feedId, isLike, isUse: true })
+    await api.post('/v1/feeds-users/likes', { feedId, isLike, isUse: true })
     this.setFeedLike(feedId, isLike)
   }) as TaskBy2<number, boolean>
 
   @action
   setFeedLike(id: number, isLike: boolean) {
-    let found = this.feeds.find((v) => v.id === id)
+    // TODO store의 현재 items와 item 데이터를 둘다 갱신해야 돼서 이렇게 구현했는데, 보기에 개운하지 않음.
+    const found = this.feed.id === id ? this.feed : this.feeds.find((v) => v.id === id)
 
     if (found) {
       const likeCount = isLike ? found.likeCount + 1 : found.likeCount - 1
-      // TODO: feeds의 일부 프로퍼티가 변경되어도 리렌더가 되지 않는다. 원인 파악 필요
+
       this.feeds = this.feeds.map((v) => {
-        return v.id === id ? { ...found!, isLike, likeCount } : v
+        return v.id === id ? { ...found!, isLike: isLike, likeCount: likeCount } : v
       })
+
+      this.feed = this.feed.id === id ? { ...this.feed, isLike: isLike, likeCount: likeCount } : this.feed
     }
   }
 
@@ -167,6 +215,14 @@ export class FeedStore {
   setForm(data: Partial<IFeedForm>) {
     this.form = {
       ...this.form,
+      ...data,
+    }
+  }
+
+  @action
+  setFormSchedule(data: Partial<IFeedSchedule>) {
+    this.form.schedule = {
+      ...this.form.schedule,
       ...data,
     }
   }

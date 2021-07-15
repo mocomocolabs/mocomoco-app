@@ -46,12 +46,7 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
   const submittable = useMemo(
     () => isValid && Object.keys(dirtyFields).length > 0,
 
-    [
-      isValid,
-      dirtyFields,
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      Object.keys(dirtyFields).length,
-    ]
+    [isValid, dirtyFields, Object.keys(dirtyFields).length]
   )
 
   useEffect(() => {
@@ -76,8 +71,9 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
     [$ui, $user]
   )
 
+  const taskGroup = [$user.getUser, $user.updateUser]
   // eslint-disable-next-line
-  const observableTaskGroup = TaskGroup<any[], void | boolean>([$user.getUser, $user.updateUser])
+  const observableTaskGroup = TaskGroup<any[], void | boolean>(taskGroup)
 
   useEffect(() => {
     $user.getUser(userId)
@@ -95,6 +91,10 @@ export const ProfileUpdateFormComponent: React.FC<IProfileUpdateForm> = ({
             <ProfileUpdateInput fields={{ control, errors, register, getValues }} />
           </form>
         )
+      },
+      rejected: () => {
+        taskGroup.forEach((task) => task.reset())
+        return <></>
       },
     })
   )

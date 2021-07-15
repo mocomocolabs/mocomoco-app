@@ -1,8 +1,7 @@
-import { IonIcon, useIonViewWillLeave } from '@ionic/react'
-import { closeCircle } from 'ionicons/icons'
 import { FC, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { compress } from '../../utils/image-compressor'
+import { Icon } from '../atoms/IconComponent'
 import './ImageUploaderComponent.scss'
 
 // eslint-disable-next-line
@@ -37,13 +36,12 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
 
   useEffect(() => {
     setImages(images.map((v, i) => assignPreview(v, i)))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  useIonViewWillLeave(() => {
-    // revokeObjectURL을 통해 해제하지 않으면 기존 URL를 유효하다고 판단하고 자바스크립트 엔진에서 GC 되지 않습니다
-    images.forEach((image) => URL.revokeObjectURL(image.preview))
-  })
+    return () => {
+      // revokeObjectURL을 통해 해제하지 않으면 기존 URL를 유효하다고 판단하고 자바스크립트 엔진에서 GC 되지 않습니다
+      images.forEach((image) => URL.revokeObjectURL(image.preview))
+    }
+  }, [])
 
   return (
     <section>
@@ -52,11 +50,11 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
       </div>
       {images?.map((image) => (
         <div className={`${className} uploader-item relative mr-1`} key={image.name}>
-          <IonIcon
-            icon={closeCircle}
-            className='absolute right-0 top-0'
+          <Icon
+            name='delete'
+            className='absolute mr-2 mt-2 right-0 top-0 icon-24'
             onClick={() => setImages(images.filter((v) => v.id !== image.id))}
-          ></IonIcon>
+          ></Icon>
           <img src={image.preview} alt='' className='h-full w-auto br-md' />
         </div>
       ))}

@@ -4,10 +4,9 @@ import { useStore } from '../../hooks/use-store'
 import { IComment } from '../../models/comment'
 import { timeDiff } from '../../utils/datetime-util'
 import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
-import { Profile } from '../atoms/ProfileComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { TextSm } from '../atoms/TextSmComponent'
 import { XDivider } from '../atoms/XDividerComponent'
+import { ProfileCard } from './ProfileCardComponent'
 
 export interface ICommentItem {
   comment: IComment
@@ -30,22 +29,23 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
 
   return useObserver(() => (
     <>
-      <div className='flex'>
-        <Profile key={comment.id} url={comment.user.profileUrl}></Profile>
-        <div className='flex-col flex-1'>
-          <div className='flex-between-center'>
-            <TextBase>{comment.user.nickname}</TextBase>
-            <div className='flex items-center'>
-              <TextSm className='gray'>{timeDiff(comment.createdAt)}</TextSm>
-              <OverflowMenuIcon
-                show={showOverlowMenu}
-                onDelete={() => onDelete(comment.id)}
-                onEdit={() => onEdit(comment.id, comment.content)}
-              />
-            </div>
-          </div>
-          <TextBase>{comment.content}</TextBase>
+      <div className='flex-col'>
+        <div className='flex-between-center mb-2'>
+          <ProfileCard
+            userId={comment.user.id}
+            profileUrl={comment.user.profileUrl}
+            communityName={comment.user.communities[0]?.name}
+            nickname={comment.user.nickname}
+            extraText={timeDiff(comment.createdAt)}
+          ></ProfileCard>
+
+          <OverflowMenuIcon
+            show={showOverlowMenu}
+            onDelete={() => onDelete(comment.id)}
+            onEdit={() => onEdit(comment.id, comment.content)}
+          />
         </div>
+        <TextBase className='ml-13'>{comment.content}</TextBase>
       </div>
       <XDivider></XDivider>
     </>

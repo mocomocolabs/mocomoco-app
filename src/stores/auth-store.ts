@@ -1,13 +1,16 @@
 import Inko from 'inko'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
 import { IAuthUser } from '../models/auth'
 import { ISignUpForm } from '../models/sign-up'
 import { api } from '../services/api-service'
 import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
+import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy } from './task'
+import { UserStore } from './user-store'
 
 const inko = new Inko()
 
@@ -24,6 +27,12 @@ export class AuthStore {
   @observable isLogin = false
   @observable.struct user: IAuthUser = initState.user
 
+  $user: UserStore
+
+  constructor(rootStore: RootStore) {
+    this.$user = rootStore.$user
+  }
+
   @action
   setIsLogin() {
     this.isLogin = true
@@ -39,7 +48,7 @@ export class AuthStore {
 
   @task.resolved
   checkEmail = (async (email: string) => {
-    return api.post(`http://localhost:8080/api/sys/users/exists`, { email })
+    return http.post(`/sys/users/exists`, { email })
   }) as TaskBy<string>
 
   @task.resolved
@@ -56,21 +65,21 @@ export class AuthStore {
     }
 
     // TODO: 제거필요
-    param.mobile = '123456789'
+    param.mobile = '_'
 
-    return api.post(`http://localhost:8080/api/auth/sign-up`, param)
+    return http.post(`/auth/sign-up`, param)
   }) as SignUpTask
 
   @task.resolved
   signIn = (async (email: string, password: string) => {
-    await api
-      .post<IAuthUserDto>(`http://localhost:8080/api/auth/sign-in`, {
+    await http
+      .post<IAuthUserDto>(`/auth/sign-in`, {
         email,
         password: inko.ko2en(password),
       })
-      .then((user: IAuthUserDto) => {
-        this.setAuth(user)
-        this.setUser(user)
+      .then(async (authUser: IAuthUserDto) => {
+        this.setAuth(authUser)
+        this.setUser(authUser)
       })
   }) as SignInTask
 
@@ -83,18 +92,23 @@ export class AuthStore {
       api.setAuthoriationBy(hasToken)
       await storage.setAccessTokenForSync()
       try {
-        await api.get<IAuthUserDto>(`http://localhost:8080/api/auth/account`).then((user) => {
-          this.setUser(user)
+        await api.get<IAuthUserDto>(`/auth/account`).then(async (authUser) => {
+          this.setUser(authUser)
         })
       } catch (e) {
-        if (e.status === 405) {
+        if (e.status === 401) {
+          // TODO: action 분리
           const refreshToken = await storage.getRefreshToken()
           api.setAuthoriationBy(refreshToken)
-          api.post<IAuthUserDto>(`http://localhost:8080/api/auth/refresh-token`, {}).then((user) => {
-            this.setAuth(user)
-          })
-        } else {
-          route.signIn()
+          api
+            .post<IAuthUserDto>(`/auth/refresh-token`, {})
+            .then((user) => {
+              this.setAuth(user)
+            })
+            .catch(() => {
+              // TODO: 컴포넌트단에서 라우팅하는 것이 코드파악에 용이함
+              route.signUp()
+            })
         }
       }
     }
@@ -111,8 +125,11 @@ export class AuthStore {
 
   @action
   setUser(user: IAuthUserDto) {
-    const { id, communities, chatroomUserIds } = user
-    this.user = { id, communityId: communities[0].id, chatroomIds: chatroomUserIds }
+    const { communities } = user
+    this.user = {
+      ...user,
+      communityId: communities[0].id,
+    }
     this.setIsLogin()
   }
 }

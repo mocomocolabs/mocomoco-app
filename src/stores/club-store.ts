@@ -8,7 +8,7 @@ import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
 import { IClubDto, IJoinClubDto, InsertClubTask, JoinClubTask } from './club-store.d'
-import { Task, TaskBy } from './task'
+import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
   club: {},
@@ -28,6 +28,7 @@ export class ClubStore {
   @observable.ref popularClubs: Club[] = []
   @observable.ref recentClubs: Club[] = []
   @observable.ref myClubs: Club[] = []
+  @observable.ref likeClubs: Club[] = []
   @observable.ref club: Club
   @observable.struct form: IClubForm = initState.form
 
@@ -38,23 +39,25 @@ export class ClubStore {
   }
 
   @task
-  getPopularClubs = (async () => {
+  getPopularClubs = (async (limit: number) => {
     // TODO: 페이징 처리 추후 구현
-    await api.get<{ clubs: IClubDto[]; count: number }>(`/clubs?sort-order=popular&limit=999`).then(
+    await api.get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=popular&limit=${limit}`).then(
       action((data) => {
         this.popularClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
       })
     )
-  }) as Task
+  }) as TaskBy<number>
 
   @task
   getRecentClubs = (async () => {
     // TODO: 페이징 처리 추후 구현
-    await api.get<{ clubs: IClubDto[]; count: number }>(`/clubs?sort-order=created_at_desc&limit=999`).then(
-      action((data) => {
-        this.recentClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
-      })
-    )
+    await api
+      .get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=created_at_desc&limit=999`)
+      .then(
+        action((data) => {
+          this.recentClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
+        })
+      )
   }) as Task
 
   @task
@@ -62,7 +65,7 @@ export class ClubStore {
     // TODO: 페이징 처리 추후 구현
     await api
       .get<{ clubs: IClubDto[]; count: number }>(
-        `http://localhost:8080/api/v1/clubs/users/${this.$auth.user.id}?sort-order=created_at_desc&limit=999`
+        `/v1/clubs/users/${this.$auth.user.id}?sort-order=created_at_desc&limit=999`
       )
       .then(
         action((data) => {
@@ -72,8 +75,24 @@ export class ClubStore {
   }) as Task
 
   @task
+  getLikeClubs = (async () => {
+    // TODO: 페이징 처리 추후 구현
+    await api
+      .get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=created_at_desc&limit=999`)
+      .then(
+        action((data) => {
+          // TODO clubs api 바뀌면, 이 부분 교체하기
+          // this.likeClubs = data.clubs.filter((v) => v.isLike).map((v) => Club.of(v, this.$auth.user.id))
+          this.likeClubs = data.clubs
+            .filter((v) => v.clubUsers.some((cu) => cu.user.id === this.$auth.user.id && cu.isLike))
+            .map((v) => Club.of(v, this.$auth.user.id))
+        })
+      )
+  }) as Task
+
+  @task
   getClub = (async (id: number) => {
-    await api.get<IClubDto>(`/clubs/${id}`).then(
+    await api.get<IClubDto>(`/v1/clubs/${id}`).then(
       action((data) => {
         this.club = Club.of(data, this.$auth.user.id!)
       })
@@ -118,22 +137,20 @@ export class ClubStore {
     )
 
     if (form.images.length === 0) {
-      // TODO: empty image 추가
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      form.images = [(await urlToFile('/assets/img/club/club01.jpg')) as any]
+      form.images = [(await urlToFile('/assets/img/no-image.png')) as any]
     }
 
     form.images?.forEach((v) => {
       formData.append('files', v)
     })
 
-    await api.post(`/clubs`, formData)
-    this.resetForm()
+    await api.post(`/v1/clubs`, formData)
   }) as InsertClubTask
 
   @task.resolved
   joinClub = (async (payload: IJoinClubDto) => {
-    await api.post(`/clubs-users`, {
+    await api.post(`/v1/clubs-users`, {
       ...payload,
       role: 'ROLE_USER',
       isUse: true,
@@ -158,6 +175,39 @@ export class ClubStore {
 
   @action
   resetForm() {
-    this.form = initState.form
+    console.log('reset??')
+
+    this.form = {
+      ...initState.form,
+    }
   }
+
+  @task.resolved
+  toggleLike = (async (id: number, isLike: boolean) => {
+    await api.post('/v1/clubs-users/likes', {
+      clubId: id,
+      isLike,
+      isUse: true,
+    })
+
+    this.setLike(id, isLike)
+  }) as TaskBy2<number, boolean>
+
+  @action
+  setLike(clubId: number, isLike: boolean) {
+    this.club = this.updateClubLike(this.club, clubId, isLike)
+    this.popularClubs = this.popularClubs.map((club) => this.updateClubLike(club, clubId, isLike))
+    this.recentClubs = this.recentClubs.map((club) => this.updateClubLike(club, clubId, isLike))
+    this.myClubs = this.myClubs.map((club) => this.updateClubLike(club, clubId, isLike))
+    this.likeClubs = this.likeClubs.map((club) => this.updateClubLike(club, clubId, isLike))
+  }
+
+  updateClubLike = (club: Club, clubId: number, isLike: boolean) =>
+    club.id === clubId
+      ? {
+          ...club,
+          isLike,
+          likeCount: isLike ? club.likeCount + 1 : club.likeCount - 1,
+        }
+      : club
 }

@@ -1,29 +1,30 @@
 // color
-$yellow: #fcbb15;
-$m-yellow: #ffed53;
-$d-yellow: #e4e1d9;
+$primary: #fecb3d;
+$m-primary: #fee59e;
+$s-primary: #fff5d8;
 
-$green: #249f8e;
-$m-green: #60d1be;
-$d-green: #007061;
+$secondary: #7e549e;
+$m-secondary: #a587bb;
+$s-secondary: #f2eef5;
 
-$black: #2c0f0f;
+$black: #212121;
 
 $gray: #9e9e9e;
-$d-gray: #666666;
+$d-gray: #554653;
+$s-gray: rgba(158, 158, 158, 0.1);
 
-$red: #f5493e;
-$m-red: #f19a95;
+$red: #e74c3c;
 
 $white: #ffffff;
 
-$padding-container: 1.6rem;
+$padding-container: 2rem;
 %px-container {
   padding-left: $padding-container;
   padding-right: $padding-container;
 }
 $padding-bottom-extra-space: 6rem;
 
+$text-xxs-size: 1rem;
 $text-xs-size: 1.2rem;
 $text-sm-size: 1.4rem;
 $text-base-size: 1.6rem;
@@ -32,6 +33,10 @@ $text-xl-size: 2.2rem;
 $text-xxl-size: 2.4rem;
 $text-xxxl-size: 3rem;
 
+%text-xxs {
+  font-size: $text-xxs-size;
+  line-height: 140%;
+}
 %text-xs {
   font-size: $text-xs-size;
   line-height: 140%;

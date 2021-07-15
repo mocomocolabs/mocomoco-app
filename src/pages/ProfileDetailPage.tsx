@@ -1,30 +1,19 @@
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  useIonViewWillEnter,
-  useIonViewWillLeave,
-} from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import { RouteComponentProps } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ProfileDetail } from '../components/molecules/ProfileDetailComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
 
-export const ProfileDetailPage: React.FC<RouteComponentProps<{ id: string }>> = ({ match }) => {
-  const userId: number = parseInt(match.params.id)
+export const ProfileDetailPage: React.FC = () => {
+  const userId = parseInt(useParams<{ id: string }>().id)
   const { $ui, $auth } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(false)
-  })
-
-  useIonViewWillLeave(() => {
-    $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   return (
     <IonPage>

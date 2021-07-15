@@ -17,7 +17,7 @@ export class UserStore {
 
   @task
   getUser = (async (userId: number) => {
-    await api.get<IUser>(`http://localhost:8080/api/sys/users/${userId}`).then(
+    await api.get<IUser>(`/sys/users/${userId}`).then(
       action((data) => {
         this.setUser(data)
       })
@@ -32,7 +32,7 @@ export class UserStore {
   @task.resolved
   updateUser = (async (user: IUser) => {
     try {
-      await api.patch(`http://localhost:8080/api/sys/users`, user)
+      await api.patch(`/sys/users`, user)
     } catch (e) {
       console.log('updateUser', e)
       return false

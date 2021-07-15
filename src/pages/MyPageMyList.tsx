@@ -1,100 +1,33 @@
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/react'
-import { filterOutline } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
-import React, { useEffect, useState } from 'react'
-import { BackButton } from '../components/molecules/BackButtonComponent'
-import { Segment } from '../components/molecules/SegmentComponent'
-import { ClubOurTownList } from '../components/organisms/ClubOurTownListComponent'
-import { FeedList } from '../components/organisms/FeedListComponent'
-import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
+import React from 'react'
 import { useStore } from '../hooks/use-store'
-import { ISegments, SEGMENT_KEYS } from '../models/segment.d'
-import { IStuffTalentFilter } from '../models/stufftalent'
-
-// const FilterMode = { none: 'none', category: 'category', status: 'status' }
-// type FilterMode = typeof FilterMode[keyof typeof FilterMode]
-const initialFilter: IStuffTalentFilter = {
-  isPublic: false,
-  communityId: undefined,
-  userId: undefined,
-  categories: [],
-  statuses: [],
-  types: [],
-}
+import { MyPageMyListBase } from './MyPageMyListBase'
 
 export const MyPageMyList: React.FC = () => {
-  const { $segment, $auth, $stuff, $talent, $feed, $club } = useStore()
-
-  // TODO segment_keys를 stufftalent용으로만 사용하고 있으니, segment.d 파일명을 바꾸던가 해야겠다
-  const segments: ISegments = {
-    [SEGMENT_KEYS.stuff]: { label: '물건창고' },
-    [SEGMENT_KEYS.talent]: { label: '재능창고' },
-    [SEGMENT_KEYS.feed]: { label: '이야기창고' },
-    [SEGMENT_KEYS.club]: { label: '소모임' },
-  }
-
-  useEffect(() => {
-    // TODO clublistcomponent 안으로 옮길지 고민해보자
-    $segment.mylistSegment === SEGMENT_KEYS.club && $club.getMyClubs()
-  }, [$segment.mylistSegment, $club])
-
-  // TODO const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
-  const [filter, setFilter] = useState<IStuffTalentFilter>({
-    ...initialFilter,
-    userId: $auth.user.id,
-  })
-
-  const renderList = (segmentKey: SEGMENT_KEYS) => {
-    // TODO 오마이갓.. store/fetchTask/clubs => 파라미터를 통일하자
-    switch (segmentKey) {
-      case SEGMENT_KEYS.stuff:
-        return <StuffTalentList store={$stuff} search={''} filter={filter} />
-      case SEGMENT_KEYS.talent:
-        return <StuffTalentList store={$talent} search={''} filter={filter} />
-      case SEGMENT_KEYS.feed:
-        return <FeedList fetchTask={$feed.getMyFeeds} />
-      case SEGMENT_KEYS.club:
-        return <ClubOurTownList clubs={$club.myClubs} />
-      default:
-        return <></> // TODO error 발생시켜야 하나?
-    }
-  }
+  const { $auth, $segment, $feed, $club } = useStore()
 
   return useObserver(() => (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <div slot='start'>
-            <BackButton type='arrow' />
-          </div>
-          <IonTitle slot='start'>내 목록</IonTitle>
-          <IonButtons slot='primary'>
-            {/* // TODO filter : 이야기창고, 소모임은 필터 없음*/}
-            <IonButton slot='end' color='dark' routerLink='/settings'>
-              <IonIcon slot='icon-only' icon={filterOutline} size='small' />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-
-      <Segment
-        segments={segments}
-        selected={$segment.mylistSegment}
-        setSelected={$segment.setMyListSegment}
-      />
-
-      <IonContent>
-        <div className='px-container my-4'>{renderList($segment.mylistSegment)}</div>
-      </IonContent>
-    </IonPage>
+    // TODO 개별 observable값이 변경될 때마다 페이지 전체가 리렌더되는 게 좀 별로다.
+    // 관련된 컴포넌트부분만 리렌더되도록 수정할 수 있을지 연구해보자.
+    <MyPageMyListBase
+      {...{
+        title: '내 목록',
+        initialFilter: {
+          isPublic: false,
+          communityId: null,
+          userId: $auth.user.id,
+          categories: [],
+          notStatuses: [],
+          types: [],
+          // TODO: 추후 페이징 처리
+          limit: 999,
+        },
+        selectedSegment: $segment.myListSegment,
+        setSelectedSegment: $segment.setMyListSegment,
+        fetchFeeds: $feed.getMyFeeds,
+        fetchClubs: $club.getMyClubs,
+        clubs: $club.myClubs,
+      }}
+    />
   ))
 }

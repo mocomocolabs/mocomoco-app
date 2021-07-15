@@ -1,5 +1,5 @@
 import { IonIcon } from '@ionic/react'
-import { ellipsisVertical } from 'ionicons/icons'
+import { ellipsisHorizontal } from 'ionicons/icons'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 
@@ -7,19 +7,22 @@ export interface IOverflowMenuIcon {
   show?: boolean
   className?: string
   icon?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onDelete?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onEdit?: any
 }
 
 export const OverflowMenuIcon: FC<IOverflowMenuIcon> = ({
   show = true,
   className = '',
-  icon = ellipsisVertical,
+  icon = ellipsisHorizontal,
   onDelete = () => {},
   onEdit = () => {},
 }) => {
   const { $ui } = useStore()
 
+  // TODO MorePopoverButton 컴포넌트와 통합하기
   const showItemMenuPopup = async (e: React.MouseEvent<HTMLIonIconElement, MouseEvent>) => {
     console.log('showItemMenuPopup')
     const action = await $ui.showPopover(e.nativeEvent)

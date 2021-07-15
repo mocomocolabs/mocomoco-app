@@ -1,19 +1,10 @@
-import {
-  IonContent,
-  IonFooter,
-  IonHeader,
-  IonPage,
-  IonToolbar,
-  useIonViewWillEnter,
-  useIonViewWillLeave,
-} from '@ionic/react'
+import { IonContent, IonFooter, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
-import { StaticContext } from 'react-router'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Spinner } from '../components/atoms/SpinnerComponent'
-import { BackButton } from '../components/molecules/BackButtonComponent'
+import { BackFloatingButton } from '../components/molecules/BackFloatingButtonComponent'
 import { FeedItem } from '../components/molecules/FeedItemComponent'
 import { CommentInsertForm } from '../components/organisms/CommentInsertFormComponent'
 import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
@@ -25,28 +16,18 @@ interface ILocationState {
   autoFocus?: boolean
 }
 
-export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, StaticContext, ILocationState>> = ({
-  match,
-  location,
-}) => {
-  const id = parseInt(match.params.id)
+export const FeedDetailPage: React.FC = () => {
+  const id = parseInt(useParams<{ id: string }>().id)
+  const autoFocus = useHistory<ILocationState>().location.state?.autoFocus
 
   const { $feed, $ui, $comment } = useStore()
 
   useEffect(() => {
     // TODO : 게시글 접근제한 테스트 필요
-    $feed.getFeed(id)
-    // eslint-disable-next-line
-  }, [])
-
-  useIonViewWillEnter(() => {
     $ui.setIsBottomTab(false)
+    $feed.getFeed(id)
     $comment.setUpdateCommentId(null)
-  })
-
-  useIonViewWillLeave(() => {
-    $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   const onDelete = async (id: number) => {
     await $feed.deleteFeed(id)
@@ -58,40 +39,35 @@ export const FeedDetailPage: React.FC<RouteComponentProps<{ id: string }, Static
     route.feedForm()
   }
 
+  const taskGroup = [$feed.getFeed, $comment.deleteComment]
   // eslint-disable-next-line
-  const taskGroup = TaskGroup<any[], void>([$feed.getFeed, $comment.deleteComment])
+  const observableTaskGroup = TaskGroup<any[], void>(taskGroup)
 
   return useObserver(() => (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <div slot='start'>
-            <BackButton type='arrow'></BackButton>
-          </div>
-          <div slot='end'></div>
-        </IonToolbar>
-      </IonHeader>
-
       <IonContent>
-        <div className='px-container'>
-          {taskGroup.match({
-            pending: () => <Spinner isFull={true}></Spinner>,
-            resolved: () => (
-              <FeedItem
-                feed={$feed.feed}
-                isDetail={true}
-                onDelete={() => onDelete($feed.feed.id)}
-                onEdit={() => onEdit($feed.feed.id)}
-              ></FeedItem>
-            ),
-          })}
-        </div>
+        <BackFloatingButton></BackFloatingButton>
+        {observableTaskGroup.match({
+          pending: () => <Spinner isFull={true}></Spinner>,
+          resolved: () => (
+            <FeedItem
+              feed={$feed.feed}
+              isDetail={true}
+              onDelete={() => onDelete($feed.feed.id)}
+              onEdit={() => onEdit($feed.feed.id)}
+            ></FeedItem>
+          ),
+          rejected: () => {
+            taskGroup.forEach((task) => task.reset())
+            return <></>
+          },
+        })}
         <ContentPopover></ContentPopover>
       </IonContent>
 
       <IonFooter>
         {$comment.updateCommentId === null && (
-          <CommentInsertForm feedId={id} autoFocus={location?.state?.autoFocus}></CommentInsertForm>
+          <CommentInsertForm feedId={id} autoFocus={autoFocus}></CommentInsertForm>
         )}
         {$comment.updateCommentId !== null && (
           <CommentUpdateForm commentId={$comment.updateCommentId} feedId={$feed.feed.id}></CommentUpdateForm>

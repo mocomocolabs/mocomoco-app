@@ -5,14 +5,15 @@ import './IconComponent.scss'
 interface IIcon extends HTMLAttributes<HTMLElement> {
   name: string
   className?: string
+  size?: 'small' | 'medium' | 'large'
 }
 
-export const Icon = ({ name, className = '', onClick = () => {} }: IIcon) => {
+export const Icon = ({ name, className = '', onClick = () => {}, size = 'medium' }: IIcon) => {
   return (
     <ReactSVG
       onClick={($evt: React.MouseEvent<HTMLElement, MouseEvent>) => onClick($evt)}
       src={`/assets/icon/${name}.svg`}
-      className={`${className} svg-icon flex items-center icon-20`}
-    ></ReactSVG>
+      className={`${className} svg-icon icon-${size === 'small' ? '12' : size === 'medium' ? '16' : '20'}`}
+    />
   )
 }

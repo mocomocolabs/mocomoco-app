@@ -1280,37 +1280,29 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@ionic/cli-framework-output@^2.2.1":
-  version "2.2.2"
-  resolved "https://registry.npmjs.org/@ionic/cli-framework-output/-/cli-framework-output-2.2.2.tgz#d03367e2b767a32fa7046c455843555b4971cd4a"
-  integrity sha512-eQYkqIW1/tCwSC6Bd0gjse96U11lDX/ikf3jvsjX7a8z/zwSmGzCHRizb7xogV65Ey+1/zyAZR71cpDRQuFLBQ==
-  dependencies:
-    "@ionic/utils-terminal" "2.3.1"
-    debug "^4.0.0"
-    tslib "^2.0.1"
-
-"@ionic/core@5.6.9":
-  version "5.6.9"
-  resolved "https://registry.npmjs.org/@ionic/core/-/core-5.6.9.tgz#6252c13c38011f877ce78952b572bb9e436e6daa"
-  integrity sha512-OFwlWFsei4r7rVJSQxIB7XbfeU5FI8aIEs9yDEsqBudLquph9b/EA/5MgKxfNX7ahs6/A8Och5zYhXg+dpa3zA==
+"@ionic/core@5.6.10":
+  version "5.6.10"
+  resolved "https://registry.npmjs.org/@ionic/core/-/core-5.6.10.tgz#2bbfb2eaafe5e34a1d310550c0f76b15c6e6edaf"
+  integrity sha512-mjrfWa8ahCV8TYqJsWpop5kTyfr3NU1fYnoAhuqwZfuCLaMzYRYFPvSNoGynD4yfveZUyAfZM0NOuSquNZgfKQ==
   dependencies:
     "@stencil/core" "^2.4.0"
     ionicons "^5.5.1"
     tslib "^2.1.0"
 
-"@ionic/react-router@^5.6.9":
-  version "5.6.9"
-  resolved "https://registry.npmjs.org/@ionic/react-router/-/react-router-5.6.9.tgz#3fe0fc09e8d958489fd58d5764cac060e479e76b"
-  integrity sha512-pGDn5FxkOi6g5OJtmIw8HQRJP49U+OjOUcx53I4S3KQ3ArGMvOxRvsWmkp+UIUPdtHAW0fl1+b/bBTgClGj0dQ==
+"@ionic/react-router@^5.6.10":
+  version "5.6.10"
+  resolved "https://registry.npmjs.org/@ionic/react-router/-/react-router-5.6.10.tgz#f38a9ff8fde19f32fab67af9fbada94139ec5ccc"
+  integrity sha512-M1sRERMBZlsg74eMTYjcm68xVnOSt7f8oE4x/virFX881XFzZAlrWKYipP+BQLDTMkDznd16Bu5kbSK9iMNhyQ==
   dependencies:
     tslib "*"
 
-"@ionic/react@^5.6.9":
-  version "5.6.9"
-  resolved "https://registry.npmjs.org/@ionic/react/-/react-5.6.9.tgz#c3e4389889e271bf675d264311e433aa72d1ceda"
-  integrity sha512-HdJo7peUp7+9pEz2VXg281TGwDzvXo27ED7cuXGauC8gafMhHxCK+gV7DdBpXeoCMQBrvxxqn+fA2YMfTRUC+A==
+"@ionic/react@^5.6.10":
+  version "5.6.10"
+  resolved "https://registry.npmjs.org/@ionic/react/-/react-5.6.10.tgz#a988124be0cc5d73071aea6dd5451c22eed85ca8"
+  integrity sha512-vgI6aFEUSft08UVsS9mqQ5xCQrOKAAzuzq4qLC8kWUONfn8MFoQbjUE8Jvo9GIFXYzhVwBN/UPfi6mxk+6bqRg==
   dependencies:
-    "@ionic/core" "5.6.9"
+    "@ionic/core" "5.6.10"
+>>>>>>> origin/master
     ionicons "^5.1.2"
     tslib "*"
 
@@ -10169,10 +10161,10 @@ react-dom@^17.0.2:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-dropzone@^11.3.2:
-  version "11.3.2"
-  resolved "https://registry.npmjs.org/react-dropzone/-/react-dropzone-11.3.2.tgz#2efb6af800a4779a9daa1e7ba1f8d51d0ab862d7"
-  integrity sha512-Z0l/YHcrNK1r85o6RT77Z5XgTARmlZZGfEKBl3tqTXL9fZNQDuIdRx/J0QjvR60X+yYu26dnHeaG2pWU+1HHvw==
+react-dropzone@^11.3.4:
+  version "11.3.4"
+  resolved "https://registry.npmjs.org/react-dropzone/-/react-dropzone-11.3.4.tgz#aeb098df5c4491e165042c9f0b5e2e7185484740"
+  integrity sha512-B1nzNRZ4F1cnrfEC0T6KXeBN1mCPinu4JCoTrp7NjB+442KSPxqfDrw41QIA2kAwlYs1+wj/0BTedeM5hc2+xw==
   dependencies:
     attr-accept "^2.2.1"
     file-selector "^0.2.2"

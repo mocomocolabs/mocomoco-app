@@ -1,75 +1,81 @@
-import {
-  IonBackdrop,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonPage,
-  IonSearchbar,
-  IonToolbar,
-  useIonViewWillEnter,
-} from '@ionic/react'
-import { create, filter as filterIcon, search as searchIcon } from 'ionicons/icons'
+import { IonContent, IonHeader, IonPage, IonSearchbar, IonToolbar } from '@ionic/react'
 import { reaction } from 'mobx'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
+import { Icon } from '../components/atoms/IconComponent'
+import { Pad } from '../components/atoms/PadComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
+import { FilterBar } from '../components/molecules/FilterBarComponent'
+import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
-import { IStuffTalentFilter } from '../models/stufftalent.d'
+import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
+import { IStuffTalentFilter, StuffTalentPageKey, StuffTalentStatus } from '../models/stufftalent.d'
 
 interface SearchbarChangeEventDetail {
   value: string | undefined
 }
 
-const FilterMode = { none: 'none', category: 'category', status: 'status', type: 'type' }
+const FilterMode = { none: 'none', category: '카테고리', type: '거래유형' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
 
 const initialSearch = ''
-const initialFilter: IStuffTalentFilter = {
-  isPublic: false,
-  communityId: undefined,
-  userId: undefined,
-  categories: [],
-  statuses: [],
-  types: [],
-}
 
 export const StuffTalentPage: React.FC = () => {
   const { $stuff, $talent, $ui, $community } = useStore()
-  const { pathname } = useLocation()
 
-  // TODO 경로명 하드코딩하지 않기
-  const store = pathname === '/stuff' ? $stuff : $talent
+  const pageData = {
+    [StuffTalentPageKey.STUFF]: { store: $stuff },
+    [StuffTalentPageKey.TALENT]: { store: $talent },
+  }
+
+  const { store } = pageData[getPageKey(useLocation().pathname)]
+  const { routeForm } = routeFunc[store.predefined.pageKey]
 
   const [searchMode, setSearchMode] = useState(false)
   const [search, setSearch] = useState(initialSearch)
   const onSearchSubmit = (e: CustomEvent<SearchbarChangeEventDetail>) => setSearch(e.detail.value!)
 
-  const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
-  const [filter, setFilter] = useState<IStuffTalentFilter>({
-    ...initialFilter,
+  const initialFilter: IStuffTalentFilter = {
+    isPublic: $community.selectedId !== store.$auth.user.communityId ? true : undefined,
+    userId: undefined,
     communityId: $community.selectedId,
-  })
-
-  useIonViewWillEnter(() => {
-    $ui.setIsBottomTab(true)
-  })
+    categories: [],
+    notStatuses: [],
+    types: [],
+    // TODO: 추후 페이징 처리
+    limit: 999,
+  }
+  const [filter, setFilter] = useState<IStuffTalentFilter>(initialFilter)
+  const [filterMode, setFilterMode] = useState<FilterMode>(FilterMode.none)
+  const onCloseFilterPopup = () => setFilterMode(FilterMode.none)
+  const onResetFilter = () => {
+    setFilter(initialFilter)
+    setFilterMode(FilterMode.none)
+  }
 
   useEffect(() => {
+    $ui.setIsBottomTab(true)
+  }, [])
+
+  useEffect(() => {
+    //TODO 상세보기 들어갔다가 돌아올 때 기존 filter값 유지되는지 확인할 것
     const disposeReaction = reaction(
       () => $community.selectedId,
       (selectedId) => {
-        console.log('reaction for communityId changed') // TODO reaction 객체가 반복생성되는지 확인하려는 용도. 나중에 삭제예정
-        setFilter({ ...filter, communityId: selectedId })
+        // TODO 모든 공동체 선택 시 isPublic=true 처리 필요
+        setFilter({
+          ...filter,
+          communityId: selectedId,
+          isPublic: selectedId !== store.$auth.user.communityId ? true : undefined,
+        })
       }
     )
 
     return () => {
       disposeReaction()
-      setFilter(initialFilter)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -88,10 +94,33 @@ export const StuffTalentPage: React.FC = () => {
             <div slot='start'>
               <CommunitySelector></CommunitySelector>
             </div>
-            <div slot='end'>
-              <IonIcon icon={filterIcon} size='large' />
-              <IonIcon icon={create} size='large' />
-              <IonIcon icon={searchIcon} size='large' onClick={() => setSearchMode(true)} />
+            <div className='flex' slot='end'>
+              <div
+                onClick={() => {
+                  const isWriting = store.form.title || store.form.content || store.form.images?.length
+
+                  if (isWriting) {
+                    return $ui.showAlert({
+                      isOpen: true,
+                      message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
+                      onSuccess() {
+                        routeForm()
+                      },
+                      onFail() {
+                        store.resetForm()
+                        routeForm()
+                      },
+                    })
+                  }
+
+                  routeForm()
+                }}
+              >
+                <Icon name='pencil' className='ml-4 icon-24'></Icon>
+              </div>
+              <div onClick={() => setSearchMode(true)}>
+                <Icon name='search' className='ml-4 icon-24'></Icon>
+              </div>
             </div>
           </div>
 
@@ -108,126 +137,55 @@ export const StuffTalentPage: React.FC = () => {
           </div>
         </IonToolbar>
 
-        <div className='px-container'>
-          {/* TODO extract as component */}
-          <div className='flex justify-around'>
-            <div
-              hidden={filter.categories.length === 0 && filter.statuses.length === 0}
-              onClick={() => {
-                setFilter(initialFilter)
-                setFilterMode(FilterMode.none)
-              }}
-            >
-              초기화
-            </div>
-            <div
-              className={filter.categories.length > 0 ? 'bg-yellow' : ''}
-              onClick={() => {
-                setFilterMode(filterMode === FilterMode.category ? FilterMode.none : FilterMode.category)
-              }}
-            >
-              ▼카테고리
-            </div>
-            <div
-              className={filter.statuses.length > 0 ? 'bg-yellow' : ''}
-              onClick={() => {
-                setFilterMode(filterMode === FilterMode.status ? FilterMode.none : FilterMode.status)
-              }}
-            >
-              ▼거래상태
-            </div>
-            <div
-              className={filter.types.length > 0 ? 'bg-yellow' : ''}
-              onClick={() => {
-                setFilterMode(filterMode === FilterMode.type ? FilterMode.none : FilterMode.type)
-              }}
-            >
-              ▼유형
-            </div>
-          </div>
+        <div className='px-container mt-1'>
+          <FilterBar
+            filters={[
+              { name: FilterMode.category, length: filter.categories.length },
+              { name: FilterMode.type, length: filter.types.length + filter.notStatuses.length },
+            ]}
+            onReset={onResetFilter}
+            onClick={(name: string) => {
+              setFilterMode(filterMode === name ? FilterMode.none : name)
+            }}
+          />
+
+          <Pad className='h-3' />
         </div>
       </IonHeader>
 
+      <div className='-mt-3' hidden={filterMode !== FilterMode.category}>
+        <FilterPopup
+          filterInfos={[
+            {
+              filter: filter.categories,
+              items: store.categories.map((c) => ({ value: c.id, label: c.name })),
+              onSelect: (newFilter) => setFilter({ ...filter, categories: newFilter }),
+            },
+          ]}
+          onClose={onCloseFilterPopup}
+        />
+      </div>
+
+      <div className='-mt-3' hidden={filterMode !== FilterMode.type}>
+        <FilterPopup
+          filterInfos={[
+            {
+              filter: filter.types,
+              items: typeLabels,
+              onSelect: (newFilter) => setFilter({ ...filter, types: newFilter }),
+            },
+            {
+              filter: filter.notStatuses,
+              items: [{ value: StuffTalentStatus.FINISH, label: '거래완료 안보기' }],
+              onSelect: (newFilter) => setFilter({ ...filter, notStatuses: newFilter }),
+            },
+          ]}
+          onClose={onCloseFilterPopup}
+        />
+      </div>
+
       <IonContent>
-        {/* TODO extract as component */}
-        <div className='justify-around' hidden={filterMode !== FilterMode.category}>
-          <div className='absolute z-10 w-full bg-white'>
-            {store.categories
-              .sort((a, b) => (a.name <= b.name ? -1 : 1))
-              .map((category) => (
-                <div
-                  key={category.id}
-                  onClick={() => {
-                    const categories = filter.categories.includes(category.id)
-                      ? filter.categories.filter((v) => v !== category.id)
-                      : filter.categories.concat(category.id)
-
-                    setFilter({ ...filter, categories })
-                  }}
-                >
-                  {category.name}
-                  {filter.categories.includes(category.id) ? ' V' : ''}
-                </div>
-              ))}
-          </div>
-          <IonBackdrop
-            onIonBackdropTap={() => {
-              setFilterMode(FilterMode.none)
-            }}
-          />
-        </div>
-
-        <div className='justify-around' hidden={filterMode !== FilterMode.status}>
-          <div className='absolute z-10 w-full bg-white'>
-            {store.statuses.map((status) => (
-              <div
-                key={status}
-                onClick={() => {
-                  const statuses = filter.statuses.includes(status)
-                    ? filter.statuses.filter((v) => v !== status)
-                    : filter.statuses.concat(status)
-
-                  setFilter({ ...filter, statuses })
-                }}
-              >
-                {status}
-                {filter.statuses.includes(status) ? ' V' : ''}
-              </div>
-            ))}
-          </div>
-          <IonBackdrop
-            onIonBackdropTap={() => {
-              setFilterMode(FilterMode.none)
-            }}
-          />
-        </div>
-
-        <div className='justify-around' hidden={filterMode !== FilterMode.type}>
-          <div className='absolute z-10 w-full bg-white'>
-            {store.types.map((type) => (
-              <div
-                key={type}
-                onClick={() => {
-                  const types = filter.types.includes(type)
-                    ? filter.types.filter((v) => v !== type)
-                    : filter.types.concat(type)
-
-                  setFilter({ ...filter, types: types })
-                }}
-              >
-                {type}
-                {filter.types.includes(type) ? ' V' : ''}
-              </div>
-            ))}
-          </div>
-          <IonBackdrop
-            onIonBackdropTap={() => {
-              setFilterMode(FilterMode.none)
-            }}
-          />
-        </div>
-
-        <div className='px-container'>
+        <div className='px-container mt-1 mb-4'>
           <StuffTalentList store={store} search={search} filter={filter} />
         </div>
       </IonContent>

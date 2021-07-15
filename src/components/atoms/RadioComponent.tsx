@@ -11,11 +11,12 @@ export interface IRadio {
 
 export const Radio: FC<IRadio> = ({ items, selected, setSelected }) => {
   return useObserver(() => (
+    // TODO radio button 디자인 입히기
     <IonRadioGroup className='flex' value={selected} onIonChange={(e) => setSelected(e.detail.value)}>
       {items.map((v, i) => (
-        <IonItem key={i}>
+        <IonItem className='text-xs' key={i}>
           <IonLabel>{v.label}</IonLabel>
-          <IonRadio slot='start' value={v.value} />
+          <IonRadio className='m-0' slot='start' value={v.value} />
         </IonItem>
       ))}
     </IonRadioGroup>

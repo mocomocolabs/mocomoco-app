@@ -1,13 +1,14 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { useEffect } from 'react'
 import { ChatRoomList } from '../components/organisms/ChatRoomListComponent'
 import { useStore } from '../hooks/use-store'
 
 export const ChatPage: React.FC = () => {
   const { $ui } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   return (
     <IonPage>

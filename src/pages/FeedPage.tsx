@@ -1,5 +1,6 @@
-import { IonContent, IonHeader, IonIcon, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
-import { create } from 'ionicons/icons'
+import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import { useEffect } from 'react'
+import { Icon } from '../components/atoms/IconComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { useStore } from '../hooks/use-store'
@@ -8,9 +9,9 @@ import { route } from '../services/route-service'
 export const FeedPage: React.FC = () => {
   const { $ui, $feed } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(true)
-  })
+  }, [])
 
   return (
     <IonPage>
@@ -24,10 +25,7 @@ export const FeedPage: React.FC = () => {
             slot='end'
             onClick={() => {
               const isWriting =
-                $feed.form.title ||
-                $feed.form.content ||
-                $feed.form.images?.length ||
-                $feed.form.scheduleTitle
+                $feed.form.title || $feed.form.content || $feed.form.images?.length || $feed.form.schedule
 
               if (isWriting) {
                 return $ui.showAlert({
@@ -45,15 +43,13 @@ export const FeedPage: React.FC = () => {
               route.feedForm()
             }}
           >
-            <IonIcon icon={create}></IonIcon>
+            <Icon name='pencil'></Icon>
           </div>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        <div className='px-container'>
-          <FeedList fetchTask={$feed.getFeeds} />
-        </div>
+        <FeedList fetchTask={$feed.getFeeds} />
       </IonContent>
     </IonPage>
   )

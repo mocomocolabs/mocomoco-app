@@ -20,7 +20,9 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
     fetchTask()
   }, [fetchTask])
 
-  const taskGroup = TaskGroup<any[], void>([fetchTask, $feed.deleteFeed])
+  const taskGroup = [fetchTask, $feed.deleteFeed]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const observableTaskGroup = TaskGroup<any[], void>(taskGroup)
 
   const onDelete = async (id: number) => {
     await $feed.deleteFeed(id)
@@ -34,7 +36,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
   }
 
   return useObserver(() =>
-    taskGroup.match({
+    observableTaskGroup.match({
       pending: () => (
         <div className='height-150 flex-center'>
           <IonSpinner color='tertiary' name='crescent' />
@@ -59,6 +61,10 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
           // TODO 목록 없을 때 표시할 공통컴포넌트 만들자
           <TextXs>목록이 없습니다</TextXs>
         ),
+      rejected: () => {
+        taskGroup.forEach((task) => task.reset())
+        return <></>
+      },
     })
   )
 }

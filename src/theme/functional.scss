@@ -22,6 +22,9 @@
 .table-cell {
   display: table-cell;
 }
+.grid {
+  display: grid;
+}
 .hidden {
   display: none;
 }
@@ -53,6 +56,12 @@
 }
 .flex-1 {
   flex: 1;
+}
+.flex-none {
+  flex: none;
+}
+.flex-grow {
+  flex-grow: 1;
 }
 .justify-start {
   justify-content: flex-start;
@@ -90,6 +99,19 @@
 }
 .self-top {
   align-self: top;
+}
+.self-bottom {
+  align-self: bottom;
+}
+.self-start {
+  align-self: start;
+}
+.self-end {
+  align-self: end;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .visible {
@@ -235,6 +257,13 @@
 .width-160 {
   width: 16rem;
 }
+.width-308 {
+  width: 30.8rem;
+}
+
+.min-w-0 {
+  min-width: 0;
+}
 
 .min-w-6 {
   min-width: 2.4rem;
@@ -298,6 +327,7 @@
 .height-30 {
   height: 3rem;
 }
+
 .height-50 {
   height: 5rem;
 }
@@ -325,6 +355,10 @@
 
 .max-h-half-screen {
   max-height: 50vh;
+}
+
+.min-h-0 {
+  min-height: 0;
 }
 
 .min-h-1 {
@@ -414,14 +448,25 @@
   padding-right: 2.4rem;
   padding-left: 2.4rem;
 }
+.px-8 {
+  padding-right: 3.2rem;
+  padding-left: 3.2rem;
+}
 .pt-0 {
   padding-top: 0;
+}
+.pt-0_5 {
+  padding-top: 0.2rem;
 }
 .pt-1 {
   padding-top: 0.4rem;
 }
 .pt-2 {
   padding-top: 0.8rem;
+}
+.pv-2 {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
 }
 .pt-2_5 {
   padding-top: 0.9rem;
@@ -434,6 +479,10 @@
 }
 .pt-5 {
   padding-top: 2rem;
+}
+.pv-5 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 .pt-6 {
   padding-top: 2.4rem;
@@ -906,6 +955,9 @@
 .ml-8 {
   margin-left: 3.2rem;
 }
+.ml-13 {
+  margin-left: 5.2rem;
+}
 .ml-auto {
   margin-left: auto;
 }
@@ -928,6 +980,19 @@
   margin-left: -2.4rem;
 }
 
+.gap-1 {
+  gap: 0.4rem;
+}
+.gap-2 {
+  gap: 0.8rem;
+}
+.gap-3 {
+  gap: 1.2rem;
+}
+.gap-4 {
+  gap: 1.6rem;
+}
+
 /** text */
 .text-left {
   text-align: left;
@@ -942,10 +1007,12 @@
   text-align: justify;
 }
 
+.text-xxs {
+  @extend %text-xxs;
+}
 .text-xs {
   @extend %text-xs;
 }
-
 .text-sm {
   @extend %text-sm;
 }
@@ -1014,24 +1081,24 @@
   line-height: 2.25rem;
 }
 
-.yellow {
-  color: $yellow;
+.primary {
+  color: $primary;
 }
-.m-yellow {
-  color: $m-yellow;
+.m-primary {
+  color: $m-primary;
 }
-.d-yellow {
-  color: $d-yellow;
+.s-primary {
+  color: $s-primary;
 }
 
-.green {
-  color: $green;
+.secondary {
+  color: $secondary;
 }
-.m-green {
-  color: $m-green;
+.m-secondary {
+  color: $m-secondary;
 }
-.d-green {
-  color: $d-green;
+.s-secondary {
+  color: $s-secondary;
 }
 
 .black {
@@ -1050,9 +1117,6 @@
 
 .red {
   color: $red;
-}
-.m-red {
-  color: $m-red;
 }
 
 .ellipsis {
@@ -1104,23 +1168,23 @@
   left: 0;
 }
 
-.bg-yellow {
-  background-color: $yellow;
+.bg-primary {
+  background-color: $primary;
 }
-.bg-m-yellow {
-  background-color: $m-yellow;
+.bg-m-primary {
+  background-color: $m-primary;
 }
-.bg-d-yellow {
-  background-color: $d-yellow;
+.bg-s-primary {
+  background-color: $s-primary;
 }
-.bg-green {
-  background-color: $green;
+.bg-secondary {
+  background-color: $secondary;
 }
-.bg-m-green {
-  background-color: $m-green;
+.bg-m-secondary {
+  background-color: $m-secondary;
 }
-.bg-d-green {
-  background-color: $d-green;
+.bg-s-secondary {
+  background-color: $s-secondary;
 }
 .bg-white {
   background-color: $white;
@@ -1137,8 +1201,8 @@
 .bg-red {
   background-color: $red;
 }
-.bg-m-red {
-  background-color: $m-red;
+.bg-s-gray {
+  background-color: $s-gray;
 }
 .bg-image {
   background-size: cover;
@@ -1177,6 +1241,9 @@
   border-radius: 1.4rem;
 }
 // TODO: 추후 디자인 가이드에 맞게 radius 통일
+.br-20 {
+  border-radius: 2rem;
+}
 .br-28 {
   border-radius: 2.8rem;
 }
@@ -1196,33 +1263,32 @@
   border-bottom-left-radius: 1.4rem;
   border-bottom-right-radius: 1.4rem;
 }
-.br-tl-xxlg {
+.br-l-xxlg {
   border-top-left-radius: 1.4rem;
+  border-bottom-left-radius: 1.4rem;
+}
+.br-r-xxlg {
+  border-top-right-radius: 1.4rem;
+  border-bottom-right-radius: 1.4rem;
 }
 
-.input-text {
-  border-style: solid;
-  border-width: 0 0 1px 0;
-  border-color: gray;
+.border-primary {
+  border: 1px solid $primary;
 }
-
-.border-yellow {
-  border: 1px solid $yellow;
+.border-m-primary {
+  border: 1px solid $m-primary;
 }
-.border-m-yellow {
-  border: 1px solid $m-yellow;
+.border-s-primary {
+  border: 1px solid $s-primary;
 }
-.border-d-yellow {
-  border: 1px solid $d-yellow;
+.border-secondary {
+  border: 1px solid $secondary;
 }
-.border-green {
-  border: 1px solid $green;
+.border-m-secondary {
+  border: 1px solid $m-secondary;
 }
-.border-m-green {
-  border: 1px solid $m-green;
-}
-.border-d-green {
-  border: 1px solid $d-green;
+.border-s-secondary {
+  border: 1px solid $s-secondary;
 }
 .border-white {
   border: 1px solid $white;
@@ -1239,9 +1305,6 @@
 .border-red {
   border: 1px solid $red;
 }
-.border-m-red {
-  border: 1px solid $m-red;
-}
 
 .ripple-parent {
   position: relative;
@@ -1256,12 +1319,16 @@
   overflow: auto;
 }
 
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
 /** shadow */
 .shadow-sm {
   box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.1);
 }
 .shadow {
-  box-shadow: 0px 2px 12px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 3px 12px 1px rgba(0, 0, 0, 0.1);
 }
 .shadow-md {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -1309,6 +1376,10 @@
   z-index: 10;
 }
 
+.z-20 {
+  z-index: 20;
+}
+
 .icon-12 {
   width: 1.2rem;
   height: 1.2rem;
@@ -1317,6 +1388,17 @@
     width: 1.2rem;
     height: 1.2rem;
     min-width: 1.2rem;
+  }
+}
+
+.icon-16 {
+  width: 1.6rem;
+  height: 1.6rem;
+  min-width: 1.6rem;
+  svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    min-width: 1.6rem;
   }
 }
 
@@ -1342,14 +1424,46 @@
   }
 }
 
-.icon-yellow {
+.icon-primary {
   rect,
   path,
   circle {
-    fill: $yellow;
+    fill: $primary;
   }
 }
 
-.z-10 {
-  z-index: 10;
+.icon-secondary {
+  rect,
+  path,
+  circle {
+    fill: $secondary;
+  }
+}
+
+.icon-gray {
+  rect,
+  path,
+  circle {
+    fill: $gray;
+  }
+}
+
+.icon-white {
+  rect,
+  path,
+  circle {
+    fill: $white;
+  }
+}
+
+.icon-rotate-180 {
+  transform: rotate(180deg);
+}
+.icon-rotate-270 {
+  transform: rotate(270deg);
+}
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
 }

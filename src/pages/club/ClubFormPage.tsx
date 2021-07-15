@@ -1,10 +1,12 @@
-import { IonContent, IonFooter, IonPage, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonFooter, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { Checkbox } from '../../components/atoms/CheckboxComponent'
+import { HeaderSubmitText } from '../../components/atoms/HeaderSubmitText'
 import { Icon } from '../../components/atoms/IconComponent'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
+import { Pad } from '../../components/atoms/PadComponent'
 import { Textarea } from '../../components/atoms/TextareaComponent'
 import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
@@ -17,8 +19,8 @@ import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubFormPage: React.FC = () => {
-  const { $ui, $club, $community } = useStore()
-  const { register, handleSubmit, formState } = useForm<IClubForm>({
+  const { $auth, $ui, $club } = useStore()
+  const { register, handleSubmit, formState, reset } = useForm<IClubForm>({
     mode: 'onChange',
     defaultValues: {
       ...$club.form,
@@ -27,9 +29,9 @@ export const ClubFormPage: React.FC = () => {
 
   const uploader = useRef<IImageUploaderRef>()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(false)
-  })
+  }, [])
 
   // TODO: 데이터 변경이 있을 때만 완료 버튼 활성화되도록 조건 추가되면 좋을 것 같네요
   // => 저는 기본값과 비교해서 수정된 값 있는지 확인하려고 dirtyFields를 활용했는데, 다른 방법이 있을 수도 있겠네요
@@ -43,8 +45,14 @@ export const ClubFormPage: React.FC = () => {
     executeWithError(async () => {
       await $club.insertClub({
         ...$club.form,
-        communityId: $community.selectedId,
+        communityId: $auth.user.communityId,
       })
+
+      await Promise.all([$club.getPopularClubs(999), $club.getRecentClubs()])
+
+      $club.resetForm()
+      reset()
+
       route.clubs()
     })
   })
@@ -60,23 +68,20 @@ export const ClubFormPage: React.FC = () => {
         <div slot='end'>
           <SpinnerWrapper
             task={$club.insertClub}
-            Submit={() => (
-              <div className={formState.isValid ? '' : 'gray'} slot='end' onClick={() => onSubmit()}>
-                완료
-              </div>
-            )}
+            Submit={<HeaderSubmitText isSubmittable={formState.isValid} onSubmit={onSubmit} />}
           ></SpinnerWrapper>
         </div>
       </Header>
       <IonContent>
-        <div className='px-container py-5'>
+        <div className='px-container'>
           <form onSubmit={onSubmit}>
             <ImageUploader
-              className='mb-6'
+              className='mt-5'
               images={$club.form.images}
               setImages={(param) => $club.setFormImage(param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
+            <Pad className='h-2'></Pad>
             <InputNormal
               placeholder='모임 이름'
               register={register('name', { required: true })}
@@ -102,17 +107,17 @@ export const ClubFormPage: React.FC = () => {
         </div>
       </IonContent>
       <IonFooter>
-        <div className='px-container flex-between-center height-56 shadow-sm'>
+        <div className='px-container flex-between-center h-11 shadow-sm'>
           {/* TODO: 카메라 플러그인 추가 */}
           <Icon
             name={$club.form.images.length ? 'image-solid' : 'image'}
-            className='icon-yellow'
+            className='icon-primary'
             onClick={() => uploader.current?.click()}
           ></Icon>
           <Checkbox
             label='전체 공개'
-            onClick={() => $club.setForm({ isPublic: !$club.form.isPublic })}
-            checked={$club.form.isPublic!}
+            defaultChecked={$club.form.isPublic!}
+            onChange={(checked) => $club.setForm({ isPublic: checked })}
           ></Checkbox>
         </div>
       </IonFooter>

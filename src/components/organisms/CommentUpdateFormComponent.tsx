@@ -1,9 +1,9 @@
-import { IonButton, IonIcon, IonTextarea } from '@ionic/react'
-import { close } from 'ionicons/icons'
+import { IonTextarea } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React from 'react'
 import { useStore } from '../../hooks/use-store'
-import { Profile } from '../atoms/ProfileComponent'
+import { executeWithError } from '../../utils/http-helper-util'
+import { Icon } from '../atoms/IconComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
 
 export interface ICommentUpdateForm {
@@ -15,44 +15,49 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
   const { $comment, $feed } = useStore()
 
   return useObserver(() => (
-    <div className='px-container py-2 flex-col bg-white'>
-      <div className='flex'>
-        <Profile url='assets/mock/profile1.jpeg'></Profile>
+    <div className='px-container py-2 flex items-center'>
+      <Icon
+        name='close'
+        className='icon-20'
+        onClick={() => {
+          $comment.setUpdateCommentId(null)
+        }}
+      ></Icon>
 
-        <IonTextarea
-          className='ml-2 bg-m-gray br-lg px-3 black leading-8'
-          autoGrow={true}
-          rows={4}
-          value={$comment.updateForm[commentId]?.content}
-          autofocus={true}
-          onIonChange={(e) => {
-            $comment.setUpdateFormBy(commentId, e.detail.value!)
-          }}
-        ></IonTextarea>
-      </div>
-      <div className='flex-between-center'>
-        <IonIcon icon={close} className='black' onClick={() => $comment.setUpdateCommentId(null)}></IonIcon>
+      <IonTextarea
+        className='ml-2 br-20 pl-4 px-3 black leading-8 border-primary'
+        autoGrow={true}
+        rows={1}
+        value={$comment.updateForm[commentId]?.content}
+        autofocus={true}
+        onIonChange={(e) => {
+          $comment.setUpdateFormBy(commentId, e.detail.value!)
+        }}
+      ></IonTextarea>
 
+      <div className='ml-2'>
         <SpinnerWrapper
           task={$comment.updateComment}
-          Submit={() => (
-            <IonButton
-              disabled={!$comment.updateForm[commentId]?.content}
-              size='small'
-              onClick={async () => {
-                await $comment.updateComment({
-                  id: commentId,
-                  feedId,
-                  content: $comment.updateForm[commentId]?.content,
-                })
-                $comment.setUpdateCommentId(null)
-                $comment.resetUpdateFormBy(commentId)
-                $feed.getFeed(feedId)
+          Submit={
+            <Icon
+              name='send-solid'
+              className='icon-secondary'
+              onClick={() => {
+                if ($comment.updateForm[commentId]?.content) {
+                  executeWithError(async () => {
+                    await $comment.updateComment({
+                      id: commentId,
+                      feedId,
+                      content: $comment.updateForm[commentId]?.content,
+                    })
+                    $comment.setUpdateCommentId(null)
+                    $comment.resetUpdateFormBy(commentId)
+                    $feed.getFeed(feedId)
+                  })
+                }
               }}
-            >
-              업데이트
-            </IonButton>
-          )}
+            ></Icon>
+          }
         ></SpinnerWrapper>
       </div>
     </div>

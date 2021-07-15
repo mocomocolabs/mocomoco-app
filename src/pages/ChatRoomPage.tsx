@@ -1,33 +1,27 @@
-import {
-  IonContent,
-  IonFooter,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  useIonViewWillEnter,
-  useIonViewWillLeave,
-} from '@ionic/react'
+import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import _ from 'lodash'
 import { useEffect } from 'react'
-import { StaticContext } from 'react-router'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ChatInsertForm } from '../components/organisms/ChatInsertFormComponent'
 import { ChatRoomDetail } from '../components/organisms/ChatRoomDetailComponent'
 import { useStore } from '../hooks/use-store'
-import _ from 'lodash'
 
 interface ILocationState {
   autoFocus?: boolean
 }
 
-export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticContext, ILocationState>> = ({
-  match,
-  location,
-}) => {
-  const roomId: number = parseInt(match.params.id)
+export const ChatRoomPage: React.FC = () => {
+  const roomId = parseInt(useParams<{ id: string }>().id)
+  const autoFocus = useHistory<ILocationState>().location.state?.autoFocus
 
   const { $ui, $chat } = useStore()
+
+  useEffect(() => {
+    $ui.setIsBottomTab(false)
+
+    return () => $chat.setCurrentRoomId(null)
+  }, [])
 
   useEffect(() => {
     // TODO : 접근제한 테스트 필요
@@ -43,15 +37,6 @@ export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticCo
       })
     }
   }, [])
-
-  useIonViewWillEnter(() => {
-    $ui.setIsBottomTab(false)
-  })
-
-  useIonViewWillLeave(() => {
-    $ui.setIsBottomTab(true)
-    $chat.setCurrentRoomId(null)
-  })
 
   return (
     <IonPage>
@@ -71,7 +56,7 @@ export const ChatRoomPage: React.FC<RouteComponentProps<{ id: string }, StaticCo
       </IonContent>
 
       <IonFooter>
-        <ChatInsertForm roomId={roomId} autoFocus={location?.state?.autoFocus}></ChatInsertForm>
+        <ChatInsertForm roomId={roomId} autoFocus={autoFocus}></ChatInsertForm>
       </IonFooter>
     </IonPage>
   )

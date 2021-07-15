@@ -55,10 +55,6 @@ class ApiService {
       (error) => {
         console.log(error)
 
-        if (error.status === 401) {
-          // TODO: refreshToken으로 재호출후 불가시 로그인 페이지로 redirect
-        }
-
         // Do something with response error)
         return Promise.reject(responseError(error))
       }

@@ -1,49 +1,97 @@
 import { AxiosRequestConfig } from 'axios'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
+import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
+import { StuffTalent } from '../models/stufftalent'
 import {
   IStuffTalent,
   IStuffTalentFilter,
-  StuffTalentPathName as PathName,
+  IStuffTalentForm,
+  StuffTalentPageKey as PageKey,
   StuffTalentStatus,
   StuffTalentType,
 } from '../models/stufftalent.d'
 import { api } from '../services/api-service'
+import { urlToFile } from '../utils/image-util'
+import { AuthStore } from './auth-store'
 import {
+  ICreateChatDto,
   IStuffsTalentsDto,
   IStuffTalentCategoryDto,
   IStuffTalentDto,
-  StuffTalentPath,
+  IStuffTalentInsertReqDto,
 } from './stufftalent-store.d'
 import { TaskBy, TaskBy2 } from './task'
-
-const paths: StuffTalentPath = {
-  [PathName.STUFF]: 'stuffs',
-  [PathName.TALENT]: 'talents',
-}
 
 const initState = {
   items: [],
   item: {} as IStuffTalent,
   categories: [] as IStuffTalentCategoryDto[],
+  form: {
+    status: StuffTalentStatus.AVAILABLE,
+    isExchangeable: false,
+    isNegotiable: false,
+    isPublic: false,
+    images: [] as ImageUploadItem[],
+  } as IStuffTalentForm,
 }
+
+export interface IStuffTalentPredefined {
+  pageKey: PageKey
+  baseApi: string
+  toggleLikeApi: string
+  createChatApi: string
+  stuffTalentIdProperty: string
+  stuffTalentUsersProperty: string
+  getItemsProperty: string
+  insertItemReqDto: string
+}
+
+const apiVer = 'v1'
+
+const predefined: IStuffTalentPredefined[] = [
+  {
+    pageKey: PageKey.STUFF,
+    baseApi: `/${apiVer}/stuffs`,
+    toggleLikeApi: `/${apiVer}/stuffs-users/likes`,
+    createChatApi: `/${apiVer}/stuffs-users/chatrooms`,
+    stuffTalentIdProperty: 'stuffId',
+    stuffTalentUsersProperty: 'stuffUsers',
+    getItemsProperty: 'stuffs',
+    insertItemReqDto: 'stuffReqDto',
+  },
+  {
+    pageKey: PageKey.TALENT,
+    baseApi: `/${apiVer}/talents`,
+    toggleLikeApi: `/${apiVer}/talents-users/likes`,
+    createChatApi: `/${apiVer}/talents-users/chatrooms`,
+    stuffTalentIdProperty: 'talentId',
+    stuffTalentUsersProperty: 'talentUsers',
+    getItemsProperty: 'talents',
+    insertItemReqDto: 'talentReqDto',
+  },
+]
 
 export class StuffTalentStore {
   @observable.struct items: IStuffTalent[] = initState.items
   @observable.struct item: IStuffTalent = initState.item
   @observable.struct categories: IStuffTalentCategoryDto[] = initState.categories
+  @observable.struct form: IStuffTalentForm = initState.form
+  @observable.struct updateForm: IStuffTalentForm = initState.form
 
   readonly statuses: StuffTalentStatus[] = Object.values(StuffTalentStatus)
   readonly types: StuffTalentType[] = Object.values(StuffTalentType)
 
-  readonly url: string
-  readonly categoriesUrl = `/categories`
+  readonly categoriesUrl = `/${apiVer}/categories`
 
-  readonly pathName: PathName
+  readonly predefined: IStuffTalentPredefined
 
-  constructor(pathName: PathName) {
-    this.pathName = pathName
-    this.url = `/${paths[pathName]}`
+  $auth: AuthStore
+
+  constructor(pathName: PageKey, rootStore: RootStore) {
+    this.$auth = rootStore.$auth
+    this.predefined = predefined.find((p) => p.pageKey === pathName) || predefined[0]
     this.getCategoriesBy(pathName)
   }
 
@@ -65,15 +113,17 @@ export class StuffTalentStore {
 
   @task
   getItems = (async (search, filter) => {
-    await api.get<IStuffsTalentsDto>(this.url, this.config(search, filter)).then(
+    await api.get<IStuffsTalentsDto>(this.predefined.baseApi, this.config(search, filter)).then(
       action((data) => {
-        this.items = this.pathName === PathName.STUFF ? data.stuffs : data.talents
+        this.items = (data[this.predefined.getItemsProperty as keyof IStuffsTalentsDto] as IStuffTalentDto[])
+          .filter((item) => filter.isLike === undefined || item.isLike === filter.isLike)
+          .map((item) => StuffTalent.of(item, this.predefined, this.$auth.user.id))
       })
     )
   }) as TaskBy2<string, IStuffTalentFilter>
 
   private config = (search: string, filter: IStuffTalentFilter) => {
-    const { userId, categories, statuses, types, isPublic, communityId } = filter
+    const { userId, categories, notStatuses, types, isPublic, communityId } = filter
 
     const config: AxiosRequestConfig = {
       params: {
@@ -83,17 +133,16 @@ export class StuffTalentStore {
 
     !!userId && this.addParam(config, 'user-id', userId)
     categories?.length > 0 && this.addParam(config, 'category-id', categories.join('_OR_'))
-    statuses?.length > 0 && this.addParam(config, 'status', statuses.join('_OR_'))
+    notStatuses?.length > 0 &&
+      this.addParam(config, 'status', notStatuses.map((s) => 'not:' + s).join('_OR_'))
     types?.length > 0 && this.addParam(config, 'type', types.join('_OR_'))
 
-    if (isPublic) {
-      this.addParam(config, 'is-public', isPublic)
-    } else {
-      !!communityId && this.addParam(config, 'community-id', communityId)
-    }
+    this.addParam(config, 'is-public', isPublic)
+    !!communityId && this.addParam(config, 'community-id', communityId)
 
     !!search && this.addParam(config, 'title', 'like:' + search)
 
+    this.addParam(config, 'limit', filter.limit)
     return config
   }
 
@@ -107,15 +156,171 @@ export class StuffTalentStore {
 
   @task
   getItem = (async (id: number) => {
-    await api.get<IStuffTalentDto>(`${this.url}/${id}`).then(
+    await api.get<IStuffTalentDto>(`${this.predefined.baseApi}/${id}`).then(
       action((data) => {
-        this.item = data
+        this.item = StuffTalent.of(data, this.predefined, this.$auth.user.id)
       })
     )
   }) as TaskBy<number>
 
   @task.resolved
   deleteItem = (async (id: number) => {
-    await api.patch(`${this.url}/${id}/is-use`) // WARN this is toggle
+    await api.patch(`${this.predefined.baseApi}/${id}/is-use`) // WARN this is toggle
   }) as TaskBy<number>
+
+  createInsertFormData = async (form: IStuffTalentForm) => {
+    const formData = new FormData()
+
+    formData.append(
+      this.predefined.insertItemReqDto,
+      new Blob(
+        [
+          JSON.stringify({
+            id: form.id,
+            communityId: form.communityId,
+            status: form.status,
+            type: form.type,
+            categoryId: form.categoryId,
+            title: form.title,
+            content: form.content,
+            price: form.price,
+            exchangeText: form.exchangeText,
+            isExchangeable: form.isExchangeable,
+            isNegotiable: form.isNegotiable,
+            isPublic: form.isPublic,
+            isUse: true,
+          } as IStuffTalentInsertReqDto),
+        ],
+        {
+          type: 'application/json',
+        }
+      )
+    )
+
+    if (form.images.length === 0) {
+      // TODO: empty image 추가 => db에 넣지 말고, images 프로퍼티가 비어 있으면 화면에서 empty image를 표시하는게 어떨까?
+      // db에 넣어놓으면, 수정화면에서 empty image인지 구분할 방법이 없다.
+      form.images = [(await urlToFile('/assets/img/no-image.png')) as ImageUploadItem]
+    }
+
+    form.images?.forEach((v) => {
+      formData.append('files', v)
+    })
+
+    return formData
+  }
+
+  @task.resolved
+  insertItem = (async (form: IStuffTalentForm) => {
+    const formData = await this.createInsertFormData(form)
+    await api.post(this.predefined.baseApi, formData)
+  }) as TaskBy<Partial<IStuffTalentForm>>
+
+  @task.resolved
+  updateItem = (async (form: IStuffTalentForm) => {
+    const formData = await this.createInsertFormData(form)
+    await api.put(this.predefined.baseApi, formData)
+  }) as TaskBy<Partial<IStuffTalentForm>>
+
+  @task.resolved
+  updateItemStatus = (async (id: number, status: StuffTalentStatus) => {
+    const formData = new FormData()
+
+    formData.append(
+      this.predefined.insertItemReqDto,
+      new Blob(
+        [
+          JSON.stringify({
+            id: id,
+            status: status,
+            isUse: true,
+          } as IStuffTalentInsertReqDto),
+        ],
+        {
+          type: 'application/json',
+        }
+      )
+    )
+
+    await api.patch(`${this.predefined.baseApi}`, formData)
+  }) as TaskBy2<number, StuffTalentStatus>
+
+  @task.resolved
+  toggleLike = (async (id: number, isLike: boolean) => {
+    await api.post(this.predefined.toggleLikeApi, {
+      [`${this.predefined.stuffTalentIdProperty}`]: id,
+      isLike,
+      isUse: true,
+    })
+
+    this.setLike(id, isLike)
+  }) as TaskBy2<number, boolean>
+
+  @action
+  setLike(id: number, isLike: boolean) {
+    // TODO store의 현재 items와 item 데이터를 둘다 갱신해야 돼서 이렇게 구현했는데, 보기에 개운하지 않음.
+    const found = this.item.id === id ? this.item : this.items.find((v) => v.id === id)
+
+    if (found) {
+      const likeCount = isLike ? found.likeCount + 1 : found.likeCount - 1
+
+      this.items = this.items.map((v) => {
+        return v.id === id ? { ...found!, isLike, likeCount } : v
+      })
+
+      this.item = this.item.id === id ? { ...this.item, isLike, likeCount } : this.item
+    }
+  }
+
+  @task
+  getUpdateForm = (async (_id: number) => {
+    await this.getItem(_id)
+
+    const images: ImageUploadItem[] = (await Promise.all(
+      this.item.imageUrls.map((v) => urlToFile(v))
+    )) as ImageUploadItem[]
+
+    this.setUpdateForm({
+      ...this.item,
+      communityId: this.item.community.id,
+      categoryId: this.item.category.id,
+      images,
+    })
+  }) as TaskBy<number>
+
+  @action
+  setForm(data: Partial<IStuffTalentForm>) {
+    this.form = {
+      ...this.form,
+      ...data,
+    }
+  }
+
+  @action
+  resetForm() {
+    this.form = initState.form
+  }
+
+  @action
+  setUpdateForm(data: Partial<IStuffTalentForm>) {
+    this.updateForm = {
+      ...this.updateForm,
+      ...data,
+    }
+  }
+
+  @action
+  resetUpdateForm() {
+    this.updateForm = initState.form
+  }
+
+  @task.resolved
+  createChat = (async (payload: ICreateChatDto) => {
+    await api
+      .post(this.predefined.createChatApi, {
+        ...payload,
+        isUse: true,
+      })
+      .catch(({ status }) => console.error('createChat response status:', status))
+  }) as TaskBy<ICreateChatDto>
 }

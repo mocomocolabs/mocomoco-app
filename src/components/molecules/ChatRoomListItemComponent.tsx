@@ -2,8 +2,9 @@ import _ from 'lodash'
 import { FC, useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { ChatRoomType, IChatRoom } from '../../models/chat.d'
+import { IUser } from '../../models/user'
 import { route } from '../../services/route-service'
-import { Profile } from '../atoms/ProfileComponent'
+import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { TextSm } from '../atoms/TextSmComponent'
@@ -18,14 +19,16 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
   useEffect(() => {}, [$chat.unReadCountAll])
 
   const isClub = room.type === ChatRoomType.CLUB
-  const contactUser = room.users.filter((v) => v.id !== $auth.user.id)[0]
+  // TODO 지금 내가 가진 모든 채팅방에서, 나만 말을 했거나, 아무 대화가 없으면 contactUser===undefined가 된다.
+  // UI적인 예외처리가 필요함.
+  const contactUser: IUser = room.users.filter((v) => v.id !== $auth.user.id)[0] ?? {}
   const imageUrl = isClub ? room.club.atchFiles[0].url : contactUser.profileUrl
   const lastChat = _.maxBy(room.chats, (v) => v.createdAt)
 
   const nickname = isClub ? room.club.name : contactUser.nickname
   const communityName = isClub
     ? room.club.community.name
-    : contactUser.communities.map((community) => community.name).join('/')
+    : contactUser.communities?.map((community) => community.name).join('/')
   const readCount = $chat.storeRooms.find((v) => v.id === room.id)?.readCount
 
   return (
@@ -40,7 +43,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           }
         }}
       >
-        <Profile url={imageUrl}></Profile>
+        <ProfileImage url={imageUrl}></ProfileImage>
       </div>
       <div className='flex-between-center flex-1' onClick={() => route.chatRoom(room.id)}>
         <div className='flex-col'>
@@ -52,7 +55,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           <TextBase className='ellipsis max-width-270'>{lastChat?.message}</TextBase>
         </div>
         {_.isNumber(readCount) && readCount > 0 && (
-          <div className='flex-center br-full bg-m-red w-6 min-w-6 h-6 ml-2'>
+          <div className='flex-center br-full bg-red w-6 min-w-6 h-6 ml-2'>
             <TextSm>{readCount}</TextSm>
           </div>
         )}

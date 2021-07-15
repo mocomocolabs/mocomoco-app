@@ -13,80 +13,112 @@ class RouteService {
     this.history.goBack()
   }
 
-  home() {
-    this.history.push('/home')
+  /**
+   * @param isReplace 현재 location history 교체 여부
+   */
+  // eslint-disable-next-line
+  route(url: string, param?: any, isReplace = false) {
+    this.history[isReplace ? 'replace' : 'push'](url, param)
+  }
+
+  intro() {
+    this.route('/intro')
   }
 
   signIn() {
-    this.history.push('/sign-in')
+    this.route('/sign-in')
   }
 
   signUp() {
-    this.history.push('/sign-up')
+    this.route('/sign-up')
   }
 
   signUpForm() {
-    this.history.push('/sign-up/form')
+    this.route('/sign-up/form')
   }
 
   signUpEmail() {
-    this.history.push('/sign-up/email')
+    this.route('/sign-up/email')
   }
 
   signUpCommunity() {
-    this.history.push('/sign-up/community')
+    this.route('/sign-up/community')
+  }
+
+  signUpComplete() {
+    this.route('/sign-up/complete')
+  }
+
+  home() {
+    this.route('/tabs/home')
   }
 
   feed() {
-    this.history.push('/feed')
+    this.route('/tabs/feed')
   }
 
   feedForm() {
-    this.history.push('/feed-write')
+    this.route('/tabs/feed/form')
   }
 
-  feedDetail(feedId: number, param?: { autoFocus?: boolean }) {
-    this.history.push(`/feed/${feedId}`, { autoFocus: param?.autoFocus })
+  feedDetail(feedId: number, param?: { autoFocus?: boolean }, isReplace = false) {
+    this.route(`/tabs/feed/${feedId}`, { autoFocus: param?.autoFocus }, isReplace)
+  }
+
+  stuff() {
+    this.route('/tabs/stuff')
+  }
+
+  stuffForm() {
+    this.route('/tabs/stuff/form')
   }
 
   stuffDetail(stuffId: number) {
-    this.history.push(`/stuff/${stuffId}`)
+    this.route(`/tabs/stuff/${stuffId}`)
+  }
+
+  talent() {
+    this.route('/tabs/talent')
+  }
+
+  talentForm() {
+    this.route('/tabs/talent/form')
   }
 
   talentDetail(talentId: number) {
-    this.history.push(`/talent/${talentId}`)
-  }
-
-  profileDetail(userId: number) {
-    this.history.push(`/users/${userId}`)
-  }
-
-  profileDetailEdit(userId: number) {
-    this.history.push(`/users/${userId}/edit`)
+    this.route(`/tabs/talent/${talentId}`)
   }
 
   chatRoom(roomId: number) {
-    this.history.push(`/chat/${roomId}`)
+    this.route(`/tabs/chat/${roomId}`)
   }
 
   clubs() {
-    this.history.push(`/club`)
+    this.route(`/tabs/club`)
   }
 
   clubForm() {
-    this.history.push(`/club-form`)
+    this.route(`/tabs/club/form`)
   }
 
   clubDetail(clubId: number) {
-    this.history.push(`/club/${clubId}`)
+    this.route(`/tabs/club/${clubId}`)
   }
 
   myPageMyList() {
-    this.history.push('/my-page/my-list')
+    this.route('/tabs/my-page/my-list')
   }
 
   myPageLikeList() {
-    this.history.push('/my-page/like-list')
+    this.route('/tabs/my-page/like-list')
+  }
+
+  profileDetail(userId: number) {
+    this.route(`/users/${userId}`)
+  }
+
+  profileDetailEdit(userId: number) {
+    this.route(`/users/${userId}/edit`)
   }
 
   get history() {

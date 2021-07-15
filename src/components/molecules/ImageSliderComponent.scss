@@ -1,0 +1,11 @@
+@import '../../theme/variable';
+
+.swiper-pagination-bullet {
+  background: $primary;
+  opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+  background: $primary;
+  opacity: 1;
+}

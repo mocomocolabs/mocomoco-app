@@ -1,6 +1,5 @@
-import { IonIcon } from '@ionic/react'
-import { eyeOff, eyeOutline } from 'ionicons/icons'
 import { FC, useState } from 'react'
+import { Icon } from './IconComponent'
 import { IInput, Input } from './InputComponent'
 
 export const InputPassword: FC<IInput> = (props) => {
@@ -8,12 +7,12 @@ export const InputPassword: FC<IInput> = (props) => {
 
   return (
     <div className='relative'>
-      <Input {...props} className='w-full h-10 my-1' type={showsPassword ? 'text' : 'password'}></Input>
-      <IonIcon
+      <Input {...props} className='inputpassword' type={showsPassword ? 'text' : 'password'}></Input>
+      <Icon
         onClick={() => setShowsPassword(!showsPassword)}
-        icon={showsPassword ? eyeOff : eyeOutline}
-        className='absolute-vertical-center right-0 pr-2'
-      ></IonIcon>
+        name={showsPassword ? 'eyeOff' : 'eyeOn'}
+        className='absolute-vertical-center right-0 mr-2 icon-primary'
+      ></Icon>
     </div>
   )
 }

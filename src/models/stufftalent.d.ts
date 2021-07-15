@@ -1,13 +1,16 @@
+import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IStuffTalentDto } from '../stores/stufftalent-store.d'
 
-export enum StuffTalentPathName {
+export enum StuffTalentPageKey {
   STUFF = 'STUFF',
   TALENT = 'TALENT',
 }
 
 export enum StuffTalentType {
-  GIVE = 'GIVE',
-  TAKE = 'TAKE',
+  SELL = 'SELL',
+  SHARE = 'SHARE',
+  EXCHANGE = 'EXCHANGE',
+  WANT = 'WANT',
 }
 
 export enum StuffTalentStatus {
@@ -16,19 +19,35 @@ export enum StuffTalentStatus {
   FINISH = 'FINISH',
 }
 
-export enum StuffTalentMethod {
-  SELL = 'SELL',
-  FREE = 'FREE',
-  EXCHANGE = 'EXCHANGE',
+export interface IStuffTalent extends IStuffTalentDto {
+  likeCount: number
+  imageUrls: string[]
+  chatroomId: number
 }
 
-export interface IStuffTalent extends IStuffTalentDto {}
-
 export interface IStuffTalentFilter {
-  isPublic: boolean
-  communityId: number | undefined
+  isPublic: boolean | undefined
+  communityId: number | null
   userId: number | undefined
   categories: number[]
-  statuses: StuffTalentStatus[]
+  notStatuses: StuffTalentStatus[]
   types: StuffTalentType[]
+  isLike?: boolean
+  limit: number
+}
+
+export interface IStuffTalentForm {
+  id?: number
+  communityId: number
+  status: StuffTalentStatus
+  type: StuffTalentType
+  categoryId: number
+  title: string
+  content: string
+  price?: number
+  exchangeText?: string
+  isExchangeable: boolean
+  isNegotiable: boolean
+  isPublic: boolean
+  images: ImageUploadItem[]
 }

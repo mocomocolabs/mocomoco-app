@@ -1,4 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonToolbar, useIonViewWillEnter } from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import { useEffect } from 'react'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { SignInEmail } from '../components/organisms/SignInEmailComponent'
 import { useStore } from '../hooks/use-store'
@@ -6,9 +7,9 @@ import { useStore } from '../hooks/use-store'
 export const LoginPage: React.FC = () => {
   const { $ui } = useStore()
 
-  useIonViewWillEnter(() => {
+  useEffect(() => {
     $ui.setIsBottomTab(false)
-  })
+  }, [])
 
   return (
     <IonPage>
