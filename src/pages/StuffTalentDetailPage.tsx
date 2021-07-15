@@ -16,11 +16,9 @@ import { ChatRoomListItem } from '../components/molecules/ChatRoomListItemCompon
 import { StuffTalentDetailContents } from '../components/molecules/StuffTalentDetailContentsComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
-import { ISubChat } from '../models/chat'
 import { getPageKey, routeFunc } from '../models/stufftalent'
 import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
-import { webSocket } from '../services/web-socket-service'
 import { IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
 
 export const StuffTalentDetailPage: React.FC = () => {
@@ -76,17 +74,8 @@ export const StuffTalentDetailPage: React.FC = () => {
           })
 
           await store.getItem(store.item.id)
-          // TODO 채팅방을 생성했으니 getRooms 호출을 해주는 게 맞겠지?
-          await $chat.getRooms({ roomIds: [...$chat.rooms.map((room) => room.id), store.item.chatroomId] })
 
-          webSocket.subscribeRoom(store.item.chatroomId, (data) => {
-            const subChat = JSON.parse(data.body) as ISubChat
-            $chat.setChat(subChat)
-            $chat.setLastChatId({
-              roomId: subChat.chatroom.id,
-              readChatId: subChat.id,
-            })
-          })
+          $chat.subscribeNewRoom(store.item.chatroomId)
 
           route.chatRoom(store.item.chatroomId)
         }}

@@ -14,10 +14,11 @@ import { ClubDetailMember } from '../../components/molecules/ClubDetailMemberCom
 import { Footer } from '../../components/organisms/FooterComponent'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
+import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubDetailPage: React.FC = () => {
   const id = parseInt(useParams<{ id: string }>().id)
-  const { $ui, $club, $auth } = useStore()
+  const { $ui, $club, $auth, $chat } = useStore()
 
   useEffect(() => {
     // TODO: statusbar 투명 체크
@@ -37,6 +38,7 @@ export const ClubDetailPage: React.FC = () => {
             <ClubDetailMember
               members={$club.club.members}
               community={$club.club.community}
+              createChat={$chat.createChat}
             ></ClubDetailMember>
 
             <Pad className='pb-extra-space'></Pad>
@@ -66,9 +68,12 @@ export const ClubDetailPage: React.FC = () => {
                         text='소모임 참여하기'
                         className='h-10'
                         onClick={() => {
-                          $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })
-                          // TODO: 테스트후 주석 제거
-                          // route.chatRoom($club.club.chatroomId)
+                          executeWithError(async () => {
+                            await $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })
+                            await $club.getClub(id)
+                            $chat.subscribeNewRoom($club.club.chatroomId)
+                            route.chatRoom($club.club.chatroomId)
+                          })
                         }}
                       ></SubmitButton>
                     }
@@ -77,8 +82,11 @@ export const ClubDetailPage: React.FC = () => {
                   <SubmitButton
                     text='채팅 참여하기'
                     className='bg-m-secondary'
-                    // TODO: set chatRoom Id
-                    onClick={() => route.chatRoom(1)}
+                    onClick={() => {
+                      // 첫 채팅참여일 수 있음
+                      $chat.subscribeNewRoom($club.club.chatroomId)
+                      route.chatRoom($club.club.chatroomId)
+                    }}
                   ></SubmitButton>
                 )}
               </div>

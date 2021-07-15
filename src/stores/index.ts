@@ -35,7 +35,7 @@ export class RootStore {
     this.$ui = new UiStore()
     this.$stuff = new StuffTalentStore(PageKey.STUFF, this)
     this.$talent = new StuffTalentStore(PageKey.TALENT, this)
-    this.$chat = new ChatStore()
+    this.$chat = new ChatStore(this)
     this.$club = new ClubStore(this)
     this.$segment = new SegmentStore()
   }

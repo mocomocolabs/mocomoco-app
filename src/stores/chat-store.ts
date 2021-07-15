@@ -1,26 +1,29 @@
 import _ from 'lodash'
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
+import { RootStore } from '.'
+import { ChatRoom } from '../models/chat-room'
 import {
+  ChatRoomType,
   ChatType,
   IChat,
   IChatForm,
   IChatRoom,
-  IChatRoomsDto,
   IStoreChatRoom,
-  ISubChat,
+  ISubscribeChat,
 } from '../models/chat.d'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { webSocket } from '../services/web-socket-service'
+import { AuthStore } from './auth-store'
 import {
-  GetChatRoomsTask,
-  IGetRooms,
+  IChatRoomDto,
   IInsertChatMessage,
   InsertChatMessageTask,
   ISetReadChatId,
   SetReadChatIdTask,
 } from './chat-store.d'
+import { TaskBy, TaskBy2 } from './task'
 
 const initState = {
   rooms: [],
@@ -30,7 +33,7 @@ const initState = {
 }
 
 export class ChatStore {
-  @observable.shallow rooms: IChatRoom[] = initState.rooms
+  @observable rooms: ChatRoom[] = initState.rooms
   @observable currentRoomId: number | null = initState.currentRoomId
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
   @observable form: { [roomId: number]: IChatForm } = initState.form
@@ -40,15 +43,57 @@ export class ChatStore {
    */
   @observable storeRooms: IStoreChatRoom[] = initState.storeRooms
 
+  $auth: AuthStore
+
+  constructor(rootStore: RootStore) {
+    this.$auth = rootStore.$auth
+  }
+
+  connectRooms = async () => {
+    await this.getRooms(this.$auth.user.chatroomIds)
+
+    // 웹소켓 연결
+    webSocket.init()
+    webSocket.connectRooms(
+      // 기존 채팅방
+      {
+        roomIds: this.rooms.map((v) => v.id),
+        cb: (data) => {
+          const subChat = JSON.parse(data.body) as ISubscribeChat
+          this.setChatAndMeta(subChat)
+        },
+      },
+      // 새로운 채팅방
+      {
+        userId: this.$auth.user.id,
+        cb: (data) => {
+          // 첫 채팅을 받는 경우
+          const subChat = JSON.parse(data.body) as ISubscribeChat
+          // 새로 만들어진 채팅방을 구독상태로 한다.
+          this.subscribeNewRoom(subChat.chatroom.id)
+
+          // 기존 채팅방에 새로운 채팅룸 공간을 생성.
+          // 첫 채팅 데이터를 스토어에 저장한다.
+          this.setChatAndMeta(subChat)
+        },
+      }
+    )
+  }
+
   @task
-  getRooms = (async ({ roomIds }: IGetRooms) => {
+  getRooms = (async (roomIds) => {
+    console.log(roomIds)
+    if (!roomIds || roomIds.length === 0) {
+      return
+    }
+
     await api
-      .get<IChatRoomsDto>('/v1/chatrooms', {
+      .get<{ chatrooms: IChatRoomDto[] }>('/v1/chatrooms?limit=999', {
         params: { ids: roomIds.toString() },
       })
       .then(
         action(async (data) => {
-          this.rooms = data.chatrooms
+          this.rooms = data.chatrooms.map((v) => ChatRoom.of(v, this.$auth.user.id))
 
           // TODO: 앱 재설치시, 모든 채팅이 unread 상태인데 추후 대안 필요
           const orgStoreChatRooms = await storage.getStoreChatRoom()
@@ -76,7 +121,87 @@ export class ChatStore {
           }
         })
       )
-  }) as GetChatRoomsTask
+  }) as TaskBy<number[]>
+
+  /**
+   * 해당 유저와 1:1 채팅을 생성합니다.
+   * @param targetUserId 상대방의 userId
+   */
+  @action
+  createChat = async (targetUserId: number) => {
+    const createdRoom = this.rooms.find(
+      (v) => v.type === ChatRoomType.NORMAL && v.users.some((user) => user.id === targetUserId)
+    )
+    if (createdRoom) {
+      return createdRoom.id
+    }
+
+    await api.post('/v1/chatrooms', {
+      type: ChatRoomType.NORMAL,
+      name: '-',
+      relationUserIds: [targetUserId, this.$auth.user.id].join(','),
+    })
+
+    const roomId = await this.getRoomIdBy(targetUserId)
+
+    if (!roomId) {
+      throw new Error('채팅 생성에 문제가 발생했습니다. 관리자에게 문의해주실래요?')
+    }
+
+    this.subscribeNewRoom(roomId)
+
+    return roomId
+  }
+
+  @task.resolved
+  insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
+    const room = _.find(this.rooms, (v) => v.id === roomId)
+
+    await api
+      .post<ISubscribeChat>('/v1/chats', {
+        type: ChatType.TALK,
+        message,
+        chatroomId: roomId,
+        isUse: true,
+      })
+      .then((data) => {
+        if (room !== undefined) room.readChatId = data.id
+        webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
+        this.setForm(roomId, '')
+      })
+  }) as InsertChatMessageTask
+
+  /**
+   *
+   * @param lastId 현재 화면의 마지막 chat id
+   */
+  @task.resolved
+  getChatMessages = (async (chatRoomId: number, lastId: number) => {
+    const { chats } = await api.get<{ chats: IChat[] }>('/v1/chats', {
+      params: {
+        'chat-room-id': chatRoomId,
+        'last-id': lastId,
+        'limit': 20,
+      },
+    })
+
+    this.setChats(chatRoomId, chats)
+  }) as TaskBy2<number, number>
+
+  /**
+   * 새로 생성된 roomId를 리턴합니다
+   * TODO : 추후 서버와 협의후 chat insert후 바로 roomId를 리턴하도록 수정
+   * @param targetUserId 1:1 채팅의 상대방 userId
+   */
+  async getRoomIdBy(targetUserId: number) {
+    await this.$auth.signInWithToken()
+    await this.getRooms(this.$auth.user.chatroomIds)
+    const newRoom = this.rooms.find(
+      (v) => v.type === ChatRoomType.NORMAL && v.users.some((u) => u.id === targetUserId)
+    )
+
+    return newRoom?.id
+  }
 
   @action
   setLastChatId = (async ({ roomId, readChatId }: ISetReadChatId) => {
@@ -99,23 +224,31 @@ export class ChatStore {
     storage.setStoreChatRoom(this.storeRooms)
   }) as SetReadChatIdTask
 
-  @task.resolved
-  insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
-    const room = _.find(this.rooms, (v) => v.id === roomId)
+  @action
+  setChatAndMeta = (chat: ISubscribeChat) => {
+    // 기존 채팅방에 새로운 채팅룸 공간을 생성.
+    // 첫 채팅 데이터를 스토어에 저장한다.
+    this.setChat(chat)
+    this.setLastChatId({
+      roomId: chat.chatroom.id,
+      readChatId: chat.id,
+    })
+  }
 
-    await new Promise((r) => setTimeout(() => r(true), 1000))
-    await api
-      .post<ISubChat>('/v1/chats', {
-        type: ChatType.TALK,
-        message,
-        chatroomId: roomId,
-        isUse: true,
-      })
-      .then((data) => {
-        if (room !== undefined) room.readChatId = data.id
-        webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
-      })
-  }) as InsertChatMessageTask
+  subscribeRoom = (roomId: number) => {
+    webSocket.subscribeRoom(roomId, (data) => {
+      const subChat = JSON.parse(data.body) as ISubscribeChat
+      this.setChatAndMeta(subChat)
+    })
+  }
+
+  subscribeNewRoom = (roomId: number) => {
+    this.subscribeRoom(roomId)
+    const currentRoomIds = [...this.rooms.map((v) => v.id)]
+    if (!currentRoomIds.includes(roomId)) {
+      this.getRooms([roomId, ...currentRoomIds])
+    }
+  }
 
   @action
   setCurrentRoomId(roomId: number | null) {
@@ -128,12 +261,20 @@ export class ChatStore {
   }
 
   @action
-  setChat(subChat: ISubChat) {
+  setChat(subChat: ISubscribeChat) {
     const chat = _.omit(subChat, ['chatroom']) as IChat
 
     this.rooms = this.rooms.map((v) => ({
       ...v,
-      chats: v.id === subChat.chatroom.id ? [...v.chats, chat] : v.chats,
+      chats: v.id === subChat.chatroom.id ? [chat, ...v.chats] : v.chats,
+    }))
+  }
+
+  @action
+  setChats(roomId: number, chats: IChat[]) {
+    this.rooms = this.rooms.map((v) => ({
+      ...v,
+      chats: v.id === roomId ? [...v.chats, ...chats] : v.chats,
     }))
   }
 

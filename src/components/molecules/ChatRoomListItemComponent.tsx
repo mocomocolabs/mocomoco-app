@@ -4,6 +4,7 @@ import { useStore } from '../../hooks/use-store'
 import { ChatRoomType, IChatRoom } from '../../models/chat.d'
 import { IUser } from '../../models/user'
 import { route } from '../../services/route-service'
+import { timeDiff } from '../../utils/datetime-util'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
@@ -34,7 +35,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
   return (
     <li className='py-4 flex'>
       <div
-        className='mr-2'
+        className='mr-2 mr-4'
         onClick={() => {
           if (isClub) {
             console.log('클럽 홈으로 가야됨')
@@ -43,22 +44,24 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           }
         }}
       >
-        <ProfileImage url={imageUrl}></ProfileImage>
+        <ProfileImage className='width-64 height-64' url={imageUrl}></ProfileImage>
       </div>
-      <div className='flex-between-center flex-1' onClick={() => route.chatRoom(room.id)}>
-        <div className='flex-col'>
+      <div className='flex-col justify-center flex-1' onClick={() => route.chatRoom(room.id)}>
+        <div className='flex flex-between-center'>
           <div className='flex'>
-            <TextLg className='mr-2'>{nickname}</TextLg>
-            <TextBase className='mr-2 d-gray'>{communityName}</TextBase>
-            <TextBase className='d-gray'>{lastChat?.createdAt}</TextBase>
+            <TextLg className='mr-2 text-bold'>{nickname}</TextLg>
+            <TextBase className='mr-2 gray'>{communityName}</TextBase>
           </div>
-          <TextBase className='ellipsis max-width-270'>{lastChat?.message}</TextBase>
+          <TextBase className='gray'>{timeDiff(lastChat?.createdAt)}</TextBase>
         </div>
-        {_.isNumber(readCount) && readCount > 0 && (
-          <div className='flex-center br-full bg-red w-6 min-w-6 h-6 ml-2'>
-            <TextSm>{readCount}</TextSm>
-          </div>
-        )}
+        <div className='flex-between-center'>
+          <TextBase className='ellipsis max-width-270'>{lastChat?.message}</TextBase>
+          {_.isNumber(readCount) && readCount > 0 && (
+            <div className='flex-center br-full bg-red w-6 h-6 ml-2 white'>
+              <TextSm>{readCount}</TextSm>
+            </div>
+          )}
+        </div>
       </div>
     </li>
   )

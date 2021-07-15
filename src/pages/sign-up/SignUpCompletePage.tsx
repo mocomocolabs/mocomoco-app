@@ -21,9 +21,9 @@ export const SignUpCompletePage: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <ImageSlider urls={['/assets/img/hama.png']}></ImageSlider>
+        <ImageSlider urls={['/assets/img/hama-signup.png']} height={452}></ImageSlider>
         <div className='px-8'>
-          <TextXxl className='text-bold d-gray text-center'>회원가입이 완료되었어요!</TextXxl>
+          <TextXxl className='text-bold d-gray text-center'>회원가입을 감사드립니다!</TextXxl>
           <TextSm className='d-gray mt-8'>관리자 승인 후 연락드릴게요 :)</TextSm>
         </div>
       </IonContent>

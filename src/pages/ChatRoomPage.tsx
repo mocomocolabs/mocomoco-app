@@ -1,5 +1,6 @@
-import { IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { IonContent, IonFooter, IonHeader, IonPage, IonToolbar } from '@ionic/react'
 import _ from 'lodash'
+import { Observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -12,6 +13,7 @@ interface ILocationState {
 }
 
 export const ChatRoomPage: React.FC = () => {
+  // TODO: 1:1 개인 채팅시, 첫 채팅 후 채팅방이 생성되도록 수정 필요
   const roomId = parseInt(useParams<{ id: string }>().id)
   const autoFocus = useHistory<ILocationState>().location.state?.autoFocus
 
@@ -45,14 +47,12 @@ export const ChatRoomPage: React.FC = () => {
           <div slot='start'>
             <BackButton type='arrow' />
           </div>
-          <IonTitle slot='start'>쪽지 보내기</IonTitle>
+          <Observer>{() => <div className='text-header text-center'>{$chat.room?.name}</div>}</Observer>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        <div className='px-container flex-col justify-end'>
-          <ChatRoomDetail roomId={roomId}></ChatRoomDetail>
-        </div>
+        <ChatRoomDetail></ChatRoomDetail>
       </IonContent>
 
       <IonFooter>

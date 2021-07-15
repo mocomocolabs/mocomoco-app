@@ -7,23 +7,48 @@ import { storage } from './storage-service'
 class WebSocketService {
   private wsUrl = config.SOCKET_URL
   private stompClient: CompatClient | null = null
+  private savedRoomIds: number[] = []
 
   init() {
     this.stompClient = Stomp.over(() => new SockJS(this.wsUrl))
     this.stompClient.debug = (str) => console.log(str)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  connectRooms(roomIds: number[], cb: (data: any) => void) {
-    this.stompClient?.connect({ Authorization: storage.accessTokenForSync }, () =>
-      roomIds.forEach((v) => this.subscribeRoom(v, cb))
-    )
+  /**
+   * 채팅방을 구독합니다
+   * @param subscribeRooms 기존 채팅방을 구독
+   * @param subscribeNewChat 새로운 채팅방을 구독
+   */
+  connectRooms(
+    subscribeRooms: {
+      roomIds: number[]
+      cb: (data: any) => void
+    },
+    subscribeNewChat: {
+      userId: number
+      cb: (data: any) => void
+    }
+  ) {
+    this.stompClient?.connect({ Authorization: storage.accessTokenForSync }, () => {
+      subscribeRooms.roomIds.forEach((v) => this.subscribeRoom(v, subscribeRooms.cb))
+      this.subscribeFirstChat(subscribeNewChat.userId, subscribeNewChat.cb)
+    })
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscribeRoom(roomId: number, cb: (data: any) => void) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.stompClient?.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
+    if (!this.savedRoomIds.some((v) => v === roomId)) {
+      console.log('📡 subscribe roomId ', roomId)
+
+      this.savedRoomIds.push(roomId)
+      this.stompClient?.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  subscribeFirstChat(userId: number, cb: (data: any) => void) {
+    console.log('🗿 subscribe userId ', userId)
+    this.stompClient?.subscribe(`/sub/chat/users/${userId}`, (data: any) => cb(data))
   }
 
   sendMessageForRoom(roomId: number, message: string) {
