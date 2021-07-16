@@ -7,6 +7,7 @@ import { Checkbox } from '../components/atoms/CheckboxComponent'
 import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { Icon } from '../components/atoms/IconComponent'
 import { InputNormal } from '../components/atoms/InputNormalComponent'
+import { IsPublicToast } from '../components/atoms/IsPublicToast'
 import { Pad } from '../components/atoms/PadComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
 import { TextXl } from '../components/atoms/TextXlComponent'
@@ -146,6 +147,7 @@ export const FeedFormPage: FC<IFeedForm> = () => {
               defaultChecked={$feed.form.isPublic}
               onChange={(checked) => $feed.setForm({ isPublic: checked })}
             ></Checkbox>
+            <IsPublicToast />
           </div>
         </IonFooter>
       </IonPage>

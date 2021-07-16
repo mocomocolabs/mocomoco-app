@@ -2,7 +2,6 @@ import { IonContent, IonFooter, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { Checkbox } from '../../components/atoms/CheckboxComponent'
 import { HeaderSubmitText } from '../../components/atoms/HeaderSubmitText'
 import { Icon } from '../../components/atoms/IconComponent'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
@@ -107,14 +106,16 @@ export const ClubFormPage: React.FC = () => {
           {/* TODO: 카메라 플러그인 추가 */}
           <Icon
             name={$club.form.images.length ? 'image-solid' : 'image'}
-            className='icon-primary'
+            className='icon-secondary'
             onClick={() => uploader.current?.click()}
           ></Icon>
+          {/* TODO 소모임은 현재, 모든 공동체 보기가 없기 때문에 전체 공개 체크박스도 막아두는 게 일관성있겠다.
           <Checkbox
             label='전체 공개'
             defaultChecked={$club.form.isPublic!}
             onChange={(checked) => $club.setForm({ isPublic: checked })}
           ></Checkbox>
+          <IsPublicToast /> */}
         </div>
       </IonFooter>
     </IonPage>

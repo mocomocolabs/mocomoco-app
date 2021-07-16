@@ -6,6 +6,7 @@ import { Checkbox } from '../components/atoms/CheckboxComponent'
 import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { Icon } from '../components/atoms/IconComponent'
 import { InputNormal } from '../components/atoms/InputNormalComponent'
+import { IsPublicToast } from '../components/atoms/IsPublicToast'
 import { Pad } from '../components/atoms/PadComponent'
 import { SquareWithCorner } from '../components/atoms/SquareWithCornerComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
@@ -234,6 +235,7 @@ export const StuffTalentFormPage: React.FC = () => {
             defaultChecked={form.isPublic}
             onChange={(checked) => setValueCustom('isPublic', checked)}
           ></Checkbox>
+          <IsPublicToast />
         </div>
       </IonFooter>
     </IonPage>

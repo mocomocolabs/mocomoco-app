@@ -1,0 +1,7 @@
+ion-toast.is-public-toast {
+  --background: var(--ion-color-primary-tint);
+  --start: 40%;
+  --end: 1rem;
+  bottom: 2.8rem;
+  top: unset !important;
+}
