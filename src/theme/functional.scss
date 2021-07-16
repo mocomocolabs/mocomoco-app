@@ -1125,6 +1125,10 @@
   color: $red;
 }
 
+.textprimary {
+  color: $textprimary;
+}
+
 .ellipsis {
   @extend %ellipsis;
 }

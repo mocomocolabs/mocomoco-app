@@ -15,7 +15,7 @@ export const BackButtonIntro: FC<IBackButtonIntro> = ({ children }) => {
         <div className='mt-1 absolute'>
           <BackButton type='arrow' action={() => route.signUp()}></BackButton>
         </div>
-        <TextXxl className='d-gray flex-1 text-bold text-center'>{children}</TextXxl>
+        <TextXxl className='textprimary flex-1 text-bold text-center'>{children}</TextXxl>
       </div>
       <Pad className='height-50'></Pad>
     </>

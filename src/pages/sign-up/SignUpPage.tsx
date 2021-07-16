@@ -31,7 +31,7 @@ export const SignUpPage: React.FC = () => {
     <IonPage>
       <IonContent>
         <div className='px-container'>
-          <TextXxl className='text-bold d-gray mt-8'>
+          <TextXxl className='text-bold textprimary mt-8'>
             하나의 마을
             <br />
             하마에 어서오세요!

@@ -10,6 +10,7 @@ export interface IToast {
     | 'light'
     | 'medium'
     | 'dark'
+    | 'textprimary'
   message?: string
   duration?: number
 }

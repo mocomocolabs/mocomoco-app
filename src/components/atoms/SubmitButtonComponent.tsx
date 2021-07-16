@@ -21,7 +21,7 @@ export const SubmitButton: FC<ISubmitButton> = ({
   const getTextColor = (color: Color) => {
     switch (color) {
       case 'primary':
-        return 'd-gray'
+        return 'textprimary'
       case 'secondary':
       case 'gray':
         return 'white'

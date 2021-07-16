@@ -7,12 +7,23 @@
 key값이 변해야 slides가 정상적으로 destroyed 된다.
 https://github.com/ionic-team/ionic-framework/issues/18782#issuecomment-558075082
 
+## \_ionic.scss와 \_variable.scss의 역할 정리
+
+`_ionic.scss`에는 dark테마나 ios, android 등 여러 selector를 구분하여 각각 변수값들을 다르게 설정해둘 수 있다. 이 때, 변수명은 `--`로 시작해야 하며, `var(변수)` 함수를 이용해서 scss 상에서 참조할 수 있다.
+
+`_variable.scss`에는 `$`나 `%` 등 일반적인 sass변수들을 설정해뒀고, scss 파일에서 변수명만으로 편하게 가져다 쓸 수 있다. 단, 위에 언급한 것처럼, ionic 변수나 커스텀 프로퍼티를 정의할 때는 참조가 안된다.
+
+서로 간의 참조순서를 정리해 보자면, `_ionic.scss`에는 테마별 기본값을 적어두고, `_variable.scss`에서는 그 값을 가져다 쓰면 되겠다. 즉, `_ionic.scss`에 테마별 selector별로 변수값들을 설정해두고, `_variable.scss`에서는 현재 선택된 selector의 값을 동적으로 참조하는 구조가 된다.
+
 ## Ionic Custom Property & Css Variables
 
 <img src="./img/ionic-custom-property.png">
 
-아이오닉 컴포넌트(ex IonInput)에서는 커스텀 프로퍼티를 사용해야만 CSS가 적용되는 경우가 있다. 이때 주의해야할 것이 `_variable.scss`의 scss 변수값 적용이 안된다.
-대신 `_ionic.scss`의 변수값을 `var(변수)`형태로 사용할 수 있다.
+Ionic 변수 또는 커스텀 프로퍼티를 정의할 때 `var(변수)` 함수로 다른 ionic 변수를 참조할 수 있다. 이 때 주의할 것은, `--`로 시작하는 변수명만 참조가능하다는 점이다. 그외에 `$`로 시작하는 등 다른 형식의 sass변수는 참조가 안된다. 그런 이유로, `var()`로는 `_variable.scss`의 변수들을 참조할 수 없다. 그리고 `var()` 없이 `$primary`처럼 변수명만 써도 참조할 수 없다.
+
+Ionic의 CSS 변수명은 `--`로 시작하도록 제약되어 있고, `:root` 등 selector 내부에만 정의할 수 있다. `_variable.scss`의 변수명을 `--`로 시작하도록 변경하려면 selector를 적용해야 한다.
+
+아이오닉 컴포넌트(ex IonInput)에서는 커스텀 프로퍼티를 사용해야만 CSS가 적용되는 경우가 있다. 이 때에도 마찬가지 룰이 적용된다.
 
 https://ionicframework.com/docs/theming/css-variables
 
