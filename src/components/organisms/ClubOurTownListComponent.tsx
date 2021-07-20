@@ -32,11 +32,11 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
               <div className='flex'>
                 <div className='flex items-center'>
                   <Icon name='time' size={12} className='icon-secondary'></Icon>
-                  <TextXs className='ml-1 gray'>{v.meetingPlace}</TextXs>
+                  <TextXs className='ml-1 gray'>{v.meetingTime}</TextXs>
                 </div>
                 <div className='ml-4 flex items-center'>
                   <Icon name='location' size={12} className='icon-secondary'></Icon>
-                  <TextXs className='ml-1 gray'>{v.meetingTime}</TextXs>
+                  <TextXs className='ml-1 gray'>{v.meetingPlace}</TextXs>
                 </div>
               </div>
               <div className='flex justify-between mt-2'>
