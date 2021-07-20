@@ -4,7 +4,9 @@ import { useObserver } from 'mobx-react-lite'
 import { Dispatch, FC, SetStateAction, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { allCommunity } from '../../stores/community-store'
-import { TextLg } from '../atoms/TextLgComponent'
+import { Icon } from '../atoms/IconComponent'
+import { TextBase } from '../atoms/TextBaseComponent'
+import './CommunitySelectorModalComponent.scss'
 import { Modal } from './ModalComponent'
 
 export interface ICommunitySelectorModal {
@@ -13,28 +15,42 @@ export interface ICommunitySelectorModal {
 }
 
 export const CommunitySelectorModal: FC<ICommunitySelectorModal> = ({ isShow, setIsShow }) => {
-  const { $community } = useStore()
+  const { $community, $auth } = useStore()
 
   const communites = useMemo(() => [allCommunity, ...$community.communities], [$community.communities])
 
   return useObserver(() => (
-    <Modal isShow={isShow} setIsShow={setIsShow} title='지역 / 공동체 선택'>
-      <ul className='px-container pt-2'>
-        {communites.map((v, i) => (
-          <li
-            key={i}
-            className='py-2'
-            onClick={() => {
-              $community.setSelectedId(v.id)
-              setIsShow(false)
-            }}
-          >
-            <div className='flex-between-center'>
-              <TextLg>{v.name}</TextLg>
-              {v.id === $community.selectedId && <IonIcon icon={checkmark}></IonIcon>}
-            </div>
-          </li>
-        ))}
+    <Modal isShow={isShow} setIsShow={setIsShow} title='공동체 선택'>
+      <ul>
+        {communites.map((v, i) => {
+          const isSelected = v.id === $community.selectedId
+          const isMyCommunity = v.id === $auth.user.communityId
+
+          return (
+            <li
+              key={i}
+              className='border-bottom py-3'
+              onClick={() => {
+                $community.setSelectedId(v.id)
+                setIsShow(false)
+              }}
+            >
+              <div className='px-container flex-between-center'>
+                <TextBase className={`flex-center ${!isSelected && 'gray'}`}>
+                  {isMyCommunity && (
+                    <Icon
+                      name={`${isSelected ? 'home-solid' : 'home'}`}
+                      size={20}
+                      className='icon-primary mr-1'
+                    />
+                  )}
+                  {v.name}
+                </TextBase>
+                {isSelected && <IonIcon icon={checkmark} />}
+              </div>
+            </li>
+          )
+        })}
       </ul>
     </Modal>
   ))

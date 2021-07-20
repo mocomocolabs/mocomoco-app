@@ -15,8 +15,8 @@ export const CommunitySelector: FC<ICommunitySelector> = () => {
   return useObserver(() => (
     <>
       <div className='flex items-center' onClick={() => setIsShowModal(true)}>
-        <Icon name='arrow' className='icon-rotate-270'></Icon>
-        <TextXl className='ml-2 text-bold'>{$community.community?.name}</TextXl>
+        <TextXl className='mr-2 text-bold'>{$community.community?.name}</TextXl>
+        <Icon name='arrow' size={20} className='icon-rotate-270'></Icon>
       </div>
 
       <CommunitySelectorModal isShow={isShowModal} setIsShow={setIsShowModal}></CommunitySelectorModal>
