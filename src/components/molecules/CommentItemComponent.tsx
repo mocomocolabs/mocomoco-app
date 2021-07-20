@@ -1,11 +1,10 @@
 import { useObserver } from 'mobx-react-lite'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IComment } from '../../models/comment'
 import { timeDiff } from '../../utils/datetime-util'
-import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { XDivider } from '../atoms/XDividerComponent'
+import { MorePopoverButton } from './MorePopoverButtonComponent'
 import { ProfileCard } from './ProfileCardComponent'
 
 export interface ICommentItem {
@@ -15,7 +14,7 @@ export interface ICommentItem {
 }
 
 export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu }) => {
-  const { $comment, $feed } = useStore()
+  const { $comment, $feed, $ui } = useStore()
 
   const onDelete = async (id: number) => {
     await $comment.deleteComment(id)
@@ -26,6 +25,26 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
     $comment.setUpdateFormBy(id, content)
     $comment.setUpdateCommentId(id)
   }
+
+  const popoverItems = useMemo(
+    () => [
+      {
+        label: '수정',
+        onClick: () => onEdit(comment.id, comment.content),
+      },
+      {
+        label: '삭제',
+        onClick: () => {
+          $ui.showAlert({
+            isOpen: true,
+            message: '게시글을 삭제하시겠어요?',
+            onSuccess: () => onDelete(comment.id),
+          })
+        },
+      },
+    ],
+    []
+  )
 
   return useObserver(() => (
     <>
@@ -39,15 +58,10 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
             extraText={timeDiff(comment.createdAt)}
           ></ProfileCard>
 
-          <OverflowMenuIcon
-            show={showOverlowMenu}
-            onDelete={() => onDelete(comment.id)}
-            onEdit={() => onEdit(comment.id, comment.content)}
-          />
+          {showOverlowMenu && <MorePopoverButton items={popoverItems} />}
         </div>
         <TextBase className='ml-13'>{comment.content}</TextBase>
       </div>
-      <XDivider></XDivider>
     </>
   ))
 }
