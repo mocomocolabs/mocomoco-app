@@ -117,10 +117,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
             <TextSm>{feed.likeCount}</TextSm>
           </div>
           <div className='flex items-center' onClick={onClick}>
-            <Icon
-              name={feed.writtenComment ? 'conversation-bubble-solid' : 'conversation-bubble'}
-              className='mr-2 icon-secondary'
-            ></Icon>
+            <Icon name={feed.writtenComment ? 'chat-solid' : 'chat'} className='mr-2 icon-secondary'></Icon>
             <TextSm>{feed.comments?.length}</TextSm>
           </div>
         </div>
