@@ -10,7 +10,7 @@ export const InputPassword: FC<IInput> = (props) => {
       <Input {...props} className='inputpassword' type={showsPassword ? 'text' : 'password'}></Input>
       <Icon
         onClick={() => setShowsPassword(!showsPassword)}
-        name={showsPassword ? 'eyeOff' : 'eyeOn'}
+        name={showsPassword ? 'eyeOn' : 'eyeOff'}
         className='absolute-vertical-center right-0 mr-2 icon-primary'
       ></Icon>
     </div>
