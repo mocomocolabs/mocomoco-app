@@ -1503,3 +1503,7 @@
   position: relative;
   overflow: hidden;
 }
+
+li.border-bottom {
+  border-bottom: 1px solid rgba($primary-rgb, 0.5);
+}

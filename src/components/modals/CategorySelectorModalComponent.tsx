@@ -1,8 +1,7 @@
-import { IonIcon } from '@ionic/react'
-import { checkmark } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import { Dispatch, FC, SetStateAction } from 'react'
-import { TextLg } from '../atoms/TextLgComponent'
+import { Icon } from '../atoms/IconComponent'
+import { TextBase } from '../atoms/TextBaseComponent'
 import { Modal } from './ModalComponent'
 
 export interface ICategorySelectorModal {
@@ -22,19 +21,19 @@ export const CategorySelectorModal: FC<ICategorySelectorModal> = ({
 }) => {
   return useObserver(() => (
     <Modal isShow={isShow} setIsShow={setIsShow} title='카테고리 선택'>
-      <ul className='px-container pt-2'>
+      <ul>
         {categories.map((v) => (
           <li
             key={v.id}
-            className='py-2'
+            className='border-bottom py-3'
             onClick={() => {
               onSelect(v.id)
               setIsShow(false)
             }}
           >
-            <div className='flex-between-center'>
-              <TextLg>{v.name}</TextLg>
-              {v.id === selectedId && <IonIcon icon={checkmark}></IonIcon>}
+            <div className='px-container flex-between-center'>
+              <TextBase className={`flex-center ${v.id !== selectedId && 'gray'}`}>{v.name}</TextBase>
+              {v.id === selectedId && <Icon name='check-no-border' className='icon-secondary' />}
             </div>
           </li>
         ))}

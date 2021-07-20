@@ -13,11 +13,11 @@ export interface ModalProps {
 export const Modal: FC<ModalProps> = ({ isShow, setIsShow, title, children }) => (
   <IonModal isOpen={isShow}>
     <Header>
-      <div slot='start' className='flex-1 items-center'>
+      <div slot='start' className='flex-1 flex-none items-center'>
         <Icon name='close' onClick={() => setIsShow(false)}></Icon>
       </div>
-      <div className='flex-1 text-header text-center'>{title}</div>
-      <div slot='end' className='flex-1' />
+      <div className='flex-center flex-grow text-header text-center'>{title}</div>
+      <div slot='end' className='flex-none w-4'></div>
     </Header>
     <IonContent>{children}</IonContent>
   </IonModal>

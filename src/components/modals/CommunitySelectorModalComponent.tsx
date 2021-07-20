@@ -1,12 +1,9 @@
-import { IonIcon } from '@ionic/react'
-import { checkmark } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
 import { Dispatch, FC, SetStateAction, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { allCommunity } from '../../stores/community-store'
 import { Icon } from '../atoms/IconComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import './CommunitySelectorModalComponent.scss'
 import { Modal } from './ModalComponent'
 
 export interface ICommunitySelectorModal {
@@ -46,7 +43,7 @@ export const CommunitySelectorModal: FC<ICommunitySelectorModal> = ({ isShow, se
                   )}
                   {v.name}
                 </TextBase>
-                {isSelected && <IonIcon icon={checkmark} />}
+                {isSelected && <Icon name='check-no-border' className='icon-secondary' />}
               </div>
             </li>
           )
