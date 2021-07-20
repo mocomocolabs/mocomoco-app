@@ -26,9 +26,9 @@ export const SettingsPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot='start'>
-            <IonBackButton text='' color='dark' defaultHref='/my-page' />
+            <IonBackButton text='' color='dark' defaultHref='/tabs/my-page' />
           </IonButtons>
-          <IonTitle slot='start'>마이페이지</IonTitle>
+          <IonTitle slot='start'>설정</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
