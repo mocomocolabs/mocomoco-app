@@ -15,32 +15,30 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
   const { $comment, $feed } = useStore()
 
   return useObserver(() => (
-    <div className='px-container py-2 flex items-center'>
+    <>
       <Icon
         name='close'
-        className='icon-20'
         onClick={() => {
           $comment.setUpdateCommentId(null)
         }}
       ></Icon>
 
-      <IonTextarea
-        className='ml-2 br-20 pl-4 px-3 black leading-8 border-primary'
-        autoGrow={true}
-        rows={1}
-        value={$comment.updateForm[commentId]?.content}
-        autofocus={true}
-        onIonChange={(e) => {
-          $comment.setUpdateFormBy(commentId, e.detail.value!)
-        }}
-      ></IonTextarea>
+      <div className='flex-between-center w-full ml-3 px-3 br-20 border-primary'>
+        <IonTextarea
+          autoGrow={true}
+          rows={1}
+          value={$comment.updateForm[commentId]?.content}
+          autofocus={true}
+          onIonChange={(e) => {
+            $comment.setUpdateFormBy(commentId, e.detail.value!)
+          }}
+        />
 
-      <div className='ml-2'>
         <SpinnerWrapper
           task={$comment.updateComment}
           Submit={
             <Icon
-              name='send-solid'
+              name={`${$comment.updateForm[commentId]?.content ? 'send-solid' : 'send'}`}
               className='icon-secondary'
               onClick={() => {
                 if ($comment.updateForm[commentId]?.content) {
@@ -58,8 +56,8 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
               }}
             ></Icon>
           }
-        ></SpinnerWrapper>
+        />
       </div>
-    </div>
+    </>
   ))
 }

@@ -19,7 +19,7 @@ export const IntroPage: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <ImageSlider urls={['/assets/img/hama.png']}></ImageSlider>
+        <ImageSlider urls={['/assets/img/hama.png']} height={380}></ImageSlider>
         <div className='px-8'>
           <TextXxl className='text-bold textprimary'>
             하나의 마을
@@ -37,8 +37,13 @@ export const IntroPage: React.FC = () => {
         </div>
       </IonContent>
       <IonFooter>
-        <div className='mb-7 mx-5'>
-          <SubmitButton text='시작하기' color='secondary' onClick={() => route.signUp()}></SubmitButton>
+        <div className='mb-5 mx-5'>
+          <SubmitButton
+            text='시작하기'
+            color='secondary'
+            size='large'
+            onClick={() => route.signUp()}
+          ></SubmitButton>
         </div>
       </IonFooter>
     </IonPage>

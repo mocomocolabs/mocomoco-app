@@ -1,7 +1,7 @@
 @import '../../theme/variable';
 
 textarea {
-  @extend %text-sm;
+  @extend %text-base;
   border: 0;
   outline: none;
   line-height: 2rem;

@@ -8,7 +8,7 @@ import { Icon } from '../components/atoms/IconComponent'
 import { Pad } from '../components/atoms/PadComponent'
 import { Spinner } from '../components/atoms/SpinnerComponent'
 import { SubmitButton } from '../components/atoms/SubmitButtonComponent'
-import { TextXs } from '../components/atoms/TextXsComponent'
+import { TextSm } from '../components/atoms/TextSmComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackFloatingButton } from '../components/molecules/BackFloatingButtonComponent'
 import { BottomPopup } from '../components/molecules/BottomPopupComponent'
@@ -122,41 +122,37 @@ export const StuffTalentDetailPage: React.FC = () => {
           </BottomPopup>
 
           <Footer>
-            <div className='flex-between-center mx-4'>
-              <div
-                className='flex-col items-center secondary'
-                onClick={async () => {
-                  await store.toggleLike(id, !store.item.isLike)
-                }}
-              >
-                <Icon
-                  name={store.item.isLike ? 'heart-solid' : 'heart'}
-                  className='icon-secondary'
-                  size='medium'
-                />
-                <TextXs>{store.item.likeCount}</TextXs>
-              </div>
+            <div
+              className='flex-col items-center secondary'
+              onClick={async () => {
+                await store.toggleLike(id, !store.item.isLike)
+              }}
+            >
+              <Icon name={store.item.isLike ? 'heart-solid' : 'heart'} className='icon-secondary' />
+              <TextSm>{store.item.likeCount}</TextSm>
+            </div>
 
-              <div className='w-full ml-4'>
-                {store.item.user.id === $auth.user.id ? (
-                  <SubmitButton
-                    text='채팅 목록 보기'
-                    color='secondary'
-                    onClick={() => {
-                      !!chatList && !_.isEmpty(chatList)
-                        ? setShowChatList(!showChatList)
-                        : $ui.showToastError({ message: '채팅 목록이 없습니다' })
-                    }}
-                  ></SubmitButton>
-                ) : !store.item?.chatroomId ? (
-                  <SpinnerWrapper task={store.createChat} Submit={createChatButton} />
-                ) : (
-                  <SubmitButton
-                    text='채팅으로 거래하기'
-                    onClick={() => route.chatRoom(store.item.chatroomId)}
-                  ></SubmitButton>
-                )}
-              </div>
+            <div className='w-full ml-4'>
+              {store.item.user.id === $auth.user.id ? (
+                <SubmitButton
+                  text='채팅 목록 보기'
+                  color='secondary'
+                  disabled={store.item.status === StuffTalentStatus.FINISH}
+                  onClick={() => {
+                    !!chatList && !_.isEmpty(chatList)
+                      ? setShowChatList(!showChatList)
+                      : $ui.showToastError({ message: '채팅 목록이 없습니다' })
+                  }}
+                ></SubmitButton>
+              ) : !store.item?.chatroomId ? (
+                <SpinnerWrapper task={store.createChat} Submit={createChatButton} />
+              ) : (
+                <SubmitButton
+                  text='채팅으로 거래하기'
+                  disabled={store.item.status === StuffTalentStatus.FINISH}
+                  onClick={() => route.chatRoom(store.item.chatroomId)}
+                ></SubmitButton>
+              )}
             </div>
           </Footer>
         </IonPage>

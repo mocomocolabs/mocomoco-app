@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { getLabel, routeFunc, statusLabels, typeLabels } from '../../models/stufftalent'
 import {
@@ -10,8 +11,8 @@ import {
 import { timeDiff } from '../../utils/datetime-util'
 import { Icon } from '../atoms/IconComponent'
 import { SquareWithCorner } from '../atoms/SquareWithCornerComponent'
+import { TextBase } from '../atoms/TextBaseComponent'
 import { TextSm } from '../atoms/TextSmComponent'
-import { TextXs } from '../atoms/TextXsComponent'
 import { ImageWithCorner } from './ImageWithCorner'
 import { MorePopoverButton } from './MorePopoverButtonComponent'
 
@@ -65,12 +66,16 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
     },
   ]
 
-  const popoverItems = _.concat(
-    [popoverEdit, popoverDelete],
-    item.status !== StuffTalentStatus.FINISH && popoverFinish,
-    item.status !== StuffTalentStatus.AVAILABLE && popoverAvailable,
-    item.status !== StuffTalentStatus.RESERVED && popoverReserved
-  ).filter(Boolean) as { label: string; onClick: () => void }[]
+  const popoverItems = useMemo(
+    () =>
+      _.concat(
+        [popoverEdit, popoverDelete],
+        item.status !== StuffTalentStatus.FINISH && popoverFinish,
+        item.status !== StuffTalentStatus.AVAILABLE && popoverAvailable,
+        item.status !== StuffTalentStatus.RESERVED && popoverReserved
+      ).filter(Boolean) as { label: string; onClick: () => void }[],
+    [item.status]
+  )
 
   return (
     <li>
@@ -78,7 +83,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
         <div className='flex' onClick={() => routeDetail(item.id)}>
           <div
             hidden={item.status === StuffTalentStatus.AVAILABLE}
-            className='flex-center absolute z-20 text-bold text-sm white'
+            className='flex-center absolute z-20 text-bold text-base white'
             style={{ width: 114, height: 124 }}
           >
             {getLabel(statusLabels, item.status)}
@@ -103,31 +108,27 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
                 {getLabel(typeLabels, item.type)}
               </SquareWithCorner>
             </div>
-            <TextSm className='ellipsis min-w-0 ml-1 flex-grow'>{item.title}</TextSm>
+            <TextBase className='ellipsis min-w-0 ml-1 flex-grow'>{item.title}</TextBase>
             <div className='flex flex-none h-full ml-1' onClick={(e) => e.stopPropagation()}>
               {loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
             </div>
           </div>
           <div className='flex-grow gray ellipsis pt-0_5 text-xxs'>
-            {item.community.name} / {timeDiff(undefined, item.createdAt)}
+            {item.community.name} / {timeDiff(item.createdAt)}
           </div>
           <div className='inline-flex' style={{ gap: '0 0.2rem' }}>
             {item.isExchangeable && <SquareWithCorner>교환 가능</SquareWithCorner>}
             {item.isNegotiable && <SquareWithCorner>가격제안 가능</SquareWithCorner>}
           </div>
           <div className='flex justify-between self-bottom mt-1'>
-            <TextSm className='text-bold ellipsis'>
+            <TextBase className='text-bold ellipsis'>
               {item.type === StuffTalentType.SELL && `${item.price.toLocaleString()}원`}
               {item.type === StuffTalentType.EXCHANGE && item.exchangeText}
               {item.type === StuffTalentType.SHARE && '무료나눔'}
-            </TextSm>
-            <div className='flex-center self-end ml-1'>
-              <Icon
-                name={item.isLike ? 'heart-solid' : 'heart'}
-                className='icon-secondary mr-1'
-                size='small'
-              />
-              <TextXs className='secondary'>{item.likeCount}</TextXs>
+            </TextBase>
+            <div className='flex-center ml-1'>
+              <Icon name={item.isLike ? 'heart-solid' : 'heart'} className='icon-secondary mr-1' size={16} />
+              <TextSm className='secondary'>{item.likeCount}</TextSm>
             </div>
           </div>
         </div>

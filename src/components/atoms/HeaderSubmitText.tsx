@@ -9,7 +9,7 @@ export interface IHeaderSubmitText {
 export const HeaderSubmitText: FC<IHeaderSubmitText> = ({ isSubmittable, onSubmit, text = '완료' }) => {
   return (
     <div
-      className={`${isSubmittable ? '' : 'gray'} text-base`}
+      className={`${isSubmittable ? '' : 'gray'} text-lg`}
       onClick={() => isSubmittable && onSubmit()}
       slot='end'
     >

@@ -1,5 +1,6 @@
 import { IonItem, IonList, useIonPopover } from '@ionic/react'
 import React from 'react'
+import { TextBase } from '../atoms/TextBaseComponent'
 
 export interface IMorePopoverButton {
   items: { label: string; onClick: () => void }[]
@@ -18,7 +19,7 @@ export const MorePopoverButton: React.FC<IMorePopoverButton> = ({ items }) => {
             v.onClick()
           }}
         >
-          {v.label}
+          <TextBase>{v.label}</TextBase>
         </IonItem>
       ))}
     </IonList>

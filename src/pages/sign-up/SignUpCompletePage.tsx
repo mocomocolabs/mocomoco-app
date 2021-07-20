@@ -1,6 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
-import { TextSm } from '../../components/atoms/TextSmComponent'
+import { TextBase } from '../../components/atoms/TextBaseComponent'
 import { TextXxl } from '../../components/atoms/TextXxlComponent'
 import { ImageSlider } from '../../components/molecules/ImageSliderComponent'
 import { useStore } from '../../hooks/use-store'
@@ -23,8 +23,8 @@ export const SignUpCompletePage: React.FC = () => {
       <IonContent>
         <ImageSlider urls={['/assets/img/hama-signup.png']} height={452}></ImageSlider>
         <div className='px-8'>
-          <TextXxl className='text-bold textprimary text-center'>회원가입을 감사드립니다!</TextXxl>
-          <TextSm className='textprimary mt-8'>관리자 승인 후 연락드릴게요 :)</TextSm>
+          <TextXxl className='text-bold textprimary'>회원가입을 감사드립니다!</TextXxl>
+          <TextBase className='gray mt-6'>관리자 승인 후 연락드릴게요 :)</TextBase>
         </div>
       </IonContent>
       {/* <IonFooter>

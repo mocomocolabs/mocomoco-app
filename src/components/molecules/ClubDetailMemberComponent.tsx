@@ -7,7 +7,7 @@ import { executeWithError } from '../../utils/http-helper-util'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { TextSm } from '../atoms/TextSmComponent'
+import { TextLg } from '../atoms/TextLgComponent'
 
 export interface IClubDetailMember {
   members: IClubMember[]
@@ -21,8 +21,8 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community, cr
   return members?.length ? (
     <div className='flex-col px-container'>
       <div className='flex mb-2'>
-        <TextBase className='text-bold'>참여 멤버</TextBase>
-        <TextBase className='ml-1'>{members.length}명</TextBase>
+        <TextLg className='text-bold'>참여 멤버</TextLg>
+        <TextLg className='ml-1'>{members.length}명</TextLg>
       </div>
       {members.map((v) => (
         <div key={v.id} className='flex-between-center mb-4'>
@@ -31,9 +31,9 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community, cr
             <div className='flex-col'>
               <div className='flex items-center'>
                 {v.isAdmin && <Icon name='star-solid' className='icon-primary mr-1'></Icon>}
-                <TextBase className='mt-1'>{v.nickname}</TextBase>
+                <TextLg className='mt-1'>{v.nickname}</TextLg>
               </div>
-              <TextSm className='gray'>{community.name}</TextSm>
+              <TextBase className='gray'>{community.name}</TextBase>
             </div>
           </div>
           {v.isAdmin && v.id !== $auth.user.id && (

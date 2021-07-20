@@ -8,7 +8,8 @@ import { Icon } from '../atoms/IconComponent'
 import { Pad } from '../atoms/PadComponent'
 import { Spinner } from '../atoms/SpinnerComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
-import { TextBase } from '../atoms/TextBaseComponent'
+import { TextLg } from '../atoms/TextLgComponent'
+import { XDivider } from '../atoms/XDividerComponent'
 
 export const SignUpCommunity: FC = () => {
   const { $community, $auth } = useStore()
@@ -19,7 +20,7 @@ export const SignUpCommunity: FC = () => {
 
   return useObserver(() => (
     <>
-      <ul className='px-container pt-2'>
+      <ul className='pt-2'>
         {$community.communities.map((v) => (
           <li
             key={v.id}
@@ -29,22 +30,25 @@ export const SignUpCommunity: FC = () => {
               $auth.setSignUpForm({ communityIds: [v.id] })
             }}
           >
-            <div className='flex-between-center'>
-              <TextBase className='gray'>{v.name}</TextBase>
+            <div className='flex-between-center pb-2'>
+              <TextLg className='gray'>{v.name}</TextLg>
               {v.id === $community.selectedId && <Icon name='check-solid' className='icon-secondary'></Icon>}
             </div>
+            <XDivider />
           </li>
         ))}
       </ul>
 
-      <Pad className='height-50'></Pad>
+      <Pad className='height-40'></Pad>
 
       {observableTaskGroup.match({
         pending: () => <Spinner></Spinner>,
         resolved: () => (
           <SubmitButton
             disabled={!$community.selectedId}
-            text='가입하기'
+            text='회원가입 완료하기'
+            color='secondary'
+            size='large'
             onClick={() => {
               executeWithError(async () => {
                 await $auth.signUp($auth.signUpForm)

@@ -101,6 +101,9 @@
   --ion-background-color: #ffffff;
   --ion-background-color-rgb: 255, 255, 255;
 
+  --ion-border-color: rgba(var(--ion-color-medium-rgb), 0.3);
+  --ion-box-shadow-color: var(--ion-border-color);
+
   --ion-text-color: #212121;
   --ion-text-color-rgb: 33, 33, 33;
 
@@ -154,6 +157,9 @@
   --ion-color-textprimary-contrast-rgb: 255, 255, 255;
   --ion-color-textprimary-shade: #4b3e49;
   --ion-color-textprimary-tint: #665964;
+
+  --ion-color-texthashtag: #fb836f;
+  --ion-color-texthashtag-rgb: 251, 131, 111;
 }
 
 /*

@@ -38,29 +38,25 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
               isRoundTop={true}
             ></ImageWithCorner>
             <div className='flex-col w-full height-92 bg-white px-3 br-b-xxlg text-left'>
-              <TextBase className='text-bold'>{v.name}</TextBase>
+              <TextBase className='text-bold mb-2'>{v.name}</TextBase>
               <div className='flex items-center'>
-                <Icon name='time' className=''></Icon>
+                <Icon name='time' className='icon-secondary' size={12} />
                 <TextXs className='ml-1'>{v.meetingTime}</TextXs>
               </div>
               <div className='flex items-center'>
-                <Icon name='time' className=''></Icon>
+                <Icon name='location' className='icon-secondary' size={12} />
                 <TextXs className='ml-1'>{v.meetingPlace}</TextXs>
               </div>
               <div className='flex justify-between mt-2'>
                 <div className='ellipsis'>
                   {v.hashtagNames.length ? (
-                    <TextXs className='secondary ellipsis'>#{v.hashtagNames.join(' #')}</TextXs>
+                    <TextXs className='texthashtag ellipsis'>#{v.hashtagNames.join(' #')}</TextXs>
                   ) : (
                     ''
                   )}
                 </div>
                 <div className='flex-center self-end ml-1'>
-                  <Icon
-                    name={v.isLike ? 'heart-solid' : 'heart'}
-                    className='icon-secondary mr-1'
-                    size='small'
-                  />
+                  <Icon name={v.isLike ? 'heart-solid' : 'heart'} className='icon-secondary mr-1' size={12} />
                   <TextXs className='secondary'>{v.likeCount}</TextXs>
                 </div>
               </div>

@@ -1,0 +1,28 @@
+@import '../../theme/variable';
+
+ion-searchbar.searchbar {
+  .searchbar-input {
+    --background: var(--ion-background-color);
+    --border-radius: 2rem;
+    --color: var(--ion-text-color);
+    border: 1px solid $primary;
+    // --icon-color: var(--ion-color-primary) !important;
+    // --clear-button-color: var(--ion-color-secondary) !important;
+    // --search-button-color: var(--ion-color-primary) !important;
+  }
+
+  // .s-ion-icon {
+  //   --clear-button-color: red; //var(--ion-color-primary);
+  //   --icon-color: var(--ion-color-primary);
+  // }
+  // .searchbar-search-icon {
+  //   --icon-color: blue !important;
+  //   --clear-button-color: blue !important;
+  //   --search-button-color: blue !important;
+  // }
+  // .searchbar-clear-button {
+  //   --icon-color: blue !important;
+  //   --clear-button-color: blue !important;
+  //   --search-button-color: blue !important;
+  // }
+}

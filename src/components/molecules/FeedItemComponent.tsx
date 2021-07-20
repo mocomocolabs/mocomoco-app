@@ -1,17 +1,17 @@
 import { useObserver } from 'mobx-react-lite'
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { Icon } from '../atoms/IconComponent'
-import { OverflowMenuIcon } from '../atoms/OverflowMenuIconComponent'
 import { Pad } from '../atoms/PadComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { TextLg } from '../atoms/TextLgComponent'
+import { TextSm } from '../atoms/TextSmComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { CommentItem } from './CommentItemComponent'
 import { ImageSlider } from './ImageSliderComponent'
+import { MorePopoverButton } from './MorePopoverButtonComponent'
 import { ProfileCard } from './ProfileCardComponent'
 
 interface IFeedItem {
@@ -23,17 +23,53 @@ interface IFeedItem {
 
 export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEdit }) => {
   // TODO: $auth를 parameter로 넘기던지 organisms로 승격
-  const { $auth, $feed } = useStore()
+  const { $auth, $feed, $ui } = useStore()
+
+  const popoverItems = useMemo(
+    () => [
+      {
+        label: '수정',
+        onClick: () => onEdit(feed.id),
+      },
+      {
+        label: '삭제',
+        onClick: () => {
+          $ui.showAlert({
+            isOpen: true,
+            message: '게시글을 삭제하시겠어요?',
+            onSuccess: () => onDelete(feed.id),
+          })
+        },
+      },
+    ],
+    []
+  )
+
+  const onClick = useMemo(
+    () => (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (!isDetail) {
+        route.feedDetail(feed.id)
+        e.stopPropagation()
+      }
+    },
+    []
+  )
 
   return useObserver(() => (
     <li>
       {feed.imageUrls?.length > 0 ? (
-        <ImageSlider urls={feed.imageUrls}></ImageSlider>
+        <div onClick={onClick}>
+          <ImageSlider urls={feed.imageUrls}></ImageSlider>
+        </div>
       ) : (
-        <Pad className='h-6'></Pad>
+        <Pad className='h-5'></Pad>
       )}
       <div className='px-container flex-col'>
-        {feed.title && <TextLg className='text-bold mb-5'>{feed.title}</TextLg>}
+        {feed.title && (
+          <div onClick={onClick} className='text-bold text-lg mb-5'>
+            {feed.title}
+          </div>
+        )}
         <div className='flex-between-center mb-5'>
           <ProfileCard
             userId={feed.user.id}
@@ -43,18 +79,12 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
             extraText={timeDiff(feed.createdAt)}
           ></ProfileCard>
 
-          <OverflowMenuIcon show={$auth.user.id === feed.user.id} onDelete={onDelete} onEdit={onEdit} />
+          {$auth.user.id === feed.user.id && <MorePopoverButton items={popoverItems} />}
         </div>
 
-        {isDetail ? (
-          <div>
-            <TextBase className='pre-line'>{feed.content}</TextBase>
-          </div>
-        ) : (
-          <div onClick={() => route.feedDetail(feed.id)}>
-            <TextBase className='pre-line'>{feed.content}</TextBase>
-          </div>
-        )}
+        <div onClick={onClick}>
+          <TextBase className='pre-line'>{feed.content}</TextBase>
+        </div>
 
         {feed.schedule && (
           <div className='br-lg shadow p-3 mt-5'>
@@ -73,44 +103,30 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
           </div>
         )}
 
-        <Pad className='h-5'></Pad>
+        <Pad className='h-4'></Pad>
         <XDivider></XDivider>
 
-        <div className='flex py-3'>
+        <div className='flex py-4'>
           <div
             className='flex items-center mr-4'
             onClick={async () => {
               await $feed.toggleFeedLike(feed.id, !feed.isLike)
             }}
           >
-            <Icon name={feed.isLike ? 'heart-solid' : 'heart'} className='mr-2'></Icon>
-            <TextBase>{feed.likeCount}</TextBase>
+            <Icon name={feed.isLike ? 'heart-solid' : 'heart'} className='mr-2 icon-secondary'></Icon>
+            <TextSm>{feed.likeCount}</TextSm>
           </div>
-          <div
-            className='flex items-center'
-            onClick={() => {
-              if (!isDetail) {
-                route.feedDetail(feed.id, { autoFocus: true })
-              }
-            }}
-          >
+          <div className='flex items-center' onClick={onClick}>
             <Icon
               name={feed.writtenComment ? 'conversation-bubble-solid' : 'conversation-bubble'}
-              className='mr-2'
+              className='mr-2 icon-secondary'
             ></Icon>
-            <TextBase>{feed.comments?.length}</TextBase>
+            <TextSm>{feed.comments?.length}</TextSm>
           </div>
         </div>
 
         {feed.comments.length ? (
-          <div
-            className='py-4'
-            onClick={() => {
-              if (!isDetail) {
-                route.feedDetail(feed.id)
-              }
-            }}
-          >
+          <div className='py-2' onClickCapture={onClick}>
             {feed.comments?.slice(0, isDetail ? undefined : 3).map((v) => (
               <CommentItem
                 key={v.id}
@@ -124,7 +140,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
           <></>
         )}
       </div>
-      <Pad className='h-2 bg-s-gray w-full'></Pad>
+      <Pad className='h-2' />
     </li>
   ))
 }

@@ -1,4 +1,4 @@
-import { IonContent, IonFooter, IonPage } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
@@ -11,6 +11,7 @@ import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
 import { Hashtag } from '../../components/molecules/HashtagComponent'
 import { IImageUploaderRef, ImageUploader } from '../../components/molecules/ImageUploaderComponent'
+import { Footer } from '../../components/organisms/FooterComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
 import { IClubForm } from '../../models/club.d'
@@ -101,23 +102,21 @@ export const ClubFormPage: React.FC = () => {
           </form>
         </div>
       </IonContent>
-      <IonFooter>
-        <div className='px-container flex-between-center h-11 shadow-sm'>
-          {/* TODO: 카메라 플러그인 추가 */}
-          <Icon
-            name={$club.form.images.length ? 'image-solid' : 'image'}
-            className='icon-secondary'
-            onClick={() => uploader.current?.click()}
-          ></Icon>
-          {/* TODO 소모임은 현재, 모든 공동체 보기가 없기 때문에 전체 공개 체크박스도 막아두는 게 일관성있겠다.
+      <Footer>
+        {/* TODO: 카메라 플러그인 추가 */}
+        <Icon
+          name={$club.form.images.length ? 'image-solid' : 'image'}
+          className='icon-secondary'
+          onClick={() => uploader.current?.click()}
+        ></Icon>
+        {/* TODO 소모임은 현재, 모든 공동체 보기가 없기 때문에 전체 공개 체크박스도 막아두는 게 일관성있겠다.
           <Checkbox
             label='전체 공개'
             defaultChecked={$club.form.isPublic!}
             onChange={(checked) => $club.setForm({ isPublic: checked })}
           ></Checkbox>
           <IsPublicToast /> */}
-        </div>
-      </IonFooter>
+      </Footer>
     </IonPage>
   ))
 }

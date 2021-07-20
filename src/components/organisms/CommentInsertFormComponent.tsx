@@ -17,22 +17,21 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
   const { $comment, $feed, $auth } = useStore()
 
   return useObserver(() => (
-    <div className='px-container py-2 flex items-center'>
+    <>
       <ProfileImage url={$auth.user?.profileUrl}></ProfileImage>
 
-      <IonTextarea
-        className='ml-2 br-20 pl-4 px-3 black leading-8 border-primary'
-        autoGrow={true}
-        rows={1}
-        placeholder='댓글을 입력해주세요'
-        value={$comment.insertForm[feedId]?.content}
-        autofocus={autoFocus}
-        onIonChange={(e) => {
-          $comment.setInsertFormBy(feedId, e.detail.value!)
-        }}
-      ></IonTextarea>
+      <div className='flex-between-center w-full ml-3 px-3 br-20 border-primary'>
+        <IonTextarea
+          autoGrow={true}
+          rows={1}
+          placeholder='댓글을 입력해주세요'
+          value={$comment.insertForm[feedId]?.content}
+          autofocus={autoFocus}
+          onIonChange={(e) => {
+            $comment.setInsertFormBy(feedId, e.detail.value!)
+          }}
+        />
 
-      <div className='ml-2'>
         <SpinnerWrapper
           task={$comment.insertComment}
           Submit={
@@ -51,8 +50,8 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
               }}
             ></Icon>
           }
-        ></SpinnerWrapper>
+        />
       </div>
-    </div>
+    </>
   ))
 }

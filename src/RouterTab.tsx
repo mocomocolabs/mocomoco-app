@@ -168,11 +168,14 @@ export const RouterTab: FC = () => {
         tab.path === TAB.MORE.path ? (
           <div key={tab.path} onClick={() => onTabClick(TAB.MORE.path)}>
             <Icon
-              name={morePaths.includes(currentTab as TAB_PATH) ? TAB.MORE.icon + '-solid' : TAB.MORE.icon}
-              className={`icon-24 ${
-                morePaths.includes(currentTab as TAB_PATH) ? 'active-style' : 'no-active-style'
-              }`}
-            ></Icon>
+              name={
+                showsMore || morePaths.includes(currentTab as TAB_PATH)
+                  ? TAB.MORE.icon + '-solid'
+                  : TAB.MORE.icon
+              }
+              className={`${morePaths.includes(currentTab as TAB_PATH) ? 'active-style' : 'no-active-style'}`}
+              size={28}
+            />
           </div>
         ) : (
           <NavLink key={tab.path} to={tab.path} onClick={() => onTabClick(tab.path)}>
@@ -184,7 +187,7 @@ export const RouterTab: FC = () => {
           </NavLink>
         )
       ),
-    [currentTab]
+    [currentTab, showsMore]
   )
 
   useEffect(() => {

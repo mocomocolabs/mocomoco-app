@@ -4,7 +4,7 @@ import { useObserver } from 'mobx-react-lite'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { ImageBackground } from '../atoms/ImageBackgroundComponent'
-import { TextBase } from '../atoms/TextBaseComponent'
+import { TextLg } from '../atoms/TextLgComponent'
 
 export interface ICommunityBanner {}
 
@@ -17,9 +17,9 @@ export const CommunityBanner: FC<ICommunityBanner> = () => {
       <div className='flex-between-center'>
         <div className='flex'>
           <IonIcon icon={people}></IonIcon>
-          <TextBase>{$community.community?.userCount}</TextBase>
+          <TextLg>{$community.community?.userCount}</TextLg>
         </div>
-        <TextBase>{$community.community?.name}</TextBase>
+        <TextLg>{$community.community?.name}</TextLg>
       </div>
     </div>
   ))

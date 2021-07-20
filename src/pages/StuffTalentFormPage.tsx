@@ -1,4 +1,4 @@
-import { IonContent, IonFooter, IonPage } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation } from 'react-router-dom'
@@ -16,6 +16,7 @@ import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CategorySelector } from '../components/molecules/CategorySelectorComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
+import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
@@ -181,18 +182,16 @@ export const StuffTalentFormPage: React.FC = () => {
                 label='교환 가능'
                 defaultChecked={form.isExchangeable}
                 onChange={(checked) => setValueCustom('isExchangeable', checked)}
-                size='small'
                 color='primary'
               ></Checkbox>
               <Checkbox
                 label='가격제안 가능'
                 defaultChecked={form.isNegotiable}
                 onChange={(checked) => setValueCustom('isNegotiable', checked)}
-                size='small'
                 color='primary'
               ></Checkbox>
             </div>
-            <XDivider className='bg-gray mt-4' />
+            <XDivider className='hr-gray mt-4' />
             <InputNormal placeholder='제목' register={register('title', { required: true })}></InputNormal>
             <Pad className='h-4' />
             <CategorySelector
@@ -202,7 +201,7 @@ export const StuffTalentFormPage: React.FC = () => {
                 setValueCustom('categoryId', id)
               }}
             />
-            <XDivider className='bg-gray mt-4' />
+            <XDivider className='hr-gray mt-4' />
             <InputNormal
               hidden={watchType !== StuffTalentType.SELL}
               type='number'
@@ -222,22 +221,20 @@ export const StuffTalentFormPage: React.FC = () => {
           </form>
         </div>
       </IonContent>
-      <IonFooter>
-        <div className='px-container flex-between-center h-11 shadow-sm'>
-          {/* TODO: 카메라 플러그인 추가 */}
-          <Icon
-            name={watchImages?.length ? 'image-solid' : 'image'}
-            className='icon-secondary'
-            onClick={() => uploader.current?.click()}
-          ></Icon>
-          <Checkbox
-            label='전체 공개'
-            defaultChecked={form.isPublic}
-            onChange={(checked) => setValueCustom('isPublic', checked)}
-          ></Checkbox>
-          <IsPublicToast />
-        </div>
-      </IonFooter>
+      <Footer>
+        {/* TODO: 카메라 플러그인 추가 */}
+        <Icon
+          name={watchImages?.length ? 'image-solid' : 'image'}
+          className='icon-secondary'
+          onClick={() => uploader.current?.click()}
+        ></Icon>
+        <Checkbox
+          label='전체 공개'
+          defaultChecked={form.isPublic}
+          onChange={(checked) => setValueCustom('isPublic', checked)}
+        ></Checkbox>
+        <IsPublicToast />
+      </Footer>
     </IonPage>
   )
 }

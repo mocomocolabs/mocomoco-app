@@ -1,0 +1,11 @@
+@import '../../theme/variable';
+
+ul.feed-list {
+  li {
+    border-bottom: 8px solid rgba($gray-rgb, 0.1);
+  }
+
+  li:last-child {
+    border-bottom: 0;
+  }
+}

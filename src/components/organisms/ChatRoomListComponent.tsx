@@ -20,7 +20,7 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
       ),
       resolved: () => (
         <>
-          <ul className='pl-0'>
+          <ul className='py-1'>
             {$chat.rooms.map((v, i) => (
               <ChatRoomListItem key={i} room={v} />
             ))}

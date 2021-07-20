@@ -7,6 +7,7 @@ import { route } from '../../services/route-service'
 import { TextXs } from '../atoms/TextXsComponent'
 import { FeedItem } from '../molecules/FeedItemComponent'
 import { ContentPopover } from './ContentPopoverComponent'
+import './FeedListComponent.scss'
 
 interface IFeedList {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,7 +46,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
       resolved: () =>
         $feed.feeds?.length > 0 ? (
           <>
-            <ul className='pl-0 move-up'>
+            <ul className='move-up feed-list'>
               {$feed.feeds.map((v, i) => (
                 <FeedItem
                   key={i}

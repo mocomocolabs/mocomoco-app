@@ -6,9 +6,8 @@ import { useStore } from '../../hooks/use-store'
 import { routeFunc } from '../../models/stufftalent'
 import { IStuffTalentFilter, StuffTalentStatus } from '../../models/stufftalent.d'
 import { StuffTalentStore } from '../../stores/stufftalent-store'
-import { TextBase } from '../atoms/TextBaseComponent'
+import { TextLg } from '../atoms/TextLgComponent'
 import { StuffTalentItem } from '../molecules/StuffTalentItemComponent'
-
 interface IStuffTalentList {
   store: StuffTalentStore
   search: string
@@ -53,7 +52,7 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
       resolved: () => (
         <>
           <div hidden={store.items.length > 0} className='text-center'>
-            <TextBase>검색결과가 없어요</TextBase>
+            <TextLg>검색결과가 없어요</TextLg>
           </div>
           <ul className='pl-0 move-up'>
             {store.items.map((item) => (

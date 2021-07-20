@@ -37,8 +37,11 @@ export const SignUpForm: FC = () => {
         placeholder='이름을 입력해주세요'
         register={register('name', { required: true })}
       ></InputNormal>
-      <ValidationMessage isShow={errors.name} message='이름은 필수값입니다'></ValidationMessage>
-      <InputNormal placeholder='별명을 입력해주세요(선택)' register={register('nickname')}></InputNormal>
+      <div className='height-20 pt-1 px-3'>
+        <ValidationMessage isShow={errors.name} message='이름은 필수값입니다'></ValidationMessage>
+      </div>
+      {/* <InputNormal placeholder='별명을 입력해주세요(선택)' register={register('nickname')}></InputNormal>
+      <Pad className='height-20'></Pad> */}
       <InputPassword
         placeholder='비밀번호를 입력해주세요'
         register={register('password', {
@@ -46,7 +49,9 @@ export const SignUpForm: FC = () => {
           minLength: { value: 6, message: '6자 이상 입력해주세요' },
         })}
       ></InputPassword>
-      <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
+      <div className='height-20 pt-1 px-3'>
+        <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
+      </div>
       <InputPassword
         placeholder='비밀번호를 확인해주세요'
         register={register('rePassword', {
@@ -54,10 +59,19 @@ export const SignUpForm: FC = () => {
           validate: (value) => value === password.current || '패스워드가 일치하지 않습니다',
         })}
       ></InputPassword>
-      <ValidationMessage isShow={errors.rePassword} message={errors?.rePassword?.message}></ValidationMessage>
-
-      <Pad className='h-4'></Pad>
-      <SubmitButton color='secondary' disabled={!formState.isValid} text='계속하기'></SubmitButton>
+      <div className='height-20 pt-1 px-3'>
+        <ValidationMessage
+          isShow={errors.rePassword}
+          message={errors?.rePassword?.message}
+        ></ValidationMessage>
+      </div>
+      <Pad className='height-20'></Pad>
+      <SubmitButton
+        color='secondary'
+        size='large'
+        disabled={!formState.isValid}
+        text='계속하기'
+      ></SubmitButton>
     </form>
   ))
 }

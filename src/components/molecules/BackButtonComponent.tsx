@@ -19,7 +19,7 @@ export const BackButton: FC<IBackButton> = ({ type, action }) => {
         action ? action() : defaultAction()
       }}
     >
-      <Icon name={type === 'close' ? 'close' : 'arrow'} className='icon-20'></Icon>
+      <Icon name={type === 'close' ? 'close' : 'arrow'}></Icon>
     </div>
   )
 }

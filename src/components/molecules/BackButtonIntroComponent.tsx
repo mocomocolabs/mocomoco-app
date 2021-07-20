@@ -11,13 +11,13 @@ export interface IBackButtonIntro {
 export const BackButtonIntro: FC<IBackButtonIntro> = ({ children }) => {
   return (
     <>
-      <div className='flex mt-8'>
+      <div className='flex mt-5'>
         <div className='mt-1 absolute'>
           <BackButton type='arrow' action={() => route.signUp()}></BackButton>
         </div>
         <TextXxl className='textprimary flex-1 text-bold text-center'>{children}</TextXxl>
       </div>
-      <Pad className='height-50'></Pad>
+      <Pad className='height-30'></Pad>
     </>
   )
 }

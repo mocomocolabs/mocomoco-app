@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { FeedSlider } from '../components/molecules/FeedSliderComponent'
@@ -6,6 +6,7 @@ import { HomeHeader } from '../components/molecules/HomeHeaderComponent'
 import { HomeTitle } from '../components/molecules/HomeTitleComponent'
 import { StuffTalentItem } from '../components/molecules/StuffTalentItemComponent'
 import { ClubPopularSlider } from '../components/organisms/ClubPopularSliderComponent'
+import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { StuffTalentPageKey } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
@@ -40,25 +41,23 @@ export const HomePage: React.FC = () => {
 
   return useObserver(() => (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <HomeHeader
-            name={$community.myCommunity?.name}
-            count={$community.myCommunity?.userCount}
-          ></HomeHeader>
-        </IonToolbar>
-      </IonHeader>
+      <Header>
+        <HomeHeader
+          name={$community.myCommunity?.name}
+          count={$community.myCommunity?.userCount}
+        ></HomeHeader>
+      </Header>
 
       <IonContent>
         <div className='px-container'>
-          <HomeTitle title='이야기 창고' route={() => route.feed()}></HomeTitle>
+          <HomeTitle title='이야기창고' route={() => route.feed()}></HomeTitle>
         </div>
         <FeedSlider items={$feed.homeFeeds}></FeedSlider>
 
         <div className='px-container'>
           {/* <HomeTitle title='다가오는 일정'></HomeTitle>
           <HomeSchedule items={$feed.homeScheduleFeeds} className='pb-2'></HomeSchedule> */}
-          <HomeTitle title='물건 창고' route={() => route.stuff()}></HomeTitle>
+          <HomeTitle title='물건창고' route={() => route.stuff()}></HomeTitle>
           {$stuff.items.map((item) => (
             <StuffTalentItem
               key={item.id}
@@ -67,7 +66,7 @@ export const HomePage: React.FC = () => {
               item={item}
             />
           ))}
-          <HomeTitle title='재능 창고' route={() => route.talent()}></HomeTitle>
+          <HomeTitle title='재능창고' route={() => route.talent()}></HomeTitle>
           {$talent.items.map((item) => (
             <StuffTalentItem
               key={item.id}

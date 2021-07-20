@@ -6,7 +6,6 @@ import { Description } from '../atoms/DescriptionComponent'
 import { Icon } from '../atoms/IconComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
-import { TextSm } from '../atoms/TextSmComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { ImageSlider } from './ImageSliderComponent'
 import { MorePopoverButton } from './MorePopoverButtonComponent'
@@ -38,14 +37,14 @@ export const ClubDetailContents: FC<IClubDetailContents> = ({ club }) => {
             ></MorePopoverButton>
           )}
         </div>
-        <TextSm className='mt-1 gray'>{club.community?.name}</TextSm>
+        <TextBase className='mt-1 gray'>{club.community?.name}</TextBase>
         <div className='flex items-center mt-4'>
           <Icon name='time' className='mr-1'></Icon>
-          <TextBase>{club.meetingPlace}</TextBase>
+          <TextLg>{club.meetingPlace}</TextLg>
         </div>
         <div className='flex items-center mt-1'>
           <Icon name='location' className='mr-1'></Icon>
-          <TextBase>{club.meetingTime}</TextBase>
+          <TextLg>{club.meetingTime}</TextLg>
         </div>
         <XDivider className='mt-4 mb-6'></XDivider>
         <Description>{club.description}</Description>

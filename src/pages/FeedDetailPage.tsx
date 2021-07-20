@@ -1,4 +1,4 @@
-import { IonContent, IonFooter, IonPage } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
@@ -9,6 +9,7 @@ import { FeedItem } from '../components/molecules/FeedItemComponent'
 import { CommentInsertForm } from '../components/organisms/CommentInsertFormComponent'
 import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
 import { ContentPopover } from '../components/organisms/ContentPopoverComponent'
+import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
 
@@ -65,14 +66,14 @@ export const FeedDetailPage: React.FC = () => {
         <ContentPopover></ContentPopover>
       </IonContent>
 
-      <IonFooter>
+      <Footer>
         {$comment.updateCommentId === null && (
           <CommentInsertForm feedId={id} autoFocus={autoFocus}></CommentInsertForm>
         )}
         {$comment.updateCommentId !== null && (
           <CommentUpdateForm commentId={$comment.updateCommentId} feedId={$feed.feed.id}></CommentUpdateForm>
         )}
-      </IonFooter>
+      </Footer>
     </IonPage>
   ))
 }

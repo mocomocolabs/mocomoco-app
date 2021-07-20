@@ -19,7 +19,7 @@ export const FilterPopup: React.FC<IFilterPopup> = ({ filterInfos, onClose }) =>
         items.map(({ value, label }) => (
           <div
             key={value}
-            className='inline-flex items-center gap-1 text-xs'
+            className='inline-flex items-center gap-1 text-sm'
             onClick={() => {
               onSelect(filter.includes(value) ? filter.filter((v) => v !== value) : filter.concat(value))
             }}

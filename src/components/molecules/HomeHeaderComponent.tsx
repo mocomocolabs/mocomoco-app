@@ -12,13 +12,13 @@ export const HomeHeader: FC<IHomeHeader> = ({ name, count }) => {
   return (
     <div className='flex-between-center'>
       <div className='flex items-center'>
-        <Icon name='home'></Icon>
+        <Icon name='home' size={28}></Icon>
         <TextXl className='ml-2 text-bold'>{name}</TextXl>
       </div>
 
       <div className='flex items-center'>
-        <Icon name='group-solid' className='icon-primary'></Icon>
-        <TextBase className='primary ml-2'>{count}명</TextBase>
+        <Icon name='group-solid' className='icon-primary' size={20}></Icon>
+        <TextBase className='primary ml-1'>{count}명</TextBase>
       </div>
     </div>
   )

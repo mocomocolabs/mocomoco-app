@@ -1,4 +1,4 @@
-import { IonContent, IonFooter, IonHeader, IonIcon, IonPage, IonToolbar } from '@ionic/react'
+import { IonContent, IonIcon, IonPage } from '@ionic/react'
 import dayjs from 'dayjs'
 import { calendar } from 'ionicons/icons'
 import { useObserver } from 'mobx-react-lite'
@@ -15,6 +15,8 @@ import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { DatetimePicker } from '../components/molecules/DatetimePickerComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
+import { Footer } from '../components/organisms/FooterComponent'
+import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
 import { DT_FORMAT } from '../utils/datetime-util'
@@ -78,17 +80,15 @@ export const FeedFormPage: FC<IFeedForm> = () => {
   return useObserver(() => {
     return (
       <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <div slot='start'>
-              <BackButton type='close'></BackButton>
-            </div>
-            <TextXl className='text-center text-bold'>이야기창고</TextXl>
-            <div slot='end'>
-              <SpinnerWrapper task={$feed.saveFeed} Submit={SubmitBtn}></SpinnerWrapper>
-            </div>
-          </IonToolbar>
-        </IonHeader>
+        <Header>
+          <div slot='start'>
+            <BackButton type='close'></BackButton>
+          </div>
+          <TextXl className='text-center text-bold'>이야기창고</TextXl>
+          <div slot='end'>
+            <SpinnerWrapper task={$feed.saveFeed} Submit={SubmitBtn}></SpinnerWrapper>
+          </div>
+        </Header>
 
         <IonContent>
           <div className='px-container'>
@@ -101,14 +101,14 @@ export const FeedFormPage: FC<IFeedForm> = () => {
             <Pad className='h-2'></Pad>
             <InputNormal
               value={$feed.form.title}
-              placeholder='제목(선택사항)'
+              placeholder='제목을 입력해주세요 (선택사항)'
               onChange={(title) => $feed.setForm({ title })}
             ></InputNormal>
             <Textarea
               value={$feed.form.content}
               onChange={(content) => $feed.setForm({ content })}
               rows={10}
-              placeholder='나누고 싶은 이야기를 자유롭게 작성해주세요 :)'
+              placeholder='나누고 싶은 이야기를 자유롭게 적어주세요 :)'
             ></Textarea>
             {$feed.form.schedule && (
               <>
@@ -134,22 +134,20 @@ export const FeedFormPage: FC<IFeedForm> = () => {
           </div>
         </IonContent>
 
-        <IonFooter>
-          <div className='px-container flex-between-center h-11 shadow-sm'>
-            {/* TODO: 카메라 플러그인 추가 */}
-            <Icon
-              name={$feed.form.images?.length ? 'image-solid' : 'image'}
-              className='icon-secondary'
-              onClick={() => uploader.current?.click()}
-            ></Icon>
-            <Checkbox
-              label='전체 공개'
-              defaultChecked={$feed.form.isPublic}
-              onChange={(checked) => $feed.setForm({ isPublic: checked })}
-            ></Checkbox>
-            <IsPublicToast />
-          </div>
-        </IonFooter>
+        <Footer>
+          {/* TODO: 카메라 플러그인 추가 */}
+          <Icon
+            name={$feed.form.images?.length ? 'image-solid' : 'image'}
+            className='icon-secondary'
+            onClick={() => uploader.current?.click()}
+          ></Icon>
+          <Checkbox
+            label='전체 공개'
+            defaultChecked={$feed.form.isPublic}
+            onChange={(checked) => $feed.setForm({ isPublic: checked })}
+          ></Checkbox>
+          <IsPublicToast />
+        </Footer>
       </IonPage>
     )
   })

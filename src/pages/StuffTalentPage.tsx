@@ -1,9 +1,10 @@
-import { IonContent, IonHeader, IonPage, IonSearchbar, IonToolbar } from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
 import { reaction } from 'mobx'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Icon } from '../components/atoms/IconComponent'
 import { Pad } from '../components/atoms/PadComponent'
+import { Searchbar, SearchbarChangeEventDetail } from '../components/atoms/SearchbarComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { FilterBar } from '../components/molecules/FilterBarComponent'
@@ -12,10 +13,6 @@ import { StuffTalentList } from '../components/organisms/StuffTalentListComponen
 import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
 import { IStuffTalentFilter, StuffTalentPageKey, StuffTalentStatus } from '../models/stufftalent.d'
-
-interface SearchbarChangeEventDetail {
-  value: string | undefined
-}
 
 const FilterMode = { none: 'none', category: '카테고리', type: '거래유형' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
@@ -86,6 +83,12 @@ export const StuffTalentPage: React.FC = () => {
     }
   }, [searchMode])
 
+  const searchbarRef = useRef<HTMLIonSearchbarElement>(null)
+  const onSearchIconClick = useCallback(() => {
+    setSearchMode(true)
+    setTimeout(async () => searchbarRef.current?.setFocus(), 100)
+  }, [])
+
   return (
     <IonPage>
       <IonHeader>
@@ -116,24 +119,17 @@ export const StuffTalentPage: React.FC = () => {
                   routeForm()
                 }}
               >
-                <Icon name='pencil' className='ml-4 icon-24'></Icon>
+                <Icon name='pencil' className='ml-4' />
               </div>
-              <div onClick={() => setSearchMode(true)}>
-                <Icon name='search' className='ml-4 icon-24'></Icon>
+              <div onClick={onSearchIconClick}>
+                <Icon name='search' className='ml-4' />
               </div>
             </div>
           </div>
 
           <div className='flex-between-center' hidden={!searchMode}>
-            <BackButton type='close' action={() => setSearchMode(false)} />
-            <IonSearchbar
-              value={search}
-              placeholder='검색'
-              type='search'
-              inputmode='search'
-              debounce={500}
-              onIonChange={onSearchSubmit}
-            />
+            <BackButton type='arrow' action={() => setSearchMode(false)} />
+            <Searchbar ref={searchbarRef} value={search} onSearchSubmit={onSearchSubmit} />
           </div>
         </IonToolbar>
 

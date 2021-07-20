@@ -44,52 +44,46 @@ export const ClubDetailPage: React.FC = () => {
             <Pad className='pb-extra-space'></Pad>
           </IonContent>
           <Footer>
-            <div className='flex-between-center mx-4'>
-              <div
-                className='flex-col items-center secondary'
-                onClick={async () => {
-                  await $club.toggleLike(id, !$club.club.isLike)
-                }}
-              >
-                <Icon
-                  name={$club.club.isLike ? 'heart-solid' : 'heart'}
-                  className='icon-secondary'
-                  size='medium'
-                />
-                <TextXs>{$club.club.likeCount}</TextXs>
-              </div>
+            <div
+              className='flex-col items-center secondary'
+              onClick={async () => {
+                await $club.toggleLike(id, !$club.club.isLike)
+              }}
+            >
+              <Icon name={$club.club.isLike ? 'heart-solid' : 'heart'} className='icon-secondary' />
+              <TextXs>{$club.club.likeCount}</TextXs>
+            </div>
 
-              <div className='w-full ml-4'>
-                {!$club.club?.isMember ? (
-                  <SpinnerWrapper
-                    task={$club.joinClub}
-                    Submit={
-                      <SubmitButton
-                        text='소모임 참여하기'
-                        className='h-10'
-                        onClick={() => {
-                          executeWithError(async () => {
-                            await $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })
-                            await $club.getClub(id)
-                            $chat.subscribeNewRoom($club.club.chatroomId)
-                            route.chatRoom($club.club.chatroomId)
-                          })
-                        }}
-                      ></SubmitButton>
-                    }
-                  ></SpinnerWrapper>
-                ) : (
-                  <SubmitButton
-                    text='채팅 참여하기'
-                    className='bg-m-secondary'
-                    onClick={() => {
-                      // 첫 채팅참여일 수 있음
-                      $chat.subscribeNewRoom($club.club.chatroomId)
-                      route.chatRoom($club.club.chatroomId)
-                    }}
-                  ></SubmitButton>
-                )}
-              </div>
+            <div className='w-full ml-4'>
+              {!$club.club?.isMember ? (
+                <SpinnerWrapper
+                  task={$club.joinClub}
+                  Submit={
+                    <SubmitButton
+                      text='소모임 참여하기'
+                      className='h-10'
+                      onClick={() => {
+                        executeWithError(async () => {
+                          await $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })
+                          await $club.getClub(id)
+                          $chat.subscribeNewRoom($club.club.chatroomId)
+                          route.chatRoom($club.club.chatroomId)
+                        })
+                      }}
+                    ></SubmitButton>
+                  }
+                ></SpinnerWrapper>
+              ) : (
+                <SubmitButton
+                  text='채팅으로 참여하기'
+                  color='secondary'
+                  onClick={() => {
+                    // 첫 채팅참여일 수 있음
+                    $chat.subscribeNewRoom($club.club.chatroomId)
+                    route.chatRoom($club.club.chatroomId)
+                  }}
+                ></SubmitButton>
+              )}
             </div>
           </Footer>
         </IonPage>

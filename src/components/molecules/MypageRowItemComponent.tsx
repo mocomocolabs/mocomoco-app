@@ -1,5 +1,5 @@
 import { IonButton, IonIcon } from '@ionic/react'
-import { TextXl } from '../atoms/TextXlComponent'
+import { TextXxl } from '../atoms/TextXxlComponent'
 
 interface IMypageRowItem {
   icon: string
@@ -12,7 +12,7 @@ export const MypageRowItem: React.FC<IMypageRowItem> = ({ icon, title, onClick }
     <IonButton color='dark' fill='outline' onClick={onClick}>
       <div className='flex items-center'>
         <IonIcon icon={icon} size='large' />
-        <TextXl>{title}</TextXl>
+        <TextXxl>{title}</TextXxl>
       </div>
     </IonButton>
   )

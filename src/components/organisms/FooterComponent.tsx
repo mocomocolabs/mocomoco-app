@@ -1,6 +1,5 @@
 import { IonFooter } from '@ionic/react'
 import React, { FC } from 'react'
-import './HeaderComponent.scss'
 
 export interface IFooter {
   children?: React.ReactNode
@@ -8,8 +7,8 @@ export interface IFooter {
 
 export const Footer: FC<IFooter> = ({ children }) => {
   return (
-    <IonFooter className='shadow-sm'>
-      <div className='my-2'>{children}</div>
+    <IonFooter className='px-container shadow-sm'>
+      <div className='flex-between-center height-56 w-full'>{children}</div>
     </IonFooter>
   )
 }

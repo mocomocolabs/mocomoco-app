@@ -1,0 +1,9 @@
+@import '../../theme/variable';
+
+.hr-primary {
+  background-color: rgba($primary-rgb, 0.5);
+}
+
+.hr-gray {
+  background-color: $border-color;
+}

@@ -36,9 +36,9 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
               radiusSize={12}
               isRoundTop={true}
             ></ImageWithCorner>
-            <div className='flex-col w-full h-10 bg-white px-3 br-b-xxlg text-left'>
+            <div className='flex-col w-full bg-white px-3 br-b-xxlg text-left'>
               <TextBase className='text-bold ellipsis'>{v.title ? v.title : v.content}</TextBase>
-              {v.title && <TextXs className='ellipsis'>{v.content}</TextXs>}
+              {v.title && <TextXs className='ellipsis -mb-1'>{v.content}</TextXs>}
             </div>
           </div>
         </IonSlide>

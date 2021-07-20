@@ -9,6 +9,7 @@ export interface ISubmitButton {
   disabled?: boolean
   onClick?: () => void
   className?: string
+  size?: 'medium' | 'large'
 }
 
 export const SubmitButton: FC<ISubmitButton> = ({
@@ -17,6 +18,7 @@ export const SubmitButton: FC<ISubmitButton> = ({
   color = 'primary',
   className = '',
   onClick,
+  size = 'medium',
 }) => {
   const getTextColor = (color: Color) => {
     switch (color) {
@@ -31,11 +33,13 @@ export const SubmitButton: FC<ISubmitButton> = ({
   return (
     <button
       type='submit'
-      className={`shadow w-full h-11 br-28 ${disabled ? 'bg-gray' : `bg-${color}`} ${className}`}
+      className={`shadow w-full height-${size === 'large' ? '56' : '40'} br-28 ${
+        disabled ? 'bg-disabled' : `bg-${color}`
+      } ${className}`}
       disabled={disabled}
       onClick={onClick}
     >
-      <TextLg className={`white text-bold ${getTextColor(color)}`}>{text}</TextLg>
+      <TextLg className={`text-bold ${disabled ? 'white' : getTextColor(color)}`}>{text}</TextLg>
     </button>
   )
 }

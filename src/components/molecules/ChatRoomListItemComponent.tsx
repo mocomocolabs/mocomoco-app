@@ -7,7 +7,6 @@ import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { TextLg } from '../atoms/TextLgComponent'
 import { TextSm } from '../atoms/TextSmComponent'
 
 interface IChatRoomListItem {
@@ -33,9 +32,9 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
   const readCount = $chat.storeRooms.find((v) => v.id === room.id)?.readCount
 
   return (
-    <li className='py-4 flex'>
+    <li className='flex-between-center py-3'>
       <div
-        className='mr-2 mr-4'
+        className='flex-center flex-none mr-4'
         onClick={() => {
           if (isClub) {
             console.log('클럽 홈으로 가야됨')
@@ -44,20 +43,20 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           }
         }}
       >
-        <ProfileImage className='width-64 height-64' url={imageUrl}></ProfileImage>
+        <ProfileImage className='width-52 height-52' url={imageUrl}></ProfileImage>
       </div>
-      <div className='flex-col justify-center flex-1' onClick={() => route.chatRoom(room.id)}>
-        <div className='flex flex-between-center'>
-          <div className='flex'>
-            <TextLg className='mr-2 text-bold'>{nickname}</TextLg>
-            <TextBase className='mr-2 gray'>{communityName}</TextBase>
-          </div>
-          <TextBase className='gray'>{timeDiff(lastChat?.createdAt)}</TextBase>
-        </div>
+      <div className='flex-col justify-center flex-1 ellipsis' onClick={() => route.chatRoom(room.id)}>
         <div className='flex-between-center'>
-          <TextBase className='ellipsis max-width-270'>{lastChat?.message}</TextBase>
-          {_.isNumber(readCount) && readCount > 0 && (
-            <div className='flex-center br-full bg-red w-6 h-6 ml-2 white'>
+          <div className='flex items-baseline ellipsis'>
+            <TextBase className='mr-1 text-bold'>{nickname}</TextBase>
+            <TextSm className='mr-1 gray ellipsis'>{communityName}</TextSm>
+          </div>
+          <TextSm className='flex-none gray'>{timeDiff(lastChat?.createdAt)}</TextSm>
+        </div>
+        <div className='flex-between-center flex-none'>
+          <TextSm className='ellipsis'>{lastChat?.message}</TextSm>
+          {_.isNumber(readCount) && readCount >= 0 && (
+            <div className='flex-center flex-none br-full bg-red min-width-20 min-height-20 leading-none ml-2 white'>
               <TextSm>{readCount}</TextSm>
             </div>
           )}

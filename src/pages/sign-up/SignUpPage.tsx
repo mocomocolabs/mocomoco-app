@@ -31,12 +31,12 @@ export const SignUpPage: React.FC = () => {
     <IonPage>
       <IonContent>
         <div className='px-container'>
-          <TextXxl className='text-bold textprimary mt-8'>
+          <TextXxl className='text-bold textprimary mt-5'>
             하나의 마을
             <br />
             하마에 어서오세요!
           </TextXxl>
-          <Pad className='height-50'></Pad>
+          <Pad className='height-30'></Pad>
           <InputNormal
             type='email'
             placeholder='이메일을 입력해주세요'
@@ -44,7 +44,7 @@ export const SignUpPage: React.FC = () => {
               required: '이메일을 입력해주세요',
               pattern: {
                 value: /\S+@\S+[.]\S+$/,
-                message: '이메일 형식이 올바르지 않습니다.',
+                message: '올바른 이메일 형식이 아닙니다.',
               },
             })}
           ></InputNormal>
@@ -54,6 +54,7 @@ export const SignUpPage: React.FC = () => {
           <SubmitButton
             disabled={!isValid}
             color='secondary'
+            size='large'
             text='이메일로 시작하기'
             onClick={async () => {
               $auth.setSignUpForm({ email: getValues().email })

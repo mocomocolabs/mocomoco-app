@@ -12,7 +12,7 @@ export const HomeTitle: FC<IHomeTitle> = ({ title, route }) => {
   return (
     <div
       onClick={route ? route : () => {}}
-      className={`flex-between-center pt-5 pb-4 ${route ? 'ion-activatable ripple-parent' : ''}`}
+      className={`flex-between-center py-4 ${route ? 'ion-activatable ripple-parent' : ''}`}
     >
       <IonRippleEffect></IonRippleEffect>
       <TextLg className='text-bold'>{title}</TextLg>

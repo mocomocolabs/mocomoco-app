@@ -24,15 +24,13 @@ export const ClubPage: React.FC = () => {
   return useObserver(() => (
     <IonPage>
       <Header>
-        <div slot='start' className='text-header'>
-          소모임
-        </div>
+        <div className='text-header'>소모임</div>
         <div slot='end'>
           <div className='flex'>
             {/* TODO: 추후구현 */}
-            {/* <Icon name='search' className='icon-24'></Icon> */}
+            {/* <Icon name='search' /> */}
             <div onClick={() => route.clubForm()}>
-              <Icon name='pencil' className='ml-4 icon-24'></Icon>
+              <Icon name='pencil' className='ml-4' />
             </div>
           </div>
         </div>
