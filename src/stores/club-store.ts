@@ -27,8 +27,7 @@ const initState = {
 export class ClubStore {
   @observable.ref popularClubs: Club[] = []
   @observable.ref recentClubs: Club[] = []
-  @observable.ref myClubs: Club[] = []
-  @observable.ref likeClubs: Club[] = []
+  @observable.ref clubs: Club[] = []
   @observable.ref club: Club
   @observable.struct form: IClubForm = initState.form
 
@@ -69,7 +68,7 @@ export class ClubStore {
       )
       .then(
         action((data) => {
-          this.myClubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
+          this.clubs = data.clubs.map((v) => Club.of(v, this.$auth.user.id!))
         })
       )
   }) as Task
@@ -83,7 +82,7 @@ export class ClubStore {
         action((data) => {
           // TODO clubs api 바뀌면, 이 부분 교체하기
           // this.likeClubs = data.clubs.filter((v) => v.isLike).map((v) => Club.of(v, this.$auth.user.id))
-          this.likeClubs = data.clubs
+          this.clubs = data.clubs
             .filter((v) => v.clubUsers.some((cu) => cu.user.id === this.$auth.user.id && cu.isLike))
             .map((v) => Club.of(v, this.$auth.user.id))
         })
@@ -193,12 +192,11 @@ export class ClubStore {
   }) as TaskBy2<number, boolean>
 
   @action
-  setLike(clubId: number, isLike: boolean) {
+  setLike = (clubId: number, isLike: boolean) => {
     this.club = this.updateClubLike(this.club, clubId, isLike)
     this.popularClubs = this.popularClubs.map((club) => this.updateClubLike(club, clubId, isLike))
     this.recentClubs = this.recentClubs.map((club) => this.updateClubLike(club, clubId, isLike))
-    this.myClubs = this.myClubs.map((club) => this.updateClubLike(club, clubId, isLike))
-    this.likeClubs = this.likeClubs.map((club) => this.updateClubLike(club, clubId, isLike))
+    this.clubs = this.clubs.map((club) => this.updateClubLike(club, clubId, isLike))
   }
 
   updateClubLike = (club: Club, clubId: number, isLike: boolean) =>

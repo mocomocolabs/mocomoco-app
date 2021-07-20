@@ -192,24 +192,23 @@ export class FeedStore {
   @task.resolved
   toggleFeedLike = (async (feedId: number, isLike: boolean) => {
     await api.post('/v1/feeds-users/likes', { feedId, isLike, isUse: true })
-    this.setFeedLike(feedId, isLike)
+    this.setLike(feedId, isLike)
   }) as TaskBy2<number, boolean>
 
   @action
-  setFeedLike(id: number, isLike: boolean) {
-    // TODO store의 현재 items와 item 데이터를 둘다 갱신해야 돼서 이렇게 구현했는데, 보기에 개운하지 않음.
-    const found = this.feed.id === id ? this.feed : this.feeds.find((v) => v.id === id)
-
-    if (found) {
-      const likeCount = isLike ? found.likeCount + 1 : found.likeCount - 1
-
-      this.feeds = this.feeds.map((v) => {
-        return v.id === id ? { ...found!, isLike: isLike, likeCount: likeCount } : v
-      })
-
-      this.feed = this.feed.id === id ? { ...this.feed, isLike: isLike, likeCount: likeCount } : this.feed
-    }
+  setLike = (feedId: number, isLike: boolean) => {
+    this.feed = this.updateFeedLike(this.feed, feedId, isLike)
+    this.feeds = this.feeds.map((feed) => this.updateFeedLike(feed, feedId, isLike))
   }
+
+  updateFeedLike = (feed: Feed, feedId: number, isLike: boolean) =>
+    feed.id === feedId
+      ? {
+          ...feed,
+          isLike,
+          likeCount: isLike ? feed.likeCount + 1 : feed.likeCount - 1,
+        }
+      : feed
 
   @action
   setForm(data: Partial<IFeedForm>) {

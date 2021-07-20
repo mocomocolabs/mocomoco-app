@@ -257,20 +257,19 @@ export class StuffTalentStore {
   }) as TaskBy2<number, boolean>
 
   @action
-  setLike(id: number, isLike: boolean) {
-    // TODO store의 현재 items와 item 데이터를 둘다 갱신해야 돼서 이렇게 구현했는데, 보기에 개운하지 않음.
-    const found = this.item.id === id ? this.item : this.items.find((v) => v.id === id)
-
-    if (found) {
-      const likeCount = isLike ? found.likeCount + 1 : found.likeCount - 1
-
-      this.items = this.items.map((v) => {
-        return v.id === id ? { ...found!, isLike, likeCount } : v
-      })
-
-      this.item = this.item.id === id ? { ...this.item, isLike, likeCount } : this.item
-    }
+  setLike = (itemId: number, isLike: boolean) => {
+    this.item = this.updateItemLike(this.item, itemId, isLike)
+    this.items = this.items.map((item) => this.updateItemLike(item, itemId, isLike))
   }
+
+  updateItemLike = (item: IStuffTalent, feedId: number, isLike: boolean) =>
+    item.id === feedId
+      ? {
+          ...item,
+          isLike,
+          likeCount: isLike ? item.likeCount + 1 : item.likeCount - 1,
+        }
+      : item
 
   @task
   getUpdateForm = (async (_id: number) => {

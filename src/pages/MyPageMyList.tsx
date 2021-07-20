@@ -26,7 +26,7 @@ export const MyPageMyList: React.FC = () => {
         setSelectedSegment: $segment.setMyListSegment,
         fetchFeeds: $feed.getMyFeeds,
         fetchClubs: $club.getMyClubs,
-        clubs: $club.myClubs,
+        clubs: $club.clubs,
       }}
     />
   ))

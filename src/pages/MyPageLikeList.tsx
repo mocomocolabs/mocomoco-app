@@ -27,7 +27,7 @@ export const MyPageLikeList: React.FC = () => {
         setSelectedSegment: $segment.setLikeListSegment,
         fetchFeeds: $feed.getLikeFeeds,
         fetchClubs: $club.getLikeClubs,
-        clubs: $club.likeClubs,
+        clubs: $club.clubs,
       }}
     />
   ))
