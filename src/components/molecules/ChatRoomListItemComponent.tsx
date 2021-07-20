@@ -55,7 +55,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
         </div>
         <div className='flex-between-center flex-none'>
           <TextSm className='ellipsis'>{lastChat?.message}</TextSm>
-          {_.isNumber(readCount) && readCount >= 0 && (
+          {_.isNumber(readCount) && readCount > 0 && (
             <div className='flex-center flex-none br-full bg-red min-width-20 min-height-20 leading-none ml-2 white'>
               <TextSm>{readCount}</TextSm>
             </div>
