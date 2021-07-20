@@ -8,8 +8,7 @@ import './BottomTabMorePopover.scss'
 export interface IBottomTabMorePopover {
   isOpen: boolean
   activeTab: TAB_PATH
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setIsOpen: any
+  setIsOpen: (open: boolean) => void
 }
 
 export const BottomTabMorePopover: FC<IBottomTabMorePopover> = ({ isOpen, setIsOpen, activeTab }) => {
@@ -18,37 +17,37 @@ export const BottomTabMorePopover: FC<IBottomTabMorePopover> = ({ isOpen, setIsO
       cssClass='bottom-tab-more-popover'
       isOpen={isOpen}
       showBackdrop={false}
-      onDidDismiss={(e) => setIsOpen(e)}
+      onWillDismiss={() => setIsOpen(false)}
     >
-      <ul className='p-4'>
-        <li
-          className='text-center pv-2'
+      <div className='flex-col height-140 justify-center gap-4'>
+        <div
+          className='text-center'
           onClick={() => {
             route.stuff()
             setIsOpen(false)
           }}
         >
           <TextBase className={`text-bold ${activeTab === TAB_PATH.STUFF && 'primary'}`}>물건창고</TextBase>
-        </li>
-        <li
-          className='text-center pv-2'
+        </div>
+        <div
+          className='text-center'
           onClick={() => {
             route.talent()
             setIsOpen(false)
           }}
         >
           <TextBase className={`text-bold ${activeTab === TAB_PATH.TALENT && 'primary'}`}>재능창고</TextBase>
-        </li>
-        <li
-          className='text-center pv-2'
+        </div>
+        <div
+          className='text-center'
           onClick={() => {
             route.clubs()
             setIsOpen(false)
           }}
         >
           <TextBase className={`text-bold ${activeTab === TAB_PATH.CLUB && 'primary'}`}>소모임</TextBase>
-        </li>
-      </ul>
+        </div>
+      </div>
     </IonPopover>
   )
 }
