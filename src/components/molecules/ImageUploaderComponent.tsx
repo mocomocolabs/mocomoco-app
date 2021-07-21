@@ -52,7 +52,7 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
         <div className={`${className} uploader-item relative mr-1`} key={image.name}>
           <Icon
             name='delete'
-            className='absolute mr-2 mt-2 right-0 top-0'
+            className='absolute mr-2 mt-2 right-0 top-0 uploader-delete-icon'
             onClick={() => setImages(images.filter((v) => v.id !== image.id))}
           ></Icon>
           <img src={image.preview} alt='' className='h-full w-auto br-md' />
