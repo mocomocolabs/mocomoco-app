@@ -34,14 +34,14 @@ $padding-container: 2rem;
 }
 $padding-bottom-extra-space: 6rem;
 
-$text-xxs-size: 0.8rem; // 10px
-$text-xs-size: 0.96rem; // 12px
-$text-sm-size: 1.12rem; // 14px
-$text-base-size: 1.28rem; // 16px
-$text-lg-size: 1.6rem; // 20px
-$text-xl-size: 1.76rem; // 22px
-$text-xxl-size: 1.92rem; // 24px
-$text-xxxl-size: 2.08rem; // 26px
+$text-xxs-size: 1rem;
+$text-xs-size: 1.2rem;
+$text-sm-size: 1.4rem;
+$text-base-size: 1.6rem;
+$text-lg-size: 2rem;
+$text-xl-size: 2.2rem;
+$text-xxl-size: 2.4rem;
+$text-xxxl-size: 2.6rem;
 
 %text-xxs {
   font-size: $text-xxs-size;
