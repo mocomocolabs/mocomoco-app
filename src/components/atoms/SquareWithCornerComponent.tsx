@@ -18,7 +18,7 @@ export const SquareWithCorner: FC<ISquareWithCorner> = ({
 }) => {
   return (
     <TextXxs
-      className={`flex-center no-wrap br-t-xxlg br-b-xxlg px-1 ${
+      className={`flex-center no-wrap ${height <= 30 ? 'br-xxlg' : 'br-xxxlg'} px-1 ${
         fill ? `text-bold ${color === 'primary' ? 'black' : 'white'} bg-${color}` : `${color} border-${color}`
       }`}
       style={{

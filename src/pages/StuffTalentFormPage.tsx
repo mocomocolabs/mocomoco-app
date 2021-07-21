@@ -10,7 +10,7 @@ import { IsPublicToast } from '../components/atoms/IsPublicToast'
 import { Pad } from '../components/atoms/PadComponent'
 import { SquareWithCorner } from '../components/atoms/SquareWithCornerComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
-import { TextXs } from '../components/atoms/TextXsComponent'
+import { TextSm } from '../components/atoms/TextSmComponent'
 import { XDivider } from '../components/atoms/XDividerComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -166,12 +166,14 @@ export const StuffTalentFormPage: React.FC = () => {
                   onClick={() => setValueCustom('type', t.value as StuffTalentType)}
                 >
                   <SquareWithCorner
-                    height={36}
+                    height={32}
                     key={i}
                     color={t.value !== watchType ? 'gray' : undefined}
                     fill={t.value === watchType}
                   >
-                    <TextXs className={t.value !== watchType ? 'gray' : undefined}>{t.label}</TextXs>
+                    <TextSm className={`${t.value !== watchType ? 'gray' : undefined} leading-none`}>
+                      {t.label}
+                    </TextSm>
                   </SquareWithCorner>
                 </div>
               ))}
