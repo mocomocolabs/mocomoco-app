@@ -22,7 +22,7 @@ import {
   IStuffTalentDto,
   IStuffTalentInsertReqDto,
 } from './stufftalent-store.d'
-import { TaskBy, TaskBy2 } from './task'
+import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
   items: [],
@@ -92,14 +92,13 @@ export class StuffTalentStore {
   constructor(pathName: PageKey, rootStore: RootStore) {
     this.$auth = rootStore.$auth
     this.predefined = predefined.find((p) => p.pageKey === pathName) || predefined[0]
-    this.getCategoriesBy(pathName)
   }
 
   @task
-  getCategoriesBy = (async (pathName: string) => {
+  getCategories = (async () => {
     const config = {
       params: {
-        'type': pathName,
+        'type': this.predefined.pageKey,
         'is-use': true,
       },
     }
@@ -109,7 +108,7 @@ export class StuffTalentStore {
         this.categories = data.categories
       })
     )
-  }) as TaskBy<string>
+  }) as Task
 
   @task
   getItems = (async (search, filter) => {

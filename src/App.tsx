@@ -13,7 +13,7 @@ import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 
 export const App: React.FC = () => {
-  const { $community, $chat, $auth } = useStore()
+  const { $community, $chat, $auth, $stuff, $talent } = useStore()
   const [initialized, setInitailzed] = useState(false)
 
   const init = async () => {
@@ -33,6 +33,8 @@ export const App: React.FC = () => {
       }
 
       $chat.connectRooms()
+      $stuff.getCategories()
+      $talent.getCategories()
     } else {
       if (!(await storage.getHaveSeenIntro())) {
         route.intro()
