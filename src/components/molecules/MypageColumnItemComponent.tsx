@@ -1,5 +1,6 @@
-import { IonIcon, IonLabel } from '@ionic/react'
 import { Link } from 'react-router-dom'
+import { Icon } from '../atoms/IconComponent'
+import { TextBase } from '../atoms/TextBaseComponent'
 
 interface IMypageColumnItem {
   icon: string
@@ -11,8 +12,8 @@ export const MypageColumnItem: React.FC<IMypageColumnItem> = ({ icon, title, hre
   return (
     <Link to={href} className='no-underline black'>
       <div className='flex-row w-100 items-center height-50'>
-        <IonIcon icon={icon} slot='start' />
-        <IonLabel className='ml-4 text-xl'>{title}</IonLabel>
+        <Icon name={icon} slot='start' />
+        <TextBase className='ml-3'>{title}</TextBase>
       </div>
     </Link>
   )

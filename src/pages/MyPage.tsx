@@ -1,8 +1,8 @@
-import { IonButton, IonButtons, IonContent, IonPage } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { Icon } from '../components/atoms/IconComponent'
-import { TextLg } from '../components/atoms/TextLgComponent'
-import { XDivider } from '../components/atoms/XDividerComponent'
+import { Pad } from '../components/atoms/PadComponent'
+import { TextXl } from '../components/atoms/TextXlComponent'
 import { MypageColumnList } from '../components/molecules/MypageColumnListComponent'
 import { MypageProfile } from '../components/molecules/MypageProfileComponent'
 import { MypageRowList } from '../components/molecules/MypageRowListComponent'
@@ -19,22 +19,18 @@ export const MyPage: React.FC = () => {
   return (
     <IonPage>
       <Header>
-        <>
-          <IonButtons slot='start'>
-            <IonButton slot='end' color='dark' routerLink='/tabs/my-page/settings'>
-              <Icon name='setting' />
-            </IonButton>
-            <TextLg className='text-left text-bold'>나의 하마</TextLg>
-          </IonButtons>
-        </>
+        <div slot='start'>
+          <Icon name='setting' />
+        </div>
+        <TextXl className='text-bold ml-1'>나의 하마</TextXl>
       </Header>
 
       <IonContent>
         <div className='px-container my-4'>
           <MypageProfile />
-          <XDivider />
+          <Pad className='height-20' />
           <MypageRowList />
-          <XDivider />
+          <Pad className='height-20' />
           <MypageColumnList />
         </div>
       </IonContent>
