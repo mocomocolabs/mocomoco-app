@@ -21,6 +21,20 @@ https://capacitorjs.com/docs/ios
         android:usesCleartextTraffic="true"
 ```
 
+- CORS 에러 해결을 위한 proxy 설정
+
+1. `package.json`에 아래 설정 추가
+
+```
+"proxy": "http://13.209.84.58:8080"
+```
+
+2. `config.ts`의 API_URL 수정
+
+```
+API_URL: '/api'
+```
+
 - build & sync
 
 ```
@@ -59,7 +73,7 @@ https://www.joshmorony.com/deploying-capacitor-applications-to-android-developme
 
 - android alias : mocomoco
 
-- ios distribution key : 
+- ios distribution key :
 
 - keystore 파일은 배포담당자에게 문의
 
@@ -74,5 +88,6 @@ https://apetools.webprofusion.com/#/tools/imagegorilla
 https://www.joshmorony.com/adding-icons-splash-screens-launch-images-to-capacitor-projects/
 
 # 디버깅
+
 - Android - 크롬 브라우저에서 `chrome://inspect` 입력
-- iOS - 사파리 브라우저의 develop을 통해 가능 
+- iOS - 사파리 브라우저의 develop을 통해 가능

@@ -19,16 +19,16 @@ interface ConfigByEnv {
 // TODO: 실서버 배포시, key변경해야함
 const configEnv: ConfigByEnv = {
   development: {
-    API_URL: 'http://localhost:8080/api',
-    SOCKET_URL: 'http://localhost:8080/ws-chat',
+    API_URL: '/api',
+    SOCKET_URL: '/ws-chat',
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },
     IS_PROD: false,
   },
   production: {
-    API_URL: 'http://localhost:8080/api',
-    SOCKET_URL: 'http://localhost:8080/ws-chat',
+    API_URL: '/api',
+    SOCKET_URL: '/ws-chat',
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },
