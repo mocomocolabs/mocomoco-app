@@ -59,6 +59,31 @@ $ npx cap open
   yarn dev:ios or yarn dev:and
 ```
 
+# android 에뮬레이터에서 앱 실행하기
+
+1. ANDROID_SDK_ROOT, ANDROID_HOME 환경변수 추가
+   - 리눅스인 경우 `~/.profile` 파일에 추가 (빌드 안되면 재부팅 후 다시 시도)
+
+```
+# Android
+export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+export ANDROID_SDK_HOME=$ANDROID_SDK_ROOT
+export ANDROID_HOME=$ANDROID_SDK_ROOT
+
+# avdmanager, sdkmanager
+export PATH=$PATH:$ANDROID_SDK_ROOT/tools/bin
+
+# adb, logcat
+export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools
+
+# emulator
+export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
+```
+
+2. Android studio > Run > Run 'app' 메뉴 실행
+
+- 한번 실행한 후엔 'Apply Changes and Restart Activity'
+
 # 배포
 
 - build 한 파일 구동
