@@ -12,6 +12,7 @@
     "sync": "yarn build && npx cap sync",
     "dev:ios": "ionic capacitor run ios -l --external",
     "dev:and": "ionic capacitor run android -l --external",
+    "prod:and": "ionic capacitor run android",
     "open:and": "npx cap open android",
     "open:ios": "npx cap open ios",
     "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}'",
@@ -51,7 +52,7 @@
     "type-fest": "^1.2.2"
   },
   "dependencies": {
-    "@capacitor/android": "^3.1.1",
+    "@capacitor/android": "^3.1.2",
     "@capacitor/core": "^3.1.1",
     "@capacitor/ios": "^3.1.1",
     "@capacitor/storage": "^1.0.3",

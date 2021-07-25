@@ -32,7 +32,13 @@ https://capacitorjs.com/docs/ios
 2. `config.ts`의 API_URL 수정
 
 ```
-API_URL: '/api'
+// browser(yarn front), livereload(yarn dev:and) 시에 적용됨
+development: {
+  API_URL: '/api',
+
+// android debug/release 빌드 시 적용됨
+production: {
+  API_URL: 'http://서버주소:포트/api',
 ```
 
 - build & sync
@@ -90,9 +96,15 @@ export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
 
 > yarn build && yarn serve:build
 
+- android
+
+> yarn prod:and
+
 - 다음 포스팅을 참고합니다.
 
 https://www.joshmorony.com/deploying-capacitor-applications-to-android-development-distribution/
+
+> Android Studio > Build > Generate Signed Bundle / APK
 
 - android keysotre password : mocomocolabs11!!
 
