@@ -27,8 +27,8 @@ const configEnv: ConfigByEnv = {
     IS_PROD: false,
   },
   production: {
-    API_URL: 'http://13.209.84.58:8080/api',
-    SOCKET_URL: 'http://13.209.84.58:8080/ws-chat',
+    API_URL: 'http://13.209.84.58/api',
+    SOCKET_URL: 'http://13.209.84.58/ws-chat',
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },
