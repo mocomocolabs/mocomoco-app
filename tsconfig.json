@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5", // 사용할 ECMA Script Version 설정
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "experimentalDecorators": true,
     "allowJs": true,
     "skipLibCheck": false, // d.ts 유형검사를 건너 뛸지 여부
@@ -20,10 +16,8 @@
     "noEmit": true, // 결과파일을 저장하지 않음, 타입스크립트 컴파일러를 컴파일러 용도로만 사용합니다. 컴파일은 웹팩에게 맡깁니다.
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
-    "strictPropertyInitialization": false, /** class의 변수 초기화 강제를 해제  */
+    "strictPropertyInitialization": false /** class의 변수 초기화 강제를 해제  */
   },
-  "include": [
-    "src",
-    "types"
-  ]
+  "include": ["src", "types"],
+  "exclude": ["src/setupProxy.js"]
 }
