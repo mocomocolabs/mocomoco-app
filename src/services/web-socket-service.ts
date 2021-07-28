@@ -59,6 +59,14 @@ class WebSocketService {
     )
   }
 
+  sendMessageForNewRoom(userId: number, message: string) {
+    this.stompClient?.send(
+      `/pub/chat/users/${userId}`,
+      { Authorization: storage.accessTokenForSync },
+      message
+    )
+  }
+
   disConnect() {
     this.stompClient?.disconnect()
   }

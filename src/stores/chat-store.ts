@@ -67,6 +67,8 @@ export class ChatStore {
       {
         userId: this.$auth.user.id,
         cb: (data) => {
+          console.log('새로 만들어진 채팅방을 구독상태로 한다.')
+
           // 첫 채팅을 받는 경우
           const subChat = JSON.parse(data.body) as ISubscribeChat
           // 새로 만들어진 채팅방을 구독상태로 한다.
@@ -166,7 +168,22 @@ export class ChatStore {
       })
       .then((data) => {
         if (room !== undefined) room.readChatId = data.id
-        webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
+        console.log(room?.chats.length)
+
+        // 첫 채팅시
+        if (room?.chats.length === 0 && room.type === ChatRoomType.NORMAL) {
+          console.log('sendMessageForNewRoom')
+
+          const targetUser = room.users.find((v) => v.id !== this.$auth.user.id)
+          if (!targetUser) {
+            throw new Error('오류가 발생하였습니다')
+          }
+          webSocket.sendMessageForNewRoom(targetUser.id, JSON.stringify(data))
+        } else {
+          console.log('sendMessageForRoom')
+
+          webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
+        }
         this.setForm(roomId, '')
       })
   }) as InsertChatMessageTask
