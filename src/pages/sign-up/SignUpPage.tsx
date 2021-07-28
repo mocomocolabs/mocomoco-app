@@ -30,8 +30,8 @@ export const SignUpPage: React.FC = () => {
   return useObserver(() => (
     <IonPage>
       <IonContent>
-        <div className='px-container'>
-          <TextXxl className='text-bold textprimary mt-5'>
+        <div className='px-container ios-pt-container'>
+          <TextXxl className='text-bold d-gray mt-8'>
             하나의 마을
             <br />
             하마에 어서오세요!

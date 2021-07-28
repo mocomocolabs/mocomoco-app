@@ -103,6 +103,7 @@ export PATH=$PATH:$ANDROID_SDK_ROOT/emulator
 - 다음 포스팅을 참고합니다.
 
 https://www.joshmorony.com/deploying-capacitor-applications-to-android-development-distribution/
+https://www.joshmorony.com/deploying-capacitor-applications-to-ios-development-distribution/
 
 > Android Studio > Build > Generate Signed Bundle / APK
 

@@ -12,10 +12,18 @@ export const BackFloatingButton: FC<IBackFloatingButton> = ({ action }) => {
   const defaultAction = () => route.goBack()
 
   return (
-    <IonFab vertical='top' horizontal='start' slot='fixed' onClick={action ?? defaultAction}>
-      <IonFabButton routerDirection='back'>
-        <BackButton type='arrow'></BackButton>
-      </IonFabButton>
-    </IonFab>
+    <>
+      <IonFab
+        className='top-0-safe-area'
+        vertical='top'
+        horizontal='start'
+        slot='fixed'
+        onClick={action ?? defaultAction}
+      >
+        <IonFabButton routerDirection='back'>
+          <BackButton type='arrow'></BackButton>
+        </IonFabButton>
+      </IonFab>
+    </>
   )
 }

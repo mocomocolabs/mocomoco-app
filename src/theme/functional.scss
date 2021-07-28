@@ -1196,10 +1196,12 @@
 .top-0 {
   top: 0;
 }
+
 .top-0-safe-area {
   top: calc(constant(safe-area-inset-bottom));
   top: calc(env(safe-area-inset-bottom));
 }
+
 .right-0 {
   right: 0;
 }
@@ -1528,4 +1530,10 @@
 
 li.border-bottom {
   border-bottom: 1px solid rgba($primary-rgb, 0.5);
+}
+
+ion-app.ios {
+  .ios-pt-container {
+    padding-top: 2.4rem;
+  }
 }
