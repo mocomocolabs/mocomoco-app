@@ -13,6 +13,8 @@ export interface IChatRoom extends IChatRoomDto {}
 
 export interface ISubscribeChat extends IChat {
   chatroom: IChatRoomDto
+  // 새로 생성한 채팅의 상대방에게 publish하기 위한 값
+  targetUserId?: number
 }
 
 export interface IChatForm {

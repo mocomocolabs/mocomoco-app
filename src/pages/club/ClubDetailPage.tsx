@@ -78,8 +78,6 @@ export const ClubDetailPage: React.FC = () => {
                   text='채팅으로 참여하기'
                   color='secondary'
                   onClick={() => {
-                    // 첫 채팅참여일 수 있음
-                    $chat.subscribeNewRoom($club.club.chatroomId)
                     route.chatRoom($club.club.chatroomId)
                   }}
                 ></SubmitButton>

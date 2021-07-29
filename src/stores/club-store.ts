@@ -145,6 +145,8 @@ export class ClubStore {
     })
 
     await api.post(`/v1/clubs`, formData)
+
+    return this.getCreatedClub()
   }) as InsertClubTask
 
   @task.resolved
@@ -197,6 +199,18 @@ export class ClubStore {
     this.popularClubs = this.popularClubs.map((club) => this.updateClubLike(club, clubId, isLike))
     this.recentClubs = this.recentClubs.map((club) => this.updateClubLike(club, clubId, isLike))
     this.clubs = this.clubs.map((club) => this.updateClubLike(club, clubId, isLike))
+  }
+
+  /**
+   * 방금 생성한 클럽을 리턴합니다.
+   * TODO: 추후 논의후 클럽 insert후 클럽 객체 리턴하도록 협의필요
+   */
+  getCreatedClub = async () => {
+    const data = await api.get<{ clubs: IClubDto[]; count: number }>(
+      `/v1/clubs/users/${this.$auth.user.id}?sort-order=created_at_desc&limit=1`
+    )
+
+    return data.clubs.pop()
   }
 
   updateClubLike = (club: Club, clubId: number, isLike: boolean) =>

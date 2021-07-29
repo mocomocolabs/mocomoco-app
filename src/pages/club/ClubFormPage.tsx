@@ -19,7 +19,7 @@ import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubFormPage: React.FC = () => {
-  const { $auth, $ui, $club } = useStore()
+  const { $auth, $ui, $club, $chat } = useStore()
   const { register, handleSubmit, formState, reset } = useForm<IClubForm>({
     mode: 'onChange',
     defaultValues: {
@@ -43,15 +43,17 @@ export const ClubFormPage: React.FC = () => {
     })
 
     executeWithError(async () => {
-      await $club.insertClub({
+      const club = await $club.insertClub({
         ...$club.form,
         communityId: $auth.user.communityId,
       })
 
-      await Promise.all([$club.getPopularClubs(999), $club.getRecentClubs()])
+      $chat.subscribeNewRoom(club.chatroom.id)
 
       $club.resetForm()
       reset()
+
+      await Promise.all([$club.getPopularClubs(999), $club.getRecentClubs()])
 
       route.clubs()
     })

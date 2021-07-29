@@ -4,7 +4,7 @@ import { IFileDto } from './common/file'
 import { ICommunityDto } from './community-store.d'
 import { IUserDto } from './user-store.d'
 
-export type InsertClubTask = Task<[Partial<IClubForm>], void>
+export type InsertClubTask = Task<[Partial<IClubForm>], IClubDto>
 
 export type JoinClubTask = Task<[IJoinClubDto], void>
 

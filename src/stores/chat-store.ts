@@ -178,6 +178,7 @@ export class ChatStore {
           if (!targetUser) {
             throw new Error('오류가 발생하였습니다')
           }
+          data.targetUserId = targetUser.id
           webSocket.sendMessageForNewRoom(targetUser.id, JSON.stringify(data))
         } else {
           console.log('sendMessageForRoom')
