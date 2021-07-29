@@ -1,5 +1,6 @@
 import { FC, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { useStore } from '../../hooks/use-store'
 import { compress } from '../../utils/image-compressor'
 import { Icon } from '../atoms/IconComponent'
 import './ImageUploaderComponent.scss'
@@ -20,6 +21,8 @@ export interface IImageUploader {
 }
 
 export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refUploader, className }) => {
+  const { $ui } = useStore()
+
   const assignPreview = (v: File, i: number) =>
     Object.assign(v, {
       id: i,
@@ -29,6 +32,9 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length + images.length > 10) {
+        return $ui.showToastError({ message: '이미지는 10장까지만 올릴 수 있어요 🤗' })
+      }
       const compressed = await Promise.all(acceptedFiles.map((file) => compress(file)))
       setImages([...images, ...compressed.map((v, i) => assignPreview(v, new Date().getTime() + i))])
     },
@@ -44,12 +50,12 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
   }, [])
 
   return (
-    <section>
+    <section className='flex-center flex-wrap gap-2'>
       <div {...getRootProps()}>
         <input {...getInputProps()} ref={refUploader} />
       </div>
       {images?.map((image) => (
-        <div className={`${className} uploader-item relative mr-1`} key={image.name}>
+        <div className={`${className} uploader-item relative`} key={image.name}>
           <Icon
             name='delete'
             className='absolute mr-2 mt-2 right-0 top-0 uploader-delete-icon'
