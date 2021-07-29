@@ -31,6 +31,8 @@ import { SignInPage } from './pages/SignInPage'
 import { StuffTalentDetailPage } from './pages/StuffTalentDetailPage'
 import { StuffTalentFormPage } from './pages/StuffTalentFormPage'
 import { StuffTalentPage } from './pages/StuffTalentPage'
+import { TermPrivacyPage } from './pages/term/TermPrivacyPage'
+import { TermUsePage } from './pages/term/TermUsePage'
 import './RouterTab.scss'
 import { route } from './services/route-service'
 import { ValueOf } from './utils/type-util'
@@ -78,6 +80,8 @@ const publicPaths = [
   '/sign-up',
   '/sign-up/form',
   '/sign-up/community',
+  '/term/use',
+  '/term/privacy',
 ]
 
 const routingInfo: { path: string; children: ReactElement; exact: boolean }[] = [
@@ -88,6 +92,8 @@ const routingInfo: { path: string; children: ReactElement; exact: boolean }[] = 
   { path: '/sign-up/form', children: <SignUpFormPage />, exact: true },
   { path: '/sign-up/community', children: <SignUpCommunityPage />, exact: true },
   { path: '/sign-up/complete', children: <SignUpCompletePage />, exact: true },
+  { path: '/term/privacy', children: <TermPrivacyPage />, exact: true },
+  { path: '/term/use', children: <TermUsePage />, exact: true },
 
   // Login 필요
   // TABS

@@ -49,6 +49,14 @@ class RouteService {
     this.route('/sign-up/complete')
   }
 
+  termPrivacy() {
+    this.route('/term/privacy')
+  }
+
+  termUse() {
+    this.route('/term/use')
+  }
+
   home() {
     this.route('/tabs/home')
   }

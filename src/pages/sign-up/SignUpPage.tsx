@@ -72,9 +72,16 @@ export const SignUpPage: React.FC = () => {
             }}
           ></SubmitButton>
           <TextXs className='gray mt-4 text-center'>
-            회원가입시 개인정보 처리방침을 읽었으며,
+            회원가입시{' '}
+            <strong className='underline' onClick={() => route.termPrivacy()}>
+              개인정보 처리방침
+            </strong>
+            을 읽었으며,
             <br />
-            이용약관에 동의하신 것으로 간주합니다.
+            <strong className='underline' onClick={() => route.termUse()}>
+              이용약관
+            </strong>
+            에 동의하신 것으로 간주합니다.
           </TextXs>
         </div>
       </IonContent>
