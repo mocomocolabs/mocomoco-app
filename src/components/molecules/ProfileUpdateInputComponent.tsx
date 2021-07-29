@@ -1,92 +1,93 @@
-import { IonAvatar, IonToggle } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
-import { Controller, FieldError, FieldValues } from 'react-hook-form'
+import React, { useCallback, useRef } from 'react'
+import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import { IUser } from '../../models/user'
+import { IStuffTalentCommunityDto } from '../../stores/stufftalent-store.d'
 import { InputNormal } from '../atoms/InputNormalComponent'
-import { TextXs } from '../atoms/TextXsComponent'
+import { Pad } from '../atoms/PadComponent'
+import { Textarea } from '../atoms/TextareaComponent'
+import { TextBase } from '../atoms/TextBaseComponent'
+import { XDivider } from '../atoms/XDividerComponent'
+import { IImageUploaderRef } from './ImageUploaderComponent'
+import { ProfileImageUploader } from './ProfileImageUploaderComponent'
 
 interface IProfileUpdateInput {
-  fields: FieldValues
+  fields: {
+    register: UseFormRegister<IUser>
+    setValue: UseFormSetValue<IUser>
+    watch: UseFormWatch<IUser>
+    control: Control<IUser>
+  }
 }
 
 export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) => {
-  const { register, control, errors, getValues } = fields
+  const { register, setValue, watch, control } = fields
+
+  const uploader = useRef<IImageUploaderRef>()
+
+  const [watchProfileUrl, watchCommunities] = watch(['profileUrl', 'communities'])
+
+  const setValueCustom = useCallback((name, value) => {
+    // shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
+    setValue(name, value, { shouldDirty: true, shouldValidate: true })
+  }, [])
 
   return useObserver(() => (
     <>
       <input type='hidden' {...register('id')} />
       <input type='hidden' {...register('profileUrl')} />
 
-      <IonAvatar className='w-30 h-30 my-3 self-center'>
-        <img src={getValues('profileUrl')} alt='프로필이미지' />
-      </IonAvatar>
-
-      <InputNormal
-        register={register('nickname', { required: '별명을 입력해 주세요' })}
-        placeholder='별명을 입력해 주세요'
-      />
-
-      <ErrorText field={errors.nickname} />
-
-      <InputNormal placeholder='상태메시지를 입력해 주세요' register={register('status')} disabled={true} />
-
-      <InputNormal
-        placeholder='010-1234-5678'
-        register={register('mobile', {
-          required: '전화번호를 입력해 주세요',
-          pattern: {
-            value: /^[0-9]{3}[-]+[0-9]{3,4}[-]+[0-9]{4}$/i,
-            message: '전화번호를 확인해 주세요',
-          },
-        })}
-      />
-
-      <ErrorText field={errors.mobile} />
-
-      <div className='flex-between-center w-full pb-3'>
-        <label slot='start'>전화번호 공개</label>
-        <Controller
-          control={control}
-          name='isPublicMobile'
-          render={({ field: { name, onChange, value } }) => (
-            <IonToggle
-              name={name}
-              onIonChange={(e) => {
-                onChange(e.detail.checked)
-              }}
-              checked={value}
-              slot='end'
-            />
-          )}
+      <Pad className='height-60' />
+      <div className='flex-center'>
+        <ProfileImageUploader
+          className='mt-5'
+          imageUrl={watchProfileUrl}
+          setImageUrl={(url) => setValueCustom('profileUrl', url)}
+          refUploader={uploader}
         />
       </div>
+      <Pad className='height-40' />
 
-      <InputNormal register={register('email')} disabled={true} />
-
-      <div className='flex-between-center w-full pb-3'>
-        <label slot='start'>이메일 공개</label>
-        <Controller
-          control={control}
-          name='isPublicEmail'
-          render={({ field: { name, onChange, value } }) => (
-            <IonToggle
-              name={name}
-              onIonChange={(e) => {
-                onChange(e.detail.checked)
-              }}
-              checked={value}
-              slot='end'
-            />
-          )}
+      <div className='flex-center'>
+        <TextBase className='flex-none gray ml-3 mr-6'>이름</TextBase>
+        <InputNormal
+          className='border-none'
+          register={register('name', { required: '이름을 입력해 주세요' })}
+          placeholder='이름을 입력해 주세요'
         />
       </div>
+      <XDivider />
+
+      <div className='flex-center'>
+        <TextBase className='flex-none gray ml-3 mr-6'>별명</TextBase>
+        <InputNormal
+          className='border-none'
+          register={register('nickname')}
+          placeholder='별명을 입력해 주세요 (선택사항)'
+        />
+      </div>
+      <XDivider />
+      <Pad className='height-10' />
+
+      <div className='flex-center'>
+        <TextBase className='flex-none gray ml-3 mr-6'>소속</TextBase>
+        <TextBase className='flex-grow gray pl-3'>
+          {(watchCommunities as IStuffTalentCommunityDto[])?.map((c) => c.name).join(' / ')}
+        </TextBase>
+      </div>
+
+      <Pad className='height-10' />
+      <XDivider />
+      <Pad className='height-10' />
+
+      <div className='flex-center items-start'>
+        <TextBase className='flex-none gray ml-3 mr-6'>소개</TextBase>
+        <div className='flex-grow -my-3'>
+          <Textarea register={register('description')} placeholder='소개를 입력해 주세요 (선택사항)' />
+        </div>
+      </div>
+      <Pad className='height-10' />
+      <XDivider />
     </>
   ))
 }
-
-interface IErrorText {
-  field?: FieldError
-}
-
-// TODO how to show error message?
-const ErrorText: React.FC<IErrorText> = ({ field }) => <TextXs className='red'>{field?.message}</TextXs>

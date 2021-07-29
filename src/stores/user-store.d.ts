@@ -21,4 +21,5 @@ export type IUserDto = {
   profileUrl: string
   communities: ICommunity[]
   createdAt: string
+  description: string
 }

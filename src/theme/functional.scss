@@ -260,6 +260,9 @@
 .width-88 {
   width: 8.8rem;
 }
+.width-150 {
+  width: 15rem;
+}
 .width-160 {
   width: 16rem;
 }
@@ -357,6 +360,9 @@
 }
 .height-56 {
   height: 5.6rem;
+}
+.height-60 {
+  height: 6rem;
 }
 .height-80 {
   height: 8rem;
@@ -1491,6 +1497,15 @@
   }
 }
 
+.icon-50 {
+  width: 5rem;
+  height: 5rem;
+  svg {
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
 .icon-primary {
   rect,
   path,
@@ -1537,6 +1552,16 @@
 
 li.border-bottom {
   border-bottom: 1px solid rgba($primary-rgb, 0.5);
+}
+
+input.border-none {
+  border: 0;
+  outline: none;
+
+  &:focus {
+    border: 0;
+    outline: none;
+  }
 }
 
 ion-app.ios {

@@ -231,3 +231,52 @@ useHistory().pathname
 
 location.history.pathname
 ```
+
+## react-hook-form 사용 시, dirtyFields 갱신 문제
+
+### 기본값(defaultValues) 설정 관련 문제
+
+- react-hook-form의 dirtyFields가 정상적으로 동작하려면,
+  제공하는 api를 이용해서 default value 값들을 설정해 줘야 함.
+- 그렇게 하지 않고, input 필드에 직접 defaultValue를 지정할 경우에는
+  필드를 한 번 클릭만 해도 dirtyFields에 포함되며, 다시 원래 값으로 돌려놔도
+  dirtyFields에서 제외되지 않고 계속 남아 있음.
+
+1. useForm 호출 시 defaultValues 프로퍼티 설정하거나,
+
+```typescript
+const {
+  formState: { isValid, dirtyFields, errors },
+  reset,
+  handleSubmit,
+  control,
+  register,
+  getValues,
+  setValue,
+} = useForm<IUser>({
+  mode: 'onChange',
+  defaultValues: { ...$user.user },
+})
+```
+
+2. reset() 호출해서 default value를 재설정하기
+
+```typescript
+useEffect(() => {
+  reset({ ...$user.user }, { keepDefaultValues: false })
+}, [reset, $user.user])
+```
+
+- 단, useEffect는 첫 render 이후에 호출되기 때문에, default value가 설정되는 타이밍이 살짝 늦어진다.
+  그래서, 첫 렌더링 과정에서 form값을 가지고 무언가 판별하는 로직이 있다면, 그 때는 기본값이 없는 상태라서 빈 값을 참조하게 되니 주의가 필요함.
+
+### setValue 로 값 변경 시 dirtyFields에 반영되지 않는 문제
+
+- input의 값을 코드 상에서 직접 변경할 때 setValue 호출하면 되는데,
+  이때 shouldDirty와 shouldValidate를 true로 설정해주면 form의 dirty와 validate가 즉시 갱신된다.
+- 단, shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
+
+```typescript
+// 요래 하면 된다.
+setValue(name, value, { shouldDirty: true, shouldValidate: true })
+```

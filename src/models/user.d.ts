@@ -12,4 +12,5 @@ export interface IUser {
   isPublicMobile: boolean
   profileUrl: string
   status: SIGN_UP_STATUS
+  description: string
 }

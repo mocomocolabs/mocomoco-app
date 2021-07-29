@@ -19,7 +19,7 @@ export const MypageProfile: React.FC = () => {
     $user.getUser.match({
       pending: () => <Spinner isFull={true}></Spinner>,
       resolved: () => (
-        <div className='flex-col items-center' onClick={() => route.profileDetail($user.user.id)}>
+        <div className='flex-col items-center' onClick={() => route.profileDetailEdit($user.user.id)}>
           <ProfileImage url={$user.user.profileUrl} className='width-88 height-88' />
           <div className='flex-col items-center w-full mt-2'>
             <TextBase className='flex-center leading-none text-bold'>

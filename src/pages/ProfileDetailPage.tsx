@@ -1,9 +1,10 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
-import { useObserver } from 'mobx-react-lite'
+import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ProfileDetail } from '../components/molecules/ProfileDetailComponent'
+import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
 
@@ -17,23 +18,22 @@ export const ProfileDetailPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <div slot='start'>
-            <BackButton type='close' />
-          </div>
-          <IonTitle slot='start'>프로필 보기</IonTitle>
+      <Header>
+        <div slot='start' className='text-header'>
+          <BackButton type='close'></BackButton>
+        </div>
+        <div className='text-header text-center'>프로필 보기</div>
 
-          {useObserver(
-            () =>
-              $auth.user.id === userId && (
-                <button slot='end' onClick={() => route.profileDetailEdit(userId)}>
-                  수정
-                </button>
-              )
+        <div slot='end'>
+          {$auth.user.id === userId && (
+            <HeaderSubmitText
+              text='수정'
+              isSubmittable={true}
+              onSubmit={() => route.profileDetailEdit(userId)}
+            />
           )}
-        </IonToolbar>
-      </IonHeader>
+        </div>
+      </Header>
 
       <IonContent>
         <div className='px-container'>

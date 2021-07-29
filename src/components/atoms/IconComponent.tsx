@@ -2,7 +2,7 @@ import { HTMLAttributes } from 'react'
 import { ReactSVG } from 'react-svg'
 import './IconComponent.scss'
 
-export type IconSize = 12 | 16 | 20 | 24 | 28 | 32
+export type IconSize = 12 | 16 | 20 | 24 | 28 | 32 | 50
 
 interface IIcon extends HTMLAttributes<HTMLElement> {
   name: string
