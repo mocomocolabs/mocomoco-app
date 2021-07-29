@@ -1,4 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import { reaction } from 'mobx'
 import { useEffect } from 'react'
 import { Icon } from '../components/atoms/IconComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
@@ -7,11 +8,18 @@ import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
 
 export const FeedPage: React.FC = () => {
-  const { $ui, $feed } = useStore()
+  const { $ui, $feed, $community } = useStore()
 
   useEffect(() => {
     $ui.setIsBottomTab(true)
   }, [])
+
+  reaction(
+    () => $community.selectedId,
+    () => {
+      $feed.getFeeds()
+    }
+  )
 
   return (
     <IonPage>
