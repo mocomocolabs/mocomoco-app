@@ -36,10 +36,9 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
       <input type='hidden' {...register('id')} />
       <input type='hidden' {...register('profileUrl')} />
 
-      <Pad className='height-60' />
+      <Pad className='height-40' />
       <div className='flex-center'>
         <ProfileImageUploader
-          className='mt-5'
           imageUrl={watchProfileUrl}
           setImageUrl={(url) => setValueCustom('profileUrl', url)}
           refUploader={uploader}

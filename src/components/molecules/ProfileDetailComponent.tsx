@@ -1,16 +1,23 @@
-import { IonAvatar } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
+import { route } from '../../services/route-service'
+import { executeWithError } from '../../utils/http-helper-util'
+import { Icon } from '../atoms/IconComponent'
+import { ImageBackground } from '../atoms/ImageBackgroundComponent'
 import { Spinner } from '../atoms/SpinnerComponent'
-import { TextXxl } from '../atoms/TextXxlComponent'
+import { SubmitButton } from '../atoms/SubmitButtonComponent'
+import { TextBase } from '../atoms/TextBaseComponent'
+import { TextSm } from '../atoms/TextSmComponent'
+import { TextXl } from '../atoms/TextXlComponent'
+import { XDivider } from '../atoms/XDividerComponent'
 
 interface IProfileDetailItem {
   userId: number
 }
 
 export const ProfileDetail: React.FC<IProfileDetailItem> = ({ userId }) => {
-  const { $user } = useStore()
+  const { $user, $chat, $auth } = useStore()
 
   useEffect(() => {
     $user.getUser(userId)
@@ -24,26 +31,45 @@ export const ProfileDetail: React.FC<IProfileDetailItem> = ({ userId }) => {
       },
       resolved: () => {
         return (
-          <div className='flex-col item-center my-4'>
-            <IonAvatar className='w-30 h-30 my-8 self-center'>
-              <img src={$user.user.profileUrl} alt='프로필이미지' />
-            </IonAvatar>
+          <div className='flex-col item-center w-full h-full relative'>
+            <ImageBackground
+              className='w-full h-full absolute dark-15'
+              url={$user.user.profileUrl || '/assets/img/hama.png'}
+            />
 
-            <TextXxl className='mb-4 text-center text-bold'>
-              {$user.user.nickname} ({$user.user.name})
-            </TextXxl>
-            <TextXxl className='mb-4 text-center'>
-              {$user.user.communities.map((community) => community.name).join('/')}
-            </TextXxl>
+            <div className='px-container w-full absolute z-10 bottom-0 white'>
+              <TextXl className='mb-2 text-center text-bold'>{$user.user.nickname}</TextXl>
 
-            <TextXxl className='mb-4 text-center'>{$user.user.status}</TextXxl>
-            <TextXxl className='mb-4 text-center'>
-              {$user.user.mobile} ({$user.user.isPublicMobile ? '공개' : '비공개'})
-            </TextXxl>
+              <div className='flex-center items-center gap-1 mb-4'>
+                <Icon name='location' size={16} color='white' />
+                <TextSm className='items-center text-center'>
+                  {$user.user.communities.map((community) => community.name).join('/')}
+                </TextSm>
+              </div>
 
-            <TextXxl className='mb-4 text-center'>
-              {$user.user.email} ({$user.user.isPublicEmail ? '공개' : '비공개'})
-            </TextXxl>
+              <XDivider />
+
+              <TextBase className='mt-4 mb-5 text-center'>
+                {$user.user.description}우리집 고양이는 귀엽다
+                <br />
+                세상에서 제일 귀여움 반박불가
+              </TextBase>
+
+              <div className='mb-5'>
+                <SubmitButton
+                  text='1:1 대화하기'
+                  disabled={$auth.user.id === userId}
+                  color='primary'
+                  size='large'
+                  onClick={async () => {
+                    executeWithError(async () => {
+                      const roomId = (await $chat.getRoomIdBy(userId)) || (await $chat.createChat(userId))
+                      route.chatRoom(roomId)
+                    })
+                  }}
+                />
+              </div>
+            </div>
           </div>
         )
       },

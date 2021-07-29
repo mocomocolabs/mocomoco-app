@@ -53,6 +53,15 @@ export const ProfileUpdatePage: React.FC = () => {
           />
         </div>
       </IonContent>
+      {/* TODO 나중에 작업 - profileDetail로 넘어갈 때, user form값을 store에 저장해둬야 함
+      <div className='px-container mb-5'>
+        <SubmitButton
+          text='미리보기'
+          color='secondary'
+          size='large'
+          onClick={() => route.profileDetail(userId)}
+        />
+      </div> */}
     </IonPage>
   )
 }

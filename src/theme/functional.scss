@@ -385,6 +385,9 @@
 .height-150 {
   height: 15rem;
 }
+.height-160 {
+  height: 16rem;
+}
 .height-250 {
   height: 25rem;
 }
@@ -1280,6 +1283,13 @@
 }
 .opacity-60 {
   opacity: 0.6;
+}
+
+.dark-15 {
+  filter: brightness(85%);
+}
+.dark-40 {
+  filter: brightness(60%);
 }
 
 /** border-radius */
