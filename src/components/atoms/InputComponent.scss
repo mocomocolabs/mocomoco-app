@@ -22,6 +22,10 @@ input {
     @extend .input-border-bottom-primary;
     outline: none;
   }
+
+  &::placeholder {
+    color: $gray !important;
+  }
 }
 
 .inputnormal,

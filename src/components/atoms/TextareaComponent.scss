@@ -1,12 +1,16 @@
 @import '../../theme/variable';
 
 textarea {
-  @extend %text-base;
+  font-size: $text-base-size !important;
   border: 0;
   outline: none;
   line-height: 2rem;
+  padding: 0 1.2rem !important;
 
   &::placeholder {
+    color: $gray !important;
+    opacity: 1 !important;
+    font-size: $text-base-size !important;
     margin: 0px;
     padding: 0px;
   }

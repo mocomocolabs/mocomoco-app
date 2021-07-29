@@ -1,21 +1,25 @@
-import { FC, TextareaHTMLAttributes } from 'react'
+import { IonTextarea } from '@ionic/react'
+import { FC } from 'react'
 import { UseFormRegisterReturn } from 'react-hook-form'
 import './TextareaComponent.scss'
 
-// Omit 'ref', to fix below warning
-// Warning: Function components cannot be given refs. Attempts to access this ref will fail.
-export interface ITextarea extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'ref' | 'onChange'> {
-  onChange?: (v: string) => void
+export interface ITextarea {
+  onChange?: (v: string | null | undefined) => void
   register?: UseFormRegisterReturn
+  rows?: number
+  maxLength?: number
+  value?: string
+  placeholder?: string
+  autoGrow?: boolean
 }
 
 export const Textarea: FC<ITextarea> = ({ onChange, register, ...props }) => {
   return (
-    <textarea
-      className='w-full px-3 py-4'
-      onChange={(e) => onChange && onChange(e.target.value!)}
+    <IonTextarea
+      className='w-full py-4 m-0'
+      onIonChange={(e) => onChange && onChange(e.detail?.value)}
       {...props}
       {...register}
-    ></textarea>
+    />
   )
 }

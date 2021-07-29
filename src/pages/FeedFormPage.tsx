@@ -106,8 +106,10 @@ export const FeedFormPage: FC<IFeedForm> = () => {
             ></InputNormal>
             <Textarea
               value={$feed.form.content}
-              onChange={(content) => $feed.setForm({ content })}
+              onChange={(content) => $feed.setForm({ content: content! })}
               rows={10}
+              autoGrow={true}
+              maxLength={255}
               placeholder='나누고 싶은 이야기를 자유롭게 적어주세요 :)'
             ></Textarea>
             {$feed.form.schedule && (
