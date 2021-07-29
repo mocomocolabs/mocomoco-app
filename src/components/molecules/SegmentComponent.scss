@@ -1,0 +1,18 @@
+.segment {
+  height: 30px;
+  --border-width: 0;
+  border-radius: 0;
+
+  ion-segment-button {
+    height: 30px;
+    margin: 0;
+    background: white;
+    --color: var(--ion-color-medium);
+    --color-checked: var(--ion-color-secondary);
+    --indicator-color: var(--ion-color-secondary);
+    --indicator-height: 4px;
+    --indicator-transform: translateY(26px);
+    --border-width: 0;
+    --border-radius: 0;
+  }
+}
