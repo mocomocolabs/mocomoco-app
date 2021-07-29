@@ -3,7 +3,7 @@ import Axios from 'axios'
 export const urlToFile = (url: string): Promise<File> => {
   return Axios.get(url, { responseType: 'blob' }).then(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (v: any) => new File([v.data], new Date().getTime().toString(), { type: v.data.type })
+    (v: any) => new File([v.data], url, { type: v.data.type })
   )
 
   // return fetch(
