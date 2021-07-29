@@ -8,7 +8,7 @@ export interface IFooter {
 export const Footer: FC<IFooter> = ({ children }) => {
   return (
     <IonFooter className='px-container shadow-sm'>
-      <div className='flex-between-center height-56 w-full'>{children}</div>
+      <div className='flex-between-center min-height-56 w-full'>{children}</div>
     </IonFooter>
   )
 }
