@@ -6,7 +6,6 @@ import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
 import { TextXs } from '../atoms/TextXsComponent'
 import { FeedItem } from '../molecules/FeedItemComponent'
-import { ContentPopover } from './ContentPopoverComponent'
 import './FeedListComponent.scss'
 
 interface IFeedList {
@@ -56,7 +55,6 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
                 ></FeedItem>
               ))}
             </ul>
-            <ContentPopover></ContentPopover>
           </>
         ) : (
           // TODO 목록 없을 때 표시할 공통컴포넌트 만들자

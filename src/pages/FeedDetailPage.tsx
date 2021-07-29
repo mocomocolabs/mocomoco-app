@@ -8,7 +8,6 @@ import { BackFloatingButton } from '../components/molecules/BackFloatingButtonCo
 import { FeedItem } from '../components/molecules/FeedItemComponent'
 import { CommentInsertForm } from '../components/organisms/CommentInsertFormComponent'
 import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
-import { ContentPopover } from '../components/organisms/ContentPopoverComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
@@ -63,7 +62,6 @@ export const FeedDetailPage: React.FC = () => {
             return <></>
           },
         })}
-        <ContentPopover></ContentPopover>
       </IonContent>
 
       <Footer>

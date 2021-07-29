@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
 import { IAlert } from '../models/alert'
-import { IPopover, IPopoverResult } from '../models/popover'
+import { IPopover } from '../models/popover'
 import { IToast } from '../models/toast'
 
 const initState = {
@@ -78,24 +78,5 @@ export class UiStore {
       }),
       toast.duration ? toast.duration : 3000
     )
-  }
-
-  @action
-  showPopover = (event: Event) => {
-    return new Promise((resolve: (value: IPopoverResult) => void) => {
-      this.popover = {
-        isOpen: true,
-        event,
-        resolve,
-      }
-    })
-  }
-
-  @action
-  hidePopover = (value?: IPopoverResult) => {
-    if (this.popover.resolve) {
-      this.popover.resolve(value)
-    }
-    this.popover = initState.popover
   }
 }
