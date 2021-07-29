@@ -67,6 +67,7 @@ export const StuffTalentDetailPage: React.FC = () => {
     () => (
       <SubmitButton
         text='채팅으로 거래하기'
+        disabled={store.item.status === StuffTalentStatus.FINISH}
         onClick={async () => {
           // TODO 예외처리: 채팅방 생성 실패하면 에러메시지 띄우기
           await store.createChat({
@@ -81,7 +82,8 @@ export const StuffTalentDetailPage: React.FC = () => {
         }}
       />
     ),
-    []
+    // useEffect에서는 observable값이 처음 set될 때만 인식하고, 이후 변경되는 건 추척 못함
+    [store.item.status]
   )
 
   const onEdit = async (id: number) => {
