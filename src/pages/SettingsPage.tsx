@@ -16,10 +16,14 @@ import {
 } from '@ionic/react'
 import { useState } from 'react'
 import { XDivider } from '../components/atoms/XDividerComponent'
+import { useStore } from '../hooks/use-store'
+import { route } from '../services/route-service'
 
 export const SettingsPage: React.FC = () => {
   const [alarmSound, setAlarmSound] = useState<string>('구름씨 랄라~')
   const [language, setLanguage] = useState<string>('한국어')
+
+  const { $auth } = useStore()
 
   return (
     <IonPage>
@@ -96,7 +100,12 @@ export const SettingsPage: React.FC = () => {
               <IonItem>
                 <IonLabel>버젼 정보</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem
+                onClick={async () => {
+                  await $auth.signOut()
+                  route.intro()
+                }}
+              >
                 <IonLabel>로그아웃</IonLabel>
               </IonItem>
               <IonItem>

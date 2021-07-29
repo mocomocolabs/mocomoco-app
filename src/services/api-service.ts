@@ -15,7 +15,7 @@ class ApiService {
   }
 
   // eslint-disable-next-line
-  post<T>(url: string, data: any): Promise<T> {
+  post<T>(url: string, data?: any): Promise<T> {
     return this.http.post(url, data)
   }
 

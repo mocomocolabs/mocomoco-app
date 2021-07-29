@@ -10,6 +10,7 @@ import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy } from './task'
+import { Task } from './task.d'
 import { UserStore } from './user-store'
 
 const inko = new Inko()
@@ -34,8 +35,8 @@ export class AuthStore {
   }
 
   @action
-  setIsLogin() {
-    this.isLogin = true
+  setIsLogin(isLogin: boolean) {
+    this.isLogin = isLogin
   }
 
   @action
@@ -114,6 +115,15 @@ export class AuthStore {
     }
   }
 
+  @task.resolved
+  signOut = (async () => {
+    await api.post<number>(`/auth/sign-out`)
+    storage.clear()
+    api.setAuthoriationBy('')
+    this.setUser({} as IAuthUserDto)
+    this.setIsLogin(false)
+  }) as Task
+
   @action
   setAuth(user: IAuthUserDto) {
     const { accessToken, refreshToken } = user
@@ -130,6 +140,6 @@ export class AuthStore {
       ...user,
       communityId: communities[0].id,
     }
-    this.setIsLogin()
+    this.setIsLogin(true)
   }
 }

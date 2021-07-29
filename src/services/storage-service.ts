@@ -81,6 +81,10 @@ class StorageService {
   get communityId() {
     return this._communityId
   }
+
+  async clear() {
+    await Storage.clear()
+  }
 }
 
 export const storage = new StorageService()
