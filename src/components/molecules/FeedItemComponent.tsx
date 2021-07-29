@@ -62,7 +62,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
           <ImageSlider urls={feed.imageUrls}></ImageSlider>
         </div>
       ) : (
-        <Pad className='h-5'></Pad>
+        <Pad className={isDetail ? 'h-10' : 'h-5'}></Pad>
       )}
       <div className='px-container flex-col'>
         {feed.title && (
