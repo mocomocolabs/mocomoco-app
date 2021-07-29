@@ -1,6 +1,7 @@
 import { IonTextarea } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useCallback } from 'react'
+import { useFocus } from '../../hooks/use-focus'
 import { useStore } from '../../hooks/use-store'
 import { scrollToBottom } from '../../utils/scroll-util'
 import { Icon } from '../atoms/IconComponent'
@@ -14,11 +15,13 @@ export interface IChatInsertForm {
 
 export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = false }) => {
   const { $chat, $user } = useStore()
+  const [inputRef, setFocus] = useFocus()
 
   const sendMessage = useCallback(async () => {
     if ($chat.form[roomId]?.message) {
       await $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
       scrollToBottom()
+      setFocus()
     }
   }, [])
 
@@ -28,6 +31,7 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
 
       <div className='flex-between-center w-full ml-3 px-3 br-20 my-1 border-primary'>
         <IonTextarea
+          ref={inputRef}
           placeholder='내용을 입력해주세요'
           autoGrow={true}
           rows={1}

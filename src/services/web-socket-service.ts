@@ -22,10 +22,12 @@ class WebSocketService {
   connectRooms(
     subscribeRooms: {
       roomIds: number[]
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cb: (data: any) => void
     },
     subscribeNewChat: {
       userId: number
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       cb: (data: any) => void
     }
   ) {
@@ -41,6 +43,7 @@ class WebSocketService {
       console.log('📡 subscribe roomId ', roomId)
 
       this.savedRoomIds.push(roomId)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.stompClient?.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
     }
   }
@@ -48,6 +51,7 @@ class WebSocketService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   subscribeFirstChat(userId: number, cb: (data: any) => void) {
     console.log('🗿 subscribe userId ', userId)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.stompClient?.subscribe(`/sub/chat/users/${userId}`, (data: any) => cb(data))
   }
 
