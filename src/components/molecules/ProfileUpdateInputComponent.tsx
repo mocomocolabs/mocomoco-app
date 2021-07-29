@@ -1,6 +1,6 @@
 import { useObserver } from 'mobx-react-lite'
 import React, { useCallback, useRef } from 'react'
-import { Control, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import { UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import { IUser } from '../../models/user'
 import { IStuffTalentCommunityDto } from '../../stores/stufftalent-store.d'
 import { InputNormal } from '../atoms/InputNormalComponent'
@@ -16,12 +16,11 @@ interface IProfileUpdateInput {
     register: UseFormRegister<IUser>
     setValue: UseFormSetValue<IUser>
     watch: UseFormWatch<IUser>
-    control: Control<IUser>
   }
 }
 
 export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) => {
-  const { register, setValue, watch, control } = fields
+  const { register, setValue, watch } = fields
 
   const uploader = useRef<IImageUploaderRef>()
 

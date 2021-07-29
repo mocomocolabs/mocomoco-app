@@ -21,9 +21,7 @@ export const ProfileUpdateFormComponent = forwardRef<HTMLFormElement, IProfileUp
     const {
       formState: { isValid, dirtyFields },
       handleSubmit,
-      control,
       register,
-      getValues,
       setValue,
       watch,
     } = useForm<IUser>({
@@ -88,7 +86,7 @@ export const ProfileUpdateFormComponent = forwardRef<HTMLFormElement, IProfileUp
               ref={ref}
               onSubmit={handleSubmit(onSubmit)}
             >
-              <ProfileUpdateInput fields={{ register, setValue, watch, control }} />
+              <ProfileUpdateInput fields={{ register, setValue, watch }} />
             </form>
           )
         },
