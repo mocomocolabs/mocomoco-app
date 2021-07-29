@@ -66,13 +66,11 @@ export class ChatStore {
       // 새로운 채팅방
       {
         userId: this.$auth.user.id,
-        cb: (data) => {
-          console.log('새로 만들어진 채팅방을 구독상태로 한다.')
-
+        cb: async (data) => {
           // 첫 채팅을 받는 경우
           const subChat = JSON.parse(data.body) as ISubscribeChat
           // 새로 만들어진 채팅방을 구독상태로 한다.
-          this.subscribeNewRoom(subChat.chatroom.id)
+          await this.subscribeNewRoom(subChat.chatroom.id)
 
           // 기존 채팅방에 새로운 채팅룸 공간을 생성.
           // 첫 채팅 데이터를 스토어에 저장한다.
@@ -260,11 +258,11 @@ export class ChatStore {
     })
   }
 
-  subscribeNewRoom = (roomId: number) => {
+  subscribeNewRoom = async (roomId: number) => {
     this.subscribeRoom(roomId)
-    const currentRoomIds = [...this.rooms.map((v) => v.id)]
+    const currentRoomIds = this.rooms.map((v) => v.id)
     if (!currentRoomIds.includes(roomId)) {
-      this.getRooms([roomId, ...currentRoomIds])
+      await this.getRooms([roomId, ...currentRoomIds])
     }
   }
 
