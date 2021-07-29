@@ -1,4 +1,3 @@
-import { useObserver } from 'mobx-react-lite'
 import { Dispatch, FC, SetStateAction } from 'react'
 import { Icon } from '../atoms/IconComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -19,7 +18,7 @@ export const CategorySelectorModal: FC<ICategorySelectorModal> = ({
   selectedId,
   onSelect,
 }) => {
-  return useObserver(() => (
+  return (
     <Modal isShow={isShow} setIsShow={setIsShow} title='카테고리 선택'>
       <ul>
         {categories.map((v) => (
@@ -39,5 +38,5 @@ export const CategorySelectorModal: FC<ICategorySelectorModal> = ({
         ))}
       </ul>
     </Modal>
-  ))
+  )
 }

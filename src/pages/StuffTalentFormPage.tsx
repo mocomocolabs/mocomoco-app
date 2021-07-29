@@ -1,4 +1,5 @@
 import { IonContent, IonPage } from '@ionic/react'
+import { Observer } from 'mobx-react-lite'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLocation } from 'react-router-dom'
@@ -196,13 +197,17 @@ export const StuffTalentFormPage: React.FC = () => {
             <XDivider className='hr-gray mt-4' />
             <InputNormal placeholder='제목' register={register('title', { required: true })}></InputNormal>
             <Pad className='h-4' />
-            <CategorySelector
-              categories={store.categories}
-              selectedId={watchCategoryId}
-              onSelect={(id: number) => {
-                setValueCustom('categoryId', id)
-              }}
-            />
+            <Observer>
+              {() => (
+                <CategorySelector
+                  categories={store.categories}
+                  selectedId={watchCategoryId}
+                  onSelect={(id: number) => {
+                    setValueCustom('categoryId', id)
+                  }}
+                />
+              )}
+            </Observer>
             <XDivider className='hr-gray mt-4' />
             <InputNormal
               hidden={watchType !== StuffTalentType.SELL}
