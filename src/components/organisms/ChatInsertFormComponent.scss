@@ -1,0 +1,9 @@
+@import '../../theme/variable';
+
+.chat-insert-form {
+  textarea {
+    &::placeholder {
+      font-size: $text-base-size !important;
+    }
+  }
+}

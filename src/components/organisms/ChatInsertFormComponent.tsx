@@ -7,6 +7,7 @@ import { scrollToBottom } from '../../utils/scroll-util'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
+import './ChatInsertFormComponent.scss'
 
 export interface IChatInsertForm {
   roomId: number
@@ -29,7 +30,7 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
     <>
       <ProfileImage url={$user.user.profileUrl}></ProfileImage>
 
-      <div className='flex-between-center w-full ml-3 px-3 br-20 my-1 border-primary'>
+      <div className='chat-insert-form flex-between-center w-full ml-3 px-3 br-20 border-primary'>
         <IonTextarea
           ref={inputRef}
           placeholder='내용을 입력해주세요'
