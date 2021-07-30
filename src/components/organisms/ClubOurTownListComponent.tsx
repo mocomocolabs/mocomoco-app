@@ -56,7 +56,7 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
           </div>
         ))
       ) : (
-        <NoContents isFull={true} />
+        <NoContents />
       )}
     </>
   )
