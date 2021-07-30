@@ -12,7 +12,7 @@
     "sync": "yarn build && npx cap sync",
     "dev:ios": "ionic capacitor run ios -l --external",
     "dev:and": "ionic capacitor run android -l --external",
-    "prod:and": "ionic capacitor run android",
+    "prod:and": "ionic capacitor run android && npx cap sync",
     "open:and": "npx cap open android",
     "open:ios": "npx cap open ios",
     "lint": "eslint 'src/**/*.{ts,tsx,js,jsx}'",
