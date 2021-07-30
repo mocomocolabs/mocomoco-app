@@ -138,7 +138,7 @@ export class AuthStore {
     const { communities } = user
     this.user = {
       ...user,
-      communityId: communities[0].id,
+      communityId: communities?.[0]?.id,
     }
     this.setIsLogin(true)
   }
