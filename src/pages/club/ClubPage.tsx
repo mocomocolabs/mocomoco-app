@@ -3,6 +3,7 @@ import { useObserver } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { Icon } from '../../components/atoms/IconComponent'
 import { TextLg } from '../../components/atoms/TextLgComponent'
+import { CommunitySelector } from '../../components/molecules/CommunitySelectorComponent'
 import { ClubOurTownList } from '../../components/organisms/ClubOurTownListComponent'
 import { ClubPopularSlider } from '../../components/organisms/ClubPopularSliderComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
@@ -24,7 +25,9 @@ export const ClubPage: React.FC = () => {
   return useObserver(() => (
     <IonPage>
       <Header>
-        <div className='text-header'>소모임</div>
+        <div slot='start'>
+          <CommunitySelector disabled />
+        </div>
         <div slot='end'>
           <div className='flex'>
             {/* TODO: 추후구현 */}
