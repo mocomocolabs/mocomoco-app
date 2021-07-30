@@ -2,11 +2,11 @@ import { IonSlide, IonSlides } from '@ionic/react'
 import { FC } from 'react'
 import { Feed } from '../../models/feed'
 import { route } from '../../services/route-service'
-import { Spinner } from '../atoms/SpinnerComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextXs } from '../atoms/TextXsComponent'
 import './FeedSliderComponent.scss'
 import { ImageWithCorner } from './ImageWithCorner'
+import { NoContents } from './NoContentsComponent'
 
 export interface IFeedSlider {
   items: Feed[]
@@ -45,7 +45,6 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
       ))}
     </IonSlides>
   ) : (
-    // TODO: 내용이 없습니다
-    <Spinner></Spinner>
+    <NoContents />
   )
 }

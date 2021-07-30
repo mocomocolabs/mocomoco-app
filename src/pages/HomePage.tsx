@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { FeedSlider } from '../components/molecules/FeedSliderComponent'
 import { HomeHeader } from '../components/molecules/HomeHeaderComponent'
 import { HomeTitle } from '../components/molecules/HomeTitleComponent'
+import { NoContents } from '../components/molecules/NoContentsComponent'
 import { StuffTalentItem } from '../components/molecules/StuffTalentItemComponent'
 import { ClubPopularSlider } from '../components/organisms/ClubPopularSliderComponent'
 import { Header } from '../components/organisms/HeaderComponent'
@@ -58,6 +59,7 @@ export const HomePage: React.FC = () => {
           {/* <HomeTitle title='다가오는 일정'></HomeTitle>
           <HomeSchedule items={$feed.homeScheduleFeeds} className='pb-2'></HomeSchedule> */}
           <HomeTitle title='물건창고' route={() => route.stuff()}></HomeTitle>
+          <NoContents show={$stuff.items?.length == 0} />
           {$stuff.items.map((item) => (
             <StuffTalentItem
               key={item.id}
@@ -67,6 +69,7 @@ export const HomePage: React.FC = () => {
             />
           ))}
           <HomeTitle title='재능창고' route={() => route.talent()}></HomeTitle>
+          <NoContents show={$talent.items?.length == 0} />
           {$talent.items.map((item) => (
             <StuffTalentItem
               key={item.id}

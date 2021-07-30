@@ -2,10 +2,10 @@ import { FC } from 'react'
 import { Club } from '../../models/club'
 import { route } from '../../services/route-service'
 import { Icon } from '../atoms/IconComponent'
-import { Spinner } from '../atoms/SpinnerComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextXs } from '../atoms/TextXsComponent'
 import { ImageWithCorner } from '../molecules/ImageWithCorner'
+import { NoContents } from '../molecules/NoContentsComponent'
 
 export interface IClubOurTownList {
   clubs: Club[]
@@ -56,7 +56,7 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
           </div>
         ))
       ) : (
-        <Spinner></Spinner>
+        <NoContents isFull={true} />
       )}
     </>
   )

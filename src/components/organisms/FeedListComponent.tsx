@@ -4,8 +4,8 @@ import { Task, TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
-import { TextXs } from '../atoms/TextXsComponent'
 import { FeedItem } from '../molecules/FeedItemComponent'
+import { NoContents } from '../molecules/NoContentsComponent'
 import './FeedListComponent.scss'
 
 interface IFeedList {
@@ -57,8 +57,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
             </ul>
           </>
         ) : (
-          // TODO 목록 없을 때 표시할 공통컴포넌트 만들자
-          <TextXs>목록이 없습니다</TextXs>
+          <NoContents isFull={true} />
         ),
       rejected: () => {
         taskGroup.forEach((task) => task.reset())

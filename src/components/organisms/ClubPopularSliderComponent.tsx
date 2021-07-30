@@ -3,10 +3,10 @@ import React, { FC } from 'react'
 import { Club } from '../../models/club'
 import { route } from '../../services/route-service'
 import { Icon } from '../atoms/IconComponent'
-import { Spinner } from '../atoms/SpinnerComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextXs } from '../atoms/TextXsComponent'
 import { ImageWithCorner } from '../molecules/ImageWithCorner'
+import { NoContents } from '../molecules/NoContentsComponent'
 import './ClubPopularSlideComponent.scss'
 
 export interface IClubPopularSlider {
@@ -66,6 +66,6 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
       ))}
     </IonSlides>
   ) : (
-    <Spinner></Spinner>
+    <NoContents />
   )
 }
