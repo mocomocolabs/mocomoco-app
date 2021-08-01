@@ -9,9 +9,10 @@ import { NoContents } from '../molecules/NoContentsComponent'
 
 export interface IClubOurTownList {
   clubs: Club[]
+  noContentsFull?: boolean
 }
 
-export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
+export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs, noContentsFull = false }) => {
   return (
     <>
       {clubs.length ? (
@@ -56,7 +57,7 @@ export const ClubOurTownList: FC<IClubOurTownList> = ({ clubs }) => {
           </div>
         ))
       ) : (
-        <NoContents />
+        <NoContents isFull={noContentsFull} />
       )}
     </>
   )

@@ -1,13 +1,11 @@
-import { useObserver } from 'mobx-react-lite'
-import { TaskGroup } from 'mobx-task'
 import { forwardRef, useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { IUser } from '../../models/user'
 import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
-import { Spinner } from '../atoms/SpinnerComponent'
 import { ProfileUpdateInput } from './ProfileUpdateInputComponent'
+import { TaskObserver } from './TaskObserverComponent'
 
 interface IProfileUpdateForm {
   userId: number
@@ -64,33 +62,17 @@ export const ProfileUpdateFormComponent = forwardRef<HTMLFormElement, IProfileUp
       [$ui, $user]
     )
 
-    const taskGroup = [$user.getUser, $user.updateUser]
-    // eslint-disable-next-line
-    const observableTaskGroup = TaskGroup<any[], void | boolean>(taskGroup)
-
     useEffect(() => {
       $user.getUser(userId)
     }, [$user, userId])
 
     // TODO performance check - render 횟수 등
-    return useObserver(() =>
-      observableTaskGroup.match({
-        pending: () => <Spinner position='center' />,
-        resolved: () => (
-          <form
-            className='flex-col w-full my-4'
-            id='profile-form'
-            ref={ref}
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <ProfileUpdateInput fields={{ register, setValue, watch }} />
-          </form>
-        ),
-        rejected: () => {
-          taskGroup.forEach((task) => task.reset())
-          return <></>
-        },
-      })
+    return (
+      <form className='flex-col w-full my-4' id='profile-form' ref={ref} onSubmit={handleSubmit(onSubmit)}>
+        <TaskObserver taskTypes={($user.getUser, $user.updateUser)} spinnerPosition='center'>
+          {() => <ProfileUpdateInput fields={{ register, setValue, watch }} />}
+        </TaskObserver>
+      </form>
     )
   }
 )

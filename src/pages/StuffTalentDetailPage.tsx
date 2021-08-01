@@ -1,12 +1,10 @@
 import { IonContent, IonPage } from '@ionic/react'
 import _ from 'lodash'
 import { when } from 'mobx'
-import { useObserver } from 'mobx-react-lite'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Icon } from '../components/atoms/IconComponent'
 import { Pad } from '../components/atoms/PadComponent'
-import { Spinner } from '../components/atoms/SpinnerComponent'
 import { SubmitButton } from '../components/atoms/SubmitButtonComponent'
 import { TextSm } from '../components/atoms/TextSmComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
@@ -14,6 +12,7 @@ import { BackFloatingButton } from '../components/molecules/BackFloatingButtonCo
 import { BottomPopup } from '../components/molecules/BottomPopupComponent'
 import { ChatRoomListItem } from '../components/molecules/ChatRoomListItemComponent'
 import { StuffTalentDetailContents } from '../components/molecules/StuffTalentDetailContentsComponent'
+import { TaskObserver } from '../components/molecules/TaskObserverComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc } from '../models/stufftalent'
@@ -63,7 +62,7 @@ export const StuffTalentDetailPage: React.FC = () => {
     return () => dispose()
   }, [])
 
-  const createChatButton = useMemo(
+  const createChatButton = useCallback(
     () => (
       <SubmitButton
         text='채팅으로 거래하기'
@@ -82,8 +81,7 @@ export const StuffTalentDetailPage: React.FC = () => {
         }}
       />
     ),
-    // useEffect에서는 observable값이 처음 set될 때만 인식하고, 이후 변경되는 건 추척 못함
-    [store.item.status]
+    []
   )
 
   const onEdit = async (id: number) => {
@@ -101,68 +99,65 @@ export const StuffTalentDetailPage: React.FC = () => {
     await store.getItem(id)
   }
 
-  return useObserver(() =>
-    store.getItem.match({
-      pending: () => <Spinner position='center' />,
-      resolved: () => (
-        <IonPage>
-          <IonContent>
-            <BackFloatingButton></BackFloatingButton>
-            {/* TODO dont pass store */}
-            <StuffTalentDetailContents
-              item={store.item}
-              loginUserId={$auth.user.id}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onUpdateStatus={onUpdateStatus}
-            />
-            <Pad className='pb-extra-space'></Pad>
-          </IonContent>
+  return (
+    <IonPage>
+      <TaskObserver taskTypes={store.getItem} spinnerPosition='center'>
+        {() => (
+          <>
+            <IonContent>
+              <BackFloatingButton />
+              {/* TODO dont pass store */}
+              <StuffTalentDetailContents
+                item={store.item}
+                loginUserId={$auth.user.id}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onUpdateStatus={onUpdateStatus}
+              />
+              <Pad className='pb-extra-space'></Pad>
+            </IonContent>
 
-          <BottomPopup show={showChatList} title='채팅 목록 보기' onClose={() => setShowChatList(false)}>
-            {chatList}
-          </BottomPopup>
+            <BottomPopup show={showChatList} title='채팅 목록 보기' onClose={() => setShowChatList(false)}>
+              {chatList}
+            </BottomPopup>
 
-          <Footer>
-            <div
-              className='flex-col items-center secondary'
-              onClick={async () => {
-                await store.toggleLike(id, !store.item.isLike)
-              }}
-            >
-              <Icon name={store.item.isLike ? 'heart-solid' : 'heart'} className='icon-secondary' />
-              <TextSm>{store.item.likeCount}</TextSm>
-            </div>
+            <Footer>
+              <div
+                className='flex-col items-center secondary'
+                onClick={async () => {
+                  await store.toggleLike(id, !store.item.isLike)
+                }}
+              >
+                <Icon name={store.item.isLike ? 'heart-solid' : 'heart'} className='icon-secondary' />
+                <TextSm>{store.item.likeCount}</TextSm>
+              </div>
 
-            <div className='w-full ml-4'>
-              {store.item.user.id === $auth.user.id ? (
-                <SubmitButton
-                  text='채팅 목록 보기'
-                  color='secondary'
-                  disabled={store.item.status === StuffTalentStatus.FINISH}
-                  onClick={() => {
-                    !!chatList && !_.isEmpty(chatList)
-                      ? setShowChatList(!showChatList)
-                      : $ui.showToastError({ message: '채팅 목록이 없습니다' })
-                  }}
-                ></SubmitButton>
-              ) : !store.item?.chatroomId ? (
-                <SpinnerWrapper task={store.createChat} Submit={createChatButton} />
-              ) : (
-                <SubmitButton
-                  text='채팅으로 거래하기'
-                  disabled={store.item.status === StuffTalentStatus.FINISH}
-                  onClick={() => route.chatRoom(store.item.chatroomId)}
-                ></SubmitButton>
-              )}
-            </div>
-          </Footer>
-        </IonPage>
-      ),
-      rejected: () => {
-        store.getItem.reset()
-        return <></>
-      },
-    })
+              <div className='w-full ml-4'>
+                {store.item.user.id === $auth.user.id ? (
+                  <SubmitButton
+                    text='채팅 목록 보기'
+                    color='secondary'
+                    disabled={store.item.status === StuffTalentStatus.FINISH}
+                    onClick={() => {
+                      !!chatList && !_.isEmpty(chatList)
+                        ? setShowChatList(!showChatList)
+                        : $ui.showToastError({ message: '채팅 목록이 없습니다' })
+                    }}
+                  />
+                ) : !store.item?.chatroomId ? (
+                  <SpinnerWrapper task={store.createChat} Submit={createChatButton()} />
+                ) : (
+                  <SubmitButton
+                    text='채팅으로 거래하기'
+                    disabled={store.item.status === StuffTalentStatus.FINISH}
+                    onClick={() => route.chatRoom(store.item.chatroomId)}
+                  />
+                )}
+              </div>
+            </Footer>
+          </>
+        )}
+      </TaskObserver>
+    </IonPage>
   )
 }

@@ -16,7 +16,7 @@ export const MypageProfile: React.FC = () => {
 
   return (
     <div className='w-full height-140 flex-center'>
-      <TaskObserver taskType={$user.getUser}>
+      <TaskObserver taskTypes={$user.getUser} spinnerPosition='centerX'>
         {() => (
           <div className='flex-col items-center' onClick={() => route.profileDetailEdit($user.user.id)}>
             <ProfileImage url={$user.user.profileUrl || undefined} className='width-88 height-88' />

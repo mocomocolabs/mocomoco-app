@@ -1,25 +1,32 @@
 import { Observer } from 'mobx-react-lite'
-import { Task } from 'mobx-task'
+import { Task, TaskGroup } from 'mobx-task'
 import { FC, ReactElement } from 'react'
-import { Spinner } from '../atoms/SpinnerComponent'
+import { ISpinnerPosition, Spinner } from '../atoms/SpinnerComponent'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface ITaskObserver {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  taskType: Task<any, any>
+  taskTypes: Task<any, any> | Task<any, any>[]
+  spinnerPosition?: ISpinnerPosition
   children: () => ReactElement
 }
 
-export const TaskObserver: FC<ITaskObserver> = ({ taskType, children }) => (
-  <Observer>
-    {() =>
-      taskType.match({
-        pending: () => <Spinner position='centerX' />,
-        resolved: children,
-        rejected: () => {
-          taskType.reset()
-          return <></>
-        },
-      })
-    }
-  </Observer>
-)
+export const TaskObserver: FC<ITaskObserver> = ({ taskTypes, spinnerPosition, children }) => {
+  const taskArray = ([] as Task<any, any>[]).concat(taskTypes)
+  const observableTaskGroup = TaskGroup<any[], any>(taskArray)
+  /* eslint-enable */
+
+  return (
+    <Observer>
+      {() =>
+        observableTaskGroup.match({
+          pending: () => <Spinner position={spinnerPosition} />,
+          resolved: children,
+          rejected: () => {
+            taskArray.forEach((t) => t.reset())
+            return <></>
+          },
+        })
+      }
+    </Observer>
+  )
+}

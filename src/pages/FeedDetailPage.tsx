@@ -1,11 +1,10 @@
 import { IonContent, IonPage } from '@ionic/react'
-import { useObserver } from 'mobx-react-lite'
-import { TaskGroup } from 'mobx-task'
+import { Observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Spinner } from '../components/atoms/SpinnerComponent'
 import { BackFloatingButton } from '../components/molecules/BackFloatingButtonComponent'
 import { FeedItem } from '../components/molecules/FeedItemComponent'
+import { TaskObserver } from '../components/molecules/TaskObserverComponent'
 import { CommentInsertForm } from '../components/organisms/CommentInsertFormComponent'
 import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
 import { Footer } from '../components/organisms/FooterComponent'
@@ -39,39 +38,33 @@ export const FeedDetailPage: React.FC = () => {
     route.feedForm()
   }
 
-  const taskGroup = [$feed.getFeed, $comment.deleteComment]
-  // eslint-disable-next-line
-  const observableTaskGroup = TaskGroup<any[], void>(taskGroup)
-
-  return useObserver(() => (
+  return (
     <IonPage>
       <IonContent>
-        <BackFloatingButton></BackFloatingButton>
-        {observableTaskGroup.match({
-          pending: () => <Spinner position='center'></Spinner>,
-          resolved: () => (
+        <BackFloatingButton />
+        <TaskObserver taskTypes={[$feed.getFeed, $comment.deleteComment]} spinnerPosition='center'>
+          {() => (
             <FeedItem
               feed={$feed.feed}
               isDetail={true}
               onDelete={() => onDelete($feed.feed.id)}
               onEdit={() => onEdit($feed.feed.id)}
-            ></FeedItem>
-          ),
-          rejected: () => {
-            taskGroup.forEach((task) => task.reset())
-            return <></>
-          },
-        })}
+            />
+          )}
+        </TaskObserver>
       </IonContent>
 
       <Footer>
-        {$comment.updateCommentId === null && (
-          <CommentInsertForm feedId={id} autoFocus={autoFocus}></CommentInsertForm>
-        )}
-        {$comment.updateCommentId !== null && (
-          <CommentUpdateForm commentId={$comment.updateCommentId} feedId={$feed.feed.id}></CommentUpdateForm>
-        )}
+        <Observer>
+          {() =>
+            $comment.updateCommentId === null ? (
+              <CommentInsertForm feedId={id} autoFocus={autoFocus} />
+            ) : (
+              <CommentUpdateForm commentId={$comment.updateCommentId} feedId={$feed.feed.id} />
+            )
+          }
+        </Observer>
       </Footer>
     </IonPage>
-  ))
+  )
 }

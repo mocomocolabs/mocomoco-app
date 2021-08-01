@@ -1,6 +1,3 @@
-import { IonSpinner } from '@ionic/react'
-import { useObserver } from 'mobx-react-lite'
-import { TaskGroup } from 'mobx-task'
 import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { routeFunc } from '../../models/stufftalent'
@@ -8,6 +5,7 @@ import { IStuffTalentFilter, StuffTalentStatus } from '../../models/stufftalent.
 import { StuffTalentStore } from '../../stores/stufftalent-store'
 import { NoContents } from '../molecules/NoContentsComponent'
 import { StuffTalentItem } from '../molecules/StuffTalentItemComponent'
+import { TaskObserver } from '../molecules/TaskObserverComponent'
 interface IStuffTalentList {
   store: StuffTalentStore
   search: string
@@ -38,20 +36,10 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
     await store.getItems(search, filter)
   }
 
-  const taskGroup = [store.getItems, store.deleteItem]
-  // eslint-disable-next-line
-  const observableTaskGroup = TaskGroup<any[], void>(taskGroup)
-
-  return useObserver(() =>
-    observableTaskGroup.match({
-      pending: () => (
-        <div className='height-150 flex-center'>
-          <IonSpinner color='tertiary' name='crescent' />
-        </div>
-      ),
-      resolved: () => (
-        <>
-          <NoContents show={store.items?.length <= 0} isFull={true} />
+  return (
+    <TaskObserver taskTypes={[store.getItems, store.deleteItem]} spinnerPosition='center'>
+      {() =>
+        store.items?.length > 0 ? (
           <ul className='pl-0 move-up'>
             {store.items.map((item) => (
               <StuffTalentItem
@@ -65,12 +53,10 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
               />
             ))}
           </ul>
-        </>
-      ),
-      rejected: () => {
-        taskGroup.forEach((task) => task.reset())
-        return <></>
-      },
-    })
+        ) : (
+          <NoContents isFull={true} />
+        )
+      }
+    </TaskObserver>
   )
 }

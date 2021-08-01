@@ -85,54 +85,62 @@ export const HomePage: React.FC = () => {
         <div className='px-container'>
           <HomeTitle title='이야기창고' route={() => route.feed()}></HomeTitle>
         </div>
-        <TaskObserver taskType={fetcher.feeds.taskType}>
+        <TaskObserver taskTypes={[fetcher.feeds.taskType]} spinnerPosition='centerX'>
           {() => <FeedSlider items={$feed.homeFeeds} />}
         </TaskObserver>
 
         <div className='px-container'>
           {/* <HomeTitle title='다가오는 일정'></HomeTitle>
-          <TaskObserver taskType={fetcher.schedules.taskType}>
+          <TaskObserver taskType={fetcher.schedules.taskType} spinnerPosition = 'centerX'>
             <HomeSchedule items={$feed.homeScheduleFeeds} className='pb-2' />
           </TaskObserver> */}
           <HomeTitle title='물건창고' route={() => route.stuff()}></HomeTitle>
-          <TaskObserver taskType={fetcher.stuffs.taskType}>
-            {() => (
-              <>
-                <NoContents show={$stuff.items?.length == 0} />
-                {$stuff.items.map((item) => (
-                  <StuffTalentItem
-                    key={item.id}
-                    loginUserId={$auth.user.id}
-                    pageKey={StuffTalentPageKey.STUFF}
-                    item={item}
-                  />
-                ))}
-              </>
-            )}
+          <TaskObserver taskTypes={fetcher.stuffs.taskType} spinnerPosition='centerX'>
+            {() =>
+              $stuff.items?.length > 0 ? (
+                <ul className='move-up'>
+                  {$stuff.items.map((item) => (
+                    <StuffTalentItem
+                      key={item.id}
+                      loginUserId={$auth.user.id}
+                      pageKey={StuffTalentPageKey.STUFF}
+                      item={item}
+                      hideMoreIcon
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <NoContents />
+              )
+            }
           </TaskObserver>
 
           <HomeTitle title='재능창고' route={() => route.talent()}></HomeTitle>
-          <TaskObserver taskType={fetcher.stuffs.taskType}>
-            {() => (
-              <>
-                <NoContents show={$talent.items?.length == 0} />
-                {$talent.items.map((item) => (
-                  <StuffTalentItem
-                    key={item.id}
-                    loginUserId={$auth.user.id}
-                    pageKey={StuffTalentPageKey.TALENT}
-                    item={item}
-                  />
-                ))}
-              </>
-            )}
+          <TaskObserver taskTypes={fetcher.talents.taskType} spinnerPosition='centerX'>
+            {() =>
+              $talent.items?.length > 0 ? (
+                <ul className='move-up'>
+                  {$talent.items.map((item) => (
+                    <StuffTalentItem
+                      key={item.id}
+                      loginUserId={$auth.user.id}
+                      pageKey={StuffTalentPageKey.TALENT}
+                      item={item}
+                      hideMoreIcon
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <NoContents />
+              )
+            }
           </TaskObserver>
         </div>
 
         <div className='px-container'>
           <HomeTitle title='소모임' route={() => route.clubs()}></HomeTitle>
         </div>
-        <TaskObserver taskType={fetcher.clubs.taskType}>
+        <TaskObserver taskTypes={fetcher.clubs.taskType} spinnerPosition='centerX'>
           {() => <ClubPopularSlider clubs={$club.popularClubs} />}
         </TaskObserver>
       </IonContent>

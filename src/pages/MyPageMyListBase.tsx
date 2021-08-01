@@ -5,6 +5,7 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
 import { Segment } from '../components/molecules/SegmentComponent'
+import { TaskObserver } from '../components/molecules/TaskObserverComponent'
 import { ClubOurTownList } from '../components/organisms/ClubOurTownListComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
@@ -75,7 +76,11 @@ export const MyPageMyListBase: React.FC<IMyPageMyListProps> = ({
       case SEGMENT_KEYS.feed:
         return <FeedList fetchTask={fetchFeeds} />
       case SEGMENT_KEYS.club:
-        return <ClubOurTownList clubs={clubs} />
+        return (
+          <TaskObserver taskTypes={fetchClubs} spinnerPosition='center'>
+            {() => <ClubOurTownList clubs={clubs} noContentsFull />}
+          </TaskObserver>
+        )
       default:
         return <></> // TODO error 발생시켜야 하나?
     }
