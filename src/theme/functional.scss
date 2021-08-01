@@ -1203,6 +1203,11 @@
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
+.absolute-horizontal-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
 .absolute-vertical-center {
   position: absolute;
   top: 50%;

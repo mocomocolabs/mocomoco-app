@@ -103,7 +103,7 @@ export const StuffTalentDetailPage: React.FC = () => {
 
   return useObserver(() =>
     store.getItem.match({
-      pending: () => <Spinner isFull={true} />,
+      pending: () => <Spinner position='center' />,
       resolved: () => (
         <IonPage>
           <IonContent>

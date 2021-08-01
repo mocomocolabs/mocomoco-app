@@ -59,7 +59,7 @@ export const App: React.FC = () => {
 
   return (
     <IonApp>
-      {initialized ? <RouterTab /> : <Spinner isFull={true} color='white' />}
+      {initialized ? <RouterTab /> : <Spinner position='center' color='white' />}
 
       <Alert></Alert>
       <Toast></Toast>

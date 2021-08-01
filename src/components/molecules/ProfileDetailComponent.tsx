@@ -27,7 +27,7 @@ export const ProfileDetail: React.FC<IProfileDetailItem> = ({ userId }) => {
   return useObserver(() =>
     $user.getUser.match({
       pending: () => {
-        return <Spinner isFull={true}></Spinner>
+        return <Spinner position='center'></Spinner>
       },
       resolved: () => {
         return (

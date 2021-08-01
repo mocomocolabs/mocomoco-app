@@ -48,7 +48,7 @@ export const FeedDetailPage: React.FC = () => {
       <IonContent>
         <BackFloatingButton></BackFloatingButton>
         {observableTaskGroup.match({
-          pending: () => <Spinner isFull={true}></Spinner>,
+          pending: () => <Spinner position='center'></Spinner>,
           resolved: () => (
             <FeedItem
               feed={$feed.feed}

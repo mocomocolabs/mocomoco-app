@@ -28,7 +28,7 @@ export const ClubDetailPage: React.FC = () => {
 
   return useObserver(() =>
     $club.getClub.match({
-      pending: () => <Spinner isFull={true} />,
+      pending: () => <Spinner position='center' />,
       resolved: () => (
         <IonPage>
           <IonContent>

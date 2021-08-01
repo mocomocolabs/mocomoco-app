@@ -75,21 +75,17 @@ export const ProfileUpdateFormComponent = forwardRef<HTMLFormElement, IProfileUp
     // TODO performance check - render 횟수 등
     return useObserver(() =>
       observableTaskGroup.match({
-        pending: () => {
-          return <Spinner isFull={true}></Spinner>
-        },
-        resolved: () => {
-          return (
-            <form
-              className='flex-col w-full my-4'
-              id='profile-form'
-              ref={ref}
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <ProfileUpdateInput fields={{ register, setValue, watch }} />
-            </form>
-          )
-        },
+        pending: () => <Spinner position='center' />,
+        resolved: () => (
+          <form
+            className='flex-col w-full my-4'
+            id='profile-form'
+            ref={ref}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <ProfileUpdateInput fields={{ register, setValue, watch }} />
+          </form>
+        ),
         rejected: () => {
           taskGroup.forEach((task) => task.reset())
           return <></>

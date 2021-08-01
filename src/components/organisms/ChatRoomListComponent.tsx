@@ -14,7 +14,7 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
 
   return useObserver(() =>
     $chat.getRooms.match({
-      pending: () => <Spinner isFull={true} />,
+      pending: () => <Spinner position='center' />,
       resolved: () => (
         <>
           <NoContents show={$chat.rooms.length <= 0} isFull={true} />
