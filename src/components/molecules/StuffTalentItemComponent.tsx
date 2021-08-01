@@ -23,6 +23,7 @@ interface IStuffTalentIItem {
   onEdit?: (id: number) => void
   onDelete?: (id: number) => void
   onUpdateStatus?: (id: number, status: StuffTalentStatus) => void
+  hideMoreIcon?: boolean
 }
 
 export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
@@ -32,6 +33,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
   onEdit,
   onDelete,
   onUpdateStatus,
+  hideMoreIcon = false,
 }) => {
   const { $ui } = useStore()
 
@@ -110,7 +112,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
             </div>
             <TextBase className='ellipsis min-w-0 ml-1 flex-grow'>{item.title}</TextBase>
             <div className='flex flex-none h-full ml-1' onClick={(e) => e.stopPropagation()}>
-              {loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
+              {!hideMoreIcon && loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
             </div>
           </div>
           <div className='flex-grow gray ellipsis pt-0_5 text-xxs'>
