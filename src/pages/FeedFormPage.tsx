@@ -65,8 +65,6 @@ export const FeedFormPage: FC<IFeedForm> = () => {
               isUpdate
             )
 
-            await $feed.getFeeds()
-
             isUpdate ? route.feedDetail($feed.form.id!, undefined, true) : route.feed()
 
             $feed.resetForm()
