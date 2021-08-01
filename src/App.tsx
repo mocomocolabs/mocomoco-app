@@ -31,7 +31,8 @@ export const App: React.FC = () => {
       $community.setSelectedId($auth.user.communityId)
 
       if ($auth.user.status === SIGN_UP_STATUS.대기 && config.IS_PROD) {
-        route.signUpComplete()
+        // TODO 내부테스트 때만 일시적으로 주석처리함
+        // route.signUpComplete()
       }
 
       $chat.connectRooms()
