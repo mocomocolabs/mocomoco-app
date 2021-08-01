@@ -16,19 +16,22 @@ interface ConfigByEnv {
   test: Config
 }
 
+const serverUrl = 'http://13.209.84.58'
+// const serverUrl = 'http://192.168.0.170:8080'
+
 // TODO: 실서버 배포시, key변경해야함
 const configEnv: ConfigByEnv = {
   development: {
-    API_URL: '/api',
-    SOCKET_URL: '/ws-chat',
+    API_URL: serverUrl + '/api',
+    SOCKET_URL: serverUrl + '/ws-chat',
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },
     IS_PROD: false,
   },
   production: {
-    API_URL: 'http://13.209.84.58/api',
-    SOCKET_URL: 'http://13.209.84.58/ws-chat',
+    API_URL: serverUrl + '/api',
+    SOCKET_URL: serverUrl + '/ws-chat',
     KEY: {
       ENCRYPT_SECRET: '8DA03642F53C0D631F1E6884F8C9BA60',
     },
