@@ -4,7 +4,7 @@ import { Observer } from 'mobx-react-lite'
 import { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { NavLink, Redirect, Route, Router, Switch } from 'react-router-dom'
 import { Icon } from './components/atoms/IconComponent'
-import { BottomTabMorePopover } from './components/molecules/BottomTabMorePopover'
+import { TabBarPopoverContents } from './components/molecules/TabBarPopoverContent'
 import { useStore } from './hooks/use-store'
 import { ChatPage } from './pages/ChatPage'
 import { ChatRoomPage } from './pages/ChatRoomPage'
@@ -129,7 +129,6 @@ const routingInfo: { path: string; children: ReactElement; exact: boolean }[] = 
 
 export const RouterTab: FC = () => {
   const [currentTab, setCurrentTab] = useState(TAB_PATH.HOME as string)
-  const [showsMore, setShowsMore] = useState(false)
   const { $auth, $ui, $chat } = useStore()
 
   const renderredRoutes = useMemo(
@@ -150,9 +149,20 @@ export const RouterTab: FC = () => {
     [currentTab]
   )
 
-  const onTabClick = useCallback((path: TAB_PATH) => {
-    path === TAB.MORE.path && setShowsMore(!showsMore)
-  }, [])
+  const onTabClick = useCallback(
+    (path: TAB_PATH) => {
+      path === TAB.MORE.path &&
+        $ui.showPopover({
+          cssClass: 'tab-bar-popover',
+          animated: true,
+          showBackdrop: false,
+          children: (
+            <TabBarPopoverContents hidePopover={$ui.hidePopover} activeTab={currentTab as TAB_PATH} />
+          ),
+        })
+    },
+    [currentTab]
+  )
 
   const setActiveTabByPath = useCallback(() => {
     const found = _.find(TAB_PATH, (tab_path) => tab_path === location.pathname)
@@ -175,7 +185,7 @@ export const RouterTab: FC = () => {
           <div key={tab.path} onClick={() => onTabClick(TAB.MORE.path)}>
             <Icon
               name={
-                showsMore || morePaths.includes(currentTab as TAB_PATH)
+                $ui.popover.isOpen || morePaths.includes(currentTab as TAB_PATH)
                   ? TAB.MORE.icon + '-solid'
                   : TAB.MORE.icon
               }
@@ -193,7 +203,7 @@ export const RouterTab: FC = () => {
           </NavLink>
         )
       ),
-    [currentTab, showsMore]
+    [currentTab]
   )
 
   useEffect(() => {
@@ -227,11 +237,6 @@ export const RouterTab: FC = () => {
               </div>
             )}
           </Observer>
-          <BottomTabMorePopover
-            isOpen={showsMore}
-            setIsOpen={setShowsMore}
-            activeTab={currentTab as TAB_PATH}
-          ></BottomTabMorePopover>
         </IonFooter>
       </Router>
     </>

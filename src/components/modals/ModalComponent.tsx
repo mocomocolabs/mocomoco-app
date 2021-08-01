@@ -16,8 +16,7 @@ export const Modal: FC<ModalProps> = ({ isShow, setIsShow, title, children }) =>
       <div slot='start' className='flex-1 flex-none items-center'>
         <Icon name='close' onClick={() => setIsShow(false)}></Icon>
       </div>
-      <div className='flex-center flex-grow text-header text-center'>{title}</div>
-      <div slot='end' className='flex-none w-4'></div>
+      <div className='flex-grow text-header absolute-center'>{title}</div>
     </Header>
     <IonContent>{children}</IonContent>
   </IonModal>

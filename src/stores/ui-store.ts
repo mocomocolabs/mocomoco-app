@@ -7,6 +7,9 @@ const initState = {
   popover: {
     isOpen: false,
     event: undefined,
+    animated: false,
+    showBackdrop: false,
+    cssClass: '',
   } as IPopover,
 
   alert: {
@@ -36,6 +39,22 @@ export class UiStore {
   @action
   setIsBottomTab = (isShow: boolean) => {
     this.isBottomTab = isShow
+  }
+
+  @action
+  showPopover = (popover: Partial<IPopover>) => {
+    return new Promise(() => {
+      this.popover = {
+        isOpen: true,
+        event: popover.event!,
+        ...popover,
+      }
+    })
+  }
+
+  @action
+  hidePopover = () => {
+    this.popover = initState.popover
   }
 
   @action

@@ -1,7 +1,9 @@
+import { App as AppPlugin } from '@capacitor/app'
 import { IonApp } from '@ionic/react'
 import { when } from 'mobx'
 import { useEffect, useState } from 'react'
 import { Alert } from './components/atoms/AlertComponent'
+import { Popover } from './components/atoms/PopoverComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
 import { Toast } from './components/atoms/ToastComponent'
 import { config } from './config'
@@ -13,7 +15,7 @@ import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 
 export const App: React.FC = () => {
-  const { $community, $chat, $auth, $stuff, $talent } = useStore()
+  const { $community, $chat, $auth, $stuff, $talent, $ui } = useStore()
   const [initialized, setInitailzed] = useState(false)
 
   const init = async () => {
@@ -45,15 +47,39 @@ export const App: React.FC = () => {
   }
 
   useEffect(() => {
-    const mobxWhen = when(
+    const disposeInitReaction = when(
       () => $auth.isLogin === false,
       () => {
         init()
       }
     )
 
+    return disposeInitReaction()
+  }, [])
+
+  useEffect(() => {
+    AppPlugin.addListener('backButton', (event) => {
+      if ($ui.popover.isOpen) {
+        $ui.hidePopover()
+        return
+      }
+
+      if ($ui.alert.isOpen) {
+        $ui.hideAlert()
+        return
+      }
+
+      if (!event.canGoBack) {
+        AppPlugin.exitApp()
+      } else {
+        route.goBack()
+      }
+    })
+
     return () => {
-      mobxWhen()
+      AppPlugin.removeAllListeners().then(() => {
+        console.log('cleanup: removed all listeners!')
+      })
     }
   }, [])
 
@@ -61,8 +87,9 @@ export const App: React.FC = () => {
     <IonApp>
       {initialized ? <RouterTab /> : <Spinner position='center' color='white' />}
 
-      <Alert></Alert>
-      <Toast></Toast>
+      <Popover />
+      <Alert />
+      <Toast />
     </IonApp>
   )
 }

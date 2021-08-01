@@ -1,7 +1,10 @@
+import { ReactElement } from 'react'
+
 export interface IPopover {
   isOpen: boolean
   event: Event | undefined
-  resolve?: (value: IPopoverResult) => void
+  cssClass?: string
+  animated?: boolean
+  showBackdrop?: boolean
+  children?: ReactElement
 }
-
-export type IPopoverResult = 'EDIT' | 'DELETE' | undefined

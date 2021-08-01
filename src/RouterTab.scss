@@ -18,3 +18,15 @@
 .no-active-style {
   @extend .icon-gray;
 }
+
+.tab-bar-popover {
+  .popover-content {
+    bottom: 5.2rem;
+    top: unset !important;
+    box-shadow: 0px 3px 12px 1px $box-shadow-color;
+    border-radius: 28px;
+    width: 140px;
+    height: 140px;
+    transform-origin: center bottom !important;
+  }
+}
