@@ -98,6 +98,9 @@ export const StuffTalentPage: React.FC = () => {
               <CommunitySelector></CommunitySelector>
             </div>
             <div className='flex' slot='end'>
+              <div onClick={onSearchIconClick}>
+                <Icon name='search' className='ml-4' />
+              </div>
               <div
                 onClick={() => {
                   const isWriting = store.form.title || store.form.content || store.form.images?.length
@@ -120,9 +123,6 @@ export const StuffTalentPage: React.FC = () => {
                 }}
               >
                 <Icon name='pencil' className='ml-4' />
-              </div>
-              <div onClick={onSearchIconClick}>
-                <Icon name='search' className='ml-4' />
               </div>
             </div>
           </div>
