@@ -131,10 +131,10 @@ export const StuffTalentFormPage: React.FC = () => {
   return (
     <IonPage>
       <Header>
-        <div slot='start' className='text-header'>
+        <div slot='start'>
           <BackButton type='close'></BackButton>
         </div>
-        <div className='text-header text-center'>{title}</div>
+        <div className='text-header absolute-center'>{title}</div>
 
         <div slot='end'>
           <SpinnerWrapper

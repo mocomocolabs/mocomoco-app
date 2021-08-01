@@ -10,7 +10,6 @@ import { InputNormal } from '../components/atoms/InputNormalComponent'
 import { IsPublicToast } from '../components/atoms/IsPublicToast'
 import { Pad } from '../components/atoms/PadComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
-import { TextXl } from '../components/atoms/TextXlComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { DatetimePicker } from '../components/molecules/DatetimePickerComponent'
@@ -82,7 +81,7 @@ export const FeedFormPage: FC<IFeedForm> = () => {
           <div slot='start'>
             <BackButton type='close'></BackButton>
           </div>
-          <TextXl className='text-center text-bold'>이야기창고</TextXl>
+          <div className='absolute-center text-header'>이야기창고</div>
           <div slot='end'>
             <SpinnerWrapper task={$feed.saveFeed} Submit={SubmitBtn}></SpinnerWrapper>
           </div>

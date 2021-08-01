@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import _ from 'lodash'
 import { Observer } from 'mobx-react-lite'
 import { useEffect } from 'react'
@@ -7,6 +7,7 @@ import { BackButton } from '../components/molecules/BackButtonComponent'
 import { ChatInsertForm } from '../components/organisms/ChatInsertFormComponent'
 import { ChatRoomDetail } from '../components/organisms/ChatRoomDetailComponent'
 import { Footer } from '../components/organisms/FooterComponent'
+import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 
 interface ILocationState {
@@ -43,14 +44,12 @@ export const ChatRoomPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <div slot='start'>
-            <BackButton type='arrow' />
-          </div>
-          <Observer>{() => <div className='text-header text-center'>{$chat.room?.name}</div>}</Observer>
-        </IonToolbar>
-      </IonHeader>
+      <Header>
+        <div slot='start'>
+          <BackButton type='arrow' />
+        </div>
+        <Observer>{() => <div className='text-header absolute-center'>{$chat.room?.name}</div>}</Observer>
+      </Header>
 
       <IonContent>
         <ChatRoomDetail></ChatRoomDetail>

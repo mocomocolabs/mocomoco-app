@@ -25,10 +25,10 @@ export const ProfileUpdatePage: React.FC = () => {
   return (
     <IonPage>
       <Header>
-        <div slot='start' className='text-header'>
+        <div slot='start'>
           <BackButton type='close' />
         </div>
-        <div className='text-header text-center'>프로필 수정</div>
+        <div className='text-header absolute-center'>프로필 수정</div>
         <div slot='end'>
           <SpinnerWrapper
             task={$user.updateUser}

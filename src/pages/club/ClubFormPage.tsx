@@ -62,10 +62,10 @@ export const ClubFormPage: React.FC = () => {
   return useObserver(() => (
     <IonPage>
       <Header>
-        <div slot='start' className='text-header'>
+        <div slot='start'>
           <BackButton type='close'></BackButton>
         </div>
-        <div className='text-header text-center'>소모임</div>
+        <div className='text-header absolute-center'>소모임</div>
 
         <div slot='end'>
           <SpinnerWrapper

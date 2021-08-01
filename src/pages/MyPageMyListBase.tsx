@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Pad } from '../components/atoms/PadComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -102,7 +102,7 @@ export const MyPageMyListBase: React.FC<IMyPageMyListProps> = ({
           <div slot='start'>
             <BackButton type='arrow' />
           </div>
-          <IonTitle slot='start'>{title}</IonTitle>
+          <div className='text-header absolute-center'>{title}</div>
         </IonToolbar>
         <Segment segments={segments} selected={selectedSegment} onChange={onChangeSegment} />
         <div className='px-container mt-1' hidden={!isShowFilterBar}>

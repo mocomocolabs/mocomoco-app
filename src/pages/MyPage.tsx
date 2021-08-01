@@ -1,8 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
-import { Icon } from '../components/atoms/IconComponent'
 import { Pad } from '../components/atoms/PadComponent'
-import { TextXl } from '../components/atoms/TextXlComponent'
 import { MypageColumnList } from '../components/molecules/MypageColumnListComponent'
 import { MypageProfile } from '../components/molecules/MypageProfileComponent'
 import { MypageRowList } from '../components/molecules/MypageRowListComponent'
@@ -19,10 +17,7 @@ export const MyPage: React.FC = () => {
   return (
     <IonPage>
       <Header>
-        <div slot='start'>
-          <Icon name='setting' />
-        </div>
-        <TextXl className='text-bold ml-1'>나의 하마</TextXl>
+        <div className='text-header'>나의 하마</div>
       </Header>
 
       <IonContent>
