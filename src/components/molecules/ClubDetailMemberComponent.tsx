@@ -26,7 +26,7 @@ export const ClubDetailMember: FC<IClubDetailMember> = ({ members, community, cr
       </div>
       {members.map((v) => (
         <div key={v.id} className='flex-between-center mb-4'>
-          <div className='flex items-center'>
+          <div className='flex items-center' onClick={() => route.profileDetail(v.id)}>
             <ProfileImage url={v.profileUrl} className='mr-2 w-10 h-10'></ProfileImage>
             <div className='flex-col'>
               <div className='flex items-center'>
