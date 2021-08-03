@@ -57,6 +57,7 @@ export const ClubDetailPage: React.FC = () => {
                 {!$club.club?.isMember ? (
                   <SpinnerWrapper
                     task={$club.joinClub}
+                    spinnerPosition='center'
                     Submit={
                       <SubmitButton
                         text='채팅으로 참여하기'

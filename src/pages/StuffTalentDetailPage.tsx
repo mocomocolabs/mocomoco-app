@@ -145,7 +145,11 @@ export const StuffTalentDetailPage: React.FC = () => {
                     }}
                   />
                 ) : !store.item?.chatroomId ? (
-                  <SpinnerWrapper task={store.createChat} Submit={createChatButton()} />
+                  <SpinnerWrapper
+                    task={store.createChat}
+                    Submit={createChatButton()}
+                    spinnerPosition='center'
+                  />
                 ) : (
                   <SubmitButton
                     text='채팅으로 거래하기'
