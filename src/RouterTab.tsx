@@ -84,6 +84,9 @@ const publicPaths = [
   '/term/privacy',
 ]
 
+// App.tsx > Back button 리스너에서 사용함
+export const cannotGoBackPaths = [TAB_PATH.HOME, '/sign-up/complete']
+
 const routingInfo: { path: string; children: ReactElement; exact: boolean }[] = [
   { path: '/dev', children: <DevPage />, exact: true },
   { path: '/intro', children: <IntroPage />, exact: true },

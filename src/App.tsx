@@ -10,7 +10,7 @@ import { config } from './config'
 import './global.scss'
 import { useStore } from './hooks/use-store'
 import { SIGN_UP_STATUS } from './models/sign-up.d'
-import { RouterTab } from './RouterTab'
+import { cannotGoBackPaths, RouterTab } from './RouterTab'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
 
@@ -70,11 +70,8 @@ export const App: React.FC = () => {
         return
       }
 
-      if (!event.canGoBack) {
-        AppPlugin.exitApp()
-      } else {
-        route.goBack()
-      }
+      const canGoBack = event.canGoBack && !cannotGoBackPaths.includes(location.pathname)
+      canGoBack ? route.goBack() : AppPlugin.exitApp()
     })
 
     return () => {
