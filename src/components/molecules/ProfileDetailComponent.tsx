@@ -58,7 +58,7 @@ export const ProfileDetail: React.FC<IProfileDetailItem> = ({ userId }) => {
                 size='large'
                 onClick={async () => {
                   executeWithError(async () => {
-                    const roomId = (await $chat.getRoomIdBy(userId)) || (await $chat.createChat(userId))
+                    const roomId = await $chat.createChat(userId)
                     route.chatRoom(roomId)
                   })
                 }}
