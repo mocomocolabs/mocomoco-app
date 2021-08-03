@@ -43,13 +43,12 @@ export class FeedStore {
 
   @task
   getFeeds = (async () => {
-    const isPublic = this.$community.selectedId ? 'false' : 'true'
+    const isMyCommunity = this.$community.selectedId === this.$community.myCommunity?.id
+    const isPublic = isMyCommunity ? '' : '&is-public=true'
 
     await api
       .get<{ feeds: IFeedDto[] }>(
-        `/v1/feeds?community-id=${
-          this.$community.selectedId ?? ''
-        }&is-use=true&limit=999&is-public=${isPublic}`
+        `/v1/feeds?community-id=${this.$community.selectedId ?? ''}${isPublic}&is-use=true&limit=999`
       )
       .then(
         action((data) => {
