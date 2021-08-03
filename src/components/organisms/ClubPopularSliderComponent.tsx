@@ -21,7 +21,7 @@ const slideOpts = {
 }
 
 export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
-  return clubs.length ? (
+  return clubs.length > 0 ? (
     <IonSlides
       key={clubs.map((v) => v.id).join('_')}
       pager={false}
@@ -66,6 +66,6 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
       ))}
     </IonSlides>
   ) : (
-    <NoContents />
+    <NoContents className='min-height-230' />
   )
 }

@@ -20,7 +20,7 @@ const slideOpts = {
 }
 
 export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
-  return items.length ? (
+  return items.length > 0 ? (
     <IonSlides
       key={items.map((v) => v.id).join('_')}
       pager={false}
@@ -45,6 +45,6 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
       ))}
     </IonSlides>
   ) : (
-    <NoContents />
+    <NoContents className='min-height-230' />
   )
 }
