@@ -1,9 +1,14 @@
 import { action, observable } from 'mobx'
 import { IAlert } from '../models/alert'
+import { IModal } from '../models/modal'
 import { IPopover } from '../models/popover'
 import { IToast } from '../models/toast'
 
 const initState = {
+  modal: {
+    isOpen: false,
+    title: '',
+  } as IModal,
   popover: {
     isOpen: false,
     event: undefined,
@@ -31,6 +36,7 @@ const initState = {
 }
 
 export class UiStore {
+  @observable modal: IModal = initState.modal
   @observable popover: IPopover = initState.popover
   @observable alert: IAlert = initState.alert
   @observable toast: IToast = initState.toast
@@ -42,12 +48,27 @@ export class UiStore {
   }
 
   @action
+  showModal = (modal: Omit<IModal, 'isOpen'>) => {
+    return new Promise(() => {
+      this.modal = {
+        ...modal,
+        isOpen: true,
+      }
+    })
+  }
+
+  @action
+  hideModal = () => {
+    this.modal = initState.modal
+  }
+
+  @action
   showPopover = (popover: Partial<IPopover>) => {
     return new Promise(() => {
       this.popover = {
-        isOpen: true,
-        event: popover.event!,
         ...popover,
+        event: popover.event!,
+        isOpen: true,
       }
     })
   }

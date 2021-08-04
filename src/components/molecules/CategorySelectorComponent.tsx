@@ -1,7 +1,8 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
+import { useStore } from '../../hooks/use-store'
 import { Icon } from '../atoms/IconComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { CategorySelectorModal } from '../modals/CategorySelectorModalComponent'
+import { CategorySelectorModalContents } from '../modals/CategorySelectorModalContentsComponent'
 
 export interface ICategorySelector {
   categories: { id: number; name: string }[]
@@ -10,25 +11,28 @@ export interface ICategorySelector {
 }
 
 export const CategorySelector: FC<ICategorySelector> = ({ categories, selectedId, onSelect }) => {
-  // TODO: modal의 open 상태를 store로 관리하여. hardware back 버튼을 제어할 필요가 있음
-  const [isShowModal, setIsShowModal] = useState(false)
+  const { $ui } = useStore()
 
   return (
-    <>
-      <div className='flex justify-between items-center px-3' onClick={() => setIsShowModal(true)}>
-        <TextBase>
-          {selectedId > 0 ? categories.find((c) => c.id === selectedId)?.name : '카테고리 선택'}
-        </TextBase>
-        <Icon name='arrow' className='icon-rotate-180' />
-      </div>
-
-      <CategorySelectorModal
-        categories={categories}
-        isShow={isShowModal}
-        setIsShow={setIsShowModal}
-        selectedId={selectedId}
-        onSelect={onSelect}
-      />
-    </>
+    <div
+      className='flex justify-between items-center px-3'
+      onClick={() =>
+        $ui.showModal({
+          title: '카테고리 선택',
+          children: (
+            <CategorySelectorModalContents
+              categories={categories}
+              selectedId={selectedId}
+              onSelect={onSelect}
+            />
+          ),
+        })
+      }
+    >
+      <TextBase>
+        {selectedId > 0 ? categories.find((c) => c.id === selectedId)?.name : '카테고리 선택'}
+      </TextBase>
+      <Icon name='arrow' className='icon-rotate-180' />
+    </div>
   )
 }

@@ -6,6 +6,7 @@ import { Alert } from './components/atoms/AlertComponent'
 import { Popover } from './components/atoms/PopoverComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
 import { Toast } from './components/atoms/ToastComponent'
+import { Modal } from './components/modals/ModalComponent'
 import { config } from './config'
 import './global.scss'
 import { useStore } from './hooks/use-store'
@@ -60,6 +61,11 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     AppPlugin.addListener('backButton', (event) => {
+      if ($ui.modal.isOpen) {
+        $ui.hideModal()
+        return
+      }
+
       if ($ui.popover.isOpen) {
         $ui.hidePopover()
         return
@@ -85,6 +91,7 @@ export const App: React.FC = () => {
     <IonApp>
       {initialized ? <RouterTab /> : <Spinner position='center' color='white' />}
 
+      <Modal />
       <Popover />
       <Alert />
       <Toast />

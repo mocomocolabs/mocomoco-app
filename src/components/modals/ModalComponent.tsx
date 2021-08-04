@@ -1,23 +1,22 @@
 import { IonContent, IonModal } from '@ionic/react'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { useObserver } from 'mobx-react-lite'
+import { FC } from 'react'
+import { useStore } from '../../hooks/use-store'
 import { Icon } from '../atoms/IconComponent'
 import { Header } from '../organisms/HeaderComponent'
 
-export interface ModalProps {
-  title: string
-  isShow: boolean
-  setIsShow: Dispatch<SetStateAction<boolean>>
-  children?: React.ReactNode
-}
+export const Modal: FC = () => {
+  const { $ui } = useStore()
 
-export const Modal: FC<ModalProps> = ({ isShow, setIsShow, title, children }) => (
-  <IonModal isOpen={isShow}>
-    <Header>
-      <div slot='start' className='flex-1 flex-none items-center'>
-        <Icon name='close' onClick={() => setIsShow(false)}></Icon>
-      </div>
-      <div className='flex-grow text-header absolute-center'>{title}</div>
-    </Header>
-    <IonContent>{children}</IonContent>
-  </IonModal>
-)
+  return useObserver(() => (
+    <IonModal isOpen={$ui.modal.isOpen}>
+      <Header>
+        <div slot='start' className='flex-1 flex-none items-center'>
+          <Icon name='close' onClick={() => $ui.hideModal()} />
+        </div>
+        <div className='flex-grow text-header absolute-center'>{$ui.modal.title}</div>
+      </Header>
+      <IonContent>{$ui.modal.children}</IonContent>
+    </IonModal>
+  ))
+}
