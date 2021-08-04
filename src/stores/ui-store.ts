@@ -63,7 +63,7 @@ export class UiStore {
   }
 
   @action
-  showPopover = (popover: Partial<IPopover>) => {
+  showPopover = (popover: Partial<Omit<IPopover, 'isOpen'>>) => {
     return new Promise(() => {
       this.popover = {
         ...popover,
@@ -79,8 +79,11 @@ export class UiStore {
   }
 
   @action
-  showAlert = (alert: IAlert) => {
-    this.alert = alert
+  showAlert = (alert: Omit<IAlert, 'isOpen'>) => {
+    this.alert = {
+      ...alert,
+      isOpen: true,
+    }
   }
 
   @action
@@ -89,7 +92,7 @@ export class UiStore {
   }
 
   @action
-  showToastSuccess = (toast: Partial<IToast>) => {
+  showToastSuccess = (toast: Partial<Omit<IToast, 'isOpen'>>) => {
     this.toast = {
       ...toast,
       color: 'success',
@@ -100,7 +103,7 @@ export class UiStore {
   }
 
   @action
-  showToastError = (toast: Partial<IToast>) => {
+  showToastError = (toast: Partial<Omit<IToast, 'isOpen'>>) => {
     this.toast = {
       ...toast,
       color: 'danger',

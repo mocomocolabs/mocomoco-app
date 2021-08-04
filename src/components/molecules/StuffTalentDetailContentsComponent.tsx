@@ -42,7 +42,6 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
       label: '삭제',
       onClick: () => {
         $ui.showAlert({
-          isOpen: true,
           message: '게시글을 삭제하시겠어요?',
           onSuccess: () => onDelete(item.id),
         })

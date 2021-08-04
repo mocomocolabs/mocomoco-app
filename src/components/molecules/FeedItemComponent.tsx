@@ -35,7 +35,6 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
         label: '삭제',
         onClick: () => {
           $ui.showAlert({
-            isOpen: true,
             message: '게시글을 삭제하시겠어요?',
             onSuccess: () => onDelete(feed.id),
           })

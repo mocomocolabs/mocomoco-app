@@ -38,7 +38,6 @@ export const ProfileUpdateFormComponent = forwardRef<HTMLFormElement, IProfileUp
     const onSubmit = useCallback(
       (user: IUser) => {
         $ui.showAlert({
-          isOpen: true,
           message: '프로필을 변경하시겠습니까?',
           onSuccess: () =>
             executeWithError(() =>

@@ -36,7 +36,6 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
         label: '삭제',
         onClick: () => {
           $ui.showAlert({
-            isOpen: true,
             message: '댓글을 삭제하시겠어요?',
             onSuccess: () => onDelete(comment.id),
           })

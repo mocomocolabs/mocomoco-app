@@ -107,7 +107,6 @@ export const StuffTalentPage: React.FC = () => {
 
                   if (isWriting) {
                     return $ui.showAlert({
-                      isOpen: true,
                       message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
                       onSuccess() {
                         routeForm()
