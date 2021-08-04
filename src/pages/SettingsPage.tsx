@@ -23,7 +23,7 @@ export const SettingsPage: React.FC = () => {
   const [alarmSound, setAlarmSound] = useState<string>('구름씨 랄라~')
   const [language, setLanguage] = useState<string>('한국어')
 
-  const { $auth } = useStore()
+  const { $auth, $ui } = useStore()
 
   return (
     <IonPage>
@@ -101,10 +101,15 @@ export const SettingsPage: React.FC = () => {
                 <IonLabel>버젼 정보</IonLabel>
               </IonItem>
               <IonItem
-                onClick={async () => {
-                  await $auth.signOut()
-                  route.intro()
-                }}
+                onClick={() =>
+                  $ui.showAlert({
+                    message: '로그아웃하시겠어요?',
+                    onSuccess: async () => {
+                      await $auth.signOut()
+                      route.intro()
+                    },
+                  })
+                }
               >
                 <IonLabel>로그아웃</IonLabel>
               </IonItem>
