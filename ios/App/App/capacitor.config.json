@@ -1,8 +1,10 @@
 {
 	"appId": "com.mocomoco.hama",
 	"appName": "hama",
-	"bundledWebRuntime": false,
-	"npmClient": "yarn",
 	"webDir": "build",
-	"cordova": {}
+	"bundledWebRuntime": false,
+	"loggingBehavior": "production",
+	"android": {
+		"allowMixedContent": true
+	}
 }
