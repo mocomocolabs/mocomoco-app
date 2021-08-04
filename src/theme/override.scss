@@ -29,3 +29,13 @@ ion-button {
 ion-toast {
   --color: var(--ion-text-color);
 }
+
+ion-alert {
+  .alert-button-inner {
+    color: var(--ion-color-secondary);
+  }
+}
+
+ion-toggle {
+  --background-checked: var(--ion-color-secondary);
+}
