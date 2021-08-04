@@ -35,10 +35,13 @@ export const SignUpForm: FC = () => {
     <form onSubmit={onSubmit}>
       <InputNormal
         placeholder='이름을 입력해주세요'
-        register={register('name', { required: true })}
+        register={register('name', {
+          required: '이름을 입력해주세요',
+          minLength: { value: 2, message: '2자 이상 입력해주세요' },
+        })}
       ></InputNormal>
       <div className='height-20 pt-1 px-3'>
-        <ValidationMessage isShow={errors.name} message='이름은 필수값입니다'></ValidationMessage>
+        <ValidationMessage isShow={errors.name} message={errors?.name?.message}></ValidationMessage>
       </div>
       {/* <InputNormal placeholder='별명을 입력해주세요(선택)' register={register('nickname')}></InputNormal>
       <Pad className='height-20'></Pad> */}
