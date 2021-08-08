@@ -11,9 +11,10 @@ export interface ICommentItem {
   comment: IComment
   feedId: number
   showOverlowMenu: boolean
+  className?: string
 }
 
-export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu }) => {
+export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu, className }) => {
   const { $comment, $feed, $ui } = useStore()
 
   const onDelete = async (id: number) => {
@@ -46,21 +47,19 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
   )
 
   return useObserver(() => (
-    <>
-      <div className='flex-col'>
-        <div className='flex-between-center mb-2'>
-          <ProfileCard
-            userId={comment.user.id}
-            profileUrl={comment.user.profileUrl}
-            communityName={comment.user.communities[0]?.name}
-            nickname={comment.user.nickname}
-            extraText={timeDiff(comment.createdAt)}
-          ></ProfileCard>
+    <div className={`${className} flex-col`}>
+      <div className='flex-between-center mb-2'>
+        <ProfileCard
+          userId={comment.user.id}
+          profileUrl={comment.user.profileUrl}
+          communityName={comment.user.communities[0]?.name}
+          nickname={comment.user.nickname}
+          extraText={timeDiff(comment.createdAt)}
+        ></ProfileCard>
 
-          {showOverlowMenu && <MorePopoverButton items={popoverItems} />}
-        </div>
-        <TextBase className='ml-13'>{comment.content}</TextBase>
+        {showOverlowMenu && <MorePopoverButton items={popoverItems} />}
       </div>
-    </>
+      <TextBase className='ml-13'>{comment.content}</TextBase>
+    </div>
   ))
 }

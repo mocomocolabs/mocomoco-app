@@ -126,6 +126,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
             {feed.comments?.slice(0, isDetail ? undefined : 3).map((v) => (
               <CommentItem
                 key={v.id}
+                className='py-3'
                 comment={v}
                 feedId={feed.id}
                 showOverlowMenu={isDetail && $auth.user.id === v.user.id}

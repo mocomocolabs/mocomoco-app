@@ -1,8 +1,8 @@
 @import '../../theme/variable';
 
-.chat-insert-form {
+.comment-insert-container {
   ion-textarea {
-    margin-top: 0.4rem !important;
+    margin: 0;
     textarea {
       --padding-top: 0.8rem;
       --padding-bottom: 0.8rem;

@@ -27,7 +27,7 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
   }, [])
 
   return useObserver(() => (
-    <>
+    <div className='flex flex-1 pv-2'>
       <ProfileImage url={$user.user.profileUrl}></ProfileImage>
 
       <div className='chat-insert-form flex-between-center w-full ml-3 px-3 br-20 border-primary'>
@@ -54,6 +54,6 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
           }
         />
       </div>
-    </>
+    </div>
   ))
 }

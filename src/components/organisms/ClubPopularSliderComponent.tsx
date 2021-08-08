@@ -38,14 +38,14 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
               isRoundTop={true}
             ></ImageWithCorner>
             <div className='flex-col w-full height-92 bg-white px-3 br-b-xxlg text-left'>
-              <TextBase className='text-bold mb-1'>{v.name}</TextBase>
+              <TextBase className='text-bold mb-1 ellipsis'>{v.name}</TextBase>
               <div className='flex items-center'>
                 <Icon name='time' className='icon-secondary' size={12} />
-                <TextXs className='ml-1 gray'>{v.meetingTime}</TextXs>
+                <TextXs className='ml-1 gray ellipsis'>{v.meetingTime}</TextXs>
               </div>
               <div className='flex items-center'>
                 <Icon name='location' className='icon-secondary' size={12} />
-                <TextXs className='ml-1 gray'>{v.meetingPlace}</TextXs>
+                <TextXs className='ml-1 gray ellipsis'>{v.meetingPlace}</TextXs>
               </div>
               <div className='flex justify-between mt-2'>
                 <div className='ellipsis'>

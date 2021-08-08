@@ -39,12 +39,12 @@ export const ClubDetailContents: FC<IClubDetailContents> = ({ club }) => {
         </div>
         <TextBase className='mt-1 gray'>{club.community?.name}</TextBase>
         <div className='flex items-center mt-4'>
-          <Icon name='time' className='mr-1'></Icon>
-          <TextLg>{club.meetingTime}</TextLg>
+          <Icon name='time' className='mr-1' color='secondary'></Icon>
+          <TextBase>{club.meetingTime}</TextBase>
         </div>
         <div className='flex items-center mt-1'>
-          <Icon name='location' className='mr-1'></Icon>
-          <TextLg>{club.meetingPlace}</TextLg>
+          <Icon name='location' className='mr-1' color='secondary'></Icon>
+          <TextBase>{club.meetingPlace}</TextBase>
         </div>
         <XDivider className='mt-4 mb-6'></XDivider>
         <Description>{club.description}</Description>

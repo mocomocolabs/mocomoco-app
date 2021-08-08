@@ -7,6 +7,7 @@ import { scrollToBottom } from '../../utils/scroll-util'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
+import './CommentInsertFormComponent.scss'
 
 export interface ICommentInsertForm {
   feedId: number
@@ -17,7 +18,7 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
   const { $comment, $feed, $auth } = useStore()
 
   return useObserver(() => (
-    <>
+    <div className='comment-insert-container flex flex-1 pv-2'>
       <ProfileImage url={$auth.user?.profileUrl}></ProfileImage>
 
       <div className='flex-between-center w-full ml-3 px-3 br-20 border-primary'>
@@ -52,6 +53,6 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
           }
         />
       </div>
-    </>
+    </div>
   ))
 }

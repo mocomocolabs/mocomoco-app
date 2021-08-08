@@ -30,7 +30,7 @@ export const SignUpCommunity: FC = () => {
                 }}
               >
                 <div className='flex-between-center pb-2'>
-                  <TextLg className='gray'>{v.name}</TextLg>
+                  <TextLg className='gray py-2'>{v.name}</TextLg>
                   {v.id === selectedId && <Icon name='check-solid' className='icon-secondary'></Icon>}
                 </div>
                 <XDivider />
