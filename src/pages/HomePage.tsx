@@ -23,13 +23,7 @@ export const HomePage: React.FC = () => {
 
   const stufftalentFilter = useMemo(
     () => ({
-      // TODO: isPublic테스트
-      isPublic: false,
       communityId: $community.myCommunity?.id ?? null,
-      userId: undefined,
-      categories: [],
-      notStatuses: [],
-      types: [],
       limit: 3,
     }),
     [$community.myCommunity?.id]
