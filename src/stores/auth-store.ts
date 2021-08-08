@@ -49,7 +49,12 @@ export class AuthStore {
 
   @task.resolved
   checkEmail = (async (email: string) => {
-    return http.post(`/sys/users/exists`, { email })
+    return http.post(`/sys/users/email/exists`, { email })
+  }) as TaskBy<string>
+
+  @task.resolved
+  checkNickname = (async (nickname: string) => {
+    return http.post(`/sys/users/nickname/exists`, { email: nickname })
   }) as TaskBy<string>
 
   @task.resolved
