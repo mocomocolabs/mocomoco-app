@@ -14,6 +14,9 @@ export const compress = (
         quality,
         width,
         height,
+        maxWidth: 2048,
+        maxHeight: 2048,
+        convertSize: 1000000, // png > 1MB => jpeg로 압축됨
         success(result: File) {
           resolve(result)
         },
