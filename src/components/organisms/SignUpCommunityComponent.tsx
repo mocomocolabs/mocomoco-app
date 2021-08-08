@@ -1,5 +1,5 @@
 import { Observer } from 'mobx-react-lite'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
@@ -13,6 +13,8 @@ import { TaskObserver } from '../molecules/TaskObserverComponent'
 export const SignUpCommunity: FC = () => {
   const { $community, $auth } = useStore()
 
+  const [selectedId, setSelectedId] = useState<number>(0)
+
   return (
     <>
       <Observer>
@@ -23,15 +25,13 @@ export const SignUpCommunity: FC = () => {
                 key={v.id}
                 className='py-2'
                 onClick={() => {
-                  $community.setSelectedId(v.id)
+                  setSelectedId(v.id)
                   $auth.setSignUpForm({ communityIds: [v.id] })
                 }}
               >
                 <div className='flex-between-center pb-2'>
                   <TextLg className='gray'>{v.name}</TextLg>
-                  {v.id === $community.selectedId && (
-                    <Icon name='check-solid' className='icon-secondary'></Icon>
-                  )}
+                  {v.id === selectedId && <Icon name='check-solid' className='icon-secondary'></Icon>}
                 </div>
                 <XDivider />
               </li>
@@ -45,7 +45,7 @@ export const SignUpCommunity: FC = () => {
       <TaskObserver taskTypes={[$auth.signUp, $auth.signIn]} spinnerPosition='centerX'>
         {() => (
           <SubmitButton
-            disabled={!$community.selectedId}
+            disabled={!selectedId}
             text='회원가입 완료하기'
             color='secondary'
             size='large'
