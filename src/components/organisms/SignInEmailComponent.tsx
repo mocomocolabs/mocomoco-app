@@ -22,7 +22,7 @@ export const SignInEmail: FC = () => {
   const password = useRef({})
   password.current = watch('password', '')
 
-  const { $auth, $chat } = useStore()
+  const { $auth } = useStore()
 
   useEffect(() => {
     if (!$auth.signUpForm.email) {
@@ -31,16 +31,7 @@ export const SignInEmail: FC = () => {
   }, [])
 
   const onSubmit = handleSubmit((form) => {
-    executeWithError(() =>
-      $auth
-        .signIn($auth.signUpForm.email!, form.password)
-        .then(async () => {
-          $chat.connectRooms()
-        })
-        .then(() => {
-          route.home()
-        })
-    )
+    executeWithError(() => $auth.signIn($auth.signUpForm.email!, form.password))
   })
 
   return useObserver(() => (

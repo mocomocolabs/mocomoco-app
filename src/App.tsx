@@ -1,16 +1,14 @@
 import { App as AppPlugin } from '@capacitor/app'
 import { IonApp } from '@ionic/react'
-import { when } from 'mobx'
+import { reaction } from 'mobx'
 import { useEffect, useState } from 'react'
 import { Alert } from './components/atoms/AlertComponent'
 import { Popover } from './components/atoms/PopoverComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
 import { Toast } from './components/atoms/ToastComponent'
 import { Modal } from './components/modals/ModalComponent'
-import { config } from './config'
 import './global.scss'
 import { useStore } from './hooks/use-store'
-import { SIGN_UP_STATUS } from './models/sign-up.d'
 import { cannotGoBackPaths, RouterTab } from './RouterTab'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
@@ -20,6 +18,8 @@ export const App: React.FC = () => {
   const [initialized, setInitailzed] = useState(false)
 
   const init = async () => {
+    console.log('app init called')
+
     // 로그인
     await Promise.all([
       //
@@ -27,36 +27,49 @@ export const App: React.FC = () => {
       $community.getCommunities(),
     ])
 
-    // login 이후 실행할 공통 호출들
-    if ($auth.isLogin && $auth.user.communityId) {
-      $community.setSelectedId($auth.user.communityId)
-
-      if ($auth.user.status === SIGN_UP_STATUS.대기 && config.IS_PROD) {
-        // TODO 내부테스트 때만 일시적으로 주석처리함
-        // route.signUpComplete()
-      }
-
-      $chat.connectRooms()
-      $stuff.getCategories()
-      $talent.getCategories()
-    } else {
-      if (!(await storage.getHaveSeenIntro())) {
-        route.intro()
-      }
-    }
-
     setInitailzed(true)
   }
 
+  const onLogin = async () => {
+    console.log('login reaction')
+
+    $community.setSelectedId($auth.user.communityId)
+    $chat.connectRooms()
+    $stuff.getCategories()
+    $talent.getCategories()
+
+    // TODO 내부테스트 때만 일시적으로 주석처리함
+    // if ($auth.user.status === SIGN_UP_STATUS.대기 && config.IS_PROD) {
+    //   route.signUpComplete()
+    // } else {
+    route.home()
+    // }
+  }
+
+  const onLogout = async () => {
+    console.log('logout reaction')
+
+    $community.setSelectedId(null)
+    $chat.disconnect()
+
+    if (!(await storage.getHaveSeenIntro())) {
+      route.intro()
+    }
+  }
+
   useEffect(() => {
-    const disposeInitReaction = when(
-      () => $auth.isLogin === false,
-      () => {
-        init()
+    init()
+  }, [])
+
+  useEffect(() => {
+    const disposeLoginReaction = reaction(
+      () => $auth.isLogin,
+      async (isLogin: boolean) => {
+        isLogin && $auth.user.communityId ? onLogin() : onLogout()
       }
     )
 
-    return disposeInitReaction()
+    return () => disposeLoginReaction()
   }, [])
 
   useEffect(() => {

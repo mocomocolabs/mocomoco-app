@@ -71,7 +71,7 @@ class WebSocketService {
     )
   }
 
-  disConnect() {
+  disconnect() {
     this.stompClient?.disconnect()
   }
 }

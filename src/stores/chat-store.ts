@@ -10,7 +10,7 @@ import {
   IChatForm,
   IChatRoom,
   IStoreChatRoom,
-  ISubscribeChat,
+  ISubscribeChat
 } from '../models/chat.d'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
@@ -21,7 +21,7 @@ import {
   IInsertChatMessage,
   InsertChatMessageTask,
   ISetReadChatId,
-  SetReadChatIdTask,
+  SetReadChatIdTask
 } from './chat-store.d'
 import { TaskBy, TaskBy2 } from './task'
 
@@ -78,6 +78,10 @@ export class ChatStore {
         },
       }
     )
+  }
+
+  disconnect = async () => {
+    webSocket.disconnect()
   }
 
   @task
