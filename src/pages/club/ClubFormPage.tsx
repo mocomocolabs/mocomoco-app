@@ -10,7 +10,11 @@ import { Textarea } from '../../components/atoms/TextareaComponent'
 import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
 import { Hashtag } from '../../components/molecules/HashtagComponent'
-import { IImageUploaderRef, ImageUploader } from '../../components/molecules/ImageUploaderComponent'
+import {
+  assignPreview,
+  IImageUploaderRef,
+  ImageUploader,
+} from '../../components/molecules/ImageUploaderComponent'
 import { Footer } from '../../components/organisms/FooterComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
@@ -79,7 +83,7 @@ export const ClubFormPage: React.FC = () => {
           <form onSubmit={onSubmit}>
             <ImageUploader
               className='mt-5'
-              images={$club.form.images}
+              images={$club.form.images?.map((v, i) => assignPreview(v, i))}
               setImages={(param) => $club.setFormImage(param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>

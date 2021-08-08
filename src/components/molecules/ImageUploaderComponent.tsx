@@ -20,14 +20,14 @@ export interface IImageUploader {
   className?: string
 }
 
+export const assignPreview = (v: File, i: number) =>
+  Object.assign(v, {
+    id: i,
+    preview: URL.createObjectURL(v),
+  })
+
 export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refUploader, className }) => {
   const { $ui } = useStore()
-
-  const assignPreview = (v: File, i: number) =>
-    Object.assign(v, {
-      id: i,
-      preview: URL.createObjectURL(v),
-    })
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',

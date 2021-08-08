@@ -13,7 +13,11 @@ import { Textarea } from '../components/atoms/TextareaComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { DatetimePicker } from '../components/molecules/DatetimePickerComponent'
-import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
+import {
+  assignPreview,
+  IImageUploaderRef,
+  ImageUploader,
+} from '../components/molecules/ImageUploaderComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
@@ -91,7 +95,7 @@ export const FeedFormPage: FC<IFeedForm> = () => {
           <div className='px-container'>
             <ImageUploader
               className='mt-5'
-              images={$feed.form.images}
+              images={$feed.form.images?.map((v, i) => assignPreview(v, i))}
               setImages={(param) => $feed.setFormImage(param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
