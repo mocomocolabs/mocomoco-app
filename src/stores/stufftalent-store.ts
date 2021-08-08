@@ -203,7 +203,7 @@ export class StuffTalentStore {
     }
 
     form.images?.forEach((v) => {
-      formData.append('files', v)
+      formData.append('files', v, v.name)
     })
 
     return formData

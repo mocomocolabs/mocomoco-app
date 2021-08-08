@@ -187,13 +187,13 @@ export class FeedStore {
     )
 
     form.images?.forEach((v) => {
-      formData.append('files', v)
+      formData.append('files', v, v.name)
     })
 
     if (isUpdate) {
       await api.put('/v1/feeds', formData)
     } else {
-      await api.post(`/v1/feeds`, formData)
+      await api.post('/v1/feeds', formData)
     }
   }) as SaveFeedTask
 

@@ -147,7 +147,7 @@ export class ClubStore {
     }
 
     form.images?.forEach((v) => {
-      formData.append('files', v)
+      formData.append('files', v, v.name)
     })
 
     await api.post(`/v1/clubs`, formData)
