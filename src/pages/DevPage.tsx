@@ -1,5 +1,6 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react'
+import { IonContent, IonPage, IonTitle } from '@ionic/react'
 import { useEffect } from 'react'
+import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 
 export const DevPage: React.FC = () => {
@@ -11,11 +12,9 @@ export const DevPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Dev</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <Header>
+        <IonTitle>Dev</IonTitle>
+      </Header>
 
       <IonContent></IonContent>
     </IonPage>

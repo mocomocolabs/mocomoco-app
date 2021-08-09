@@ -93,7 +93,7 @@ export const StuffTalentPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <div className='flex-between-center' hidden={searchMode}>
+          <div className='flex-between-center min-height-56' hidden={searchMode}>
             <div slot='start'>
               <CommunitySelector></CommunitySelector>
             </div>

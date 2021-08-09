@@ -8,7 +8,9 @@ export interface IHeader {
 export const Header: FC<IHeader> = ({ children }) => {
   return (
     <IonHeader>
-      <IonToolbar>{children}</IonToolbar>
+      <IonToolbar>
+        <div className='flex-between-center min-height-56 w-full'>{children}</div>
+      </IonToolbar>
     </IonHeader>
   )
 }

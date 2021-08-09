@@ -10,7 +10,7 @@ export interface IHomeHeader {
 
 export const HomeHeader: FC<IHomeHeader> = ({ name, count }) => {
   return (
-    <div className='flex-between-center'>
+    <>
       <div className='flex items-center'>
         <Icon name='home' size={28}></Icon>
         <TextXl className='ml-2 text-bold'>{name}</TextXl>
@@ -20,6 +20,6 @@ export const HomeHeader: FC<IHomeHeader> = ({ name, count }) => {
         <Icon name='group-solid' className='icon-primary' size={20}></Icon>
         <TextBase className='primary ml-1'>{count}명</TextBase>
       </div>
-    </div>
+    </>
   )
 }

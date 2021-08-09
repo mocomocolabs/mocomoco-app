@@ -2,7 +2,6 @@ import {
   IonBackButton,
   IonButtons,
   IonContent,
-  IonHeader,
   IonItem,
   IonItemGroup,
   IonLabel,
@@ -12,10 +11,10 @@ import {
   IonSelectOption,
   IonTitle,
   IonToggle,
-  IonToolbar,
 } from '@ionic/react'
 import { useState } from 'react'
 import { XDivider } from '../components/atoms/XDividerComponent'
+import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
 
@@ -27,14 +26,12 @@ export const SettingsPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonButtons slot='start'>
-            <IonBackButton text='' color='dark' defaultHref='/tabs/my-page' />
-          </IonButtons>
-          <IonTitle slot='start'>설정</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <Header>
+        <IonButtons slot='start'>
+          <IonBackButton text='' color='dark' defaultHref='/tabs/my-page' />
+        </IonButtons>
+        <IonTitle slot='start'>설정</IonTitle>
+      </Header>
       <IonContent>
         <div className='px-container my-4'>
           <IonList lines='none'>
