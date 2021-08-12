@@ -3,8 +3,8 @@
 	"appName": "hama",
 	"webDir": "build",
 	"bundledWebRuntime": false,
-	"loggingBehavior": "production",
+	"loggingBehavior": "debug",
 	"android": {
-		"allowMixedContent": true
+		"allowMixedContent": false
 	}
 }

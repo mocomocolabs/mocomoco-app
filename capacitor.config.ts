@@ -11,10 +11,13 @@ const config: CapacitorConfig = {
   appName: 'hama',
   webDir: 'build',
   bundledWebRuntime: false,
-  loggingBehavior: 'production', // TODO change to 'debug' when release
+  loggingBehavior: 'debug', // TODO change to 'debug' when release
   android: {
-    allowMixedContent: true, // TODO change to false when release
+    allowMixedContent: false, // TODO change to false when release
   },
+  // server: {
+  //   androidScheme: 'https',
+  // },
 
   // TODO apply later
   // plugins: {
