@@ -1211,10 +1211,10 @@
   resolved "https://registry.yarnpkg.com/@capacitor/app/-/app-1.0.2.tgz#920dbf7055aa8ba060932d6e8dcac6f8bbc821af"
   integrity sha512-P9PInUnUdkiqYk+7wzd51Oe6AzJ4KyKDRFVebDMGo7UgHFuK2ogDTDLabrv9XQUV1Zk2tXvpEoGmw46dd+2Img==
 
-"@capacitor/cli@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/@capacitor/cli/-/cli-3.1.1.tgz#2805e6952364d465567a97ff20509ca6e1a488aa"
-  integrity sha512-I8YF59WqxToujLH+Kn0k0rmGbmy/aTJGuSFXr7zKwCzBQPI4d6RST9aprvQI+7CTFIdcXIhMOz5XnEV1V/1FTA==
+"@capacitor/cli@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/cli/-/cli-3.1.2.tgz#e25b2ab2426412d6db7f1c5e2ef56649a194aff3"
+  integrity sha512-o3NYIXso8A8Gyo77cIWPKMnR0vc7LzzE8rbQnLRFSYrnTLy2G0v7yQrB1J7xm/qgjMIplaJOJ+WzLHbtu0NEFw==
   dependencies:
     "@ionic/cli-framework-output" "^2.2.1"
     "@ionic/utils-fs" "^3.1.5"
@@ -1233,21 +1233,21 @@
     tslib "^2.1.0"
     xml2js "^0.4.23"
 
-"@capacitor/core@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/@capacitor/core/-/core-3.1.1.tgz#61e1ad8b9f532ee5bc5e5c680b0fd71a00492765"
-  integrity sha512-VTOdy2GZPLxMGDmwXWfhQWoP7G+0XE8gx2er2uo8e8Y6K8YjT8bxqlOL4VJ8gC5X8Wq281SR4OsajzhdgDazgQ==
+"@capacitor/core@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/core/-/core-3.1.2.tgz#0e4691ca098e1ff5bd96105b9523122768e8657d"
+  integrity sha512-cMqDY4JTNtyonqVPYxHqbmN3M3jlEBnQxecptlR+6yk/ZuhUwOJTHT1ActXRLyrQ8XIc74+9Yd37fwjWckSwFg==
   dependencies:
     tslib "^2.1.0"
 
-"@capacitor/ios@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/@capacitor/ios/-/ios-3.1.1.tgz#aec035e78a0586c60053a19c06397b794c4fbc7b"
-  integrity sha512-T8HWF2QNhMPb8EjO3Fn6Gmxg7llDPdb8K4mDe977Ufxq0WFuwlQw+VbSDzVXCHhkd2askyDCbpVUh5npONVwTQ==
+"@capacitor/ios@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@capacitor/ios/-/ios-3.1.2.tgz#a4323f7903d7b944b80a20c0ba7b458db5c8ea3a"
+  integrity sha512-y6wnTLK0I/ckTuofzeRkXK0OPw6vAKOj0I6QXwg2DxDdtiHmed6qP/G8cvwNBiFhZE9xfXAulxRYP8D76TPtNQ==
 
 "@capacitor/storage@^1.0.3":
   version "1.0.3"
-  resolved "https://registry.npmjs.org/@capacitor/storage/-/storage-1.0.3.tgz#7c69a32001358de9ce95f844a96438e6cd9656a9"
+  resolved "https://registry.yarnpkg.com/@capacitor/storage/-/storage-1.0.3.tgz#7c69a32001358de9ce95f844a96438e6cd9656a9"
   integrity sha512-tY1Rb5qVbiCPm1G983jkgvqU28oVe2/BByVC29AJ8efZ4V46NqfXcmj12Ve1KiAo/XIwtp8li/GXcdCT1QnyQg==
 
 "@cnakazawa/watch@^1.0.3":
