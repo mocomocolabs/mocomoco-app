@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { ChatRoomListItem } from '../molecules/ChatRoomListItemComponent'
 import { NoContents } from '../molecules/NoContentsComponent'
@@ -7,11 +6,7 @@ import { TaskObserver } from '../molecules/TaskObserverComponent'
 interface IChatRoomList {}
 
 export const ChatRoomList: React.FC<IChatRoomList> = () => {
-  const { $auth, $chat } = useStore()
-
-  useEffect(() => {
-    $chat.getRooms($auth.user.chatroomIds)
-  }, [])
+  const { $chat } = useStore()
 
   return (
     <TaskObserver taskTypes={$chat.getRooms} spinnerPosition='center'>
