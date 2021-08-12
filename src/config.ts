@@ -16,7 +16,8 @@ interface ConfigByEnv {
   test: Config
 }
 
-const serverUrl = 'https://hama.gq'
+// const serverUrl = 'https://hama.gq'
+const serverUrl = 'http://3.35.164.207'
 // const serverUrl = 'http://localhost:8080'
 
 // TODO: 실서버 배포시, key변경해야함
