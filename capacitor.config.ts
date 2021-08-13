@@ -13,7 +13,7 @@ const config: CapacitorConfig = {
   bundledWebRuntime: false,
   loggingBehavior: 'debug', // TODO change to 'debug' when release
   android: {
-    allowMixedContent: false, // TODO change to false when release
+    allowMixedContent: true, // TODO change to false when release
   },
   // server: {
   //   androidScheme: 'https',
