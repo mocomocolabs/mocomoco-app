@@ -3,8 +3,8 @@ import Compressor from 'compressorjs'
 export const compress = (
   file: File,
   {
-    width = Infinity,
-    height = Infinity,
+    width = undefined,
+    height = undefined,
     quality = 0.6,
   }: { width?: number; height?: number; quality?: number } = {}
 ): Promise<File> => {
