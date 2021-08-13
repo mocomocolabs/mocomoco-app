@@ -1,18 +1,43 @@
-import { Stomp } from '@stomp/stompjs'
-import { CompatClient } from '@stomp/stompjs/esm6/compatibility/compat-client'
+import { Client, IFrame, IMessage, StompConfig } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
 import { config } from '../config'
 import { storage } from './storage-service'
 
 class WebSocketService {
-  private wsUrl = config.SOCKET_URL
-  private stompClient: CompatClient | null = null
-  private savedRoomIds: number[] = []
-
-  init() {
-    this.stompClient = Stomp.over(() => new SockJS(this.wsUrl))
-    this.stompClient.debug = (str) => console.log(str)
+  readonly stompConfig: StompConfig = {
+    webSocketFactory: () => new SockJS(config.SOCKET_URL),
+    reconnectDelay: 500,
+    // maxWebSocketChunkSize: 1024 * 1024, // TODO output buffer size
+    // logRawCommunication: true, // TODO only for debug
+    debug: (str: string) => console.log(str),
+    onStompError: (frame: IFrame) => {
+      // Will be invoked in case of error encountered at Broker
+      // Bad login/passcode typically will cause an error
+      // Complaint brokers will set `message` header with a brief message. Body may contain details.
+      // Compliant brokers will terminate the connection after any error
+      console.log('💣 Broker reported error: ', frame.headers['message'])
+      console.log('💣 Additional details: ', frame.body)
+    },
+    onUnhandledFrame: (frame: IFrame) => {
+      console.log('💣 onUnhandledFrame: ', frame.headers['message'], frame)
+    },
+    onUnhandledMessage: (message: IMessage) => {
+      console.log('💣 onUnhandledMessage: ', message)
+    },
+    onUnhandledReceipt: (receipt: IFrame) => {
+      console.log('💣 onUnhandledReceipt: ', receipt)
+    },
+    onWebSocketError: (event: Event) => {
+      console.log('💣 onWebSocketError: ', event)
+    },
+    onWebSocketClose: (closeEvent: CloseEvent) => {
+      console.log('💔 onWebSocketClose: ', closeEvent.reason, closeEvent)
+    },
   }
+
+  private stompClient: Client = new Client(this.stompConfig)
+
+  private savedRoomIds: number[] = []
 
   /**
    * 채팅방을 구독합니다
@@ -31,10 +56,16 @@ class WebSocketService {
       cb: (data: any) => void
     }
   ) {
-    this.stompClient?.connect({ Authorization: storage.accessTokenForSync }, () => {
+    this.stompClient.connectHeaders = { Authorization: storage.accessTokenForSync }
+
+    this.stompClient.onConnect = (frame: IFrame) => {
+      console.log('🤝 onConnect', frame)
+
       subscribeRooms.roomIds.forEach((v) => this.subscribeRoom(v, subscribeRooms.cb))
       this.subscribeFirstChat(subscribeNewChat.userId, subscribeNewChat.cb)
-    })
+    }
+
+    this.stompClient.activate()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,7 +75,7 @@ class WebSocketService {
 
       this.savedRoomIds.push(roomId)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.stompClient?.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
+      this.stompClient.subscribe(`/sub/chat/chatrooms/${roomId}`, (data: any) => cb(data))
     }
   }
 
@@ -52,27 +83,27 @@ class WebSocketService {
   subscribeFirstChat(userId: number, cb: (data: any) => void) {
     console.log('🗿 subscribe userId ', userId)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.stompClient?.subscribe(`/sub/chat/users/${userId}`, (data: any) => cb(data))
+    this.stompClient.subscribe(`/sub/chat/users/${userId}`, (data: any) => cb(data))
   }
 
   sendMessageForRoom(roomId: number, message: string) {
-    this.stompClient?.send(
-      `/pub/chat/chatrooms/${roomId}`,
-      { Authorization: storage.accessTokenForSync },
-      message
-    )
+    this.stompClient.publish({
+      destination: `/pub/chat/chatrooms/${roomId}`,
+      headers: { Authorization: storage.accessTokenForSync }, //TODO canbe removed?
+      body: message,
+    })
   }
 
   sendMessageForNewRoom(userId: number, message: string) {
-    this.stompClient?.send(
-      `/pub/chat/users/${userId}`,
-      { Authorization: storage.accessTokenForSync },
-      message
-    )
+    this.stompClient.publish({
+      destination: `/pub/chat/users/${userId}`,
+      headers: { Authorization: storage.accessTokenForSync }, //TODO canbe removed?
+      body: message,
+    })
   }
 
   disconnect() {
-    this.stompClient?.disconnect()
+    this.stompClient.deactivate()
   }
 }
 

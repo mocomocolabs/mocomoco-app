@@ -10,7 +10,7 @@ import {
   IChatForm,
   IChatRoom,
   IStoreChatRoom,
-  ISubscribeChat
+  ISubscribeChat,
 } from '../models/chat.d'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
@@ -21,7 +21,7 @@ import {
   IInsertChatMessage,
   InsertChatMessageTask,
   ISetReadChatId,
-  SetReadChatIdTask
+  SetReadChatIdTask,
 } from './chat-store.d'
 import { TaskBy, TaskBy2 } from './task'
 
@@ -53,7 +53,6 @@ export class ChatStore {
     await this.getRooms(this.$auth.user.chatroomIds)
 
     // 웹소켓 연결
-    webSocket.init()
     webSocket.connectRooms(
       // 기존 채팅방
       {
