@@ -15,12 +15,16 @@ export const FeedPage: React.FC = () => {
     $ui.setIsBottomTab(true)
   }, [])
 
-  reaction(
-    () => $community.selectedId,
-    () => {
-      $feed.getFeeds()
-    }
-  )
+  useEffect(() => {
+    const disposeReaction = reaction(
+      () => $community.selectedId,
+      () => {
+        $feed.getFeeds()
+      }
+    )
+
+    return () => disposeReaction()
+  }, [])
 
   return (
     <IonPage>
