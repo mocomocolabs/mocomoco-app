@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { IResponse } from '../../types/axios'
 import { config } from '../config'
+import { rootStore } from '../index'
 import { responseError, responseSuccess } from '../utils/http-helper-util'
 
 class ApiService {
@@ -55,8 +56,19 @@ class ApiService {
       (error) => {
         console.log(error)
 
-        // Do something with response error)
-        return Promise.reject(responseError(error))
+        const reason = responseError(error)
+        console.log('responseError', reason)
+
+        if (reason.status === 500 && reason.message === 'unauthorized.msg') {
+          console.log('👅 force to sign out')
+          rootStore.$ui.showToastError({
+            message: '다른 기기에 로그인되어 있습니다.<br>계속 이용하시려면 다시 로그인해주세요.',
+          })
+          rootStore.$auth.signOutFollowupProcess()
+        }
+
+        // Do something with response error
+        return Promise.reject(reason)
       }
     )
   }

@@ -16,7 +16,6 @@ import { useState } from 'react'
 import { XDivider } from '../components/atoms/XDividerComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
-import { route } from '../services/route-service'
 
 export const SettingsPage: React.FC = () => {
   const [alarmSound, setAlarmSound] = useState<string>('구름씨 랄라~')
@@ -101,10 +100,7 @@ export const SettingsPage: React.FC = () => {
                 onClick={() =>
                   $ui.showAlert({
                     message: '로그아웃하시겠어요?',
-                    onSuccess: async () => {
-                      await $auth.signOut()
-                      route.intro()
-                    },
+                    onSuccess: () => $auth.signOut(),
                   })
                 }
               >

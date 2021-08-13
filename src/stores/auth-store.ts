@@ -86,6 +86,7 @@ export class AuthStore {
       .then(async (authUser: IAuthUserDto) => {
         this.setAuth(authUser)
         this.setUser(authUser)
+        this.setIsLogin(true)
       })
   }) as SignInTask
 
@@ -100,6 +101,7 @@ export class AuthStore {
       try {
         await api.get<IAuthUserDto>(`/auth/account`).then(async (authUser) => {
           this.setUser(authUser)
+          this.setIsLogin(true)
         })
       } catch (e) {
         if (e.status === 401) {
@@ -123,11 +125,16 @@ export class AuthStore {
   @task.resolved
   signOut = (async () => {
     await api.post<number>(`/auth/sign-out`)
-    storage.clear()
+    await this.signOutFollowupProcess()
+  }) as Task
+
+  @action
+  signOutFollowupProcess = async () => {
+    await storage.clear()
     api.setAuthoriationBy('')
     this.setUser({} as IAuthUserDto)
     this.setIsLogin(false)
-  }) as Task
+  }
 
   @action
   setAuth(user: IAuthUserDto) {
@@ -145,6 +152,5 @@ export class AuthStore {
       ...user,
       communityId: communities?.[0]?.id,
     }
-    this.setIsLogin(true)
   }
 }

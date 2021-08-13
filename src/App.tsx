@@ -52,9 +52,7 @@ export const App: React.FC = () => {
     $community.setSelectedId(null)
     $chat.disconnect()
 
-    if (!(await storage.getHaveSeenIntro())) {
-      route.intro()
-    }
+    !(await storage.getHaveSeenIntro()) ? route.intro() : route.signUp()
   }
 
   useEffect(() => {
