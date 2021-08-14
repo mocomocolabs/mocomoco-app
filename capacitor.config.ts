@@ -20,18 +20,24 @@ const config: CapacitorConfig = {
   // },
 
   // TODO apply later
-  // plugins: {
-  //   SplashScreen: {
-  //     launchAutoHide: false,
-  //   },
-  //   LocalNotifications: {
-  //     smallIcon: 'ic_stat_icon_config_sample',
-  //     iconColor: '#CE0B7C',
-  //   },
-  //   PushNotifications: {
-  //     presentationOptions: ["alert", "sound"]
-  //   }
-  // },
+  plugins: {
+    SplashScreen: {
+      launchShowDuration: 900,
+      launchAutoHide: true,
+      backgroundColor: '#00000000',
+      showSpinner: false,
+      splashFullScreen: false,
+      splashImmersive: false,
+    },
+    //   LocalNotifications: {
+    //     smallIcon: 'ic_stat_icon_config_sample',
+    //     iconColor: '#CE0B7C',
+    //   },
+    //   PushNotifications: {
+    //     presentationOptions: ["alert", "sound"]
+    //   }
+  },
+  cordova: {},
 }
 
 export = config

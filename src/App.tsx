@@ -1,4 +1,5 @@
 import { App as AppPlugin } from '@capacitor/app'
+import { SplashScreen } from '@capacitor/splash-screen'
 import { IonApp } from '@ionic/react'
 import { reaction } from 'mobx'
 import { useEffect, useState } from 'react'
@@ -19,6 +20,8 @@ export const App: React.FC = () => {
 
   const init = async () => {
     console.log('app init called')
+
+    SplashScreen.hide({ fadeOutDuration: 300 })
 
     // 로그인
     await Promise.all([

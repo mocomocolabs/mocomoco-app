@@ -6,5 +6,16 @@
 	"loggingBehavior": "debug",
 	"android": {
 		"allowMixedContent": true
-	}
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 900,
+			"launchAutoHide": true,
+			"backgroundColor": "#00000000",
+			"showSpinner": false,
+			"splashFullScreen": false,
+			"splashImmersive": false
+		}
+	},
+	"cordova": {}
 }
