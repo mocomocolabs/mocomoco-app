@@ -24,7 +24,7 @@ export const CommunitySelector: FC<ICommunitySelector> = ({ disabled = false }) 
       }
     >
       <TextXl className='mr-2 text-bold my-2'>{$community.community?.name}</TextXl>
-      <Icon name='arrow' size={20} className='icon-rotate-270' color={disabled ? 'gray' : undefined}></Icon>
+      {!disabled && <Icon name='arrow' size={20} className='icon-rotate-270' />}
     </div>
   ))
 }
