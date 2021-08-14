@@ -202,7 +202,9 @@ export const RouterTab: FC = () => {
               name={getTabIcon(tab)}
               className={currentTab === tab.path ? 'active-style' : 'no-active-style'}
             />
-            {tab === TAB.CHAT && <div hidden={$chat.unReadCountAll <= 0} className='badge' />}
+            {tab === TAB.CHAT && (
+              <Observer>{() => <div hidden={$chat.unReadCountAll <= 0} className='badge' />}</Observer>
+            )}
           </NavLink>
         )
       ),
