@@ -28,7 +28,7 @@ export class RootStore {
 
   constructor() {
     this.$user = new UserStore()
-    this.$auth = new AuthStore(this)
+    this.$auth = new AuthStore()
     this.$community = new CommunityStore(this)
     this.$feed = new FeedStore(this)
     this.$comment = new CommentStore()

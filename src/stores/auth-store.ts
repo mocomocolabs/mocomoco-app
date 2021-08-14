@@ -1,7 +1,6 @@
 import Inko from 'inko'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
-import { RootStore } from '.'
 import { IAuthUser } from '../models/auth'
 import { ISignUpForm } from '../models/sign-up'
 import { api } from '../services/api-service'
@@ -10,7 +9,6 @@ import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy } from './task'
 import { Task } from './task.d'
-import { UserStore } from './user-store'
 
 const inko = new Inko()
 
@@ -28,12 +26,6 @@ export class AuthStore {
   @observable.struct signUpForm: Partial<ISignUpForm> = initState.signUpForm
   @observable isLogin = false
   @observable.struct user: IAuthUser = initState.user
-
-  $user: UserStore
-
-  constructor(rootStore: RootStore) {
-    this.$user = rootStore.$user
-  }
 
   @action
   setIsLogin(isLogin: boolean) {
