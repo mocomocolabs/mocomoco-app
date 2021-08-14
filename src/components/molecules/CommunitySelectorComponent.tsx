@@ -6,10 +6,11 @@ import { TextXl } from '../atoms/TextXlComponent'
 import { CommunitySelectorModalContents } from '../modals/CommunitySelectorModalContentsComponent'
 
 export interface ICommunitySelector {
+  name?: string
   disabled?: boolean
 }
 
-export const CommunitySelector: FC<ICommunitySelector> = ({ disabled = false }) => {
+export const CommunitySelector: FC<ICommunitySelector> = ({ name, disabled = false }) => {
   const { $community, $ui } = useStore()
 
   return useObserver(() => (
@@ -23,7 +24,7 @@ export const CommunitySelector: FC<ICommunitySelector> = ({ disabled = false }) 
         })
       }
     >
-      <TextXl className='mr-2 text-bold my-2'>{$community.community?.name}</TextXl>
+      <TextXl className='mr-2 text-bold my-2'>{name || $community.community?.name}</TextXl>
       {!disabled && <Icon name='arrow' size={20} className='icon-rotate-270' />}
     </div>
   ))

@@ -11,7 +11,7 @@ import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
 
 export const ClubPage: React.FC = () => {
-  const { $ui, $club } = useStore()
+  const { $ui, $club, $community } = useStore()
 
   useEffect(() => {
     $ui.setIsBottomTab(true)
@@ -26,7 +26,7 @@ export const ClubPage: React.FC = () => {
     <IonPage>
       <Header>
         <div slot='start'>
-          <CommunitySelector disabled />
+          <CommunitySelector name={$community.myCommunity?.name} disabled />
         </div>
         <div slot='end'>
           <div className='flex'>
