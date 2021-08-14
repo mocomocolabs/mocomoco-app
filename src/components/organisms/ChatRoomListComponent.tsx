@@ -1,4 +1,5 @@
 import { useStore } from '../../hooks/use-store'
+import { ChatRoomType } from '../../models/chat.d'
 import { ChatRoomListItem } from '../molecules/ChatRoomListItemComponent'
 import { NoContents } from '../molecules/NoContentsComponent'
 import { TaskObserver } from '../molecules/TaskObserverComponent'
@@ -10,17 +11,19 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
 
   return (
     <TaskObserver taskTypes={$chat.getRooms} spinnerPosition='center'>
-      {() =>
-        $chat.rooms?.length > 0 ? (
+      {() => {
+        const rooms = $chat.rooms?.filter((r) => [ChatRoomType.ALL, r.type].includes($chat.selectedRoomType))
+
+        return rooms.length > 0 ? (
           <ul className='py-1'>
-            {$chat.rooms.map((v, i) => (
+            {rooms.map((v, i) => (
               <ChatRoomListItem key={i} room={v} />
             ))}
           </ul>
         ) : (
           <NoContents isFull={true} />
         )
-      }
+      }}
     </TaskObserver>
   )
 }

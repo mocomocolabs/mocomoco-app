@@ -30,8 +30,11 @@ export interface IStoreChatRoom {
 }
 
 export enum ChatRoomType {
+  ALL = '',
   NORMAL = 'NORMAL',
   CLUB = 'CLUB',
+  STUFF = 'STUFF',
+  TALENT = 'TALENT',
 }
 
 export enum ChatType {

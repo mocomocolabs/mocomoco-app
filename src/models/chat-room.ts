@@ -10,7 +10,7 @@ export class ChatRoom {
   static of(dto: IChatRoomDto, userId: number) {
     return Object.assign(new ChatRoom(), {
       ...dto,
-      name: dto.type === ChatRoomType.CLUB ? dto.name : dto.users.find((v) => v.id !== userId)?.nickname,
+      name: dto.type === ChatRoomType.NORMAL ? dto.users.find((v) => v.id !== userId)?.nickname : dto.name,
     })
   }
 }

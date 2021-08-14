@@ -1,7 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
-import { Icon } from '../components/atoms/IconComponent'
-import { TextXl } from '../components/atoms/TextXlComponent'
+import { ChatroomTypeSelector } from '../components/molecules/ChatroomTypeSelectorComponent'
 import { ChatRoomList } from '../components/organisms/ChatRoomListComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
@@ -17,8 +16,7 @@ export const ChatPage: React.FC = () => {
     <IonPage>
       <Header>
         <div className='flex items-center'>
-          <TextXl className='text-bold'>전체 채팅</TextXl>
-          <Icon name='arrow' className='ml-2 icon-rotate-270'></Icon>
+          <ChatroomTypeSelector />
         </div>
       </Header>
 

@@ -34,7 +34,9 @@ const initState = {
 
 export class ChatStore {
   @observable rooms: ChatRoom[] = initState.rooms
+  @observable selectedRoomType: ChatRoomType = ChatRoomType.ALL
   @observable currentRoomId: number | null = initState.currentRoomId
+
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
   @observable form: { [roomId: number]: IChatForm } = initState.form
   /**
@@ -91,7 +93,7 @@ export class ChatStore {
     }
 
     await api
-      .get<{ chatrooms: IChatRoomDto[] }>('/v1/chatrooms?limit=999', {
+      .get<{ chatrooms: IChatRoomDto[] }>(`/v1/chatrooms?limit=999&type=${this.selectedRoomType}`, {
         params: { ids: roomIds.toString() },
       })
       .then(
@@ -125,6 +127,11 @@ export class ChatStore {
         })
       )
   }) as TaskBy<number[]>
+
+  @action
+  setRoomType = (type: ChatRoomType) => {
+    this.selectedRoomType = type
+  }
 
   /**
    * 해당 유저와 1:1 채팅을 생성합니다.
