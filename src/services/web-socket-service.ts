@@ -60,9 +60,16 @@ class WebSocketService {
 
     this.stompClient.onConnect = (frame: IFrame) => {
       console.log('🤝 onConnect', frame)
+      console.log('🤝 onConnect - subscribeRooms: ', subscribeRooms.roomIds.toString())
+      console.log('🤝 onConnect - savedRoomIds: ', this.savedRoomIds.toString())
 
       subscribeRooms.roomIds.forEach((v) => this.subscribeRoom(v, subscribeRooms.cb))
       this.subscribeFirstChat(subscribeNewChat.userId, subscribeNewChat.cb)
+    }
+
+    this.stompClient.onDisconnect = (frame: IFrame) => {
+      console.log('💔 onDisconnect', frame)
+      this.savedRoomIds = []
     }
 
     this.stompClient.activate()
