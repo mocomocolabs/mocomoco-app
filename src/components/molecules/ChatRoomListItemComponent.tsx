@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { ChatRoomType, IChatRoom } from '../../models/chat.d'
 import { IUser } from '../../models/user'
@@ -41,7 +41,7 @@ const roomInfoGetter: IRoomInfoGetter[] = [
     type: ChatRoomType.CLUB,
     info: (room: IChatRoom) => ({
       imageUrl: room.club.atchFiles[0].url,
-      roomName: room.club.name,
+      roomName: room.name,
       communityName: room.club.community.name,
       route: () => route.clubDetail(room.club.id),
     }),
@@ -50,7 +50,7 @@ const roomInfoGetter: IRoomInfoGetter[] = [
     type: ChatRoomType.STUFF,
     info: (room: IChatRoom) => ({
       imageUrl: room.stuff?.atchFiles[0].url,
-      roomName: room.stuff?.title,
+      roomName: room.name,
       communityName: room.stuff?.community.name,
       route: () => route.stuffDetail(room.stuff?.id),
     }),
@@ -59,7 +59,7 @@ const roomInfoGetter: IRoomInfoGetter[] = [
     type: ChatRoomType.TALENT,
     info: (room: IChatRoom) => ({
       imageUrl: room.talent?.atchFiles[0].url,
-      roomName: room.talent?.title,
+      roomName: room.name,
       communityName: room.talent?.community.name,
       route: () => route.talentDetail(room.talent?.id),
     }),
@@ -73,7 +73,10 @@ interface IChatRoomListItem {
 export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
   const { $auth, $chat } = useStore()
 
-  const roomInfo = roomInfoGetter.find((i) => i.type === room.type)?.info(room, $auth.user.id)
+  const roomInfo = useMemo(
+    () => roomInfoGetter.find((i) => i.type === room.type)?.info(room, $auth.user.id),
+    [room]
+  )
 
   const lastChat = _.maxBy(room.chats, (v) => v.createdAt)
   const readCount = $chat.storeRooms.find((v) => v.id === room.id)?.readCount
