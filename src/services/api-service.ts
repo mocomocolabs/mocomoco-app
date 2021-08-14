@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { IResponse } from '../../types/axios'
 import { config } from '../config'
 import { rootStore } from '../index'
+import { signInWithTokenApiUrl } from '../stores/auth-store'
 import { responseError, responseSuccess } from '../utils/http-helper-util'
 
 class ApiService {
@@ -39,6 +40,12 @@ class ApiService {
     return true
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private signOutRequiredFor = (reason: any) =>
+    (reason.status === 401 && reason.config?.url !== signInWithTokenApiUrl) ||
+    (reason.status === 500 &&
+      ['unauthorized.msg', 'JWT String argument cannot be null or empty.'].includes(reason.message))
+
   private async init() {
     this.http = axios.create({
       baseURL: config.API_URL,
@@ -59,15 +66,14 @@ class ApiService {
         const reason = responseError(error)
         console.log('responseError', reason)
 
-        if (reason.status === 500 && reason.message === 'unauthorized.msg') {
+        if (this.signOutRequiredFor(reason)) {
           console.log('👅 force to sign out')
-          rootStore.$ui.showToastError({
-            message: '다른 기기에 로그인되어 있습니다.<br>계속 이용하시려면 다시 로그인해주세요.',
+          rootStore.$ui.showAlert({
+            message: '서버 연결이 만료되었습니다. 계속 이용하시려면 다시 로그인해주세요.',
+            onSuccess: () => rootStore.$auth.signOutCallback(),
           })
-          rootStore.$auth.signOutFollowupProcess()
         }
 
-        // Do something with response error
         return Promise.reject(reason)
       }
     )

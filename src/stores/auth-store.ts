@@ -5,7 +5,6 @@ import { RootStore } from '.'
 import { IAuthUser } from '../models/auth'
 import { ISignUpForm } from '../models/sign-up'
 import { api } from '../services/api-service'
-import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
@@ -22,6 +21,8 @@ const initState = {
   } as Partial<ISignUpForm>,
   user: {} as IAuthUser,
 }
+
+export const signInWithTokenApiUrl = '/auth/account'
 
 export class AuthStore {
   @observable.struct signUpForm: Partial<ISignUpForm> = initState.signUpForm
@@ -83,12 +84,16 @@ export class AuthStore {
         email,
         password: inko.ko2en(password),
       })
-      .then(async (authUser: IAuthUserDto) => {
-        this.setAuth(authUser)
-        this.setUser(authUser)
-        this.setIsLogin(true)
-      })
+      .then(async (authUser: IAuthUserDto) => await this.signInCallback(authUser))
   }) as SignInTask
+
+  @action
+  signInCallback = async (authUser: IAuthUserDto) => {
+    console.log('signInCallback', authUser)
+    await this.setAuth(authUser)
+    this.setUser(authUser)
+    this.setIsLogin(true)
+  }
 
   @action
   async signInWithToken() {
@@ -99,37 +104,37 @@ export class AuthStore {
       api.setAuthoriationBy(hasToken)
       await storage.setAccessTokenForSync()
       try {
-        await api.get<IAuthUserDto>(`/auth/account`).then(async (authUser) => {
+        await api.get<IAuthUserDto>(signInWithTokenApiUrl).then(async (authUser: IAuthUserDto) => {
           this.setUser(authUser)
           this.setIsLogin(true)
         })
       } catch (e) {
         if (e.status === 401) {
-          // TODO: action 분리
-          const refreshToken = await storage.getRefreshToken()
-          api.setAuthoriationBy(refreshToken)
-          api
-            .post<IAuthUserDto>(`/auth/refresh-token`, {})
-            .then((user) => {
-              this.setAuth(user)
-            })
-            .catch(() => {
-              // TODO: 컴포넌트단에서 라우팅하는 것이 코드파악에 용이함
-              route.signUp()
-            })
+          this.refreshToken()
         }
       }
     }
   }
 
+  @action
+  refreshToken = async () => {
+    console.log('👅 refresh token')
+
+    const refreshToken = await storage.getRefreshToken()
+    api.setAuthoriationBy(refreshToken)
+    api.post<IAuthUserDto>('/auth/refresh-token', {}).then(async (authUser: IAuthUserDto) => {
+      await this.setAuth(authUser)
+    })
+  }
+
   @task.resolved
   signOut = (async () => {
     await api.post<number>(`/auth/sign-out`)
-    await this.signOutFollowupProcess()
+    await this.signOutCallback()
   }) as Task
 
   @action
-  signOutFollowupProcess = async () => {
+  signOutCallback = async () => {
     await storage.clear()
     api.setAuthoriationBy('')
     this.setUser({} as IAuthUserDto)
@@ -137,11 +142,11 @@ export class AuthStore {
   }
 
   @action
-  setAuth(user: IAuthUserDto) {
+  async setAuth(user: IAuthUserDto) {
     const { accessToken, refreshToken } = user
-    storage.setAccessToken(accessToken)
-    storage.setRefreshToken(refreshToken)
-    storage.setAccessTokenForSync()
+    await storage.setAccessToken(accessToken)
+    await storage.setRefreshToken(refreshToken)
+    await storage.setAccessTokenForSync()
     api.setAuthoriationBy(accessToken)
   }
 
