@@ -80,8 +80,6 @@ const publicPaths = [
   '/sign-up',
   '/sign-up/form',
   '/sign-up/community',
-  '/term/use',
-  '/term/privacy',
 ]
 
 // App.tsx > Back button 리스너에서 사용함
