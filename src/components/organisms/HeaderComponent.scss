@@ -1,0 +1,29 @@
+@import '../../theme/variable';
+@import '../../theme/functional.scss';
+
+.header-container {
+  @extend .flex-between-center;
+  @extend .min-height-56;
+  @extend .w-full;
+  @extend .gap-2;
+  @extend .ellipsis;
+}
+
+.header-item-start {
+  display: flex;
+  flex: 1 0 0;
+  justify-content: flex-start;
+}
+
+.header-item-end {
+  display: flex;
+  flex: 1 0 0;
+  justify-content: flex-end;
+}
+
+.header-item-center {
+  display: flex;
+  flex: 1 1 min-content;
+  justify-content: center;
+  overflow: hidden;
+}

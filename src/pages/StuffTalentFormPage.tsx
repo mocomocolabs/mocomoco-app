@@ -130,19 +130,16 @@ export const StuffTalentFormPage: React.FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <div slot='start'>
-          <BackButton type='close'></BackButton>
-        </div>
-        <div className='text-header absolute-center'>{title}</div>
-
-        <div slot='end'>
+      <Header
+        start={<BackButton type='close' />}
+        center={title}
+        end={
           <SpinnerWrapper
             task={store.insertItem}
             Submit={<HeaderSubmitText isSubmittable={submittable} onSubmit={onSubmit} />}
-          ></SpinnerWrapper>
-        </div>
-      </Header>
+          />
+        }
+      />
       <IonContent>
         <div className='px-container py-5'>
           <form id='stufftalent-form' onSubmit={onSubmit}>

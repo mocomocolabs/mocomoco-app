@@ -28,35 +28,34 @@ export const FeedPage: React.FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <div slot='start'>
-          <CommunitySelector></CommunitySelector>
-        </div>
-        {/* TODO: 본인의 커뮤니티에서만 글을 쓸 수 있어야함 */}
-        <div
-          slot='end'
-          onClick={() => {
-            const isWriting =
-              $feed.form.title || $feed.form.content || $feed.form.images?.length || $feed.form.schedule
+      <Header
+        start={<CommunitySelector />}
+        end={
+          /* TODO: 본인의 커뮤니티에서만 글을 쓸 수 있어야함 */
+          <div
+            onClick={() => {
+              const isWriting =
+                $feed.form.title || $feed.form.content || $feed.form.images?.length || $feed.form.schedule
 
-            if (isWriting) {
-              return $ui.showAlert({
-                message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
-                onSuccess() {
-                  route.feedForm()
-                },
-                onFail() {
-                  $feed.resetForm()
-                  route.feedForm()
-                },
-              })
-            }
-            route.feedForm()
-          }}
-        >
-          <Icon name='pencil'></Icon>
-        </div>
-      </Header>
+              if (isWriting) {
+                return $ui.showAlert({
+                  message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
+                  onSuccess() {
+                    route.feedForm()
+                  },
+                  onFail() {
+                    $feed.resetForm()
+                    route.feedForm()
+                  },
+                })
+              }
+              route.feedForm()
+            }}
+          >
+            <Icon name='pencil'></Icon>
+          </div>
+        }
+      />
 
       <IonContent>
         <FeedList fetchTask={$feed.getFeeds} />

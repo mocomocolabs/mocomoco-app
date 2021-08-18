@@ -24,12 +24,10 @@ export const ProfileUpdatePage: React.FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <div slot='start'>
-          <BackButton type='close' />
-        </div>
-        <div className='text-header absolute-center'>프로필 수정</div>
-        <div slot='end'>
+      <Header
+        start={<BackButton type='close' />}
+        center='프로필 수정'
+        end={
           <SpinnerWrapper
             task={$user.updateUser}
             Submit={
@@ -41,8 +39,8 @@ export const ProfileUpdatePage: React.FC = () => {
               />
             }
           />
-        </div>
-      </Header>
+        }
+      />
 
       <IonContent>
         <div className='px-container flex-col items-center'>

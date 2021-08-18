@@ -1,6 +1,5 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { FC, useEffect } from 'react'
-import { TextXl } from '../../components/atoms/TextXlComponent'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
@@ -14,12 +13,7 @@ export const TermPrivacyPage: FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <div slot='start'>
-          <BackButton type='close'></BackButton>
-        </div>
-        <TextXl className='text-center text-bold'>개인정보취급방침</TextXl>
-      </Header>
+      <Header start={<BackButton type='close' />} center='개인정보취급방침' />
 
       <IonContent>
         <div className='px-container'>

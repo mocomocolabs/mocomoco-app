@@ -1081,10 +1081,6 @@
 .text-title {
   @extend %text-xl;
 }
-.text-header {
-  @extend %text-xl;
-  font-weight: bold;
-}
 
 .text-light {
   font-weight: 300;

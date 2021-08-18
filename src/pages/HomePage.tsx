@@ -2,8 +2,10 @@ import { IonContent, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { Task } from 'mobx-task'
 import { useEffect, useMemo } from 'react'
+import { Icon } from '../components/atoms/IconComponent'
+import { TextBase } from '../components/atoms/TextBaseComponent'
+import { TextHeader } from '../components/atoms/TextHeaderComponent'
 import { FeedSlider } from '../components/molecules/FeedSliderComponent'
-import { HomeHeader } from '../components/molecules/HomeHeaderComponent'
 import { HomeTitle } from '../components/molecules/HomeTitleComponent'
 import { NoContents } from '../components/molecules/NoContentsComponent'
 import { StuffTalentItem } from '../components/molecules/StuffTalentItemComponent'
@@ -68,12 +70,20 @@ export const HomePage: React.FC = () => {
 
   return useObserver(() => (
     <IonPage>
-      <Header>
-        <HomeHeader
-          name={$community.myCommunity?.name}
-          count={$community.myCommunity?.userCount}
-        ></HomeHeader>
-      </Header>
+      <Header
+        start={
+          <div className='flex items-center gap-2'>
+            <Icon name='home' size={28} />
+            <TextHeader>{$community.myCommunity?.name}</TextHeader>
+          </div>
+        }
+        end={
+          <div className='flex items-center gap-1'>
+            <Icon name='group-solid' className='icon-primary' size={20}></Icon>
+            <TextBase className='primary'>{$community.myCommunity?.userCount}명</TextBase>
+          </div>
+        }
+      />
 
       <IonContent>
         <div className='px-container'>

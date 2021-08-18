@@ -1,0 +1,9 @@
+@import '../../theme/variable';
+@import '../../theme/functional';
+
+.text-header {
+  @extend %text-xl;
+  @extend .leading-none;
+  @extend .ellipsis;
+  @extend .text-bold;
+}

@@ -44,12 +44,10 @@ export const ChatRoomPage: React.FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <div slot='start'>
-          <BackButton type='arrow' />
-        </div>
-        <Observer>{() => <div className='text-header absolute-center'>{$chat.room?.name}</div>}</Observer>
-      </Header>
+      <Header
+        start={<BackButton type='arrow' />}
+        center={<Observer>{() => <>{$chat.room?.name}</>}</Observer>}
+      />
 
       <IonContent>
         <ChatRoomDetail></ChatRoomDetail>

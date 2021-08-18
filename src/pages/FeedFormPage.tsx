@@ -81,15 +81,11 @@ export const FeedFormPage: FC<IFeedForm> = () => {
   return useObserver(() => {
     return (
       <IonPage>
-        <Header>
-          <div slot='start'>
-            <BackButton type='close'></BackButton>
-          </div>
-          <div className='absolute-center text-header'>이야기창고</div>
-          <div slot='end'>
-            <SpinnerWrapper task={$feed.saveFeed} Submit={SubmitBtn}></SpinnerWrapper>
-          </div>
-        </Header>
+        <Header
+          start={<BackButton type='close' />}
+          center='이야기창고'
+          end={<SpinnerWrapper task={$feed.saveFeed} Submit={SubmitBtn}></SpinnerWrapper>}
+        />
 
         <IonContent>
           <div className='px-container'>

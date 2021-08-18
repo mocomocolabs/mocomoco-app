@@ -1,6 +1,4 @@
 import {
-  IonBackButton,
-  IonButtons,
   IonContent,
   IonItem,
   IonItemGroup,
@@ -9,11 +7,11 @@ import {
   IonPage,
   IonSelect,
   IonSelectOption,
-  IonTitle,
   IonToggle,
 } from '@ionic/react'
 import { useState } from 'react'
 import { XDivider } from '../components/atoms/XDividerComponent'
+import { BackButton } from '../components/molecules/BackButtonComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 
@@ -25,12 +23,7 @@ export const SettingsPage: React.FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <IonButtons slot='start'>
-          <IonBackButton text='' color='dark' defaultHref='/tabs/my-page' />
-        </IonButtons>
-        <IonTitle slot='start'>설정</IonTitle>
-      </Header>
+      <Header start={<BackButton type='close' />} center='설정' />
       <IonContent>
         <div className='px-container my-4'>
           <IonList lines='none'>

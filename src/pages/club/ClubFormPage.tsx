@@ -65,19 +65,16 @@ export const ClubFormPage: React.FC = () => {
 
   return useObserver(() => (
     <IonPage>
-      <Header>
-        <div slot='start'>
-          <BackButton type='close'></BackButton>
-        </div>
-        <div className='text-header absolute-center'>소모임</div>
-
-        <div slot='end'>
+      <Header
+        start={<BackButton type='close' />}
+        center='소모임'
+        end={
           <SpinnerWrapper
             task={$club.insertClub}
             Submit={<HeaderSubmitText isSubmittable={formState.isValid} onSubmit={onSubmit} />}
-          ></SpinnerWrapper>
-        </div>
-      </Header>
+          />
+        }
+      />
       <IonContent>
         <div className='px-container'>
           <form onSubmit={onSubmit}>

@@ -10,12 +10,7 @@ export const Modal: FC = () => {
 
   return useObserver(() => (
     <IonModal isOpen={$ui.modal.isOpen}>
-      <Header>
-        <div slot='start' className='flex-1 flex-none items-center'>
-          <Icon name='close' onClick={() => $ui.hideModal()} />
-        </div>
-        <div className='flex-grow text-header absolute-center'>{$ui.modal.title}</div>
-      </Header>
+      <Header start={<Icon name='close' onClick={() => $ui.hideModal()} />} center={$ui.modal.title} />
       <IonContent>{$ui.modal.children}</IonContent>
     </IonModal>
   ))

@@ -24,20 +24,16 @@ export const ClubPage: React.FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <div slot='start'>
-          <CommunitySelector name={$community.myCommunity?.name} disabled />
-        </div>
-        <div slot='end'>
-          <div className='flex'>
-            {/* TODO: 추후구현 */}
-            {/* <Icon name='search' /> */}
-            <div onClick={() => route.clubForm()}>
-              <Icon name='pencil' className='ml-4' />
-            </div>
+      <Header
+        start={<CommunitySelector name={$community.myCommunity?.name} disabled />}
+        end={
+          /* TODO: 추후구현 */
+          /* <Icon name='search' /> */
+          <div onClick={() => route.clubForm()}>
+            <Icon name='pencil' />
           </div>
-        </div>
-      </Header>
+        }
+      />
       <IonContent>
         <TextLg className='px-container mt-5 mb-4 text-bold'>인기 소모임</TextLg>
         <TaskObserver taskTypes={$club.getPopularClubs} spinnerPosition='centerX'>

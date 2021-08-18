@@ -14,11 +14,7 @@ export const ChatPage: React.FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <div className='flex items-center'>
-          <ChatroomTypeSelector />
-        </div>
-      </Header>
+      <Header start={<ChatroomTypeSelector />} />
 
       <IonContent>
         <div className='px-container'>

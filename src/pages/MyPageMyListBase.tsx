@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Pad } from '../components/atoms/PadComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
@@ -8,6 +8,7 @@ import { Segment } from '../components/molecules/SegmentComponent'
 import { TaskObserver } from '../components/molecules/TaskObserverComponent'
 import { ClubOurTownList } from '../components/organisms/ClubOurTownListComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
+import { Header } from '../components/organisms/HeaderComponent'
 import { StuffTalentList } from '../components/organisms/StuffTalentListComponent'
 import { useStore } from '../hooks/use-store'
 import { Club } from '../models/club'
@@ -97,26 +98,26 @@ export const MyPageMyListBase: React.FC<IMyPageMyListProps> = ({
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <div slot='start'>
-            <BackButton type='arrow' />
-          </div>
-          <div className='text-header absolute-center'>{title}</div>
-        </IonToolbar>
-        <Segment segments={segments} selected={selectedSegment} onChange={onChangeSegment} />
-        <div className='px-container mt-1' hidden={!isShowFilterBar}>
-          <FilterBar
-            filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
-            onReset={onResetFilter}
-            onClick={(name: string) => {
-              setFilterMode(filterMode === name ? FilterMode.none : name)
-            }}
-          />
+      <Header
+        start={<BackButton type='arrow' />}
+        center={title}
+        bottom={
+          <>
+            <Segment segments={segments} selected={selectedSegment} onChange={onChangeSegment} />
+            <div className='px-container mt-1' hidden={!isShowFilterBar}>
+              <FilterBar
+                filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
+                onReset={onResetFilter}
+                onClick={(name: string) => {
+                  setFilterMode(filterMode === name ? FilterMode.none : name)
+                }}
+              />
 
-          <Pad className='h-3' />
-        </div>
-      </IonHeader>
+              <Pad className='h-3' />
+            </div>
+          </>
+        }
+      />
 
       <div className='-mt-3' hidden={filterMode !== FilterMode.type}>
         <FilterPopup

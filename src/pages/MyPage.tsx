@@ -16,9 +16,7 @@ export const MyPage: React.FC = () => {
 
   return (
     <IonPage>
-      <Header>
-        <div className='text-header'>나의 하마</div>
-      </Header>
+      <Header start='나의 하마' />
 
       <IonContent>
         <div className='px-container my-4'>
