@@ -1,10 +1,14 @@
 @import '../../theme/variable';
 
 ion-searchbar.searchbar {
+  padding: 0;
+  margin: 0;
+
   .searchbar-input {
     --background: var(--ion-background-color);
     --border-radius: 2rem;
     --color: var(--ion-text-color);
+    height: 4rem;
     border: 1px solid $primary;
     // --icon-color: var(--ion-color-primary) !important;
     // --clear-button-color: var(--ion-color-secondary) !important;
