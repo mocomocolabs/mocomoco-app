@@ -3,7 +3,7 @@ import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { ChatRoomType } from '../../models/chat.d'
 import { Icon } from '../atoms/IconComponent'
-import { TextXl } from '../atoms/TextXlComponent'
+import { TextHeader } from '../atoms/TextHeaderComponent'
 import { ChatroomTypeSelectorModalContents } from '../modals/ChatroomTypeSelectorModalContentsComponent'
 
 export interface IChatroomTypeSelector {}
@@ -21,7 +21,7 @@ export const ChatroomTypeSelector: FC<IChatroomTypeSelector> = () => {
 
   return useObserver(() => (
     <div
-      className='flex items-center'
+      className='flex items-center gap-2'
       onClick={() =>
         $ui.showModal({
           title: '채팅 선택',
@@ -35,9 +35,7 @@ export const ChatroomTypeSelector: FC<IChatroomTypeSelector> = () => {
         })
       }
     >
-      <TextXl className='mr-2 text-bold my-2'>
-        {chatroomTypeNames.find(([type]) => type === $chat.selectedRoomType)?.[1]}
-      </TextXl>
+      <TextHeader>{chatroomTypeNames.find(([type]) => type === $chat.selectedRoomType)?.[1]}</TextHeader>
       <Icon name='arrow' size={20} className='icon-rotate-270' />
     </div>
   ))

@@ -2,7 +2,7 @@ import { useObserver } from 'mobx-react-lite'
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { Icon } from '../atoms/IconComponent'
-import { TextXl } from '../atoms/TextXlComponent'
+import { TextHeader } from '../atoms/TextHeaderComponent'
 import { CommunitySelectorModalContents } from '../modals/CommunitySelectorModalContentsComponent'
 
 export interface ICommunitySelector {
@@ -15,7 +15,7 @@ export const CommunitySelector: FC<ICommunitySelector> = ({ name, disabled = fal
 
   return useObserver(() => (
     <div
-      className='flex items-center'
+      className='flex items-center gap-2'
       onClick={() =>
         !disabled &&
         $ui.showModal({
@@ -24,7 +24,7 @@ export const CommunitySelector: FC<ICommunitySelector> = ({ name, disabled = fal
         })
       }
     >
-      <TextXl className='mr-2 text-bold my-2'>{name || $community.community?.name}</TextXl>
+      <TextHeader>{name || $community.community?.name}</TextHeader>
       {!disabled && <Icon name='arrow' size={20} className='icon-rotate-270' />}
     </div>
   ))
