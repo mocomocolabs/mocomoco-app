@@ -1,7 +1,7 @@
 import { useObserver } from 'mobx-react-lite'
 import React, { useCallback, useRef } from 'react'
 import { UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
-import { IUser } from '../../models/user'
+import { IUser } from '../../models/user.d'
 import { IStuffTalentCommunityDto } from '../../stores/stufftalent-store.d'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { Pad } from '../atoms/PadComponent'

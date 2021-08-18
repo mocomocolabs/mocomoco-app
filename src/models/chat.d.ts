@@ -1,5 +1,5 @@
 import { IChatRoomDto } from '../stores/chat-store.d'
-import { IUser } from './user'
+import { IUser } from './user.d'
 
 export interface IChat {
   id: number

@@ -1,5 +1,6 @@
 import { ICommunity } from '../models/community.d'
 import { SIGN_UP_STATUS } from '../models/sign-up.d'
+import { IFileDto } from './common/file'
 
 export enum USER_ROLE {
   USER = 'ROLE_USER',
@@ -18,8 +19,8 @@ export type IUserDto = {
   roles: USER_ROLE
   isUse: boolean
   status: SIGN_UP_STATUS
-  profileUrl: string
   communities: ICommunity[]
   createdAt: string
   description: string
+  atchFiles: IFileDto[]
 }

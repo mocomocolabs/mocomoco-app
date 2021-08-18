@@ -1,6 +1,6 @@
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IComment } from './comment'
-import { IUser } from './user'
+import { IUser } from './user.d'
 
 export type FeedType = 'SCHEDULE' | 'NORMAL'
 

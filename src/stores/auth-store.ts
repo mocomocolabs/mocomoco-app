@@ -1,7 +1,8 @@
 import Inko from 'inko'
 import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
-import { IAuthUser } from '../models/auth'
+import { AuthUser } from '../models/auth'
+import { IAuthUser } from '../models/auth.d'
 import { ISignUpForm } from '../models/sign-up'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
@@ -80,8 +81,9 @@ export class AuthStore {
   }) as SignInTask
 
   @action
-  signInCallback = async (authUser: IAuthUserDto) => {
-    console.log('signInCallback', authUser)
+  signInCallback = async (dto: IAuthUserDto) => {
+    console.log('signInCallback', dto)
+    const authUser = AuthUser.of(dto)
     await this.setAuth(authUser)
     this.setUser(authUser)
     this.setIsLogin(true)
@@ -96,8 +98,8 @@ export class AuthStore {
       api.setAuthoriationBy(hasToken)
       await storage.setAccessTokenForSync()
       try {
-        await api.get<IAuthUserDto>(signInWithTokenApiUrl).then(async (authUser: IAuthUserDto) => {
-          this.setUser(authUser)
+        await api.get<IAuthUserDto>(signInWithTokenApiUrl).then(async (dto: IAuthUserDto) => {
+          this.setUser(AuthUser.of(dto))
           this.setIsLogin(true)
         })
       } catch (e) {
@@ -129,7 +131,7 @@ export class AuthStore {
   signOutCallback = async () => {
     await storage.clear()
     api.setAuthoriationBy('')
-    this.setUser({} as IAuthUserDto)
+    this.setUser({} as IAuthUser)
     this.setIsLogin(false)
   }
 
@@ -143,11 +145,7 @@ export class AuthStore {
   }
 
   @action
-  setUser(user: IAuthUserDto) {
-    const { communities } = user
-    this.user = {
-      ...user,
-      communityId: communities?.[0]?.id,
-    }
+  setUser(user: IAuthUser) {
+    this.user = user
   }
 }

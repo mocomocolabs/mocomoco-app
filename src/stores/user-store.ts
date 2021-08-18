@@ -1,8 +1,10 @@
 import { action, observable } from 'mobx'
 import { task, Task } from 'mobx-task'
-import { IUser } from '../models/user'
+import { User } from '../models/user'
+import { IUser } from '../models/user.d'
 import { api } from '../services/api-service'
 import { TaskBy } from './task'
+import { IUserDto } from './user-store.d'
 
 const initState = {
   user: {} as IUser,
@@ -17,9 +19,9 @@ export class UserStore {
 
   @task
   getUser = (async (userId: number) => {
-    await api.get<IUser>(`/sys/users/${userId}`).then(
+    await api.get<IUserDto>(`/sys/users/${userId}`).then(
       action((data) => {
-        this.setUser(data)
+        this.setUser(User.of(data))
       })
     )
   }) as TaskBy<number>

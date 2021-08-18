@@ -10,7 +10,7 @@ export interface IUser {
   isPublicEmail: boolean
   mobile: string
   isPublicMobile: boolean
-  profileUrl: string
   status: SIGN_UP_STATUS
   description: string
+  profileUrl: string
 }

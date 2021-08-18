@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
-import { IUser } from '../../models/user'
+import { IUser } from '../../models/user.d'
 import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 import { ProfileUpdateInput } from './ProfileUpdateInputComponent'

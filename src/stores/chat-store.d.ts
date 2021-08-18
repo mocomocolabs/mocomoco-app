@@ -1,6 +1,6 @@
 import { Task } from 'mobx-task'
 import { ChatRoomType, IChat } from '../models/chat'
-import { IUser } from '../models/user'
+import { IUser } from '../models/user.d'
 import { IClubDto } from './club-store.d'
 import { IStuffTalentDto } from './stufftalent-store.d'
 
