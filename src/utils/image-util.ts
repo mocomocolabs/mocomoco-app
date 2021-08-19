@@ -3,7 +3,10 @@ import Axios from 'axios'
 export const urlToFile = (url: string): Promise<File> => {
   return Axios.get(url, { responseType: 'blob' }).then(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (v: any) => new File([v.data], url, { type: v.data.type })
+    (v: any) => {
+      const filename = url // TODO 개선 필요
+      return new File([v.data], filename, { type: v.data.type })
+    }
   )
 
   // return fetch(
@@ -11,14 +14,4 @@ export const urlToFile = (url: string): Promise<File> => {
   // )
   //   .then((res) => res.blob())
   //   .then((blob) => new File([blob], new Date().getTime().toString()))
-}
-
-export const fileToBase64 = (file: File, resolve: (url: string) => void) => {
-  const reader = new FileReader()
-  reader.onloadend = (event) => {
-    const base64result = event.target?.result
-    resolve(base64result as string)
-  }
-  reader.onerror = (error) => console.log(error)
-  reader.readAsDataURL(file)
 }

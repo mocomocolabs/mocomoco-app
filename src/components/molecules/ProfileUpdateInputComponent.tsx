@@ -1,46 +1,47 @@
-import { useObserver } from 'mobx-react-lite'
 import React, { useCallback, useRef } from 'react'
-import { UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
-import { IUser } from '../../models/user.d'
+import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import { IUserForm } from '../../models/user.d'
 import { IStuffTalentCommunityDto } from '../../stores/stufftalent-store.d'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { Pad } from '../atoms/PadComponent'
 import { Textarea } from '../atoms/TextareaComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
+import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { XDivider } from '../atoms/XDividerComponent'
-import { IImageUploaderRef } from './ImageUploaderComponent'
+import { IImageUploaderRef, ImageUploadItem } from './ImageUploaderComponent'
 import { ProfileImageUploader } from './ProfileImageUploaderComponent'
 
 interface IProfileUpdateInput {
   fields: {
-    register: UseFormRegister<IUser>
-    setValue: UseFormSetValue<IUser>
-    watch: UseFormWatch<IUser>
+    register: UseFormRegister<IUserForm>
+    setValue: UseFormSetValue<IUserForm>
+    watch: UseFormWatch<IUserForm>
+    errors: FieldErrors<IUserForm>
   }
 }
 
 export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) => {
-  const { register, setValue, watch } = fields
+  const { register, setValue, watch, errors } = fields
 
   const uploader = useRef<IImageUploaderRef>()
 
-  const [watchProfileUrl, watchCommunities] = watch(['profileUrl', 'communities'])
+  const [watchProfileUrl, watchImage, watchCommunities] = watch(['profileUrl', 'image', 'communities'])
 
   const setValueCustom = useCallback((name, value) => {
     // shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
     setValue(name, value, { shouldDirty: true, shouldValidate: true })
   }, [])
 
-  return useObserver(() => (
+  return (
     <>
       <input type='hidden' {...register('id')} />
-      <input type='hidden' {...register('profileUrl')} />
+      <input type='hidden' {...register('image')} />
 
       <Pad className='height-40' />
       <div className='flex-center'>
         <ProfileImageUploader
-          imageUrl={watchProfileUrl}
-          setImageUrl={(url) => setValueCustom('profileUrl', url)}
+          imageUrl={watchImage.preview || watchProfileUrl}
+          setImage={(image: ImageUploadItem) => setValueCustom('image', image)}
           refUploader={uploader}
         />
       </div>
@@ -50,11 +51,18 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
         <TextBase className='flex-none gray ml-3 mr-6'>이름</TextBase>
         <InputNormal
           className='border-none'
-          register={register('name', { required: '이름을 입력해 주세요' })}
+          register={register('name', {
+            required: '이름을 입력해 주세요',
+            minLength: { value: 2, message: '2~6글자 사이로 입력해 주세요' },
+            maxLength: { value: 6, message: '2~6글자 사이로 입력해 주세요' },
+          })}
           placeholder='이름을 입력해 주세요'
         />
       </div>
       <XDivider />
+      <div className='mt-1 ml-20'>
+        <ValidationMessage isShow={errors.name} message={errors.name?.message} />
+      </div>
 
       <div className='flex-center'>
         <TextBase className='flex-none gray ml-3 mr-6'>별명</TextBase>
@@ -81,11 +89,15 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
       <div className='flex-center items-start'>
         <TextBase className='flex-none gray ml-3 mr-6'>소개</TextBase>
         <div className='flex-grow -my-3'>
-          <Textarea register={register('description')} placeholder='소개를 입력해 주세요 (선택사항)' />
+          <Textarea
+            register={register('description')}
+            placeholder='소개를 입력해 주세요 (선택사항)'
+            autoGrow
+          />
         </div>
       </div>
       <Pad className='height-10' />
       <XDivider />
     </>
-  ))
+  )
 }
