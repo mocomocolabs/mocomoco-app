@@ -47,7 +47,7 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
                 <Icon name='location' className='icon-secondary' size={12} />
                 <TextXs className='ml-1 gray ellipsis'>{v.meetingPlace}</TextXs>
               </div>
-              <div className='flex justify-between mt-2'>
+              <div className='flex justify-between mt-2 gap-1'>
                 <div className='ellipsis'>
                   {v.hashtagNames.length ? (
                     <TextXs className='texthashtag ellipsis'>#{v.hashtagNames.join(' #')}</TextXs>
@@ -55,8 +55,8 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
                     ''
                   )}
                 </div>
-                <div className='flex-center self-end ml-1'>
-                  <Icon name={v.isLike ? 'heart-solid' : 'heart'} className='icon-secondary mr-1' size={16} />
+                <div className='flex-center self-end gap-1'>
+                  <Icon name={v.isLike ? 'heart-solid' : 'heart'} className='icon-secondary' size={16} />
                   <TextXs className='secondary'>{v.likeCount}</TextXs>
                 </div>
               </div>

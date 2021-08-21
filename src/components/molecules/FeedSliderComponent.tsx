@@ -2,6 +2,7 @@ import { IonSlide, IonSlides } from '@ionic/react'
 import { FC } from 'react'
 import { Feed } from '../../models/feed'
 import { route } from '../../services/route-service'
+import { Icon } from '../atoms/IconComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextXs } from '../atoms/TextXsComponent'
 import './FeedSliderComponent.scss'
@@ -38,7 +39,15 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
             ></ImageWithCorner>
             <div className='flex-col w-full bg-white px-3 br-b-xxlg text-left'>
               <TextBase className='text-bold ellipsis'>{v.title ? v.title : v.content}</TextBase>
-              {v.title && <TextXs className='ellipsis -mb-1'>{v.content}</TextXs>}
+              <div className='flex-between-center gap-2 -mb-1'>
+                <div className='overflow-hidden'>
+                  {v.title && <TextXs className='ellipsis'>{v.content}</TextXs>}
+                </div>
+                <div className='flex-center justify-end gap-1' style={{ flex: '1 0 0' }}>
+                  <Icon name={v.isLike ? 'heart-solid' : 'heart'} className='icon-secondary' size={16} />
+                  <TextXs className='secondary'>{v.likeCount}</TextXs>
+                </div>
+              </div>
             </div>
           </div>
         </IonSlide>
