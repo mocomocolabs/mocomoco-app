@@ -105,7 +105,7 @@ export class StuffTalentStore {
 
     await api.get<{ categories: IStuffTalentCategoryDto[] }>(this.categoriesUrl, config).then(
       action((data) => {
-        this.categories = data.categories
+        this.categories = data.categories.sort((a, b) => a.id - b.id) // sort by id asc
       })
     )
   }) as Task
