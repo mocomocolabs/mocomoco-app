@@ -16,7 +16,7 @@ import { executeWithError } from '../utils/http-helper-util'
 export const ProfileUpdatePage: React.FC = () => {
   const userId = parseInt(useParams<{ id: string }>().id)
 
-  const { $ui, $user } = useStore()
+  const { $ui, $user, $auth } = useStore()
 
   useEffect(() => {
     $ui.setIsBottomTab(false)
@@ -27,6 +27,7 @@ export const ProfileUpdatePage: React.FC = () => {
     handleSubmit,
     register,
     setValue,
+    getValues,
     watch,
     reset,
   } = useForm<IUserForm>({
@@ -60,8 +61,29 @@ export const ProfileUpdatePage: React.FC = () => {
     [isValid, dirtyFields, Object.keys(dirtyFields).length]
   )
 
+  const checkUniqueNickname = async (nickname: string) => {
+    try {
+      await $auth.checkNickname(nickname)
+    } catch (e) {
+      if (e.status === 409) {
+        return false
+      }
+
+      throw e
+    }
+
+    return true
+  }
+
   const onSubmit = useCallback(
-    (form: IUserForm) => {
+    async (form: IUserForm) => {
+      const isUniqueNickname = await checkUniqueNickname(getValues('nickname'))
+
+      if (!isUniqueNickname) {
+        $ui.showToastError({ message: '이미 존재하는 별명입니다. 새로운 별명을 입력해주세요.' })
+        return
+      }
+
       $ui.showAlert({
         message: '프로필을 변경하시겠습니까?',
         onSuccess: () =>

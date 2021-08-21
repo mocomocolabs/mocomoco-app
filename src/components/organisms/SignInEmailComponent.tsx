@@ -47,7 +47,8 @@ export const SignInEmail: FC = () => {
         <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
       </div>
       <SpinnerWrapper
-        task={$auth.signUp}
+        task={$auth.signIn}
+        spinnerPosition='centerX'
         Submit={
           <SubmitButton
             disabled={!formState.isValid}

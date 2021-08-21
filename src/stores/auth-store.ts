@@ -48,8 +48,22 @@ export class AuthStore {
 
   @task.resolved
   checkNickname = (async (nickname: string) => {
-    return http.post(`/sys/users/nickname/exists`, { email: nickname })
+    return http.post(`/sys/users/nickname/exists`, { nickname })
   }) as TaskBy<string>
+
+  makeUniqueNickname = async (nickname: string): Promise<string> => {
+    try {
+      await this.checkNickname(nickname!)
+    } catch (e) {
+      if (e.status === 409) {
+        return await this.makeUniqueNickname(nickname + '2')
+      }
+
+      throw e
+    }
+
+    return nickname
+  }
 
   @task.resolved
   signUp = (async (form) => {
@@ -60,9 +74,8 @@ export class AuthStore {
     delete param.rePassword
 
     param.password = inko.ko2en(param.password!)
-    if (!param.nickname) {
-      param.nickname = param.name
-    }
+
+    param.nickname = await this.makeUniqueNickname((param.nickname ? param.nickname : param.name)!)
 
     // TODO: 제거필요
     param.mobile = '_'
