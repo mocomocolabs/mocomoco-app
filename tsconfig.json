@@ -18,6 +18,5 @@
     "noFallthroughCasesInSwitch": true,
     "strictPropertyInitialization": false /** class의 변수 초기화 강제를 해제  */
   },
-  "include": ["src", "types"],
-  "exclude": ["src/setupProxy.js"]
+  "include": ["src", "types"]
 }
