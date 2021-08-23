@@ -1,7 +1,8 @@
+/// <reference types="@capacitor/splash-screen" />
+
 /* TODO apply later
 /// <reference types="@capacitor/local-notifications" />
 /// <reference types="@capacitor/push-notifications" />
-/// <reference types="@capacitor/splash-screen" />
 */
 
 import { CapacitorConfig } from '@capacitor/cli'
@@ -19,7 +20,6 @@ const config: CapacitorConfig = {
   //   androidScheme: 'https',
   // },
 
-  // TODO apply later
   plugins: {
     SplashScreen: {
       launchShowDuration: 900,
@@ -29,6 +29,8 @@ const config: CapacitorConfig = {
       splashFullScreen: false,
       splashImmersive: false,
     },
+
+    // TODO apply later
     //   LocalNotifications: {
     //     smallIcon: 'ic_stat_icon_config_sample',
     //     iconColor: '#CE0B7C',
