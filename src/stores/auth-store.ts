@@ -1,6 +1,6 @@
 import Inko from 'inko'
 import { action, observable } from 'mobx'
-import { task } from 'mobx-task'
+import { Task, task } from 'mobx-task'
 import { AuthUser } from '../models/auth'
 import { IAuthUser } from '../models/auth.d'
 import { ISignUpForm } from '../models/sign-up'
@@ -9,7 +9,6 @@ import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy } from './task'
-import { Task } from './task.d'
 
 const inko = new Inko()
 
@@ -42,27 +41,39 @@ export class AuthStore {
   }
 
   @task.resolved
-  checkEmail = (async (email: string) => {
-    return http.post(`/sys/users/email/exists`, { email })
-  }) as TaskBy<string>
-
-  @task.resolved
-  checkNickname = (async (nickname: string) => {
-    return http.post(`/sys/users/nickname/exists`, { nickname })
-  }) as TaskBy<string>
-
-  makeUniqueNickname = async (nickname: string): Promise<string> => {
+  checkEmailExists = (async (email: string) => {
     try {
-      await this.checkNickname(nickname!)
+      await http.post(`/sys/users/email/exists`, { email })
     } catch (e) {
       if (e.status === 409) {
-        return await this.makeUniqueNickname(nickname + '2')
+        return true
       }
 
       throw e
     }
 
-    return nickname
+    return false
+  }) as Task<[string], boolean>
+
+  @task.resolved
+  checkNicknameExists = (async (nickname: string) => {
+    try {
+      await http.post(`/sys/users/nickname/exists`, { nickname })
+    } catch (e) {
+      if (e.status === 409) {
+        return true
+      }
+
+      throw e
+    }
+
+    return false
+  }) as Task<[string], boolean>
+
+  private makeUniqueNickname = async (nickname: string): Promise<string> => {
+    return (await this.checkNicknameExists(nickname))
+      ? await this.makeUniqueNickname(nickname + '2')
+      : nickname
   }
 
   @task.resolved
@@ -138,7 +149,7 @@ export class AuthStore {
   signOut = (async () => {
     await api.post<number>(`/auth/sign-out`)
     await this.signOutCallback()
-  }) as Task
+  }) as TaskBy<void>
 
   @action
   signOutCallback = async () => {

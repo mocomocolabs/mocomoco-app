@@ -57,18 +57,12 @@ export const SignUpPage: React.FC = () => {
             size='large'
             text='이메일로 시작하기'
             onClick={async () => {
-              $auth.setSignUpForm({ email: getValues().email })
+              const email = getValues('email')
 
-              $auth
-                .checkEmail(getValues().email)
-                .then(() => {
-                  route.signUpForm()
-                })
-                .catch((err) => {
-                  if (err.status === 409) {
-                    route.signIn()
-                  }
-                })
+              $auth.setSignUpForm({ email })
+
+              const exists = await $auth.checkEmailExists(email)
+              exists ? route.signIn() : route.signUpForm()
             }}
           ></SubmitButton>
           <TextXs className='gray mt-4 text-center'>

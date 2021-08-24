@@ -1,6 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { DeepMap, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
@@ -27,7 +27,6 @@ export const ProfileUpdatePage: React.FC = () => {
     handleSubmit,
     register,
     setValue,
-    getValues,
     watch,
     reset,
   } = useForm<IUserForm>({
@@ -61,25 +60,22 @@ export const ProfileUpdatePage: React.FC = () => {
     [isValid, dirtyFields, Object.keys(dirtyFields).length]
   )
 
-  const checkUniqueNickname = async (nickname: string) => {
-    try {
-      await $auth.checkNickname(nickname)
-    } catch (e) {
-      if (e.status === 409) {
-        return false
-      }
-
-      throw e
-    }
-
-    return true
+  /**
+  dirtyFields를 참고해서, 변경된 프로퍼티만 남김
+  */
+  function filterUpdatedFields<T>(form: T, dirtyFields: DeepMap<T, true>): T {
+    return Object.fromEntries(
+      Object.entries(form).filter(([key]) => {
+        return key === 'id' || Object.keys(dirtyFields).includes(key)
+      })
+    ) as T
   }
 
   const onSubmit = useCallback(
     async (form: IUserForm) => {
-      const isUniqueNickname = await checkUniqueNickname(getValues('nickname'))
+      const updatedFields = filterUpdatedFields(form, dirtyFields)
 
-      if (!isUniqueNickname) {
+      if (updatedFields.nickname && (await $auth.checkNicknameExists(updatedFields.nickname))) {
         $ui.showToastError({ message: '이미 존재하는 별명입니다. 새로운 별명을 입력해주세요.' })
         return
       }
@@ -87,21 +83,12 @@ export const ProfileUpdatePage: React.FC = () => {
       $ui.showAlert({
         message: '프로필을 변경하시겠습니까?',
         onSuccess: () =>
-          executeWithError(() => {
-            return $user
-              .updateUser(
-                // dirtyFields를 참고해서, 변경된 프로퍼티만 남김
-                Object.fromEntries(
-                  Object.entries(form).filter(([key]) => {
-                    return key === 'id' || Object.keys(dirtyFields).includes(key)
-                  })
-                ) as IUserForm
-              )
-              .then((success) => {
-                if (success) {
-                  route.goBack()
-                }
-              })
+          executeWithError(async () => {
+            return $user.updateUser(updatedFields).then((success) => {
+              if (success) {
+                route.goBack()
+              }
+            })
           }),
       })
     },
