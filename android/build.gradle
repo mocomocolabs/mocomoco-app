@@ -8,7 +8,7 @@ buildscript {
         jcenter() // capacitor-cordova-android-plugins 때문에 필요함.
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
+        classpath 'com.android.tools.build:gradle:7.0.1'
         classpath 'com.google.gms:google-services:4.3.5'
 
         // NOTE: Do not place your application dependencies here; they belong
