@@ -28,27 +28,23 @@ export const SettingsPage: React.FC = () => {
         <div className='px-container my-4'>
           <IonList lines='none'>
             <IonItemGroup>
-              <IonItem>
-                <IonLabel>쪽지, 댓글 알림</IonLabel>
-                <IonToggle slot='end' name='chat_alarm_on_off' checked></IonToggle>
+              <IonItem disabled>
+                <IonLabel>채팅 알림</IonLabel>
+                <IonToggle slot='end' name='chat_alarm_on_off' checked />
               </IonItem>
-              <IonItem>
-                <IonLabel>관심글, 관심주제 알림</IonLabel>
-                <IonToggle slot='end' name='chat_alarm_on_off' checked></IonToggle>
+              <IonItem disabled>
+                <IonLabel>댓글 알림</IonLabel>
+                <IonToggle slot='end' name='chat_alarm_on_off' checked />
               </IonItem>
-              <IonItem>
-                <IonLabel>홈화면에서 개인일정 보기</IonLabel>
-                <IonToggle slot='end' name='chat_alarm_on_off' checked></IonToggle>
-              </IonItem>
-              <IonItem>
+              <IonItem disabled>
                 <IonLabel>방해금지시간 설정</IonLabel>
-                <IonToggle slot='end' name='chat_alarm_on_off'></IonToggle>
+                <IonToggle slot='end' name='chat_alarm_on_off' />
               </IonItem>
-              <IonItem>
+              <IonItem disabled>
                 <IonLabel>진동</IonLabel>
-                <IonToggle slot='end' name='chat_alarm_on_off' checked></IonToggle>
+                <IonToggle slot='end' name='chat_alarm_on_off' checked />
               </IonItem>
-              <IonItem>
+              <IonItem disabled>
                 <IonLabel>알림음</IonLabel>
                 <IonSelect
                   interface='action-sheet'
@@ -68,7 +64,7 @@ export const SettingsPage: React.FC = () => {
             <XDivider />
 
             <IonItemGroup>
-              <IonItem>
+              <IonItem disabled>
                 <IonLabel>언어</IonLabel>
                 <IonSelect
                   interface='action-sheet'
@@ -83,10 +79,10 @@ export const SettingsPage: React.FC = () => {
                 </IonSelect>
               </IonItem>
 
-              <IonItem>
+              <IonItem disabled>
                 <IonLabel>오픈소스 라이센스</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem disabled>
                 <IonLabel>버젼 정보</IonLabel>
               </IonItem>
               <IonItem
@@ -99,7 +95,7 @@ export const SettingsPage: React.FC = () => {
               >
                 <IonLabel>로그아웃</IonLabel>
               </IonItem>
-              <IonItem>
+              <IonItem disabled>
                 <IonLabel>회원탈퇴</IonLabel>
               </IonItem>
             </IonItemGroup>
