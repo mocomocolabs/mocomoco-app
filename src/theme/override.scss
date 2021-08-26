@@ -26,5 +26,8 @@ ion-alert {
 }
 
 ion-toggle {
+  --handle-background: white;
+  --handle-background-checked: white;
+  --background: var(--ion-color-medium);
   --background-checked: var(--ion-color-secondary);
 }
