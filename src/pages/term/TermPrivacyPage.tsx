@@ -13,7 +13,7 @@ export const TermPrivacyPage: FC = () => {
 
   return (
     <IonPage>
-      <Header start={<BackButton type='close' />} center='개인정보취급방침' />
+      <Header start={<BackButton type='close' />} center='개인정보 처리방침' />
 
       <IonContent>
         <div className='px-container'>

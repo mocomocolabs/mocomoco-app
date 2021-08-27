@@ -1,25 +1,44 @@
+import { App as AppPlugin } from '@capacitor/app'
 import {
   IonContent,
   IonItem,
   IonItemGroup,
   IonLabel,
   IonList,
+  IonNote,
   IonPage,
   IonSelect,
   IonSelectOption,
   IonToggle,
 } from '@ionic/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { XDivider } from '../components/atoms/XDividerComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
+import { route } from '../services/route-service'
 
 export const SettingsPage: React.FC = () => {
   const [alarmSound, setAlarmSound] = useState<string>('구름씨 랄라~')
   const [language, setLanguage] = useState<string>('한국어')
+  const [versionName, setVersionName] = useState<string>('')
 
   const { $auth, $ui } = useStore()
+
+  useEffect(() => {
+    const getVersionName = async () => {
+      try {
+        const appInfo = await AppPlugin.getInfo()
+        setVersionName(appInfo.version)
+      } catch (e) {
+        console.log(e, '=> ignored')
+      } finally {
+        console.log('getVersionName called')
+      }
+    }
+
+    getVersionName()
+  }, [])
 
   return (
     <IonPage>
@@ -80,11 +99,28 @@ export const SettingsPage: React.FC = () => {
               </IonItem>
 
               <IonItem disabled>
+                <IonLabel>계정 정보</IonLabel>
+              </IonItem>
+
+              <IonItem>
+                <IonLabel>버젼 정보</IonLabel>
+                <IonNote slot='end' color='secondary'>
+                  {versionName}
+                </IonNote>
+              </IonItem>
+
+              <IonItem onClick={() => route.termUse()}>
+                <IonLabel>이용약관</IonLabel>
+              </IonItem>
+
+              <IonItem onClick={() => route.termPrivacy()}>
+                <IonLabel>개인정보 처리방침</IonLabel>
+              </IonItem>
+
+              <IonItem disabled>
                 <IonLabel>오픈소스 라이센스</IonLabel>
               </IonItem>
-              <IonItem disabled>
-                <IonLabel>버젼 정보</IonLabel>
-              </IonItem>
+
               <IonItem
                 onClick={() =>
                   $ui.showAlert({
