@@ -44,8 +44,6 @@ export const App: React.FC = () => {
     // TODO 내부테스트 때만 일시적으로 주석처리함
     // if ($auth.user.status === SIGN_UP_STATUS.대기 && config.IS_PROD) {
     //   route.signUpComplete()
-    // } else {
-    route.home()
     // }
   }
 

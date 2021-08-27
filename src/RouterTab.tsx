@@ -80,6 +80,17 @@ const publicPaths = [
   '/sign-up',
   '/sign-up/form',
   '/sign-up/community',
+  '/term/privacy',
+  '/term/use',
+]
+
+const admissionPaths = [
+  //
+  '/intro',
+  '/sign-in',
+  '/sign-up',
+  '/sign-up/form',
+  '/sign-up/community',
 ]
 
 // App.tsx > Back button 리스너에서 사용함
@@ -174,7 +185,7 @@ export const RouterTab: FC = () => {
     if (!$auth.isLogin && !publicPaths.includes(path)) {
       route.signUp()
     }
-    if ($auth.isLogin && publicPaths.includes(path)) {
+    if ($auth.isLogin && admissionPaths.includes(path)) {
       route.home()
     }
   }, [])
@@ -227,7 +238,7 @@ export const RouterTab: FC = () => {
         <IonContent>
           <Switch>
             {renderredRoutes}
-            <Redirect from='/' to='/tabs/home' exact />
+            <Redirect to='/tabs/home' />
           </Switch>
         </IonContent>
 
