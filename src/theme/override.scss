@@ -31,3 +31,9 @@ ion-toggle {
   --background: var(--ion-color-medium);
   --background-checked: var(--ion-color-secondary);
 }
+
+ion-label,
+ion-note,
+ion-select {
+  font-size: $text-base-size !important;
+}
