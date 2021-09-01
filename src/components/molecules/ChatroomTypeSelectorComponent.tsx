@@ -25,7 +25,7 @@ export const ChatroomTypeSelector: FC<IChatroomTypeSelector> = () => {
       onClick={() =>
         $ui.showModal({
           title: '채팅 선택',
-          children: (
+          render: () => (
             <ChatroomTypeSelectorModalContents
               typeNames={chatroomTypeNames}
               selectedType={$chat.selectedRoomType}

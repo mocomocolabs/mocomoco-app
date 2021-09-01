@@ -18,8 +18,8 @@ export const Textarea: FC<ITextarea> = ({ onChange, register, ...props }) => {
     <IonTextarea
       className='w-full py-4 m-0 textarea-component'
       onIonChange={(e) => {
-        onChange && onChange(e.detail?.value)
         register?.onChange(e)
+        onChange && onChange(e.detail?.value)
       }}
       {...props}
       {...register}

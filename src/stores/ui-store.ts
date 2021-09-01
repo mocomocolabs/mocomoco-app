@@ -63,6 +63,11 @@ export class UiStore {
   }
 
   @action
+  setModalSubmittable = (submittable: boolean) => {
+    this.modal.submittable = submittable
+  }
+
+  @action
   showPopover = (popover: Partial<Omit<IPopover, 'isOpen'>>) => {
     return new Promise(() => {
       this.popover = {

@@ -1,7 +1,7 @@
 import { IonDatetime } from '@ionic/react'
 import dayjs from 'dayjs'
 import { FC } from 'react'
-import { ymd } from '../../utils/datetime-util'
+import { hms, ymd } from '../../utils/datetime-util'
 
 export interface IDatetimePicker {
   value?: string
@@ -31,7 +31,7 @@ export const DatetimePicker: FC<IDatetimePicker> = ({ value, onChangeDate, onCha
         cancelText='취소'
         value={dayjs(value).format('HH:mm')}
         onIonChange={(e) => {
-          onChangeTime && onChangeTime(e.detail.value!.replace(':', ''))
+          onChangeTime && onChangeTime(hms(e.detail.value!, 'HH:mm'))
         }}
       ></IonDatetime>
     </>

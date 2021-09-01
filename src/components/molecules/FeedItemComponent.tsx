@@ -61,7 +61,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
           <ImageSlider urls={feed.imageUrls}></ImageSlider>
         </div>
       ) : (
-        <Pad className={isDetail ? 'h-10' : 'h-5'}></Pad>
+        <Pad className={isDetail ? 'h-15' : 'h-5'}></Pad>
       )}
       <div className='px-container flex-col'>
         {feed.title && (
@@ -86,10 +86,10 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
         </div>
 
         {feed.schedule && (
-          <div className='br-lg shadow p-3 mt-5'>
+          <div className='br-lg shadow p-3 mt-5' onClick={onClick}>
             <div className='flex items-center'>
               <Icon name='calendar' className='icon-secondary'></Icon>
-              <TextBase className='ml-2 text-bold'>{feed.schedule?.title}wpwpwp</TextBase>
+              <TextBase className='ml-2 text-bold'>{feed.schedule?.title}</TextBase>
             </div>
             <div className='flex items-center mt-1'>
               <Icon name='time' className='icon-secondary'></Icon>

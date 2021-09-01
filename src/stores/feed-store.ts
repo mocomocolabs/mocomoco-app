@@ -21,6 +21,7 @@ const initState = {
     title: '',
     content: '',
     images: [],
+    schedule: undefined,
     isPublic: false,
   } as IFeedForm,
 }
@@ -31,7 +32,7 @@ export class FeedStore {
   @observable.ref homeScheduleFeeds: IFeedSchedule[] = []
   @observable.ref feed: IFeed = initState.feed
   @observable.struct form: IFeedForm = initState.form
-  @observable deleted = false
+  @observable.struct updateForm: IFeedForm = initState.form
 
   $auth: AuthStore
   $community: CommunityStore
@@ -91,7 +92,9 @@ export class FeedStore {
   @task
   getHomeScheduleFeeds = (async () => {
     await api
-      .get<{ schedules: IFeedScheduleDto[] }>(`/v1/schedules?sort-order=start-date-time_asc&limit=3`)
+      .get<{ schedules: IFeedScheduleDto[] }>(
+        `/v1/schedules?sort-order=start-date-time_asc&is_use=true&limit=3`
+      )
       .then(
         action((data) => {
           this.homeScheduleFeeds = data.schedules.map((v) => Feed.scheduleOf(v)!)
@@ -122,6 +125,22 @@ export class FeedStore {
         })
       })
     )
+  }) as TaskBy<number>
+
+  @task
+  getUpdateForm = (async (_id: number) => {
+    await this.getFeed(_id)
+
+    const images: ImageUploadItem[] = (await Promise.all(
+      this.feed.imageUrls.map((v) => urlToFile(v))
+    )) as ImageUploadItem[]
+
+    this.setUpdateForm({
+      ...this.feed,
+      // communityId: this.feed.community.id,
+      // categoryId: this.feed.category.id,
+      images,
+    })
   }) as TaskBy<number>
 
   @task.resolved
@@ -169,10 +188,12 @@ export class FeedStore {
             communityId: form.communityId,
             type: form.type,
             schedule: form.schedule && {
+              id: form.schedule.id,
               title: form.schedule.title,
               place: form.schedule.place,
               startDateTime: form.schedule.startDate + form.schedule.startTime!,
               endDateTime: form.schedule.endDate + form.schedule.endTime!,
+              isUse: true,
             },
             title: form.title,
             content: form.content,
@@ -228,10 +249,17 @@ export class FeedStore {
 
   @action
   setFormSchedule(data: Partial<IFeedSchedule>) {
-    this.form.schedule = {
-      ...this.form.schedule,
-      ...data,
-    }
+    this.setForm({
+      schedule: {
+        ...this.form.schedule,
+        ...data,
+      },
+    })
+  }
+
+  @action
+  resetFormSchedule() {
+    this.setForm({ schedule: initState.form.schedule })
   }
 
   @action
@@ -243,7 +271,20 @@ export class FeedStore {
   }
 
   @action
+  setUpdateForm(data: Partial<IFeedForm>) {
+    this.updateForm = {
+      ...this.updateForm,
+      ...data,
+    }
+  }
+
+  @action
   resetForm() {
     this.form = initState.form
+  }
+
+  @action
+  resetUpdateForm() {
+    this.updateForm = initState.form
   }
 }

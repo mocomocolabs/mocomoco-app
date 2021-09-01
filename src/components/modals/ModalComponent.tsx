@@ -10,8 +10,12 @@ export const Modal: FC = () => {
 
   return useObserver(() => (
     <IonModal isOpen={$ui.modal.isOpen}>
-      <Header start={<Icon name='close' onClick={() => $ui.hideModal()} />} center={$ui.modal.title} />
-      <IonContent>{$ui.modal.children}</IonContent>
+      <Header
+        start={<Icon name='close' onClick={() => $ui.hideModal()} />}
+        center={$ui.modal.title}
+        end={$ui.modal.submit && $ui.modal.submit($ui.modal.submittable!)}
+      />
+      <IonContent>{$ui.modal.render && $ui.modal.render()}</IonContent>
     </IonModal>
   ))
 }

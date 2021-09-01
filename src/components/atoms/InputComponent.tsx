@@ -14,9 +14,15 @@ export const Input: FC<IInput> = ({ type, onChange, register, ...props }) => {
   return (
     <input
       type={type || 'text'}
-      onChange={(e) => onChange && onChange(e.target.value!)}
       {...props}
       {...register}
-    ></input>
+      // onChange를 custom하게 사용할 것이므로, register 보다 늦게 설정해서
+      // register.onChange를 덮어써야(overwrite)해야 한다.
+      onChange={(e) => {
+        register?.onChange(e)
+        onChange && onChange(e.target.value!)
+      }}
+      ref={register?.ref}
+    />
   )
 }

@@ -6,14 +6,15 @@ export interface IHeaderSubmitText {
   text?: string
 }
 
-export const HeaderSubmitText: FC<IHeaderSubmitText> = ({ isSubmittable, onSubmit, text = '완료' }) => {
-  return (
-    <div
-      className={`${isSubmittable ? '' : 'gray'} text-lg`}
-      onClick={() => isSubmittable && onSubmit()}
-      slot='end'
-    >
-      {text}
-    </div>
-  )
-}
+export const HeaderSubmitText: FC<IHeaderSubmitText> = ({ isSubmittable, onSubmit, text = '완료' }) => (
+  <div
+    className={`${isSubmittable ? '' : 'gray'} text-lg`}
+    onClick={(e) => {
+      e.preventDefault()
+      isSubmittable && onSubmit()
+    }}
+    slot='end'
+  >
+    {text}
+  </div>
+)

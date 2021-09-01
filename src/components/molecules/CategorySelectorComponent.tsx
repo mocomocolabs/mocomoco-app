@@ -19,7 +19,7 @@ export const CategorySelector: FC<ICategorySelector> = ({ categories, selectedId
       onClick={() =>
         $ui.showModal({
           title: '카테고리 선택',
-          children: (
+          render: () => (
             <CategorySelectorModalContents
               categories={categories}
               selectedId={selectedId}

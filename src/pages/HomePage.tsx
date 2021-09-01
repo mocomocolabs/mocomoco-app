@@ -6,6 +6,7 @@ import { Icon } from '../components/atoms/IconComponent'
 import { TextBase } from '../components/atoms/TextBaseComponent'
 import { TextHeader } from '../components/atoms/TextHeaderComponent'
 import { FeedSlider } from '../components/molecules/FeedSliderComponent'
+import { HomeSchedule } from '../components/molecules/HomeScheduleComponent'
 import { HomeTitle } from '../components/molecules/HomeTitleComponent'
 import { NoContents } from '../components/molecules/NoContentsComponent'
 import { StuffTalentItem } from '../components/molecules/StuffTalentItemComponent'
@@ -94,10 +95,11 @@ export const HomePage: React.FC = () => {
         </TaskObserver>
 
         <div className='px-container'>
-          {/* <HomeTitle title='다가오는 일정'></HomeTitle>
-          <TaskObserver taskType={fetcher.schedules.taskType} spinnerPosition = 'centerX'>
-            <HomeSchedule items={$feed.homeScheduleFeeds} className='pb-2' />
-          </TaskObserver> */}
+          <HomeTitle title='다가오는 일정'></HomeTitle>
+          <TaskObserver taskTypes={fetcher.schedules.taskType} spinnerPosition='centerX'>
+            {() => <HomeSchedule items={$feed.homeScheduleFeeds} className='pb-2' />}
+          </TaskObserver>
+
           <HomeTitle title='물건창고' route={() => route.stuff()}></HomeTitle>
           <TaskObserver taskTypes={fetcher.stuffs.taskType} spinnerPosition='centerX'>
             {() =>

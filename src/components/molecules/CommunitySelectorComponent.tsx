@@ -20,7 +20,7 @@ export const CommunitySelector: FC<ICommunitySelector> = ({ name, disabled = fal
         !disabled &&
         $ui.showModal({
           title: '공동체 선택',
-          children: <CommunitySelectorModalContents />,
+          render: () => <CommunitySelectorModalContents />,
         })
       }
     >
