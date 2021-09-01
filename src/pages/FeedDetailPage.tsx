@@ -34,7 +34,7 @@ export const FeedDetailPage: React.FC = () => {
   }
 
   const onEdit = async (id: number) => {
-    await $feed.getFeedForm(id)
+    await $feed.getUpdateForm(id)
     route.feedForm()
   }
 

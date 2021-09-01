@@ -25,7 +25,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask }) => {
   }
 
   const onEdit = async (id: number) => {
-    await $feed.getFeedForm(id)
+    await $feed.getUpdateForm(id)
     route.feedForm()
     fetchTask()
   }

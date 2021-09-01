@@ -1,7 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'
-import { reaction } from 'mobx'
-import { useObserver } from 'mobx-react-lite'
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
+import { useForm } from 'react-hook-form'
 import { Checkbox } from '../components/atoms/CheckboxComponent'
 import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { Icon } from '../components/atoms/IconComponent'
@@ -13,66 +12,94 @@ import { TextBase } from '../components/atoms/TextBaseComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { FeedScheduleModalContents } from '../components/modals/FeedScheduleModalContents'
 import { BackButton } from '../components/molecules/BackButtonComponent'
-import {
-  assignPreview,
-  IImageUploaderRef,
-  ImageUploader,
-} from '../components/molecules/ImageUploaderComponent'
+import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
+import { IFeedForm } from '../models/feed.d'
 import { route } from '../services/route-service'
 import { datetimeRange } from '../utils/datetime-util'
 import { executeWithError } from '../utils/http-helper-util'
 
-export interface IFeedForm {}
-
-export const FeedFormPage: FC<IFeedForm> = () => {
+export const FeedFormPage: FC = () => {
   const { $ui, $feed, $auth } = useStore()
 
   const uploader = useRef<IImageUploaderRef>()
-  const isUpdate = $feed.updateForm.id !== undefined
+
+  const isUpdate = !!$feed.updateForm.id
+  const form = Object.assign({}, isUpdate ? { ...$feed.updateForm } : { ...$feed.form })
+
+  const {
+    formState: { isValid, dirtyFields },
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    watch,
+  } = useForm<IFeedForm>({
+    mode: 'onChange',
+    // TODO 최종적으로는 $community.selectedId 를 사용하는 게 맞는데, 지금은 내 공동체에만 글을 쓸 수 있으니 auth.user.communityId를 사용하도록 함.
+    defaultValues: { ...form, communityId: form.communityId > 0 ? form.communityId : $auth.user.communityId },
+  })
+
+  const [watchImages, watchSchedule] = watch(['images', 'schedule'])
+
+  const setValueCustom = useCallback((name, value) => {
+    // shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
+    setValue(name, value, { shouldDirty: true, shouldValidate: true })
+  }, [])
+
+  const submittable = useMemo(() => {
+    const isChangedFromDefaultValues = Object.keys(dirtyFields).length > 0
+
+    return isValid && !(isUpdate && !isChangedFromDefaultValues)
+  }, [isValid, Object.keys(dirtyFields)])
+
+  const isSubmitCompleted = useRef(false)
+
+  const onSubmit = handleSubmit(async (form) => {
+    // delete empty schedule.
+    // react-hook-form은 undefined값을 빈문자('')로 치환하기 때문에
+    // undefined가 되어야 한다면 별도로 처리해줘야 한다.
+    form.schedule = !!form.schedule ? form.schedule : undefined
+
+    executeWithError(async () => {
+      if (isUpdate) {
+        await $feed.saveFeed(form, true)
+        $feed.resetUpdateForm()
+      } else {
+        await $feed.saveFeed(form, false)
+        $feed.resetForm()
+      }
+
+      isSubmitCompleted.current = true
+
+      isUpdate ? route.feedDetail(form.id!, undefined, true) : route.feed()
+    })
+  })
+
+  const SubmitBtn = useMemo(
+    () => <HeaderSubmitText isSubmittable={submittable} onSubmit={onSubmit} />,
+    [submittable, onSubmit]
+  )
 
   useEffect(() => {
     $ui.setIsBottomTab(false)
 
     return () => {
-      if (isUpdate) {
-        // TODO check if submit completed
-        const submitCompleted = true
-        submitCompleted && $feed.resetUpdateForm()
-      } else {
-        const needToSaveTemp =
-          $feed.form.title || $feed.form.content || $feed.form.images?.length || $feed.form.schedule
+      isUpdate ? $feed.resetUpdateForm() : $feed.resetForm()
 
-        !needToSaveTemp && $feed.resetForm()
+      // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
+      if (isUpdate || isSubmitCompleted.current) return
+
+      const [title, content, images, schedule] = getValues(['title', 'content', 'images', 'schedule'])
+
+      if (title || content || images?.length || schedule) {
+        $feed.setForm(getValues())
+        console.log('cleanup', '임시저장 완료')
       }
     }
   }, [])
-
-  const SubmitBtn = useMemo(
-    () => (
-      <HeaderSubmitText
-        isSubmittable={!!$feed.form.content}
-        onSubmit={() =>
-          executeWithError(async () => {
-            await $feed.saveFeed(
-              {
-                ...$feed.form,
-                communityId: $auth.user.communityId,
-              },
-              isUpdate
-            )
-
-            isUpdate ? route.feedDetail($feed.form.id!, undefined, true) : route.feed()
-
-            $feed.resetForm()
-          })
-        }
-      />
-    ),
-    [$feed.form.content, $auth.user.communityId, $feed.form]
-  )
 
   const scheduleRef = useRef<HTMLFormElement>(null)
 
@@ -90,13 +117,13 @@ export const FeedFormPage: FC<IFeedForm> = () => {
 
   const showScheduleModal = useCallback(() => {
     $ui.showModal({
-      title: $feed.form.schedule ? '일정 변경하기' : '일정 만들기',
+      title: !!watchSchedule ? '일정 변경하기' : '일정 만들기',
       submit: scheduleModalSubmitButton,
       render: () => (
         <FeedScheduleModalContents
-          schedule={$feed.form.schedule}
+          schedule={watchSchedule}
           setSchedule={(data) =>
-            $feed.setFormSchedule({
+            setValueCustom('schedule', {
               ...data,
               formatScheduleTime: datetimeRange(
                 data.startDate + data.startTime!,
@@ -109,64 +136,53 @@ export const FeedFormPage: FC<IFeedForm> = () => {
         />
       ),
     })
-  }, [])
+  }, [watchSchedule])
 
-  const [showSchedule, setShowSchedule] = useState(false)
+  return (
+    <IonPage>
+      <Header
+        start={<BackButton type='close' />}
+        center='이야기창고'
+        end={<SpinnerWrapper task={$feed.saveFeed} Submit={SubmitBtn} />}
+      />
 
-  useEffect(() => {
-    const disposeReaction = reaction(
-      () => $feed.form.schedule,
-      (schedule) => setShowSchedule(!!schedule)
-    )
+      <IonContent>
+        <div className='px-container'>
+          <form id='stufftalent-form' onSubmit={onSubmit}>
+            <input type='hidden' {...register('id')} />
+            <input type='hidden' {...register('images')} />
+            <input type='hidden' {...register('schedule')} />
+            <input type='hidden' {...register('isPublic')} />
 
-    return () => disposeReaction()
-  }, [])
-
-  return useObserver(() => {
-    return (
-      <IonPage>
-        <Header
-          start={<BackButton type='close' />}
-          center='이야기창고'
-          end={<SpinnerWrapper task={$feed.saveFeed} Submit={SubmitBtn}></SpinnerWrapper>}
-        />
-
-        <IonContent>
-          <div className='px-container'>
             <ImageUploader
               className='mt-5'
-              images={$feed.form.images?.map((v, i) => assignPreview(v, i))}
-              setImages={(param) => $feed.setFormImage(param)}
+              images={watchImages}
+              setImages={(param) => setValueCustom('images', param)}
               refUploader={uploader as IImageUploaderRef}
-            ></ImageUploader>
-            <Pad className='h-2'></Pad>
-            <InputNormal
-              value={$feed.form.title}
-              placeholder='제목을 입력해주세요 (선택사항)'
-              onChange={(title) => $feed.setForm({ title })}
-            ></InputNormal>
+            />
+            <Pad className='h-2' />
+            <InputNormal placeholder='제목을 입력해주세요 (선택사항)' register={register('title')} />
             <Textarea
-              value={$feed.form.content}
-              onChange={(content) => $feed.setForm({ content: content! })}
               rows={10}
               autoGrow={true}
               maxLength={255}
               placeholder='나누고 싶은 이야기를 자유롭게 적어주세요 :)'
-            ></Textarea>
-            {showSchedule && (
+              register={register('content', { required: true })}
+            />
+            {!!watchSchedule && (
               <div className='br-lg shadow p-3 mt-5 relative'>
                 <div onClick={showScheduleModal}>
                   <div className='flex items-center'>
-                    <Icon name='calendar' className='icon-secondary'></Icon>
-                    <TextBase className='ml-2 text-bold'>{$feed.form.schedule?.title}</TextBase>
+                    <Icon name='calendar' className='icon-secondary' />
+                    <TextBase className='ml-2 text-bold'>{watchSchedule?.title}</TextBase>
                   </div>
                   <div className='flex items-center mt-1'>
-                    <Icon name='time' className='icon-secondary'></Icon>
-                    <TextBase className='ml-2'>{$feed.form.schedule?.formatScheduleTime}</TextBase>
+                    <Icon name='time' className='icon-secondary' />
+                    <TextBase className='ml-2'>{watchSchedule?.formatScheduleTime}</TextBase>
                   </div>
                   <div className='flex items-center mt-1'>
-                    <Icon name='location' className='icon-secondary'></Icon>
-                    <TextBase className='ml-2'>{$feed.form.schedule?.place}</TextBase>
+                    <Icon name='location' className='icon-secondary' />
+                    <TextBase className='ml-2'>{watchSchedule?.place}</TextBase>
                   </div>
                 </div>
                 <Icon
@@ -174,36 +190,36 @@ export const FeedFormPage: FC<IFeedForm> = () => {
                   className='absolute mr-2 mt-2 right-0 top-0 uploader-delete-icon'
                   onClick={(e) => {
                     e.preventDefault()
-                    $feed.resetFormSchedule()
+                    setValueCustom('schedule', undefined)
                   }}
                 />
               </div>
             )}
-          </div>
-        </IonContent>
+          </form>
+        </div>
+      </IonContent>
 
-        <Footer>
-          {/* TODO: 카메라 플러그인 추가 */}
-          <div className='flex-between-center gap-4'>
-            <Icon
-              name={$feed.form.images?.length ? 'image-solid' : 'image'}
-              className='icon-secondary'
-              onClick={() => uploader.current?.click()}
-            />
-            <Icon
-              name={$feed.form.schedule?.title ? 'calendar-solid' : 'calendar'}
-              className='icon-secondary'
-              onClick={showScheduleModal}
-            />
-          </div>
-          <Checkbox
-            label='전체 공개'
-            defaultChecked={$feed.form.isPublic}
-            onChange={(checked) => $feed.setForm({ isPublic: checked })}
-          ></Checkbox>
-          <IsPublicToast />
-        </Footer>
-      </IonPage>
-    )
-  })
+      <Footer>
+        {/* TODO: 카메라 플러그인 추가 */}
+        <div className='flex-between-center gap-4'>
+          <Icon
+            name={watchImages?.length ? 'image-solid' : 'image'}
+            className='icon-secondary'
+            onClick={() => uploader.current?.click()}
+          />
+          <Icon
+            name={watchSchedule ? 'calendar-solid' : 'calendar'}
+            className='icon-secondary'
+            onClick={showScheduleModal}
+          />
+        </div>
+        <Checkbox
+          label='전체 공개'
+          defaultChecked={form.isPublic}
+          onChange={(checked) => setValueCustom('isPublic', checked)}
+        />
+        <IsPublicToast />
+      </Footer>
+    </IonPage>
+  )
 }

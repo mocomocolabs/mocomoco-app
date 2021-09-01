@@ -25,7 +25,7 @@ import { IStuffTalentForm, StuffTalentPageKey, StuffTalentType } from '../models
 import { executeWithError } from '../utils/http-helper-util'
 
 export const StuffTalentFormPage: React.FC = () => {
-  const { $ui, $stuff, $talent, $community } = useStore()
+  const { $ui, $stuff, $talent, $auth } = useStore()
 
   const pageData = {
     [StuffTalentPageKey.STUFF]: { store: $stuff, title: '물건창고' },
@@ -47,7 +47,8 @@ export const StuffTalentFormPage: React.FC = () => {
     watch,
   } = useForm<IStuffTalentForm>({
     mode: 'onChange',
-    defaultValues: { ...form, communityId: form.communityId ?? $community.selectedId },
+    // TODO 최종적으로는 $community.selectedId 를 사용하는 게 맞는데, 지금은 내 공동체에만 글을 쓸 수 있으니 auth.user.communityId를 사용하도록 함.
+    defaultValues: { ...form, communityId: form.communityId > 0 ? form.communityId : $auth.user.communityId },
   })
 
   const [watchCategoryId, watchType, watchPrice, watchExchangeText, watchImages] = watch([

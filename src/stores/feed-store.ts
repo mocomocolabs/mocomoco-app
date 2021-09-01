@@ -13,8 +13,7 @@ import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
   feeds: [],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  feed: {} as any,
+  feed: {} as IFeed,
   form: {
     type: FEED_TYPE.NORMAL,
     communityId: 0,
@@ -112,35 +111,20 @@ export class FeedStore {
   }) as TaskBy<number>
 
   @task
-  getFeedForm = (async (id: number) => {
+  getUpdateForm = (async (id: number) => {
     await api.get<IFeedDto>(`/v1/feeds/${id}`).then(
       action(async (dto) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const images: any = await Promise.all(dto.atchFiles?.map((v) => urlToFile(v.url)))
+        const images: ImageUploadItem[] = (await Promise.all(
+          dto.atchFiles?.map((v) => urlToFile(v.url))
+        )) as ImageUploadItem[]
 
-        this.setForm({
+        this.setUpdateForm({
           ...dto,
           schedule: Feed.scheduleOf(dto.schedule),
           images,
         })
       })
     )
-  }) as TaskBy<number>
-
-  @task
-  getUpdateForm = (async (_id: number) => {
-    await this.getFeed(_id)
-
-    const images: ImageUploadItem[] = (await Promise.all(
-      this.feed.imageUrls.map((v) => urlToFile(v))
-    )) as ImageUploadItem[]
-
-    this.setUpdateForm({
-      ...this.feed,
-      // communityId: this.feed.community.id,
-      // categoryId: this.feed.category.id,
-      images,
-    })
   }) as TaskBy<number>
 
   @task.resolved
