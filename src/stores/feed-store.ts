@@ -92,7 +92,7 @@ export class FeedStore {
   getHomeScheduleFeeds = (async () => {
     await api
       .get<{ schedules: IFeedScheduleDto[] }>(
-        `/v1/schedules?sort-order=start-date-time_asc&is_use=true&limit=3`
+        `/v1/schedules?community-id=${this.$auth.user.communityId}&sort-order=start-date-time_asc&is-use=true&limit=3`
       )
       .then(
         action((data) => {
