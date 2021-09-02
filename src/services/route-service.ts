@@ -1,10 +1,10 @@
 import { createBrowserHistory, History } from 'history'
 
-export interface IFeedDetailRouteParam {
+export interface IAutoFocusRouteParam {
   autoFocus?: boolean
 }
 
-export interface IFeedFormRouteParam {
+export interface IGoDetailRouteParam {
   goDetailOnSubmit?: boolean
 }
 
@@ -73,11 +73,11 @@ class RouteService {
     this.route('/tabs/feed')
   }
 
-  feedForm(param?: IFeedFormRouteParam) {
+  feedForm(param?: IGoDetailRouteParam) {
     this.route('/tabs/feed/form', param)
   }
 
-  feedDetail(feedId: number, param?: IFeedDetailRouteParam, isReplace = false) {
+  feedDetail(feedId: number, param?: IAutoFocusRouteParam, isReplace = false) {
     this.route(`/tabs/feed/${feedId}`, param, isReplace)
   }
 
@@ -85,24 +85,24 @@ class RouteService {
     this.route('/tabs/stuff')
   }
 
-  stuffForm() {
-    this.route('/tabs/stuff/form')
+  stuffForm(param?: IGoDetailRouteParam) {
+    this.route('/tabs/stuff/form', param)
   }
 
-  stuffDetail(stuffId: number) {
-    this.route(`/tabs/stuff/${stuffId}`)
+  stuffDetail(stuffId: number, isReplace = false) {
+    this.route(`/tabs/stuff/${stuffId}`, undefined, isReplace)
   }
 
   talent() {
     this.route('/tabs/talent')
   }
 
-  talentForm() {
-    this.route('/tabs/talent/form')
+  talentForm(param?: IGoDetailRouteParam) {
+    this.route('/tabs/talent/form', param)
   }
 
-  talentDetail(talentId: number) {
-    this.route(`/tabs/talent/${talentId}`)
+  talentDetail(talentId: number, isReplace = false) {
+    this.route(`/tabs/talent/${talentId}`, undefined, isReplace)
   }
 
   chatRoom(roomId: number) {

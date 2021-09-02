@@ -2,7 +2,7 @@ import { IonContent, IonPage } from '@ionic/react'
 import { Observer } from 'mobx-react-lite'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { useLocation } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { Checkbox } from '../components/atoms/CheckboxComponent'
 import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { Icon } from '../components/atoms/IconComponent'
@@ -22,9 +22,12 @@ import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
 import { IStuffTalentForm, StuffTalentPageKey, StuffTalentType } from '../models/stufftalent.d'
+import { IGoDetailRouteParam, route } from '../services/route-service'
 import { executeWithError } from '../utils/http-helper-util'
 
 export const StuffTalentFormPage: React.FC = () => {
+  const goDetailOnSubmit = useHistory<IGoDetailRouteParam>().location.state?.goDetailOnSubmit
+
   const { $ui, $stuff, $talent, $auth } = useStore()
 
   const pageData = {
@@ -33,7 +36,7 @@ export const StuffTalentFormPage: React.FC = () => {
   }
 
   const { store, title } = pageData[getPageKey(useLocation().pathname)]
-  const { routeList } = routeFunc[store.predefined.pageKey]
+  const { routeDetail } = routeFunc[store.predefined.pageKey]
 
   const isUpdate = !!store.updateForm.id
   const form = Object.assign({}, isUpdate ? { ...store.updateForm } : { ...store.form })
@@ -92,7 +95,8 @@ export const StuffTalentFormPage: React.FC = () => {
       }
 
       isSubmitCompleted.current = true
-      routeList()
+
+      goDetailOnSubmit ? routeDetail(form.id!, true) : route.goBack()
     })
   })
 
@@ -116,16 +120,14 @@ export const StuffTalentFormPage: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    const [exchangeText, price] = getValues(['exchangeText', 'price'])
-
     // 불필요한 setValue 호출을 막기 위해 현재 빈 값인 필드는 그냥 둔다.
     if ([StuffTalentType.SHARE, StuffTalentType.WANT].includes(watchType)) {
-      !!exchangeText && setValueCustom('exchangeText', undefined)
-      !!price && setValueCustom('price', undefined)
+      !!watchExchangeText && setValueCustom('exchangeText', undefined)
+      !!watchPrice && setValueCustom('price', undefined)
     } else if (StuffTalentType.SELL === watchType) {
-      !!exchangeText && setValueCustom('exchangeText', undefined)
+      !!watchExchangeText && setValueCustom('exchangeText', undefined)
     } else if (StuffTalentType.EXCHANGE === watchType) {
-      !!price && setValueCustom('price', undefined)
+      !!watchPrice && setValueCustom('price', undefined)
     }
   }, [watchType])
 
