@@ -1,6 +1,7 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import { useHistory } from 'react-router'
 import { Checkbox } from '../components/atoms/CheckboxComponent'
 import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { Icon } from '../components/atoms/IconComponent'
@@ -17,11 +18,14 @@ import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { IFeedForm } from '../models/feed.d'
-import { route } from '../services/route-service'
+import { IFeedFormRouteParam, route } from '../services/route-service'
 import { datetimeRange } from '../utils/datetime-util'
 import { executeWithError } from '../utils/http-helper-util'
 
 export const FeedFormPage: FC = () => {
+  const goDetailOnSubmit = useHistory<IFeedFormRouteParam>().location.state?.goDetailOnSubmit
+  console.log({ goDetailOnSubmit })
+
   const { $ui, $feed, $auth } = useStore()
 
   const uploader = useRef<IImageUploaderRef>()
@@ -74,7 +78,7 @@ export const FeedFormPage: FC = () => {
 
       isSubmitCompleted.current = true
 
-      isUpdate ? route.feedDetail(form.id!, undefined, true) : route.feed()
+      goDetailOnSubmit ? route.feedDetail(form.id!, undefined, true) : route.goBack()
     })
   })
 

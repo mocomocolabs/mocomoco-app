@@ -9,15 +9,11 @@ import { CommentInsertForm } from '../components/organisms/CommentInsertFormComp
 import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
-import { route } from '../services/route-service'
-
-interface ILocationState {
-  autoFocus?: boolean
-}
+import { IFeedDetailRouteParam, route } from '../services/route-service'
 
 export const FeedDetailPage: React.FC = () => {
   const id = parseInt(useParams<{ id: string }>().id)
-  const autoFocus = useHistory<ILocationState>().location.state?.autoFocus
+  const autoFocus = useHistory<IFeedDetailRouteParam>().location.state?.autoFocus
 
   const { $feed, $ui, $comment } = useStore()
 

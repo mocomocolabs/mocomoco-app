@@ -1,5 +1,13 @@
 import { createBrowserHistory, History } from 'history'
 
+export interface IFeedDetailRouteParam {
+  autoFocus?: boolean
+}
+
+export interface IFeedFormRouteParam {
+  goDetailOnSubmit?: boolean
+}
+
 class RouteService {
   private _history: History
 
@@ -65,12 +73,12 @@ class RouteService {
     this.route('/tabs/feed')
   }
 
-  feedForm() {
-    this.route('/tabs/feed/form')
+  feedForm(param?: IFeedFormRouteParam) {
+    this.route('/tabs/feed/form', param)
   }
 
-  feedDetail(feedId: number, param?: { autoFocus?: boolean }, isReplace = false) {
-    this.route(`/tabs/feed/${feedId}`, { autoFocus: param?.autoFocus }, isReplace)
+  feedDetail(feedId: number, param?: IFeedDetailRouteParam, isReplace = false) {
+    this.route(`/tabs/feed/${feedId}`, param, isReplace)
   }
 
   stuff() {

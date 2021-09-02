@@ -1,5 +1,5 @@
 import { useObserver } from 'mobx-react-lite'
-import React, { FC, useMemo } from 'react'
+import React, { FC, useCallback, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed.d'
 import { route } from '../../services/route-service'
@@ -44,15 +44,19 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
     []
   )
 
-  const onClick = useMemo(
-    () => (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (!isDetail) {
-        route.feedDetail(feed.id)
-        e.stopPropagation()
-      }
-    },
-    []
-  )
+  const onClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!isDetail) {
+      route.feedDetail(feed.id)
+      e.stopPropagation()
+    }
+  }, [])
+
+  const onClickWithAutoFocus = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (!isDetail) {
+      route.feedDetail(feed.id, { autoFocus: true })
+      e.stopPropagation()
+    }
+  }, [])
 
   return useObserver(() => (
     <li>
@@ -122,7 +126,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
         </div>
 
         {feed.comments.length ? (
-          <div className='py-2' onClickCapture={onClick}>
+          <div className='py-2' onClickCapture={onClickWithAutoFocus}>
             {feed.comments?.slice(0, isDetail ? undefined : 3).map((v) => (
               <CommentItem
                 key={v.id}
