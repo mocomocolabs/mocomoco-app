@@ -1,6 +1,7 @@
-import { IonLabel, IonSegment, IonSegmentButton } from '@ionic/react'
+import { IonSegment, IonSegmentButton } from '@ionic/react'
 import React from 'react'
 import { ISegments, SEGMENT_KEYS } from '../../models/segment'
+import { TextSm } from '../atoms/TextSmComponent'
 import './SegmentComponent.scss'
 
 interface ISegment {
@@ -19,8 +20,8 @@ export const Segment: React.FC<ISegment> = ({ segments, selected, onChange }) =>
   }
 
   const segmentButtons = Object.entries(segments).map(([segmentKey, { label }]) => (
-    <IonSegmentButton className='segment' key={segmentKey} value={segmentKey}>
-      <IonLabel>{label}</IonLabel>
+    <IonSegmentButton key={segmentKey} value={segmentKey}>
+      <TextSm className='leading-none'>{label}</TextSm>
     </IonSegmentButton>
   ))
 
