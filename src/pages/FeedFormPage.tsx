@@ -18,12 +18,12 @@ import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { IFeedForm } from '../models/feed.d'
-import { IGoDetailRouteParam, route } from '../services/route-service'
+import { IRouteParam, route } from '../services/route-service'
 import { datetimeRange } from '../utils/datetime-util'
 import { executeWithError } from '../utils/http-helper-util'
 
 export const FeedFormPage: FC = () => {
-  const goDetailOnSubmit = useHistory<IGoDetailRouteParam>().location.state?.goDetailOnSubmit
+  const goDetailOnSubmit = useHistory<IRouteParam>().location.state?.goDetailOnSubmit
 
   const { $ui, $feed, $auth } = useStore()
 

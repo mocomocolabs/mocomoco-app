@@ -14,6 +14,7 @@ import { TaskObserver } from '../components/molecules/TaskObserverComponent'
 import { ClubPopularSlider } from '../components/organisms/ClubPopularSliderComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
+import { SEGMENT_KEYS } from '../models/segment.d'
 import { StuffTalentPageKey } from '../models/stufftalent.d'
 import { route } from '../services/route-service'
 
@@ -95,7 +96,7 @@ export const HomePage: React.FC = () => {
         </TaskObserver>
 
         <div className='px-container'>
-          <HomeTitle title='다가오는 일정'></HomeTitle>
+          <HomeTitle title='다가오는 일정' route={() => route.feed({ segment: SEGMENT_KEYS.schedule })} />
           <TaskObserver taskTypes={fetcher.schedules.taskType} spinnerPosition='centerX'>
             {() => <HomeSchedule items={$feed.homeScheduleFeeds} className='pb-2' />}
           </TaskObserver>

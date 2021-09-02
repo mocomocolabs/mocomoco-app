@@ -22,11 +22,11 @@ import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
 import { IStuffTalentForm, StuffTalentPageKey, StuffTalentType } from '../models/stufftalent.d'
-import { IGoDetailRouteParam, route } from '../services/route-service'
+import { IRouteParam, route } from '../services/route-service'
 import { executeWithError } from '../utils/http-helper-util'
 
 export const StuffTalentFormPage: React.FC = () => {
-  const goDetailOnSubmit = useHistory<IGoDetailRouteParam>().location.state?.goDetailOnSubmit
+  const goDetailOnSubmit = useHistory<IRouteParam>().location.state?.goDetailOnSubmit
 
   const { $ui, $stuff, $talent, $auth } = useStore()
 

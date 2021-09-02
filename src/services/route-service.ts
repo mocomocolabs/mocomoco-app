@@ -1,11 +1,10 @@
 import { createBrowserHistory, History } from 'history'
+import { SEGMENT_KEYS } from '../models/segment.d'
 
-export interface IAutoFocusRouteParam {
+export interface IRouteParam {
   autoFocus?: boolean
-}
-
-export interface IGoDetailRouteParam {
   goDetailOnSubmit?: boolean
+  segment?: SEGMENT_KEYS
 }
 
 class RouteService {
@@ -69,15 +68,15 @@ class RouteService {
     this.route('/tabs/home')
   }
 
-  feed() {
-    this.route('/tabs/feed')
+  feed(param?: IRouteParam) {
+    this.route('/tabs/feed', param)
   }
 
-  feedForm(param?: IGoDetailRouteParam) {
+  feedForm(param?: IRouteParam) {
     this.route('/tabs/feed/form', param)
   }
 
-  feedDetail(feedId: number, param?: IAutoFocusRouteParam, isReplace = false) {
+  feedDetail(feedId: number, param?: IRouteParam, isReplace = false) {
     this.route(`/tabs/feed/${feedId}`, param, isReplace)
   }
 
@@ -85,7 +84,7 @@ class RouteService {
     this.route('/tabs/stuff')
   }
 
-  stuffForm(param?: IGoDetailRouteParam) {
+  stuffForm(param?: IRouteParam) {
     this.route('/tabs/stuff/form', param)
   }
 
@@ -97,7 +96,7 @@ class RouteService {
     this.route('/tabs/talent')
   }
 
-  talentForm(param?: IGoDetailRouteParam) {
+  talentForm(param?: IRouteParam) {
     this.route('/tabs/talent/form', param)
   }
 

@@ -3,6 +3,7 @@ export enum SEGMENT_KEYS {
   talent = 'talent',
   feed = 'feed',
   club = 'club',
+  schedule = 'schedule',
 }
 
 export interface ISegments {

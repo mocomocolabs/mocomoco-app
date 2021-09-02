@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { IGoDetailRouteParam, route } from '../services/route-service'
+import { IRouteParam, route } from '../services/route-service'
 import { IStuffTalentPredefined } from '../stores/stufftalent-store'
 import { IStuffTalentDto, IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
 import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus, StuffTalentType } from './stufftalent.d'
@@ -50,7 +50,7 @@ export const getPageKey = (path: string) => {
 interface IRouteFunc {
   [index: string]: {
     routeList: () => void
-    routeForm: (param?: IGoDetailRouteParam) => void
+    routeForm: (param?: IRouteParam) => void
     routeDetail: (id: number, isReplace?: boolean) => void
   }
 }

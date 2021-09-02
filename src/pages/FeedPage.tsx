@@ -1,14 +1,25 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { reaction } from 'mobx'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useHistory } from 'react-router'
 import { Icon } from '../components/atoms/IconComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
+import { Segment } from '../components/molecules/SegmentComponent'
 import { FeedList } from '../components/organisms/FeedListComponent'
 import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
-import { route } from '../services/route-service'
+import { ISegments, SEGMENT_KEYS } from '../models/segment.d'
+import { IRouteParam, route } from '../services/route-service'
+
+const segments: ISegments = {
+  [SEGMENT_KEYS.feed]: { label: '전체글' },
+  [SEGMENT_KEYS.schedule]: { label: '일정' },
+}
 
 export const FeedPage: React.FC = () => {
+  const segment = useHistory<IRouteParam>().location.state?.segment
+  const initSegment = segment ?? SEGMENT_KEYS.feed
+
   const { $ui, $feed, $community } = useStore()
 
   useEffect(() => {
@@ -25,6 +36,20 @@ export const FeedPage: React.FC = () => {
 
     return () => disposeReaction()
   }, [])
+
+  const [selectedSegment, setSelectedSegment] = useState<SEGMENT_KEYS>(initSegment)
+
+  const onChangeSegment = useCallback(
+    (segment: SEGMENT_KEYS) => {
+      selectedSegment !== segment && setSelectedSegment(segment)
+    },
+    [selectedSegment]
+  )
+
+  const renderList = useMemo(
+    () => <FeedList fetchTask={$feed.getFeeds} segment={selectedSegment} />,
+    [selectedSegment]
+  )
 
   return (
     <IonPage>
@@ -55,11 +80,10 @@ export const FeedPage: React.FC = () => {
             <Icon name='pencil'></Icon>
           </div>
         }
+        bottom={<Segment segments={segments} selected={selectedSegment} onChange={onChangeSegment} />}
       />
 
-      <IonContent>
-        <FeedList fetchTask={$feed.getFeeds} />
-      </IonContent>
+      <IonContent>{renderList}</IonContent>
     </IonPage>
   )
 }
