@@ -168,6 +168,8 @@ export class StuffTalentStore {
   }) as TaskBy<number>
 
   createInsertFormData = async (form: IStuffTalentForm) => {
+    if (form.images.length === 0) throw new Error('최소 1개의 이미지를 등록해 주세요')
+
     const formData = new FormData()
 
     formData.append(
@@ -196,13 +198,7 @@ export class StuffTalentStore {
       )
     )
 
-    if (form.images.length === 0) {
-      // TODO: empty image 추가 => db에 넣지 말고, images 프로퍼티가 비어 있으면 화면에서 empty image를 표시하는게 어떨까?
-      // db에 넣어놓으면, 수정화면에서 empty image인지 구분할 방법이 없다.
-      form.images = [(await urlToFile('/assets/img/no-image.png')) as ImageUploadItem]
-    }
-
-    form.images?.forEach((v) => {
+    form.images.forEach((v) => {
       formData.append('files', v, v.name)
     })
 

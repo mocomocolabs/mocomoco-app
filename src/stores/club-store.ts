@@ -108,6 +108,7 @@ export class ClubStore {
   getClubForm = (async (_id: number) => {
     await this.getClub(_id)
 
+    console.log(this.club.imageUrls)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const images: any = await Promise.all(this.club.imageUrls.map((v) => urlToFile(v)))
 
@@ -119,6 +120,8 @@ export class ClubStore {
 
   @task.resolved
   insertClub = (async (form: IClubForm) => {
+    if (form.images.length === 0) throw new Error('최소 1개의 이미지를 등록해 주세요')
+
     const formData = new FormData()
 
     formData.append(
@@ -141,12 +144,7 @@ export class ClubStore {
       )
     )
 
-    if (form.images.length === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      form.images = [(await urlToFile('/assets/img/no-image.png')) as any]
-    }
-
-    form.images?.forEach((v) => {
+    form.images.forEach((v) => {
       formData.append('files', v, v.name)
     })
 
