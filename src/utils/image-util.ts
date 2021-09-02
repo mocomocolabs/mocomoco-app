@@ -1,10 +1,11 @@
 import Axios from 'axios'
+import path from 'path'
 
 export const urlToFile = (url: string): Promise<File> => {
   return Axios.get(url, { responseType: 'blob' }).then(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (v: any) => {
-      const filename = url // TODO 개선 필요
+      const filename = path.basename(new URL(url).pathname)
       return new File([v.data], filename, { type: v.data.type })
     }
   )
