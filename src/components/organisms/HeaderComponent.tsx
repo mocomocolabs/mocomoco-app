@@ -27,7 +27,7 @@ export const Header: FC<IHeader> = ({ start, center, end, bottom, searchbar }) =
   }, [searchbar?.show])
 
   return (
-    <IonHeader>
+    <IonHeader className='ion-no-border'>
       <IonToolbar>
         <div className='header-container' hidden={searchbar?.show}>
           <div className='header-item-start'>
