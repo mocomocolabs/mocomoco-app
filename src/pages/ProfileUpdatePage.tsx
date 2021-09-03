@@ -66,7 +66,7 @@ export const ProfileUpdatePage: React.FC = () => {
   function filterUpdatedFields<T>(form: T, dirtyFields: DeepMap<T, true>): T {
     return Object.fromEntries(
       Object.entries(form).filter(([key]) => {
-        return key === 'id' || Object.keys(dirtyFields).includes(key)
+        return key === 'id' || Object.keys(dirtyFields).includes(key) || key === 'image' // TODO 20210903-1 서버작업 완료되면 image는 지울 것
       })
     ) as T
   }
