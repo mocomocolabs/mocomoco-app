@@ -44,11 +44,7 @@ export const ProfileDetail: React.FC<IProfileDetailItem> = ({ userId }) => {
 
             <XDivider />
 
-            <TextBase className='mt-4 mb-5 text-center'>
-              {$user.user.description}우리집 고양이는 귀엽다
-              <br />
-              세상에서 제일 귀여움 반박불가
-            </TextBase>
+            <TextBase className='mt-4 mb-5 text-center pre-line'>{$user.user.description}</TextBase>
 
             <div className='mb-5'>
               <SubmitButton
