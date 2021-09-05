@@ -1,5 +1,5 @@
 import { Task } from 'mobx-task'
-import { FeedType, IFeedForm } from '../models/feed.d'
+import { FeedType, IFeedForm, ScheduleType } from '../models/feed.d'
 import { IFileDto } from './common/file.d'
 import { ICommunityDto } from './community-store.d'
 import { IUserDto } from './user-store.d'
@@ -26,6 +26,7 @@ export interface IFeedDto {
 
 export interface IFeedScheduleDto {
   id: number
+  type: ScheduleType
   title: string
   place: string
   /** yyyymmddhhmmss */

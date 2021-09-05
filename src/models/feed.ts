@@ -24,6 +24,7 @@ export class Feed {
     return dto?.isUse
       ? {
           id: dto.id,
+          type: dto.type,
           title: dto.title,
           place: dto.place,
           startDate: dto.startDateTime.substr(0, 8),

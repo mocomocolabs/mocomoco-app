@@ -2,7 +2,13 @@ import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IComment } from './comment'
 import { IUser } from './user.d'
 
-export type FeedType = 'SCHEDULE' | 'NORMAL'
+export enum FeedType {
+  NORMAL = 'NORMAL',
+}
+
+export enum ScheduleType {
+  FEED = 'FEED',
+}
 
 export interface IFeed {
   id: number
@@ -42,8 +48,5 @@ export interface IFeedSchedule {
   endDate: string /** yyyymmdd */
   endTime: string /** hhmmss */
   formatScheduleTime: string /** 12월 29일 오후 8:00 - 오후 10:00 */
-}
-
-export enum FEED_TYPE {
-  NORMAL = 'NORMAL',
+  type: ScheduleType
 }

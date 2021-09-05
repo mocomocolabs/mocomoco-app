@@ -3,7 +3,7 @@ import { task } from 'mobx-task'
 import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { Feed } from '../models/feed'
-import { FEED_TYPE, IFeed, IFeedForm, IFeedSchedule } from '../models/feed.d'
+import { FeedType, IFeed, IFeedForm, IFeedSchedule } from '../models/feed.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
@@ -15,7 +15,7 @@ const initState = {
   feeds: [],
   feed: {} as IFeed,
   form: {
-    type: FEED_TYPE.NORMAL,
+    type: FeedType.NORMAL,
     communityId: 0,
     title: '',
     content: '',
