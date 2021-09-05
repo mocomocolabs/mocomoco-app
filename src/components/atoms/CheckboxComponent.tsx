@@ -20,7 +20,7 @@ export const Checkbox: FC<ICheckbox> = ({
 
   useEffect(() => {
     onChange && onChange(checked)
-  }, [checked, onChange])
+  }, [checked])
 
   return (
     <div className='flex items-center' onClick={() => setChecked(!checked)}>
