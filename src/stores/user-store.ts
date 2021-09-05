@@ -43,7 +43,9 @@ export class UserStore {
     await this.getUser(_id)
 
     // TODO 20210903-1 서버작업 완료되면 지울 것
-    const image: ImageUploadItem = (await urlToFile(this.user.profileUrl)) as ImageUploadItem
+    const image: ImageUploadItem | undefined = !!this.user.profileUrl
+      ? ((await urlToFile(this.user.profileUrl)) as ImageUploadItem)
+      : undefined
 
     this.setUpdateForm({
       ...this.user,
