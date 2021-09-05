@@ -1,6 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { DeepMap, useForm } from 'react-hook-form'
+import { FieldNamesMarkedBoolean, useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import { HeaderSubmitText } from '../components/atoms/HeaderSubmitText'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
@@ -63,7 +63,7 @@ export const ProfileUpdatePage: React.FC = () => {
   /**
   dirtyFields를 참고해서, 변경된 프로퍼티만 남김
   */
-  function filterUpdatedFields<T>(form: T, dirtyFields: DeepMap<T, true>): T {
+  function filterUpdatedFields<T>(form: T, dirtyFields: FieldNamesMarkedBoolean<IUserForm>): T {
     return Object.fromEntries(
       Object.entries(form).filter(([key]) => {
         return key === 'id' || Object.keys(dirtyFields).includes(key) || key === 'image' // TODO 20210903-1 서버작업 완료되면 image는 지울 것
