@@ -21,17 +21,17 @@ export class Feed {
   }
 
   static scheduleOf(dto: IFeedScheduleDto): IFeedSchedule | undefined {
-    return (
-      dto && {
-        id: dto.id,
-        title: dto.title,
-        place: dto.place,
-        startDate: dto.startDateTime.substr(0, 8),
-        startTime: dto.startDateTime.substr(8),
-        endDate: dto.endDateTime.substr(0, 8),
-        endTime: dto.endDateTime.substr(8),
-        formatScheduleTime: datetimeRange(dto.startDateTime, dto.endDateTime),
-      }
-    )
+    return dto?.isUse
+      ? {
+          id: dto.id,
+          title: dto.title,
+          place: dto.place,
+          startDate: dto.startDateTime.substr(0, 8),
+          startTime: dto.startDateTime.substr(8),
+          endDate: dto.endDateTime.substr(0, 8),
+          endTime: dto.endDateTime.substr(8),
+          formatScheduleTime: datetimeRange(dto.startDateTime, dto.endDateTime),
+        }
+      : undefined
   }
 }

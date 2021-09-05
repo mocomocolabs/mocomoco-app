@@ -32,4 +32,5 @@ export interface IFeedScheduleDto {
   startDateTime: string
   /** yyyymmddhhmmss */
   endDateTime: string
+  isUse: boolean
 }
