@@ -4,7 +4,6 @@ import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { User } from '../models/user'
 import { IUser, IUserForm } from '../models/user.d'
 import { api } from '../services/api-service'
-import { urlToFile } from '../utils/image-util'
 import { TaskBy } from './task'
 import { IUserDto } from './user-store.d'
 
@@ -42,14 +41,8 @@ export class UserStore {
   getUpdateForm = (async (_id: number) => {
     await this.getUser(_id)
 
-    // TODO 20210903-1 서버작업 완료되면 지울 것
-    const image: ImageUploadItem | undefined = !!this.user.profileUrl
-      ? ((await urlToFile(this.user.profileUrl)) as ImageUploadItem)
-      : undefined
-
     this.setUpdateForm({
       ...this.user,
-      image,
     })
   }) as TaskBy<number>
 

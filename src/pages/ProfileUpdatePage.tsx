@@ -65,9 +65,7 @@ export const ProfileUpdatePage: React.FC = () => {
   */
   function filterUpdatedFields<T>(form: T, dirtyFields: FieldNamesMarkedBoolean<IUserForm>): T {
     return Object.fromEntries(
-      Object.entries(form).filter(([key]) => {
-        return key === 'id' || Object.keys(dirtyFields).includes(key) || key === 'image' // TODO 20210903-1 서버작업 완료되면 image는 지울 것
-      })
+      Object.entries(form).filter(([key]) => key === 'id' || Object.keys(dirtyFields).includes(key))
     ) as T
   }
 
