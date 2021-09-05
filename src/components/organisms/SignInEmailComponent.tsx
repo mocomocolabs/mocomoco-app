@@ -6,8 +6,8 @@ import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 import { InputPassword } from '../atoms/InputPasswordComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
-import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
+import { FieldErrorMessage } from '../molecules/FieldErrorMessageComponent'
 
 export const SignInEmail: FC = () => {
   const {
@@ -40,24 +40,16 @@ export const SignInEmail: FC = () => {
         placeholder='비밀번호를 입력해주세요'
         register={register('password', {
           required: '비밀번호를 입력해주세요',
-          minLength: { value: 6, message: '6자 이상 입력해주세요' },
+          minLength: { value: 6, message: '6~32자 사이로 입력해주세요' },
+          maxLength: { value: 32, message: '6~32자 사이로 입력해주세요' },
         })}
-      ></InputPassword>
-      <div className='h-10 pt-1 px-3'>
-        <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
-      </div>
+      />
+      <FieldErrorMessage error={errors.password} className='h-10' />
       <SpinnerWrapper
         task={$auth.signIn}
         spinnerPosition='centerX'
-        Submit={
-          <SubmitButton
-            disabled={!formState.isValid}
-            text='로그인'
-            size='large'
-            color='secondary'
-          ></SubmitButton>
-        }
-      ></SpinnerWrapper>
+        Submit={<SubmitButton disabled={!formState.isValid} text='로그인' size='large' color='secondary' />}
+      />
     </form>
   ))
 }

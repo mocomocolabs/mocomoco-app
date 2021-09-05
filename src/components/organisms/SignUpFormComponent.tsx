@@ -8,7 +8,7 @@ import { InputNormal } from '../atoms/InputNormalComponent'
 import { InputPassword } from '../atoms/InputPasswordComponent'
 import { Pad } from '../atoms/PadComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
-import { ValidationMessage } from '../atoms/ValidationMessageComponent'
+import { FieldErrorMessage } from '../molecules/FieldErrorMessageComponent'
 
 export const SignUpForm: FC = () => {
   const {
@@ -37,44 +37,32 @@ export const SignUpForm: FC = () => {
         placeholder='이름을 입력해주세요'
         register={register('name', {
           required: '이름을 입력해주세요',
-          minLength: { value: 2, message: '2자 이상 입력해주세요' },
+          minLength: { value: 2, message: '2~6글자 사이로 입력해주세요' },
+          maxLength: { value: 6, message: '2~6글자 사이로 입력해주세요' },
         })}
-      ></InputNormal>
-      <div className='height-20 pt-1 px-3'>
-        <ValidationMessage isShow={errors.name} message={errors?.name?.message}></ValidationMessage>
-      </div>
+      />
+      <FieldErrorMessage error={errors.name} />
       {/* <InputNormal placeholder='별명을 입력해주세요(선택)' register={register('nickname')}></InputNormal>
       <Pad className='height-20'></Pad> */}
       <InputPassword
         placeholder='비밀번호를 입력해주세요'
         register={register('password', {
-          required: '패스워드를 입력해주세요',
-          minLength: { value: 6, message: '6자 이상 입력해주세요' },
+          required: '비밀번호를 입력해주세요',
+          minLength: { value: 6, message: '6~32글자 사이로 입력해주세요' },
+          maxLength: { value: 32, message: '6~32글자 사이로 입력해주세요' },
         })}
-      ></InputPassword>
-      <div className='height-20 pt-1 px-3'>
-        <ValidationMessage isShow={errors.password} message={errors?.password?.message}></ValidationMessage>
-      </div>
+      />
+      <FieldErrorMessage error={errors.password} />
       <InputPassword
         placeholder='비밀번호를 확인해주세요'
         register={register('rePassword', {
-          required: '패스워드를 입력해주세요',
-          validate: (value) => value === password.current || '패스워드가 일치하지 않습니다',
+          required: '비밀번호를 입력해주세요',
+          validate: (value) => value === password.current || '비밀번호가 일치하지 않습니다',
         })}
-      ></InputPassword>
-      <div className='height-20 pt-1 px-3'>
-        <ValidationMessage
-          isShow={errors.rePassword}
-          message={errors?.rePassword?.message}
-        ></ValidationMessage>
-      </div>
-      <Pad className='height-20'></Pad>
-      <SubmitButton
-        color='secondary'
-        size='large'
-        disabled={!formState.isValid}
-        text='계속하기'
-      ></SubmitButton>
+      />
+      <FieldErrorMessage error={errors.rePassword} />
+      <Pad className='height-20' />
+      <SubmitButton color='secondary' size='large' disabled={!formState.isValid} text='계속하기' />
     </form>
   ))
 }

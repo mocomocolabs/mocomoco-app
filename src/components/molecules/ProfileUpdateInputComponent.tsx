@@ -2,12 +2,13 @@ import React, { useCallback, useRef } from 'react'
 import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 import { IUserForm } from '../../models/user.d'
 import { IStuffTalentCommunityDto } from '../../stores/stufftalent-store.d'
+import { maxLengthValidator } from '../../utils/form-util'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { Pad } from '../atoms/PadComponent'
 import { Textarea } from '../atoms/TextareaComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
-import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { XDivider } from '../atoms/XDividerComponent'
+import { FieldErrorMessage as FieldErrorMessage } from './FieldErrorMessageComponent'
 import { IImageUploaderRef, ImageUploadItem } from './ImageUploaderComponent'
 import { ProfileImageUploader } from './ProfileImageUploaderComponent'
 
@@ -40,7 +41,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
       <Pad className='height-40' />
       <div className='flex-center'>
         <ProfileImageUploader
-          imageUrl={watchImage.preview || watchProfileUrl}
+          imageUrl={watchImage?.preview || watchProfileUrl}
           setImage={(image: ImageUploadItem) => setValueCustom('image', image)}
           refUploader={uploader}
         />
@@ -52,27 +53,30 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
         <InputNormal
           className='border-none'
           register={register('name', {
-            required: '이름을 입력해 주세요',
-            minLength: { value: 2, message: '2~6글자 사이로 입력해 주세요' },
-            maxLength: { value: 6, message: '2~6글자 사이로 입력해 주세요' },
+            required: '이름을 입력해주세요',
+            minLength: { value: 2, message: '2~6글자 사이로 입력해주세요' },
+            maxLength: { value: 6, message: '2~6글자 사이로 입력해주세요' },
           })}
-          placeholder='이름을 입력해 주세요'
+          placeholder='이름을 입력해주세요'
         />
       </div>
       <XDivider />
-      <div className='mt-1 ml-20'>
-        <ValidationMessage isShow={errors.name} message={errors.name?.message} />
-      </div>
+      <FieldErrorMessage error={errors.name} className='pl-20' />
 
       <div className='flex-center'>
         <TextBase className='flex-none gray ml-3 mr-6'>별명</TextBase>
         <InputNormal
           className='border-none'
-          register={register('nickname')}
-          placeholder='별명을 입력해 주세요 (선택사항)'
+          register={register('nickname', {
+            minLength: { value: 2, message: '2~20글자 사이로 입력해주세요' },
+            maxLength: { value: 20, message: '2~20글자 사이로 입력해주세요' },
+          })}
+          placeholder='별명을 입력해주세요 (선택사항)'
         />
       </div>
       <XDivider />
+      <FieldErrorMessage error={errors.nickname} className='pl-20' />
+
       <Pad className='height-10' />
 
       <div className='flex-center'>
@@ -90,14 +94,17 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
         <TextBase className='flex-none gray ml-3 mr-6'>소개</TextBase>
         <div className='flex-grow -my-3'>
           <Textarea
-            register={register('description')}
-            placeholder='소개를 입력해 주세요 (선택사항)'
-            autoGrow
+            register={register('description', {
+              validate: (value) => maxLengthValidator(value, 100),
+            })}
+            placeholder='소개를 입력해주세요 (선택사항)'
+            rows={5}
           />
         </div>
       </div>
       <Pad className='height-10' />
       <XDivider />
+      <FieldErrorMessage error={errors.description} className='pl-20' />
     </>
   )
 }

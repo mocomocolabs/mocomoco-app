@@ -9,6 +9,7 @@ import { Pad } from '../../components/atoms/PadComponent'
 import { Textarea } from '../../components/atoms/TextareaComponent'
 import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
+import { FieldErrorMessage } from '../../components/molecules/FieldErrorMessageComponent'
 import { Hashtag } from '../../components/molecules/HashtagComponent'
 import {
   assignPreview,
@@ -20,11 +21,17 @@ import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
 import { IClubForm } from '../../models/club.d'
 import { route } from '../../services/route-service'
+import { maxLengthValidator } from '../../utils/form-util'
 import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubFormPage: React.FC = () => {
   const { $auth, $ui, $club, $chat } = useStore()
-  const { register, handleSubmit, formState, reset } = useForm<IClubForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid, errors },
+    reset,
+  } = useForm<IClubForm>({
     mode: 'onChange',
     defaultValues: {
       ...$club.form,
@@ -71,7 +78,7 @@ export const ClubFormPage: React.FC = () => {
         end={
           <SpinnerWrapper
             task={$club.insertClub}
-            Submit={<HeaderSubmitText isSubmittable={formState.isValid} onSubmit={onSubmit} />}
+            Submit={<HeaderSubmitText isSubmittable={isValid} onSubmit={onSubmit} />}
           />
         }
       />
@@ -84,28 +91,52 @@ export const ClubFormPage: React.FC = () => {
               setImages={(param) => $club.setFormImage(param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
+
             <Pad className='h-2'></Pad>
+
             <InputNormal
               placeholder='모임 이름'
-              register={register('name', { required: true })}
-            ></InputNormal>
+              register={register('name', {
+                required: true,
+                validate: (value) => maxLengthValidator(value, 100),
+              })}
+            />
+            <FieldErrorMessage error={errors.name} />
+
             <InputNormal
               placeholder='모임 시간'
-              register={register('meetingTime', { required: true })}
-            ></InputNormal>
+              register={register('meetingTime', {
+                required: true,
+                validate: (value) => maxLengthValidator(value, 100),
+              })}
+            />
+            <FieldErrorMessage error={errors.meetingTime} />
+
             <InputNormal
               placeholder='모임 장소'
-              register={register('meetingPlace', { required: true })}
-            ></InputNormal>
+              register={register('meetingPlace', {
+                required: true,
+                validate: (value) => maxLengthValidator(value, 100),
+              })}
+            />
+            <FieldErrorMessage error={errors.meetingPlace} />
+
+            {/* TODO validate: (value) => maxLengthValidator(value, 100), */}
             <Hashtag
               onChange={(hashtagNames) => $club.setForm({ hashtagNames })}
               value={$club.form.hashtagNames?.join(' ')}
-            ></Hashtag>
+            />
+
             <Textarea
               rows={10}
+              autoGrow={true}
               placeholder='소모임을 자유롭게 소개해주세요 :)'
-              register={register('description', { required: true })}
-            ></Textarea>
+              register={register('description', {
+                required: true,
+                validate: (value) => maxLengthValidator(value, 1000),
+              })}
+            />
+            <FieldErrorMessage error={errors.description} />
           </form>
         </div>
       </IonContent>

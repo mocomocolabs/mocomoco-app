@@ -120,7 +120,7 @@ export class ClubStore {
 
   @task.resolved
   insertClub = (async (form: IClubForm) => {
-    if (form.images.length === 0) throw new Error('최소 1개의 이미지를 등록해 주세요')
+    if (form.images.length === 0) throw new Error('최소 1개의 이미지를 등록해주세요')
 
     const formData = new FormData()
 

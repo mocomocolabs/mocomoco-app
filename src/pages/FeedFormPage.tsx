@@ -13,6 +13,7 @@ import { TextBase } from '../components/atoms/TextBaseComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { FeedScheduleModalContents } from '../components/modals/FeedScheduleModalContents'
 import { BackButton } from '../components/molecules/BackButtonComponent'
+import { FieldErrorMessage } from '../components/molecules/FieldErrorMessageComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
@@ -20,6 +21,7 @@ import { useStore } from '../hooks/use-store'
 import { IFeedForm } from '../models/feed.d'
 import { IRouteParam, route } from '../services/route-service'
 import { datetimeRange } from '../utils/datetime-util'
+import { maxLengthValidator } from '../utils/form-util'
 import { executeWithError } from '../utils/http-helper-util'
 
 export const FeedFormPage: FC = () => {
@@ -33,7 +35,7 @@ export const FeedFormPage: FC = () => {
   const form = Object.assign({}, isUpdate ? { ...$feed.updateForm } : { ...$feed.form })
 
   const {
-    formState: { isValid, dirtyFields },
+    formState: { isValid, dirtyFields, errors },
     register,
     handleSubmit,
     getValues,
@@ -163,15 +165,28 @@ export const FeedFormPage: FC = () => {
               setImages={(param) => setValueCustom('images', param)}
               refUploader={uploader as IImageUploaderRef}
             />
+
             <Pad className='h-2' />
-            <InputNormal placeholder='제목을 입력해주세요 (선택사항)' register={register('title')} />
+
+            <InputNormal
+              placeholder='제목을 입력해주세요 (선택사항)'
+              register={register('title', {
+                validate: (value) => maxLengthValidator(value, 100),
+              })}
+            />
+            <FieldErrorMessage error={errors.title} />
+
             <Textarea
               rows={10}
               autoGrow={true}
-              maxLength={255}
               placeholder='나누고 싶은 이야기를 자유롭게 적어주세요 :)'
-              register={register('content', { required: true })}
+              register={register('content', {
+                required: true,
+                validate: (value) => maxLengthValidator(value, 1000),
+              })}
             />
+            <FieldErrorMessage error={errors.content} />
+
             {!!watchSchedule && (
               <div className='br-lg shadow p-3 mt-5 relative'>
                 <div onClick={showScheduleModal}>
@@ -198,6 +213,8 @@ export const FeedFormPage: FC = () => {
                 />
               </div>
             )}
+
+            <Pad className='h-2' />
           </form>
         </div>
       </IonContent>

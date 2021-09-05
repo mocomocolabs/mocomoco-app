@@ -7,7 +7,7 @@ import { Pad } from '../../components/atoms/PadComponent'
 import { SubmitButton } from '../../components/atoms/SubmitButtonComponent'
 import { TextXs } from '../../components/atoms/TextXsComponent'
 import { TextXxl } from '../../components/atoms/TextXxlComponent'
-import { ValidationMessage } from '../../components/atoms/ValidationMessageComponent'
+import { FieldErrorMessage } from '../../components/molecules/FieldErrorMessageComponent'
 import { useStore } from '../../hooks/use-store'
 import { ISignUpForm } from '../../models/sign-up'
 import { route } from '../../services/route-service'
@@ -36,7 +36,9 @@ export const SignUpPage: React.FC = () => {
             <br />
             하마에 어서오세요!
           </TextXxl>
-          <Pad className='height-30'></Pad>
+
+          <Pad className='height-30' />
+
           <InputNormal
             type='email'
             placeholder='이메일을 입력해주세요'
@@ -47,10 +49,9 @@ export const SignUpPage: React.FC = () => {
                 message: '올바른 이메일 형식이 아닙니다.',
               },
             })}
-          ></InputNormal>
-          <div className='h-10 pt-1 px-3'>
-            <ValidationMessage isShow={errors.email} message={errors.email?.message}></ValidationMessage>
-          </div>
+          />
+          <FieldErrorMessage error={errors.email} className='h-10' />
+
           <SubmitButton
             disabled={!isValid}
             color='secondary'
@@ -64,7 +65,8 @@ export const SignUpPage: React.FC = () => {
               const exists = await $auth.checkEmailExists(email)
               exists ? route.signIn() : route.signUpForm()
             }}
-          ></SubmitButton>
+          />
+
           <TextXs className='gray mt-4 text-center'>
             회원가입시{' '}
             <strong className='underline' onClick={() => route.termPrivacy()}>

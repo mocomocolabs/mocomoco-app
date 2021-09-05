@@ -16,6 +16,7 @@ import { XDivider } from '../components/atoms/XDividerComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CategorySelector } from '../components/molecules/CategorySelectorComponent'
+import { FieldErrorMessage } from '../components/molecules/FieldErrorMessageComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
@@ -23,6 +24,7 @@ import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
 import { IStuffTalentForm, StuffTalentPageKey, StuffTalentType } from '../models/stufftalent.d'
 import { IRouteParam, route } from '../services/route-service'
+import { maxLengthValidator } from '../utils/form-util'
 import { executeWithError } from '../utils/http-helper-util'
 
 export const StuffTalentFormPage: React.FC = () => {
@@ -41,18 +43,13 @@ export const StuffTalentFormPage: React.FC = () => {
   const isUpdate = !!store.updateForm.id
   const form = Object.assign({}, isUpdate ? { ...store.updateForm } : { ...store.form })
 
-  const {
-    formState: { isValid, dirtyFields },
-    register,
-    handleSubmit,
-    getValues,
-    setValue,
-    watch,
-  } = useForm<IStuffTalentForm>({
+  const { formState, register, handleSubmit, getValues, setValue, watch } = useForm<IStuffTalentForm>({
     mode: 'onChange',
     // TODO 최종적으로는 $community.selectedId 를 사용하는 게 맞는데, 지금은 내 공동체에만 글을 쓸 수 있으니 auth.user.communityId를 사용하도록 함.
     defaultValues: { ...form, communityId: form.communityId > 0 ? form.communityId : $auth.user.communityId },
   })
+
+  const { isValid, dirtyFields, errors } = formState
 
   const [watchCategoryId, watchType, watchPrice, watchExchangeText, watchImages] = watch([
     'categoryId',
@@ -153,12 +150,14 @@ export const StuffTalentFormPage: React.FC = () => {
             <input type='hidden' {...register('isExchangeable')} />
             <input type='hidden' {...register('isNegotiable')} />
             <input type='hidden' {...register('isPublic')} />
+
             <ImageUploader
               className='mb-4'
               images={watchImages}
               setImages={(param) => setValueCustom('images', param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
+
             <div className='flex gap-1 w-full'>
               {typeLabels.map((t, i) => (
                 <div
@@ -179,7 +178,9 @@ export const StuffTalentFormPage: React.FC = () => {
                 </div>
               ))}
             </div>
+
             <Pad className='h-4' />
+
             <div className='flex gap-4'>
               <Checkbox
                 label='교환 가능'
@@ -194,9 +195,20 @@ export const StuffTalentFormPage: React.FC = () => {
                 color='primary'
               ></Checkbox>
             </div>
+
             <XDivider className='hr-gray mt-4' />
-            <InputNormal placeholder='제목' register={register('title', { required: true })}></InputNormal>
+
+            <InputNormal
+              placeholder='제목'
+              register={register('title', {
+                required: true,
+                validate: (value) => maxLengthValidator(value, 100),
+              })}
+            />
+            <FieldErrorMessage error={errors.title} />
+
             <Pad className='h-4' />
+
             <Observer>
               {() => (
                 <CategorySelector
@@ -208,23 +220,41 @@ export const StuffTalentFormPage: React.FC = () => {
                 />
               )}
             </Observer>
+
             <XDivider className='hr-gray mt-4' />
-            <InputNormal
-              hidden={watchType !== StuffTalentType.SELL}
-              type='number'
-              placeholder='원하시는 가격을 적어주세요'
-              register={register('price')}
-            ></InputNormal>
-            <InputNormal
-              hidden={watchType !== StuffTalentType.EXCHANGE}
-              placeholder='무엇과 교환하고 싶으신가요?'
-              register={register('exchangeText')}
-            ></InputNormal>
+
+            <div hidden={watchType !== StuffTalentType.SELL}>
+              <InputNormal
+                type='number'
+                placeholder='원하시는 가격을 적어주세요'
+                register={register('price', {
+                  min: { value: 1, message: '1~1000000000000 사이의 숫자를 입력해주세요' },
+                  max: { value: 1000000000000, message: '1~1000000000000 사이의 숫자를 입력해주세요' },
+                })}
+              />
+              <FieldErrorMessage error={errors.price} />
+            </div>
+
+            <div hidden={watchType !== StuffTalentType.EXCHANGE}>
+              <InputNormal
+                placeholder='무엇과 교환하고 싶으신가요?'
+                register={register('exchangeText', {
+                  validate: (value) => maxLengthValidator(value, 100),
+                })}
+              />
+              <FieldErrorMessage error={errors.exchangeText} />
+            </div>
+
             <Textarea
               rows={10}
+              autoGrow={true}
               placeholder='물건/재능이 새로운 활용처를 찾을 수 있도록 자유롭게 소개해주세요 :)'
-              register={register('content', { required: true })}
-            ></Textarea>
+              register={register('content', {
+                required: true,
+                validate: (value) => maxLengthValidator(value, 1000),
+              })}
+            />
+            <FieldErrorMessage error={errors.content} />
           </form>
         </div>
       </IonContent>
@@ -239,7 +269,7 @@ export const StuffTalentFormPage: React.FC = () => {
           label='전체 공개'
           defaultChecked={form.isPublic}
           onChange={(checked) => setValueCustom('isPublic', checked)}
-        ></Checkbox>
+        />
         <IsPublicToast />
       </Footer>
     </IonPage>

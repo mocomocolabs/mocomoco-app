@@ -4,12 +4,14 @@ import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { IFeedSchedule } from '../../models/feed.d'
 import { DT_FORMAT } from '../../utils/datetime-util'
+import { maxLengthValidator } from '../../utils/form-util'
 import { executeWithError } from '../../utils/http-helper-util'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { Pad } from '../atoms/PadComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { DatetimePicker } from '../molecules/DatetimePickerComponent'
+import { FieldErrorMessage } from '../molecules/FieldErrorMessageComponent'
 
 interface IFeedScheduleModal {
   schedule?: Partial<IFeedSchedule>
@@ -35,7 +37,7 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
   const initHMS = now.add(1, 'hour').startOf('hour').format(DT_FORMAT.HMS)
 
   const {
-    formState: { isValid, dirtyFields },
+    formState: { isValid, dirtyFields, errors },
     register,
     handleSubmit,
     setValue,
@@ -107,8 +109,13 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
         <Pad className='h-3' />
         <InputNormal
           placeholder='일정의 제목을 입력해주세요'
-          register={register('title', { required: true })}
+          register={register('title', {
+            required: true,
+            validate: (value) => maxLengthValidator(value, 100),
+          })}
         />
+        <FieldErrorMessage error={errors.title} />
+
         <div className='flex-between-center mt-3 px-3'>
           <TextBase>시작 일시</TextBase>
           <DatetimePicker
@@ -127,7 +134,14 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
         </div>
         <Pad className='h-2' />
         <XDivider />
-        <InputNormal placeholder='장소를 입력해주세요' register={register('place', { required: true })} />
+        <InputNormal
+          placeholder='장소를 입력해주세요'
+          register={register('place', {
+            required: true,
+            validate: (value) => maxLengthValidator(value, 100),
+          })}
+        />
+        <FieldErrorMessage error={errors.place} />
       </div>
     </form>
   )
