@@ -395,8 +395,8 @@
   height: 25rem;
 }
 
-.max-h-half-screen {
-  max-height: 50vh;
+.max-h-25\% {
+  max-height: 25vh;
 }
 
 .min-h-0 {
@@ -632,6 +632,9 @@
 }
 .pl-8 {
   padding-left: 3.2rem;
+}
+.pl-20 {
+  padding-left: 8rem;
 }
 
 .pb-extra-space {
@@ -1007,9 +1010,6 @@
 }
 .ml-13 {
   margin-left: 5.2rem;
-}
-.ml-20 {
-  margin-left: 8rem;
 }
 .ml-auto {
   margin-left: auto;
