@@ -84,7 +84,7 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
 
   const onSubmit = useCallback((form: IFeedSchedule) => {
     executeWithError(async () => {
-      const { startDate, startTime, endDate, endTime, title, place, type } = form
+      const { startDate, startTime, endDate, endTime } = form
 
       const validDate = startDate + startTime <= endDate + endTime
 
