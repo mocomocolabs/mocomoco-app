@@ -117,7 +117,7 @@ export const HomePage: React.FC = () => {
                   ))}
                 </ul>
               ) : (
-                <NoContents className='min-height-230' />
+                <NoContents className='min-height-210' />
               )
             }
           </TaskObserver>
@@ -138,7 +138,7 @@ export const HomePage: React.FC = () => {
                   ))}
                 </ul>
               ) : (
-                <NoContents className='min-height-230' />
+                <NoContents className='min-height-210' />
               )
             }
           </TaskObserver>

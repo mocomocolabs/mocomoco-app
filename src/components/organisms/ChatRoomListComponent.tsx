@@ -21,7 +21,7 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
             ))}
           </ul>
         ) : (
-          <NoContents isFull={true} />
+          <NoContents isFull={true}>똑똑, 여기 아무도 없나요?</NoContents>
         )
       }}
     </TaskObserver>

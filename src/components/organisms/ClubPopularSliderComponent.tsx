@@ -66,6 +66,6 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
       ))}
     </IonSlides>
   ) : (
-    <NoContents className='min-height-230' />
+    <NoContents className='min-height-210' />
   )
 }

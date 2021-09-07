@@ -54,6 +54,6 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
       ))}
     </IonSlides>
   ) : (
-    <NoContents className='min-height-230' />
+    <NoContents className='min-height-210' />
   )
 }

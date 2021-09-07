@@ -54,7 +54,15 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
             ))}
           </ul>
         ) : (
-          <NoContents isFull={true} />
+          <NoContents isFull={true}>
+            {!!search ? (
+              <p>
+                아주 멀리까지 날아가봤지만
+                <br />
+                아무것도 찾지 못 했어요 :(
+              </p>
+            ) : undefined}
+          </NoContents>
         )
       }
     </TaskObserver>
