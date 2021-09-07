@@ -26,6 +26,10 @@ export const SettingsPage: React.FC = () => {
   const { $auth, $ui } = useStore()
 
   useEffect(() => {
+    $ui.setIsBottomTab(false)
+  }, [])
+
+  useEffect(() => {
     const getVersionName = async () => {
       try {
         const appInfo = await AppPlugin.getInfo()
@@ -44,7 +48,7 @@ export const SettingsPage: React.FC = () => {
     <IonPage>
       <Header start={<BackButton type='close' />} center='설정' />
       <IonContent>
-        <div className='px-container my-4'>
+        <div className='px-container'>
           <IonList lines='none'>
             <IonItemGroup>
               <IonItem disabled>
