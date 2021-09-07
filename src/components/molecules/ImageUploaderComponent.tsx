@@ -29,14 +29,32 @@ export const assignPreview = (v: File, i: number) =>
 export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refUploader, className }) => {
   const { $ui } = useStore()
 
+  const totalSizeLimit = 5 * 1024 * 1024
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     onDrop: async (acceptedFiles: File[]) => {
       if (acceptedFiles.length + images.length > 10) {
         return $ui.showToastError({ message: '이미지는 10장까지만 올릴 수 있어요 🤗' })
       }
+
+      let totalSize = images.reduce((result, image) => (result += image.size), 0)
+
       const compressed = await Promise.all(acceptedFiles.map((file) => compress(file)))
-      setImages([...images, ...compressed.map((v, i) => assignPreview(v, new Date().getTime() + i))])
+      const newImages = compressed.reduce((result, image) => {
+        totalSize += image.size
+
+        totalSize < totalSizeLimit && result.push(image)
+
+        return result
+      }, [] as File[])
+
+      totalSize >= totalSizeLimit &&
+        $ui.showToastError({
+          message: '첨부할 수 있는 용량이 초과되어 일부 이미지를 업로드하지 못 했어요',
+        })
+
+      setImages([...images, ...newImages.map((v, i) => assignPreview(v, new Date().getTime() + i))])
     },
   })
 

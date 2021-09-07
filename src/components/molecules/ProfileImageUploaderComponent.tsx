@@ -1,5 +1,6 @@
 import { FC, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { useStore } from '../../hooks/use-store'
 import { compress } from '../../utils/image-compressor'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
@@ -19,15 +20,19 @@ export interface IImageUploader {
 const defaultUrl = '/assets/img/avatar.png'
 
 export const ProfileImageUploader: FC<IImageUploader> = ({ imageUrl, setImage, refUploader, className }) => {
+  const { $ui } = useStore()
+
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
     multiple: false,
     onDrop: async (acceptedFiles: File[]) => {
       const compressed = await compress(acceptedFiles[0])
-      // TODO compress 후 용량이 5MB 이상이면 안됨
-      // if (acceptedFiles.length + images.length > 10) {
-      //   return $ui.showToastError({ message: '이미지는 10장까지만 올릴 수 있어요 🤗' })
-      // }
+
+      // 첨부이미지의 용량을 5MB 미만으로 제한함
+      if (compressed.size >= 5 * 1024 * 1024) {
+        return $ui.showToastError({ message: '좀더 작은 용량의 이미지를 등록해주세요' })
+      }
+
       cleanupImageUrl(imageUrl)
       setImage(assignPreview(compressed, new Date().getTime()))
     },
