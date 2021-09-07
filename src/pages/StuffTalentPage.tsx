@@ -1,5 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { reaction } from 'mobx'
+import { Observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Icon } from '../components/atoms/IconComponent'
@@ -12,6 +13,7 @@ import { StuffTalentList } from '../components/organisms/StuffTalentListComponen
 import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
 import { IStuffTalentFilter, StuffTalentPageKey, StuffTalentStatus } from '../models/stufftalent.d'
+import { allCommunity } from '../stores/community-store'
 
 const FilterMode = { none: 'none', category: '카테고리', type: '거래유형' }
 type FilterMode = typeof FilterMode[keyof typeof FilterMode]
@@ -86,28 +88,35 @@ export const StuffTalentPage: React.FC = () => {
         <div onClick={() => setShowSearch(true)}>
           <Icon name='search' />
         </div>
-        <div
-          onClick={() => {
-            const isWriting = store.form.title || store.form.content || store.form.images?.length
+        <Observer>
+          {() => (
+            <div
+              hidden={![$community.myCommunity, allCommunity].includes($community.community)}
+              onClick={() => {
+                const isWriting = store.form.title || store.form.content || store.form.images?.length
 
-            if (isWriting) {
-              return $ui.showAlert({
-                message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
-                onSuccess() {
-                  routeForm()
-                },
-                onFail() {
-                  store.resetForm()
-                  routeForm()
-                },
-              })
-            }
+                if (isWriting) {
+                  return $ui.showAlert({
+                    message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
+                    onSuccess() {
+                      routeForm()
+                    },
+                    onFail() {
+                      store.resetForm()
+                      store.setForm({ isPublic: $community.community === allCommunity })
+                      routeForm()
+                    },
+                  })
+                }
 
-            routeForm()
-          }}
-        >
-          <Icon name='pencil' />
-        </div>
+                store.setForm({ isPublic: $community.community === allCommunity })
+                routeForm()
+              }}
+            >
+              <Icon name='pencil' />
+            </div>
+          )}
+        </Observer>
       </div>
     ),
     []

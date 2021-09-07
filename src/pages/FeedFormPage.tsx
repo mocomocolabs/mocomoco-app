@@ -27,7 +27,7 @@ import { executeWithError } from '../utils/http-helper-util'
 export const FeedFormPage: FC = () => {
   const goDetailOnSubmit = useHistory<IRouteParam>().location.state?.goDetailOnSubmit
 
-  const { $ui, $feed, $auth } = useStore()
+  const { $ui, $feed, $auth, $community } = useStore()
 
   const uploader = useRef<IImageUploaderRef>()
 
@@ -44,7 +44,10 @@ export const FeedFormPage: FC = () => {
   } = useForm<IFeedForm>({
     mode: 'onChange',
     // TODO 최종적으로는 $community.selectedId 를 사용하는 게 맞는데, 지금은 내 공동체에만 글을 쓸 수 있으니 auth.user.communityId를 사용하도록 함.
-    defaultValues: { ...init, communityId: init.communityId > 0 ? init.communityId : $auth.user.communityId },
+    defaultValues: {
+      ...init,
+      communityId: init.communityId > 0 ? init.communityId : $auth.user.communityId,
+    },
   })
 
   const [watchImages, watchSchedule] = watch(['images', 'schedule'])

@@ -1,5 +1,6 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { reaction } from 'mobx'
+import { Observer } from 'mobx-react-lite'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Icon } from '../components/atoms/IconComponent'
@@ -10,6 +11,7 @@ import { Header } from '../components/organisms/HeaderComponent'
 import { useStore } from '../hooks/use-store'
 import { ISegments, SEGMENT_KEYS } from '../models/segment.d'
 import { IRouteParam, route } from '../services/route-service'
+import { allCommunity } from '../stores/community-store'
 
 const segments: ISegments = {
   [SEGMENT_KEYS.feed]: { label: '모든 글' },
@@ -20,7 +22,7 @@ export const FeedPage: React.FC = () => {
   const segment = useHistory<IRouteParam>().location.state?.segment
   const initSegment = segment ?? SEGMENT_KEYS.feed
 
-  const { $ui, $feed, $community } = useStore()
+  const { $ui, $feed, $community, $auth } = useStore()
 
   useEffect(() => {
     $ui.setIsBottomTab(true)
@@ -56,29 +58,36 @@ export const FeedPage: React.FC = () => {
       <Header
         start={<CommunitySelector />}
         end={
-          /* TODO: 본인의 커뮤니티에서만 글을 쓸 수 있어야함 */
-          <div
-            onClick={() => {
-              const isWriting =
-                $feed.form.title || $feed.form.content || $feed.form.images?.length || $feed.form.schedule
+          <Observer>
+            {() => (
+              <div
+                hidden={![$community.myCommunity, allCommunity].includes($community.community)}
+                onClick={() => {
+                  const isWriting =
+                    $feed.form.title || $feed.form.content || $feed.form.images?.length || $feed.form.schedule
 
-              if (isWriting) {
-                return $ui.showAlert({
-                  message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
-                  onSuccess() {
-                    route.feedForm()
-                  },
-                  onFail() {
-                    $feed.resetForm()
-                    route.feedForm()
-                  },
-                })
-              }
-              route.feedForm()
-            }}
-          >
-            <Icon name='pencil'></Icon>
-          </div>
+                  if (isWriting) {
+                    return $ui.showAlert({
+                      message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
+                      onSuccess() {
+                        route.feedForm()
+                      },
+                      onFail() {
+                        $feed.resetForm()
+                        $feed.setForm({ isPublic: $community.community === allCommunity })
+                        route.feedForm()
+                      },
+                    })
+                  }
+
+                  $feed.setForm({ isPublic: $community.community === allCommunity })
+                  route.feedForm()
+                }}
+              >
+                <Icon name='pencil'></Icon>
+              </div>
+            )}
+          </Observer>
         }
         bottom={<Segment segments={segments} selected={selectedSegment} onChange={onChangeSegment} />}
       />
