@@ -5,6 +5,7 @@ import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { Feed } from '../models/feed'
 import { FeedType, IFeed, IFeedForm, IFeedSchedule } from '../models/feed.d'
 import { api } from '../services/api-service'
+import { ymdhms } from '../utils/datetime-util'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
 import { CommunityStore } from './community-store'
@@ -92,7 +93,9 @@ export class FeedStore {
   getHomeScheduleFeeds = (async () => {
     await api
       .get<{ schedules: IFeedScheduleDto[] }>(
-        `/v1/schedules?community-id=${this.$auth.user.communityId}&sort-order=start-date-time_asc&is-use=true&limit=3`
+        `/v1/schedules?community-id=${
+          this.$auth.user.communityId
+        }&start-date-time=goe:${ymdhms()}&sort-order=start-date-time_asc&is-use=true&limit=3`
       )
       .then(
         action((data) => {
@@ -128,26 +131,11 @@ export class FeedStore {
   }) as TaskBy<number>
 
   @task.resolved
-  deleteFeed = (async (id: number) => {
-    const formData = new FormData()
+  deleteFeed = (async ({ id, schedule }: IFeed) => {
+    await api.patch(`/v1/feeds/${id}/is-use`)
 
-    formData.append(
-      'feedReqDto',
-      new Blob(
-        [
-          JSON.stringify({
-            id,
-            isUse: false,
-          }),
-        ],
-        {
-          type: 'application/json',
-        }
-      )
-    )
-
-    await api.patch(`/v1/feeds/${id}/is-use`, formData)
-  }) as TaskBy<number>
+    !!schedule?.isUse && (await api.patch(`/v1/schedules/${schedule.id}/is-use`))
+  }) as TaskBy<IFeed>
 
   @task.resolved
   saveFeed = (async (form: IFeedForm, isUpdate: boolean) => {
@@ -177,7 +165,8 @@ export class FeedStore {
               place: form.schedule.place,
               startDateTime: form.schedule.startDate + form.schedule.startTime!,
               endDateTime: form.schedule.endDate + form.schedule.endTime!,
-              isUse: true,
+              type: form.schedule.type,
+              isUse: form.schedule.isUse ?? true,
             },
             title: form.title,
             content: form.content,

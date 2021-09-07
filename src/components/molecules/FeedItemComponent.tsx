@@ -17,7 +17,7 @@ import { ProfileCard } from './ProfileCardComponent'
 interface IFeedItem {
   feed: IFeed
   isDetail?: boolean
-  onDelete: (id: number) => void
+  onDelete: (feed: IFeed) => void
   onEdit: (id: number) => void
 }
 
@@ -36,7 +36,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
         onClick: () => {
           $ui.showAlert({
             message: '게시글을 삭제하시겠어요?',
-            onSuccess: () => onDelete(feed.id),
+            onSuccess: () => onDelete(feed),
           })
         },
       },

@@ -32,6 +32,8 @@ export class Feed {
           endDate: dto.endDateTime.substr(0, 8),
           endTime: dto.endDateTime.substr(8),
           formatScheduleTime: datetimeRange(dto.startDateTime, dto.endDateTime),
+          feedId: dto.feed.id,
+          isUse: dto.isUse,
         }
       : undefined
   }

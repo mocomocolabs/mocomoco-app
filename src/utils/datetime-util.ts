@@ -20,6 +20,7 @@ export enum DT_FORMAT {
 
 export const ymd = (value?: string) => dayjs(value).format(DT_FORMAT.YMD)
 export const hms = (value?: string, format?: string) => dayjs(value, format).format(DT_FORMAT.HMS)
+export const ymdhms = (value?: string) => ymd(value) + hms(value)
 
 export const timeDiff = (from?: string, to?: string) => {
   const fromDate = from ? dayjs(from) : dayjs()

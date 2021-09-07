@@ -9,6 +9,7 @@ import { CommentInsertForm } from '../components/organisms/CommentInsertFormComp
 import { CommentUpdateForm } from '../components/organisms/CommentUpdateFormComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
+import { IFeed } from '../models/feed.d'
 import { IRouteParam, route } from '../services/route-service'
 
 export const FeedDetailPage: React.FC = () => {
@@ -24,8 +25,8 @@ export const FeedDetailPage: React.FC = () => {
     $comment.setUpdateCommentId(null)
   }, [])
 
-  const onDelete = async (id: number) => {
-    await $feed.deleteFeed(id)
+  const onDelete = async (feed: IFeed) => {
+    await $feed.deleteFeed(feed)
     route.goBack()
   }
 
@@ -39,14 +40,7 @@ export const FeedDetailPage: React.FC = () => {
       <IonContent>
         <BackFloatingButton />
         <TaskObserver taskTypes={[$feed.getFeed, $comment.deleteComment]} spinnerPosition='center'>
-          {() => (
-            <FeedItem
-              feed={$feed.feed}
-              isDetail={true}
-              onDelete={() => onDelete($feed.feed.id)}
-              onEdit={() => onEdit($feed.feed.id)}
-            />
-          )}
+          {() => <FeedItem feed={$feed.feed} isDetail={true} onDelete={onDelete} onEdit={onEdit} />}
         </TaskObserver>
       </IonContent>
 

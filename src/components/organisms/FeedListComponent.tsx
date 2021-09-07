@@ -4,6 +4,7 @@ import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed.d'
 import { SEGMENT_KEYS } from '../../models/segment.d'
 import { route } from '../../services/route-service'
+import { hms, ymd } from '../../utils/datetime-util'
 import { FeedItem } from '../molecules/FeedItemComponent'
 import { NoContents } from '../molecules/NoContentsComponent'
 import { TaskObserver } from '../molecules/TaskObserverComponent'
@@ -21,7 +22,10 @@ interface IFeedFilter {
 
 const filter: IFeedFilter = {
   [SEGMENT_KEYS.feed]: undefined,
-  [SEGMENT_KEYS.schedule]: (feed: IFeed) => !!feed.schedule,
+  [SEGMENT_KEYS.schedule]: ({ schedule }) => {
+    const futureSchedule = !!schedule?.isUse && schedule.startDate >= ymd() && schedule.startTime >= hms()
+    return futureSchedule
+  },
 }
 
 const sort: { [key: string]: ((a: IFeed, b: IFeed) => number) | undefined } = {
@@ -42,8 +46,8 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask, segment = SEGMENT_KEY
     fetchTask()
   }, [fetchTask])
 
-  const onDelete = async (id: number) => {
-    await $feed.deleteFeed(id)
+  const onDelete = async (feed: IFeed) => {
+    await $feed.deleteFeed(feed)
     fetchTask()
   }
 
@@ -63,12 +67,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask, segment = SEGMENT_KEY
         return sorted.length > 0 ? (
           <ul className='move-up feed-list'>
             {sorted.map((v, i) => (
-              <FeedItem
-                key={i}
-                feed={v}
-                onEdit={() => onEdit(v.id)}
-                onDelete={() => onDelete(v.id)}
-              ></FeedItem>
+              <FeedItem key={i} feed={v} onEdit={onEdit} onDelete={onDelete} />
             ))}
           </ul>
         ) : (

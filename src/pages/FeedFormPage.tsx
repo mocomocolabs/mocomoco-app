@@ -32,7 +32,7 @@ export const FeedFormPage: FC = () => {
   const uploader = useRef<IImageUploaderRef>()
 
   const isUpdate = !!$feed.updateForm.id
-  const form = Object.assign({}, isUpdate ? { ...$feed.updateForm } : { ...$feed.form })
+  const init = Object.assign({}, isUpdate ? { ...$feed.updateForm } : { ...$feed.form })
 
   const {
     formState: { isValid, dirtyFields, errors },
@@ -44,7 +44,7 @@ export const FeedFormPage: FC = () => {
   } = useForm<IFeedForm>({
     mode: 'onChange',
     // TODO 최종적으로는 $community.selectedId 를 사용하는 게 맞는데, 지금은 내 공동체에만 글을 쓸 수 있으니 auth.user.communityId를 사용하도록 함.
-    defaultValues: { ...form, communityId: form.communityId > 0 ? form.communityId : $auth.user.communityId },
+    defaultValues: { ...init, communityId: init.communityId > 0 ? init.communityId : $auth.user.communityId },
   })
 
   const [watchImages, watchSchedule] = watch(['images', 'schedule'])
@@ -67,6 +67,11 @@ export const FeedFormPage: FC = () => {
     // react-hook-form은 undefined값을 빈문자('')로 치환하기 때문에
     // undefined가 되어야 한다면 별도로 처리해줘야 한다.
     form.schedule = !!form.schedule ? form.schedule : undefined
+
+    const scheduleDeleted = init.schedule && !!!form.schedule
+    if (scheduleDeleted) {
+      form.schedule = { ...init.schedule, isUse: false }
+    }
 
     executeWithError(async () => {
       if (isUpdate) {
@@ -235,7 +240,7 @@ export const FeedFormPage: FC = () => {
         </div>
         <Checkbox
           label='전체 공개'
-          defaultChecked={form.isPublic}
+          defaultChecked={init.isPublic}
           onChange={(checked) => setValueCustom('isPublic', checked)}
         />
         <IsPublicToast />

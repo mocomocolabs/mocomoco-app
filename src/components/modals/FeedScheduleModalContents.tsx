@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { FC, useCallback, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
-import { IFeedSchedule } from '../../models/feed.d'
+import { IFeedSchedule, ScheduleType } from '../../models/feed.d'
 import { DT_FORMAT } from '../../utils/datetime-util'
 import { maxLengthValidator } from '../../utils/form-util'
 import { executeWithError } from '../../utils/http-helper-util'
@@ -53,6 +53,8 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
       title: '',
       place: '',
       ...init,
+      type: ScheduleType.FEED,
+      isUse: true,
     },
   })
 
@@ -82,7 +84,7 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
 
   const onSubmit = useCallback((form: IFeedSchedule) => {
     executeWithError(async () => {
-      const { startDate, startTime, endDate, endTime, title, place } = form
+      const { startDate, startTime, endDate, endTime, title, place, type } = form
 
       const validDate = startDate + startTime <= endDate + endTime
 
@@ -90,7 +92,7 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
         throw new Error('종료일시가 시작일시보다 빠릅니다.<br />일시를 확인해주세요.')
       }
 
-      setSchedule({ startDate, startTime, endDate, endTime, title, place })
+      setSchedule(form)
       $ui.hideModal()
     })
   }, [])

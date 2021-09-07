@@ -33,5 +33,6 @@ export interface IFeedScheduleDto {
   startDateTime: string
   /** yyyymmddhhmmss */
   endDateTime: string
+  feed: IFeedDto
   isUse: boolean
 }

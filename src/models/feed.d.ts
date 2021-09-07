@@ -49,4 +49,6 @@ export interface IFeedSchedule {
   endTime: string /** hhmmss */
   formatScheduleTime: string /** 12월 29일 오후 8:00 - 오후 10:00 */
   type: ScheduleType
+  feedId: number
+  isUse: boolean
 }
