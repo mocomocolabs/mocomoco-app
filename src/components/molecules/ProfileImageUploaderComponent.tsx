@@ -59,8 +59,8 @@ export const ProfileImageUploader: FC<IImageUploader> = ({ imageUrl, setImage, r
           refUploader.current.click()
         }}
       >
-        <ProfileImage className='width-160 height-160 dark' url={imageUrl || defaultUrl} />
-        <Icon name='camera' size={50} className='absolute-center icon-primary' />
+        <ProfileImage className='width-160 height-160' url={imageUrl || defaultUrl} />
+        <Icon name='camera' size={50} className='absolute bottom-0 right-0' />
       </div>
     </section>
   )
