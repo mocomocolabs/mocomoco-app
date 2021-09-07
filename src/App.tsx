@@ -23,7 +23,7 @@ export const App: React.FC = () => {
 
     SplashScreen.hide({ fadeOutDuration: 300 })
 
-    $community.getCommunities()
+    await $community.getCommunities()
 
     if (!(await storage.getHaveSeenIntro())) {
       route.intro()
