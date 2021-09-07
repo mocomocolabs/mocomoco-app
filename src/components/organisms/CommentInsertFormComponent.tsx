@@ -18,7 +18,7 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
   const { $comment, $feed, $auth } = useStore()
 
   return useObserver(() => (
-    <div className='comment-insert-container flex flex-1 pv-2'>
+    <div className='comment-insert-container flex-center flex-1'>
       <ProfileImage url={$auth.user?.profileUrl}></ProfileImage>
 
       <div className='flex-between-center w-full ml-3 px-3 br-20 border-primary'>

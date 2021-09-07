@@ -12,7 +12,7 @@ import { ISegments, SEGMENT_KEYS } from '../models/segment.d'
 import { IRouteParam, route } from '../services/route-service'
 
 const segments: ISegments = {
-  [SEGMENT_KEYS.feed]: { label: '전체글' },
+  [SEGMENT_KEYS.feed]: { label: '모든 글' },
   [SEGMENT_KEYS.schedule]: { label: '일정' },
 }
 

@@ -15,7 +15,7 @@ const initState = {
 
 export const allCommunity = {
   id: null,
-  name: '모든 공동체',
+  name: '모든 마을',
   userCount: 0,
   bannerUrl: '',
 }

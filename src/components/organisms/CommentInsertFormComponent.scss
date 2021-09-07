@@ -3,11 +3,21 @@
 .comment-insert-container {
   ion-textarea {
     margin: 0;
+    padding-bottom: 0;
+    vertical-align: middle;
+    font-size: $text-base-size !important;
     textarea {
       --padding-top: 0.8rem;
       --padding-bottom: 0.8rem;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      vertical-align: middle;
+      font-size: $text-base-size !important;
       &::placeholder {
+        padding-bottom: 0;
+        margin-bottom: 0;
         font-size: $text-base-size !important;
+        vertical-align: middle;
       }
     }
   }

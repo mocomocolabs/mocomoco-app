@@ -9,7 +9,7 @@ import { ChatroomTypeSelectorModalContents } from '../modals/ChatroomTypeSelecto
 export interface IChatroomTypeSelector {}
 
 const chatroomTypeNames: [ChatRoomType, string][] = [
-  [ChatRoomType.ALL, '전체 채팅'],
+  [ChatRoomType.ALL, '모든 채팅'],
   [ChatRoomType.NORMAL, '일반 채팅'],
   [ChatRoomType.CLUB, '소모임 채팅'],
   [ChatRoomType.STUFF, '물건창고 채팅'],

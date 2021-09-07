@@ -24,6 +24,7 @@ import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
 import { IStuffTalentForm, StuffTalentPageKey, StuffTalentType } from '../models/stufftalent.d'
 import { IRouteParam, route } from '../services/route-service'
+import { StuffTalentStore } from '../stores/stufftalent-store'
 import { maxLengthValidator } from '../utils/form-util'
 import { executeWithError } from '../utils/http-helper-util'
 
@@ -32,7 +33,13 @@ export const StuffTalentFormPage: React.FC = () => {
 
   const { $ui, $stuff, $talent, $auth } = useStore()
 
-  const pageData = {
+  interface IPageData {
+    [key: string]: {
+      store: StuffTalentStore
+      title: string
+    }
+  }
+  const pageData: IPageData = {
     [StuffTalentPageKey.STUFF]: { store: $stuff, title: '물건창고' },
     [StuffTalentPageKey.TALENT]: { store: $talent, title: '재능창고' },
   }
@@ -199,7 +206,7 @@ export const StuffTalentFormPage: React.FC = () => {
             <XDivider className='hr-gray mt-4' />
 
             <InputNormal
-              placeholder='제목'
+              placeholder='제목을 입력해주세요'
               register={register('title', {
                 required: true,
                 validate: (value) => maxLengthValidator(value, 100),
@@ -248,7 +255,7 @@ export const StuffTalentFormPage: React.FC = () => {
             <Textarea
               rows={10}
               autoGrow={true}
-              placeholder='물건/재능이 새로운 활용처를 찾을 수 있도록 자유롭게 소개해주세요 :)'
+              placeholder={`새롭게 활용될 곳을 찾을 수 있도록 자세히 소개해주세요 :)`}
               register={register('content', {
                 required: true,
                 validate: (value) => maxLengthValidator(value, 1000),
@@ -266,7 +273,7 @@ export const StuffTalentFormPage: React.FC = () => {
           onClick={() => uploader.current?.click()}
         ></Icon>
         <Checkbox
-          label='전체 공개'
+          label='모든 마을에 보이기'
           defaultChecked={form.isPublic}
           onChange={(checked) => setValueCustom('isPublic', checked)}
         />

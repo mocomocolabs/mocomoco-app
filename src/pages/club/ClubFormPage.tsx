@@ -95,7 +95,7 @@ export const ClubFormPage: React.FC = () => {
             <Pad className='h-2'></Pad>
 
             <InputNormal
-              placeholder='모임 이름'
+              placeholder='모임의 이름을 입력해주세요'
               register={register('name', {
                 required: true,
                 validate: (value) => maxLengthValidator(value, 100),
@@ -104,7 +104,7 @@ export const ClubFormPage: React.FC = () => {
             <ValidationMessage message={errors.name?.message} />
 
             <InputNormal
-              placeholder='모임 시간'
+              placeholder='모임 시간 (예: 매주 수요일 12:00)'
               register={register('meetingTime', {
                 required: true,
                 validate: (value) => maxLengthValidator(value, 100),
@@ -149,7 +149,7 @@ export const ClubFormPage: React.FC = () => {
         ></Icon>
         {/* TODO 소모임은 현재, 모든 공동체 보기가 없기 때문에 전체 공개 체크박스도 막아두는 게 일관성있겠다.
           <Checkbox
-            label='전체 공개'
+            label='모든 마을에 보이기'
             defaultChecked={$club.form.isPublic!}
             onChange={(checked) => $club.setForm({ isPublic: checked })}
           ></Checkbox>

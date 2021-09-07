@@ -80,7 +80,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
       <Pad className='height-10' />
 
       <div className='flex-center'>
-        <TextBase className='flex-none gray ml-3 mr-6'>소속</TextBase>
+        <TextBase className='flex-none gray ml-3 mr-6'>마을</TextBase>
         <TextBase className='flex-grow gray pl-3'>
           {(watchCommunities as IStuffTalentCommunityDto[])?.map((c) => c.name).join(' / ')}
         </TextBase>

@@ -19,7 +19,7 @@ export const CommunitySelector: FC<ICommunitySelector> = ({ name, disabled = fal
       onClick={() =>
         !disabled &&
         $ui.showModal({
-          title: '공동체 선택',
+          title: '마을 선택',
           render: () => <CommunitySelectorModalContents />,
         })
       }

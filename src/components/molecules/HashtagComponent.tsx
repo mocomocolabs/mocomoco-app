@@ -35,7 +35,7 @@ export const Hashtag: FC<IHashtag> = ({ value = '', onChange }) => {
   return useObserver(() => (
     <InputNormal
       value={val}
-      placeholder='#해시태그를 적어주세요'
+      placeholder='#해시태그를_적어주세요'
       onChange={(value) => {
         if (value === '') {
           return setAndOnChange('#')

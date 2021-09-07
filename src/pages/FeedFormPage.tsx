@@ -239,7 +239,7 @@ export const FeedFormPage: FC = () => {
           />
         </div>
         <Checkbox
-          label='전체 공개'
+          label='모든 마을에 보이기'
           defaultChecked={init.isPublic}
           onChange={(checked) => setValueCustom('isPublic', checked)}
         />
