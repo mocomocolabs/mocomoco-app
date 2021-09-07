@@ -5,6 +5,7 @@ export interface ISignUpForm {
   password: string
   rePassword: string
   communityIds: number[]
+  introduce: string
   locale: 'ko_KR'
 
   mobile?: string

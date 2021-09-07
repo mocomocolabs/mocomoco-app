@@ -9,9 +9,9 @@ import { executeWithError } from '../../utils/http-helper-util'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { Pad } from '../atoms/PadComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
+import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { DatetimePicker } from '../molecules/DatetimePickerComponent'
-import { FieldErrorMessage } from '../molecules/FieldErrorMessageComponent'
 
 interface IFeedScheduleModal {
   schedule?: Partial<IFeedSchedule>
@@ -114,7 +114,7 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
             validate: (value) => maxLengthValidator(value, 100),
           })}
         />
-        <FieldErrorMessage error={errors.title} />
+        <ValidationMessage message={errors.title?.message} />
 
         <div className='flex-between-center mt-3 px-3'>
           <TextBase>시작 일시</TextBase>
@@ -141,7 +141,7 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
             validate: (value) => maxLengthValidator(value, 100),
           })}
         />
-        <FieldErrorMessage error={errors.place} />
+        <ValidationMessage message={errors.place?.message} />
       </div>
     </form>
   )

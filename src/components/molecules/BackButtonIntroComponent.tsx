@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import { route } from '../../services/route-service'
 import { Pad } from '../atoms/PadComponent'
 import { TextXxl } from '../atoms/TextXxlComponent'
 import { BackButton } from './BackButtonComponent'
@@ -11,11 +10,11 @@ export interface IBackButtonIntro {
 export const BackButtonIntro: FC<IBackButtonIntro> = ({ children }) => {
   return (
     <>
-      <div className='flex mt-5'>
+      <div className='flex mt-5 keep-word'>
         <div className='mt-1 absolute'>
-          <BackButton type='arrow' action={() => route.signUp()}></BackButton>
+          <BackButton type='arrow' />
         </div>
-        <TextXxl className='textprimary flex-1 text-bold text-center'>{children}</TextXxl>
+        <TextXxl className='textprimary flex-1 text-bold text-center leading-12 mx-7'>{children}</TextXxl>
       </div>
       <Pad className='height-30'></Pad>
     </>

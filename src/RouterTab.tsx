@@ -26,6 +26,7 @@ import { SettingsPage } from './pages/SettingsPage'
 import { SignUpCommunityPage } from './pages/sign-up/SignUpCommunityPage'
 import { SignUpCompletePage } from './pages/sign-up/SignUpCompletePage'
 import { SignUpFormPage } from './pages/sign-up/SignUpFormPage'
+import { SignUpIntroducePage } from './pages/sign-up/SignUpIntroducePage'
 import { SignUpPage } from './pages/sign-up/SignUpPage'
 import { SignInPage } from './pages/SignInPage'
 import { StuffTalentDetailPage } from './pages/StuffTalentDetailPage'
@@ -80,6 +81,7 @@ const publicPaths = [
   '/sign-up',
   '/sign-up/form',
   '/sign-up/community',
+  '/sign-up/introduce',
   '/term/privacy',
   '/term/use',
 ]
@@ -91,6 +93,7 @@ const admissionPaths = [
   '/sign-up',
   '/sign-up/form',
   '/sign-up/community',
+  '/sign-up/introduce',
 ]
 
 // App.tsx > Back button 리스너에서 사용함
@@ -103,6 +106,7 @@ const routingInfo: { path: string; children: ReactElement; exact: boolean }[] = 
   { path: '/sign-up', children: <SignUpPage />, exact: true },
   { path: '/sign-up/form', children: <SignUpFormPage />, exact: true },
   { path: '/sign-up/community', children: <SignUpCommunityPage />, exact: true },
+  { path: '/sign-up/introduce', children: <SignUpIntroducePage />, exact: true },
   { path: '/sign-up/complete', children: <SignUpCompletePage />, exact: true },
   { path: '/term/privacy', children: <TermPrivacyPage />, exact: true },
   { path: '/term/use', children: <TermUsePage />, exact: true },

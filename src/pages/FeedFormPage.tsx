@@ -10,10 +10,10 @@ import { IsPublicToast } from '../components/atoms/IsPublicToast'
 import { Pad } from '../components/atoms/PadComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
 import { TextBase } from '../components/atoms/TextBaseComponent'
+import { ValidationMessage } from '../components/atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { FeedScheduleModalContents } from '../components/modals/FeedScheduleModalContents'
 import { BackButton } from '../components/molecules/BackButtonComponent'
-import { FieldErrorMessage } from '../components/molecules/FieldErrorMessageComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
@@ -174,7 +174,7 @@ export const FeedFormPage: FC = () => {
                 validate: (value) => maxLengthValidator(value, 100),
               })}
             />
-            <FieldErrorMessage error={errors.title} />
+            <ValidationMessage message={errors.title?.message} />
 
             <Textarea
               rows={10}
@@ -185,7 +185,7 @@ export const FeedFormPage: FC = () => {
                 validate: (value) => maxLengthValidator(value, 1000),
               })}
             />
-            <FieldErrorMessage error={errors.content} />
+            <ValidationMessage message={errors.content?.message} />
 
             {!!watchSchedule && (
               <div className='br-lg shadow p-3 mt-5 relative'>

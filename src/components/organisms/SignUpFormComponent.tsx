@@ -1,37 +1,45 @@
-import { useObserver } from 'mobx-react-lite'
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
 import { ISignUpForm } from '../../models/sign-up'
 import { route } from '../../services/route-service'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { InputPassword } from '../atoms/InputPasswordComponent'
-import { Pad } from '../atoms/PadComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
-import { FieldErrorMessage } from '../molecules/FieldErrorMessageComponent'
+import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 
 export const SignUpForm: FC = () => {
+  const { $auth } = useStore()
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    watch,
-    formState,
+    formState: { isValid, errors },
+    getValues,
+    trigger,
   } = useForm<ISignUpForm>({
     mode: 'onChange',
+    defaultValues: { ...$auth.signUpForm },
   })
-  const password = useRef({})
-  password.current = watch('password', '')
 
-  const { $auth } = useStore()
+  const isSubmitSuccessful = useRef(false)
 
   const onSubmit = handleSubmit(async (form) => {
     $auth.setSignUpForm(form)
+    isSubmitSuccessful.current = true
 
     route.signUpCommunity()
   })
 
-  return useObserver(() => (
+  useEffect(() => {
+    const cleanUp = () => {
+      !isSubmitSuccessful.current && $auth.resetSignUpForm()
+    }
+
+    return cleanUp
+  }, [])
+
+  return (
     <form onSubmit={onSubmit}>
       <InputNormal
         placeholder='이름을 입력해주세요'
@@ -41,28 +49,31 @@ export const SignUpForm: FC = () => {
           maxLength: { value: 6, message: '2~6글자 사이로 입력해주세요' },
         })}
       />
-      <FieldErrorMessage error={errors.name} />
-      {/* <InputNormal placeholder='별명을 입력해주세요(선택)' register={register('nickname')}></InputNormal>
-      <Pad className='height-20'></Pad> */}
+      <ValidationMessage message={errors.name?.message} keepSpace />
+
       <InputPassword
         placeholder='비밀번호를 입력해주세요'
+        onChange={() => getValues('rePassword') && trigger('rePassword')}
         register={register('password', {
           required: '비밀번호를 입력해주세요',
           minLength: { value: 6, message: '6~32글자 사이로 입력해주세요' },
           maxLength: { value: 32, message: '6~32글자 사이로 입력해주세요' },
         })}
       />
-      <FieldErrorMessage error={errors.password} />
+      <ValidationMessage message={errors.password?.message} keepSpace />
+
       <InputPassword
         placeholder='비밀번호를 확인해주세요'
         register={register('rePassword', {
           required: '비밀번호를 입력해주세요',
-          validate: (value) => value === password.current || '비밀번호가 일치하지 않습니다',
+          // 'password'값이 변경되면 'rePassword'의 validate가 호출되는데
+          // getValues('password) 를 사용해야만 최신값을 읽어올 수 있다.
+          validate: (value) => value === getValues('password') || '비밀번호가 일치하지 않습니다',
         })}
       />
-      <FieldErrorMessage error={errors.rePassword} />
-      <Pad className='height-20' />
-      <SubmitButton color='secondary' size='large' disabled={!formState.isValid} text='계속하기' />
+      <ValidationMessage message={errors.rePassword?.message} className='height-40' keepSpace />
+
+      <SubmitButton color='secondary' size='large' disabled={!isValid} text='계속하기' />
     </form>
-  ))
+  )
 }

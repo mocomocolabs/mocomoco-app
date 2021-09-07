@@ -1,4 +1,3 @@
-import { useObserver } from 'mobx-react-lite'
 import { FC, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useStore } from '../../hooks/use-store'
@@ -6,8 +5,8 @@ import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 import { InputPassword } from '../atoms/InputPasswordComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
+import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
-import { FieldErrorMessage } from '../molecules/FieldErrorMessageComponent'
 
 export const SignInEmail: FC = () => {
   const {
@@ -34,7 +33,7 @@ export const SignInEmail: FC = () => {
     executeWithError(() => $auth.signIn($auth.signUpForm.email!, form.password))
   })
 
-  return useObserver(() => (
+  return (
     <form onSubmit={onSubmit}>
       <InputPassword
         placeholder='비밀번호를 입력해주세요'
@@ -44,12 +43,13 @@ export const SignInEmail: FC = () => {
           maxLength: { value: 32, message: '6~32자 사이로 입력해주세요' },
         })}
       />
-      <FieldErrorMessage error={errors.password} className='h-10' />
+      <ValidationMessage message={errors.password?.message} className='height-40' keepSpace />
+
       <SpinnerWrapper
         task={$auth.signIn}
         spinnerPosition='centerX'
         Submit={<SubmitButton disabled={!formState.isValid} text='로그인' size='large' color='secondary' />}
       />
     </form>
-  ))
+  )
 }

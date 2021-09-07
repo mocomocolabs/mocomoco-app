@@ -22,7 +22,6 @@ export const Input: FC<IInput> = ({ type, onChange, register, ...props }) => {
         register?.onChange(e)
         onChange && onChange(e.target.value!)
       }}
-      ref={register?.ref}
     />
   )
 }

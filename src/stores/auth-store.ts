@@ -40,6 +40,11 @@ export class AuthStore {
     }
   }
 
+  @action
+  resetSignUpForm() {
+    this.signUpForm = initState.signUpForm
+  }
+
   @task.resolved
   checkEmailExists = (async (email: string) => {
     try {
@@ -78,6 +83,7 @@ export class AuthStore {
 
   @task.resolved
   signUp = (async (form) => {
+    console.log(form)
     const param = { ...form }
     // TODO: fcmToken 업데이트
     param.fcmToken = '_'

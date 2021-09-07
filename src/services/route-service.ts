@@ -52,6 +52,10 @@ class RouteService {
     this.route('/sign-up/community')
   }
 
+  signUpIntroduce() {
+    this.route('/sign-up/introduce')
+  }
+
   signUpComplete() {
     this.route('/sign-up/complete')
   }

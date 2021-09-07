@@ -14,7 +14,7 @@ export const SignInPage: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <div className='px-container'>
+        <div className='px-container ios-pt-container'>
           <BackButtonIntro>
             이미 회원이시군요!
             <br /> 다시 만나서 반가워요 :)

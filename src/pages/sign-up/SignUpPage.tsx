@@ -7,7 +7,7 @@ import { Pad } from '../../components/atoms/PadComponent'
 import { SubmitButton } from '../../components/atoms/SubmitButtonComponent'
 import { TextXs } from '../../components/atoms/TextXsComponent'
 import { TextXxl } from '../../components/atoms/TextXxlComponent'
-import { FieldErrorMessage } from '../../components/molecules/FieldErrorMessageComponent'
+import { ValidationMessage } from '../../components/atoms/ValidationMessageComponent'
 import { useStore } from '../../hooks/use-store'
 import { ISignUpForm } from '../../models/sign-up'
 import { route } from '../../services/route-service'
@@ -31,7 +31,7 @@ export const SignUpPage: React.FC = () => {
     <IonPage>
       <IonContent>
         <div className='px-container ios-pt-container'>
-          <TextXxl className='text-bold d-gray mt-8'>
+          <TextXxl className='text-bold textprimary mt-5'>
             하나의 마을
             <br />
             하마에 어서오세요!
@@ -50,7 +50,7 @@ export const SignUpPage: React.FC = () => {
               },
             })}
           />
-          <FieldErrorMessage error={errors.email} className='h-10' />
+          <ValidationMessage message={errors.email?.message} className='height-40' keepSpace />
 
           <SubmitButton
             disabled={!isValid}

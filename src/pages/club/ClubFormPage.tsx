@@ -7,9 +7,9 @@ import { Icon } from '../../components/atoms/IconComponent'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
 import { Pad } from '../../components/atoms/PadComponent'
 import { Textarea } from '../../components/atoms/TextareaComponent'
+import { ValidationMessage } from '../../components/atoms/ValidationMessageComponent'
 import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
-import { FieldErrorMessage } from '../../components/molecules/FieldErrorMessageComponent'
 import { Hashtag } from '../../components/molecules/HashtagComponent'
 import {
   assignPreview,
@@ -101,7 +101,7 @@ export const ClubFormPage: React.FC = () => {
                 validate: (value) => maxLengthValidator(value, 100),
               })}
             />
-            <FieldErrorMessage error={errors.name} />
+            <ValidationMessage message={errors.name?.message} />
 
             <InputNormal
               placeholder='모임 시간'
@@ -110,7 +110,7 @@ export const ClubFormPage: React.FC = () => {
                 validate: (value) => maxLengthValidator(value, 100),
               })}
             />
-            <FieldErrorMessage error={errors.meetingTime} />
+            <ValidationMessage message={errors.meetingTime?.message} />
 
             <InputNormal
               placeholder='모임 장소'
@@ -119,7 +119,7 @@ export const ClubFormPage: React.FC = () => {
                 validate: (value) => maxLengthValidator(value, 100),
               })}
             />
-            <FieldErrorMessage error={errors.meetingPlace} />
+            <ValidationMessage message={errors.meetingPlace?.message} />
 
             {/* TODO validate: (value) => maxLengthValidator(value, 100), */}
             <Hashtag
@@ -136,7 +136,7 @@ export const ClubFormPage: React.FC = () => {
                 validate: (value) => maxLengthValidator(value, 1000),
               })}
             />
-            <FieldErrorMessage error={errors.description} />
+            <ValidationMessage message={errors.description?.message} />
           </form>
         </div>
       </IonContent>

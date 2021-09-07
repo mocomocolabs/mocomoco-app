@@ -7,8 +7,8 @@ import { InputNormal } from '../atoms/InputNormalComponent'
 import { Pad } from '../atoms/PadComponent'
 import { Textarea } from '../atoms/TextareaComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
+import { ValidationMessage } from '../atoms/ValidationMessageComponent'
 import { XDivider } from '../atoms/XDividerComponent'
-import { FieldErrorMessage as FieldErrorMessage } from './FieldErrorMessageComponent'
 import { IImageUploaderRef, ImageUploadItem } from './ImageUploaderComponent'
 import { ProfileImageUploader } from './ProfileImageUploaderComponent'
 
@@ -61,7 +61,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
         />
       </div>
       <XDivider />
-      <FieldErrorMessage error={errors.name} className='pl-20' />
+      <ValidationMessage message={errors.name?.message} className='pl-20' />
 
       <div className='flex-center'>
         <TextBase className='flex-none gray ml-3 mr-6'>별명</TextBase>
@@ -75,7 +75,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
         />
       </div>
       <XDivider />
-      <FieldErrorMessage error={errors.nickname} className='pl-20' />
+      <ValidationMessage message={errors.nickname?.message} className='pl-20' />
 
       <Pad className='height-10' />
 
@@ -104,7 +104,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
       </div>
       <Pad className='height-10' />
       <XDivider />
-      <FieldErrorMessage error={errors.description} className='pl-20' />
+      <ValidationMessage message={errors.description?.message} className='pl-20' />
     </>
   )
 }

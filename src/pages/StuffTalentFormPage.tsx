@@ -12,11 +12,11 @@ import { Pad } from '../components/atoms/PadComponent'
 import { SquareWithCorner } from '../components/atoms/SquareWithCornerComponent'
 import { Textarea } from '../components/atoms/TextareaComponent'
 import { TextSm } from '../components/atoms/TextSmComponent'
+import { ValidationMessage } from '../components/atoms/ValidationMessageComponent'
 import { XDivider } from '../components/atoms/XDividerComponent'
 import { SpinnerWrapper } from '../components/helpers/SpinnerWrapper'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { CategorySelector } from '../components/molecules/CategorySelectorComponent'
-import { FieldErrorMessage } from '../components/molecules/FieldErrorMessageComponent'
 import { IImageUploaderRef, ImageUploader } from '../components/molecules/ImageUploaderComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { Header } from '../components/organisms/HeaderComponent'
@@ -205,7 +205,7 @@ export const StuffTalentFormPage: React.FC = () => {
                 validate: (value) => maxLengthValidator(value, 100),
               })}
             />
-            <FieldErrorMessage error={errors.title} />
+            <ValidationMessage message={errors.title?.message} />
 
             <Pad className='h-4' />
 
@@ -232,7 +232,7 @@ export const StuffTalentFormPage: React.FC = () => {
                   max: { value: 1000000000000, message: '1~1000000000000 사이의 숫자를 입력해주세요' },
                 })}
               />
-              <FieldErrorMessage error={errors.price} />
+              <ValidationMessage message={errors.price?.message} />
             </div>
 
             <div hidden={watchType !== StuffTalentType.EXCHANGE}>
@@ -242,7 +242,7 @@ export const StuffTalentFormPage: React.FC = () => {
                   validate: (value) => maxLengthValidator(value, 100),
                 })}
               />
-              <FieldErrorMessage error={errors.exchangeText} />
+              <ValidationMessage message={errors.exchangeText?.message} />
             </div>
 
             <Textarea
@@ -254,7 +254,7 @@ export const StuffTalentFormPage: React.FC = () => {
                 validate: (value) => maxLengthValidator(value, 1000),
               })}
             />
-            <FieldErrorMessage error={errors.content} />
+            <ValidationMessage message={errors.content?.message} />
           </form>
         </div>
       </IonContent>
