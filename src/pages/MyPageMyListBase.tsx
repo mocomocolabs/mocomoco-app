@@ -88,7 +88,7 @@ export const MyPageMyListBase: React.FC<IMyPageMyListProps> = ({
   }, [selectedSegment, filter, clubs])
 
   useEffect(() => {
-    $ui.setIsBottomTab(true)
+    $ui.setIsBottomTab(false)
   }, [])
 
   useEffect(() => {

@@ -28,10 +28,6 @@ export const FeedScheduleModalContents: FC<IFeedScheduleModal> = ({
 }) => {
   const { $ui } = useStore()
 
-  useEffect(() => {
-    $ui.setIsBottomTab(true)
-  }, [])
-
   const now = dayjs()
   const initYMD = now.format(DT_FORMAT.YMD)
   const initHMS = now.add(1, 'hour').startOf('hour').format(DT_FORMAT.HMS)
