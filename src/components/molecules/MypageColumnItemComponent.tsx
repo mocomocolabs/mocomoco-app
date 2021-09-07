@@ -17,7 +17,7 @@ export const MypageColumnItem: React.FC<IMypageColumnItem> = ({ icon, title, hre
       onClick={(e) => disabled && e.preventDefault()}
     >
       <div className='flex-row w-100 items-center height-50'>
-        <Icon name={icon} slot='start' />
+        <Icon name={icon} slot='start' color='secondary' />
         <TextBase className='ml-3'>{title}</TextBase>
       </div>
     </Link>
