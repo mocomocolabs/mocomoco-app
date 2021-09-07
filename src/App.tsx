@@ -23,12 +23,13 @@ export const App: React.FC = () => {
 
     SplashScreen.hide({ fadeOutDuration: 300 })
 
-    // 로그인
-    await Promise.all([
-      //
-      $auth.signInWithToken(),
-      $community.getCommunities(),
-    ])
+    $community.getCommunities()
+
+    if (!(await storage.getHaveSeenIntro())) {
+      route.intro()
+    } else {
+      await $auth.signInWithToken()
+    }
 
     setInitailzed(true)
   }
@@ -55,7 +56,7 @@ export const App: React.FC = () => {
     $community.setSelectedId(null)
     $chat.disconnect()
 
-    !(await storage.getHaveSeenIntro()) ? route.intro() : route.signUp()
+    route.intro()
   }
 
   useEffect(() => {
