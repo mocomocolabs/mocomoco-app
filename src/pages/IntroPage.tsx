@@ -21,7 +21,7 @@ export const IntroPage: React.FC = () => {
     <IonPage>
       <IonContent>
         <ImageSlider urls={['/assets/img/hama.png']} height={380}></ImageSlider>
-        <div className='px-8'>
+        <div className='px-8 -mt-2'>
           <TextXxl className='text-bold textprimary'>
             하나의 마을
             <br />
