@@ -1,9 +1,10 @@
-import { IonContent, IonFooter, IonPage } from '@ionic/react'
+import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { SubmitButton } from '../components/atoms/SubmitButtonComponent'
 import { TextSm } from '../components/atoms/TextSmComponent'
 import { TextXxl } from '../components/atoms/TextXxlComponent'
 import { ImageSlider } from '../components/molecules/ImageSliderComponent'
+import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
 import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
@@ -26,7 +27,7 @@ export const IntroPage: React.FC = () => {
             <br />
             하마에 어서오세요!
           </TextXxl>
-          <TextSm className='gray mt-8'>
+          <TextSm className='gray my-7'>
             개인이 모여 하나의 공동체를 이루고
             <br />
             확장되고 연결되어 하나의 마을을 이루고
@@ -36,16 +37,14 @@ export const IntroPage: React.FC = () => {
           </TextSm>
         </div>
       </IonContent>
-      <IonFooter>
-        <div className='mb-5 mx-5'>
-          <SubmitButton
-            text='시작하기'
-            color='secondary'
-            size='large'
-            onClick={() => route.signUp()}
-          ></SubmitButton>
-        </div>
-      </IonFooter>
+      <Footer className='pb-5 px-5' noBorder>
+        <SubmitButton
+          text='시작하기'
+          color='secondary'
+          size='large'
+          onClick={() => route.signUp()}
+        ></SubmitButton>
+      </Footer>
     </IonPage>
   )
 }

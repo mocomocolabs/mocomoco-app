@@ -1,10 +1,11 @@
-import { IonContent, IonFooter } from '@ionic/react'
+import { IonContent } from '@ionic/react'
 import _ from 'lodash'
 import { Observer } from 'mobx-react-lite'
 import { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { NavLink, Redirect, Route, Router, Switch } from 'react-router-dom'
 import { Icon } from './components/atoms/IconComponent'
 import { TabBarPopoverContents } from './components/molecules/TabBarPopoverContent'
+import { Footer } from './components/organisms/FooterComponent'
 import { useStore } from './hooks/use-store'
 import { ChatPage } from './pages/ChatPage'
 import { ChatRoomPage } from './pages/ChatRoomPage'
@@ -246,16 +247,14 @@ export const RouterTab: FC = () => {
           </Switch>
         </IonContent>
 
-        <IonFooter>
-          <Observer>
-            {() => (
-              // TODO 이 부분도 info 객체로 분리하자
-              <div hidden={!$ui.isBottomTab} className='px-container flex-between-center height-56 shadow-sm'>
-                {renderredTabs}
-              </div>
-            )}
-          </Observer>
-        </IonFooter>
+        <Observer>
+          {() => (
+            <Footer hidden={!$ui.isBottomTab}>
+              {/* TODO 이 부분도 info 객체로 분리하자 */}
+              {renderredTabs}
+            </Footer>
+          )}
+        </Observer>
       </Router>
     </>
   )

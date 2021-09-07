@@ -24,14 +24,16 @@ export const SignUpCompletePage: React.FC = () => {
         <ImageSlider urls={['/assets/img/hama-signup.png']} height={452}></ImageSlider>
         <div className='px-6 text-center'>
           <TextXxl className='text-bold textprimary'>하마가 당신을 기다리고 있어요!</TextXxl>
-          <TextBase className='gray mt-6'>관리자 승인 후 다시 들어와 주세요 :)</TextBase>
+          <TextBase className='gray mt-6'>
+            맞이할 준비가 되면 알려드릴게요.
+            <br />
+            잠시 후에 만나요 :)
+          </TextBase>
         </div>
       </IonContent>
-      {/* <IonFooter>
-        <div className='mb-7 mx-5'>
+      {/* <Footer>
           <SubmitButton text='시작하기' color='secondary' onClick={() => route.signUp()}></SubmitButton>
-        </div>
-      </IonFooter> */}
+      </Footer> */}
     </IonPage>
   )
 }
