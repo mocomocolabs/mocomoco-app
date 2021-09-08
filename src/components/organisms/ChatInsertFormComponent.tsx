@@ -28,10 +28,13 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
 
   return useObserver(() => (
     <div className='flex flex-1 pv-2'>
-      <ProfileImage url={$user.user.profileUrl}></ProfileImage>
+      <div className='flex flex-none'>
+        <ProfileImage url={$user.user.profileUrl}></ProfileImage>
+      </div>
 
       <div className='chat-insert-form flex-between-center w-full ml-3 px-3 br-20 border-primary'>
         <IonTextarea
+          className='leading-none'
           ref={inputRef}
           placeholder='내용을 입력해주세요'
           autoGrow={true}
