@@ -268,18 +268,22 @@ export class StuffTalentStore {
 
   @task
   getUpdateForm = (async (_id: number) => {
-    await this.getItem(_id)
+    await api.get<IStuffTalentDto>(`${this.predefined.baseApi}/${_id}`).then(
+      action(async (data) => {
+        const item = StuffTalent.of(data, this.predefined, this.$auth.user.id)
 
-    const images: ImageUploadItem[] = (await Promise.all(
-      this.item.imageUrls.map((v) => urlToFile(v))
-    )) as ImageUploadItem[]
+        const images: ImageUploadItem[] = (await Promise.all(
+          item.imageUrls.map((v) => urlToFile(v))
+        )) as ImageUploadItem[]
 
-    this.setUpdateForm({
-      ...this.item,
-      communityId: this.item.community.id,
-      categoryId: this.item.category.id,
-      images,
-    })
+        this.setUpdateForm({
+          ...this.item,
+          communityId: this.item.community.id,
+          categoryId: this.item.category.id,
+          images,
+        })
+      })
+    )
   }) as TaskBy<number>
 
   @action
