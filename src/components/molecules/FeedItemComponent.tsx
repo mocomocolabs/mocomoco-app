@@ -69,7 +69,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
       )}
       <div className='px-container flex-col'>
         {feed.title && (
-          <div onClick={onClick} className='text-bold text-lg mb-5'>
+          <div onClick={onClick} className='text-bold text-xl mb-5'>
             {feed.title}
           </div>
         )}

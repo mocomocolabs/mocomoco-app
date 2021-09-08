@@ -2,7 +2,7 @@ import { IonDatetime } from '@ionic/react'
 import dayjs from 'dayjs'
 import { FC } from 'react'
 import { hms, ymd } from '../../utils/datetime-util'
-
+import './DatetimePickerComponent.scss'
 export interface IDatetimePicker {
   value?: string
   onChangeDate?: (date: string) => void

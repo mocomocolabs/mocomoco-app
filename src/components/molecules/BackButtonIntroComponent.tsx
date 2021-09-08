@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Pad } from '../atoms/PadComponent'
-import { TextXxl } from '../atoms/TextXxlComponent'
+import { TextXxxl } from '../atoms/TextXxxlComponent'
 import { BackButton } from './BackButtonComponent'
 
 export interface IBackButtonIntro {
@@ -14,7 +14,7 @@ export const BackButtonIntro: FC<IBackButtonIntro> = ({ children }) => {
         <div className='mt-1 absolute'>
           <BackButton type='arrow' />
         </div>
-        <TextXxl className='textprimary flex-1 text-bold text-center leading-12 mx-7'>{children}</TextXxl>
+        <TextXxxl className='textprimary flex-1 text-bold text-center leading-12 mx-7'>{children}</TextXxxl>
       </div>
       <Pad className='height-30'></Pad>
     </>

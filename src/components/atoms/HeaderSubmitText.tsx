@@ -8,7 +8,7 @@ export interface IHeaderSubmitText {
 
 export const HeaderSubmitText: FC<IHeaderSubmitText> = ({ isSubmittable, onSubmit, text = '완료' }) => (
   <div
-    className={`${isSubmittable ? '' : 'gray'} text-lg`}
+    className={`${isSubmittable ? '' : 'gray'} text-xl`}
     onClick={(e) => {
       e.preventDefault()
       isSubmittable && onSubmit()

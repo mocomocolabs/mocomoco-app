@@ -6,7 +6,7 @@ import { InputNormal } from '../../components/atoms/InputNormalComponent'
 import { Pad } from '../../components/atoms/PadComponent'
 import { SubmitButton } from '../../components/atoms/SubmitButtonComponent'
 import { TextXs } from '../../components/atoms/TextXsComponent'
-import { TextXxl } from '../../components/atoms/TextXxlComponent'
+import { TextXxxl } from '../../components/atoms/TextXxxlComponent'
 import { ValidationMessage } from '../../components/atoms/ValidationMessageComponent'
 import { useStore } from '../../hooks/use-store'
 import { ISignUpForm } from '../../models/sign-up'
@@ -31,11 +31,11 @@ export const SignUpPage: React.FC = () => {
     <IonPage>
       <IonContent>
         <div className='px-container ios-pt-container'>
-          <TextXxl className='text-bold textprimary mt-5'>
+          <TextXxxl className='text-bold textprimary mt-5'>
             하나의 마을
             <br />
             하마에 어서오세요!
-          </TextXxl>
+          </TextXxxl>
 
           <Pad className='height-30' />
 

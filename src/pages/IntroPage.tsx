@@ -2,7 +2,7 @@ import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { SubmitButton } from '../components/atoms/SubmitButtonComponent'
 import { TextSm } from '../components/atoms/TextSmComponent'
-import { TextXxl } from '../components/atoms/TextXxlComponent'
+import { TextXxxl } from '../components/atoms/TextXxxlComponent'
 import { ImageSlider } from '../components/molecules/ImageSliderComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
@@ -22,11 +22,11 @@ export const IntroPage: React.FC = () => {
       <IonContent>
         <ImageSlider urls={['/assets/img/hama.png']} height={380}></ImageSlider>
         <div className='px-8 -mt-2'>
-          <TextXxl className='text-bold textprimary'>
+          <TextXxxl className='text-bold textprimary'>
             하나의 마을
             <br />
             하마에 어서오세요!
-          </TextXxl>
+          </TextXxxl>
           <TextSm className='gray my-7'>
             개인이 모여 하나의 공동체를 이루고
             <br />

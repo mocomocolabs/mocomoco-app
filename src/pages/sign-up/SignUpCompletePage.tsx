@@ -1,7 +1,7 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { TextBase } from '../../components/atoms/TextBaseComponent'
-import { TextXxl } from '../../components/atoms/TextXxlComponent'
+import { TextXxxl } from '../../components/atoms/TextXxxlComponent'
 import { ImageSlider } from '../../components/molecules/ImageSliderComponent'
 import { useStore } from '../../hooks/use-store'
 import { SIGN_UP_STATUS } from '../../models/sign-up.d'
@@ -23,7 +23,7 @@ export const SignUpCompletePage: React.FC = () => {
       <IonContent>
         <ImageSlider urls={['/assets/img/hama-signup.png']} height={452}></ImageSlider>
         <div className='px-6 text-center'>
-          <TextXxl className='text-bold textprimary'>하마가 당신을 기다리고 있어요!</TextXxl>
+          <TextXxxl className='text-bold textprimary'>하마가 당신을 기다리고 있어요!</TextXxxl>
           <TextBase className='gray mt-6'>
             맞이할 준비가 되면 알려드릴게요.
             <br />

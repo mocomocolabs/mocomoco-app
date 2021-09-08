@@ -10,7 +10,7 @@ import { SquareWithCorner } from '../atoms/SquareWithCornerComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
 import { TextSm } from '../atoms/TextSmComponent'
-import { TextXxl } from '../atoms/TextXxlComponent'
+import { TextXxxl } from '../atoms/TextXxxlComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { ImageSlider } from './ImageSliderComponent'
 import { MorePopoverButton } from './MorePopoverButtonComponent'
@@ -118,9 +118,9 @@ export const StuffTalentDetailContents: FC<IStuffTalentDetailContents> = ({
           className='flex items-baseline mt-1'
           hidden={[StuffTalentType.SHARE, StuffTalentType.WANT].includes(item.type)}
         >
-          <TextXxl className='text-bold'>
+          <TextXxxl className='text-bold'>
             {item.type === StuffTalentType.SELL ? item.price.toLocaleString() : item.exchangeText}
-          </TextXxl>
+          </TextXxxl>
           {item.type === StuffTalentType.SELL && <TextBase>원</TextBase>}
         </div>
 

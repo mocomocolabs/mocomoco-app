@@ -1,0 +1,31 @@
+@import '../../theme/variable';
+@import '../../theme/functional';
+
+ion-picker {
+  .picker-wrapper {
+    height: 280px !important;
+  }
+
+  .picker-toolbar {
+    margin-bottom: 15px !important;
+  }
+
+  .picker-button {
+    color: $secondary !important;
+    font-size: $text-base-size !important;
+  }
+
+  .picker-opts {
+    min-width: 60px !important;
+    max-width: 80px !important;
+  }
+
+  .picker-opt {
+    color: $gray !important;
+    font-size: $text-xxxl-size !important;
+  }
+
+  .picker-opt-selected {
+    color: $secondary !important;
+  }
+}

@@ -7,7 +7,7 @@ import { ImageBackground } from '../atoms/ImageBackgroundComponent'
 import { SubmitButton } from '../atoms/SubmitButtonComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextSm } from '../atoms/TextSmComponent'
-import { TextXl } from '../atoms/TextXlComponent'
+import { TextXxl } from '../atoms/TextXxlComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { TaskObserver } from './TaskObserverComponent'
 
@@ -33,7 +33,7 @@ export const ProfileDetail: React.FC<IProfileDetailItem> = ({ userId }) => {
           />
 
           <div className='px-container w-full absolute z-10 bottom-0 white'>
-            <TextXl className='mb-2 text-center text-bold'>{$user.user.nickname}</TextXl>
+            <TextXxl className='mb-2 text-center text-bold'>{$user.user.nickname}</TextXxl>
 
             <div className='flex-center items-center gap-1 mb-4'>
               <Icon name='location' size={16} color='white' />
