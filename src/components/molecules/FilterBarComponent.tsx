@@ -1,7 +1,6 @@
 import { Icon } from '../atoms/IconComponent'
 import { SquareWithCorner } from '../atoms/SquareWithCornerComponent'
 import { TextSm } from '../atoms/TextSmComponent'
-import { TextXs } from '../atoms/TextXsComponent'
 
 interface IFilterBar {
   show?: boolean
@@ -14,8 +13,8 @@ export const FilterBar: React.FC<IFilterBar> = ({ show = true, filters, onReset,
   <div className='flex gap-1' hidden={!show}>
     <div hidden={filters.every((filter) => filter.length === 0)} onClick={onReset}>
       <SquareWithCorner width={79} height={24} color='secondary'>
-        <Icon name='reset' size={16} color='secondary' />
-        <TextXs>초기화</TextXs>
+        <Icon name='reset' size={16} color='secondary' className='mr-1' />
+        <TextSm>초기화</TextSm>
       </SquareWithCorner>
     </div>
 
@@ -32,7 +31,7 @@ export const FilterBar: React.FC<IFilterBar> = ({ show = true, filters, onReset,
           >
             <Icon
               name='arrow'
-              className={`icon-${isFilterSet ? 'white' : 'gray'} icon-rotate-270`}
+              className={`icon-${isFilterSet ? 'white' : 'gray'} icon-rotate-270 mr-1`}
               size={16}
             />
             <TextSm>{filter.name}</TextSm>

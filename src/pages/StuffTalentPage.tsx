@@ -4,7 +4,6 @@ import { Observer } from 'mobx-react-lite'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router'
 import { Icon } from '../components/atoms/IconComponent'
-import { Pad } from '../components/atoms/PadComponent'
 import { CommunitySelector } from '../components/molecules/CommunitySelectorComponent'
 import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
@@ -124,7 +123,7 @@ export const StuffTalentPage: React.FC = () => {
 
   const filterBarComponent = useMemo(
     () => (
-      <div className='px-container mt-1'>
+      <div className='px-container my-3'>
         <FilterBar
           filters={[
             { name: FilterMode.category, length: filter.categories.length },
@@ -135,8 +134,6 @@ export const StuffTalentPage: React.FC = () => {
             setFilterMode(filterMode === name ? FilterMode.none : name)
           }}
         />
-
-        <Pad className='h-3' />
       </div>
     ),
     [filterMode, filter]
@@ -161,7 +158,7 @@ export const StuffTalentPage: React.FC = () => {
         searchbar={searchbar}
       />
 
-      <div className='-mt-3' hidden={filterMode !== FilterMode.category}>
+      <div className='-mt-3 mb-3' hidden={filterMode !== FilterMode.category}>
         <FilterPopup
           filterInfos={[
             {
@@ -174,7 +171,7 @@ export const StuffTalentPage: React.FC = () => {
         />
       </div>
 
-      <div className='-mt-3' hidden={filterMode !== FilterMode.type}>
+      <div className='-mt-3 mb-3' hidden={filterMode !== FilterMode.type}>
         <FilterPopup
           filterInfos={[
             {

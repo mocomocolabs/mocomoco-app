@@ -1,6 +1,5 @@
 import { IonContent, IonPage } from '@ionic/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Pad } from '../components/atoms/PadComponent'
 import { BackButton } from '../components/molecules/BackButtonComponent'
 import { FilterBar } from '../components/molecules/FilterBarComponent'
 import { FilterPopup } from '../components/molecules/FilterPopupComponent'
@@ -104,7 +103,7 @@ export const MyPageMyListBase: React.FC<IMyPageMyListProps> = ({
         bottom={
           <>
             <Segment segments={segments} selected={selectedSegment} onChange={onChangeSegment} />
-            <div className='px-container mt-1' hidden={!isShowFilterBar}>
+            <div className='px-container my-3' hidden={!isShowFilterBar}>
               <FilterBar
                 filters={[{ name: FilterMode.type, length: filter.types.length + filter.notStatuses.length }]}
                 onReset={onResetFilter}
@@ -112,14 +111,12 @@ export const MyPageMyListBase: React.FC<IMyPageMyListProps> = ({
                   setFilterMode(filterMode === name ? FilterMode.none : name)
                 }}
               />
-
-              <Pad className='h-3' />
             </div>
           </>
         }
       />
 
-      <div className='-mt-3' hidden={filterMode !== FilterMode.type}>
+      <div className='-mt-3 mb-3' hidden={filterMode !== FilterMode.type}>
         <FilterPopup
           filterInfos={[
             {
