@@ -17,6 +17,10 @@ ion-button {
 
 ion-toast {
   --color: var(--ion-text-color);
+
+  &::part(message) {
+    text-align: center !important;
+  }
 }
 
 ion-alert {
