@@ -117,13 +117,14 @@ export class FeedStore {
   getUpdateForm = (async (id: number) => {
     await api.get<IFeedDto>(`/v1/feeds/${id}`).then(
       action(async (dto) => {
+        const feed = Feed.of(dto, this.$auth.user.id)
+
         const images: ImageUploadItem[] = (await Promise.all(
-          dto.atchFiles?.map((v) => urlToFile(v.url))
+          feed.atchFiles?.map((v) => urlToFile(v.url))
         )) as ImageUploadItem[]
 
         this.setUpdateForm({
-          ...dto,
-          schedule: Feed.scheduleOf(dto.schedule),
+          ...feed,
           images,
         })
       })

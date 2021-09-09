@@ -39,11 +39,13 @@ export class UserStore {
 
   @task
   getUpdateForm = (async (_id: number) => {
-    await this.getUser(_id)
-
-    this.setUpdateForm({
-      ...this.user,
-    })
+    await api.get<IUserDto>(`/sys/users/${_id}`).then(
+      action((data) => {
+        this.setUpdateForm({
+          ...User.of(data),
+        })
+      })
+    )
   }) as TaskBy<number>
 
   @action

@@ -277,9 +277,9 @@ export class StuffTalentStore {
         )) as ImageUploadItem[]
 
         this.setUpdateForm({
-          ...this.item,
-          communityId: this.item.community.id,
-          categoryId: this.item.category.id,
+          ...item,
+          communityId: item.community.id,
+          categoryId: item.category.id,
           images,
         })
       })
