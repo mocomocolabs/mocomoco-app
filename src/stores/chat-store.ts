@@ -93,7 +93,7 @@ export class ChatStore {
     }
 
     await api
-      .get<{ chatrooms: IChatRoomDto[] }>(`/v1/chatrooms?limit=999&type=${this.selectedRoomType}`, {
+      .get<{ chatrooms: IChatRoomDto[] }>(`/v1/chatrooms?limit=999`, {
         params: { ids: roomIds.toString() },
       })
       .then(
