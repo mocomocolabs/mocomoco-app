@@ -28,41 +28,49 @@ const roomInfoGetter: IRoomInfoGetter[] = [
     info: (room: IChatRoom, loginUserId?: number) => {
       // TODO 지금 내가 가진 모든 채팅방에서, 나만 말을 했거나, 아무 대화가 없으면 contactUser===undefined가 된다.
       // UI적인 예외처리가 필요함.
-      const contactUser: IUser = room.users.filter((v) => v.id !== loginUserId)[0] ?? {}
+      const contactUser: IUser = room.users.find((v) => v.id !== loginUserId) ?? ({} as IUser)
       return {
         imageUrl: contactUser.profileUrl,
         roomName: contactUser.nickname,
         communityName: contactUser.communities?.map((community) => community.name).join('/'),
-        route: () => route.profileDetail(contactUser.id),
+        route: () => !!contactUser.id && route.profileDetail(contactUser.id),
       }
     },
   },
   {
     type: ChatRoomType.CLUB,
     info: (room: IChatRoom) => ({
-      imageUrl: room.club.atchFiles[0].url,
+      imageUrl: room.club.imageUrls[0],
       roomName: room.name,
       communityName: room.club.community.name,
-      route: () => route.clubDetail(room.club.id),
+      route: () => !!room.club.id && route.clubDetail(room.club.id),
     }),
   },
   {
     type: ChatRoomType.STUFF,
-    info: (room: IChatRoom) => ({
-      imageUrl: room.stuff?.atchFiles[0].url,
-      roomName: room.name,
-      communityName: room.stuff?.community.name,
-      route: () => route.stuffDetail(room.stuff?.id),
-    }),
+    info: (room: IChatRoom, loginUserId?: number) => {
+      const contactUser: IUser = room.users.find((v) => v.id !== loginUserId) ?? ({} as IUser)
+
+      return {
+        imageUrl: room.stuff.atchFiles[0].url,
+        roomName: contactUser.nickname,
+        communityName: room.stuff.community.name,
+        route: () => !!room.stuff.id && route.stuffDetail(room.stuff.id),
+      }
+    },
   },
   {
     type: ChatRoomType.TALENT,
-    info: (room: IChatRoom) => ({
-      imageUrl: room.talent?.atchFiles[0].url,
-      roomName: room.name,
-      communityName: room.talent?.community.name,
-      route: () => route.talentDetail(room.talent?.id),
-    }),
+    info: (room: IChatRoom, loginUserId?: number) => {
+      const contactUser: IUser = room.users.find((v) => v.id !== loginUserId) ?? ({} as IUser)
+
+      return {
+        imageUrl: room.talent.atchFiles[0].url,
+        roomName: contactUser.nickname,
+        communityName: room.talent.community.name,
+        route: () => !!room.talent.id && route.talentDetail(room.talent.id),
+      }
+    },
   },
 ]
 
