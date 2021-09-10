@@ -84,6 +84,8 @@ export const ProfileUpdatePage: React.FC = () => {
           executeWithError(async () => {
             return $user.updateUser(updatedFields).then((success) => {
               if (success) {
+                // TODO 여기서 직접 호출하지 말고, userStore에서 updateUser flag를 observing 하면 어떨까나?
+                $auth.updateUser()
                 route.goBack()
               }
             })
