@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, SyntheticEvent } from 'react'
 
 export interface IProfileImageComponent {
   url?: string
@@ -8,5 +8,14 @@ export interface IProfileImageComponent {
 const avatarUrl = '/assets/img/avatar.png'
 
 export const ProfileImage: FC<IProfileImageComponent> = ({ url = avatarUrl, className }) => {
-  return <img className={`shadow br-full w-10 h-10 ${className}`} src={url} alt='' />
+  return (
+    <img
+      className={`shadow br-full w-10 h-10 ${className}`}
+      src={url}
+      alt=''
+      onError={(e: SyntheticEvent<HTMLImageElement, Event>) => {
+        e.currentTarget.src = avatarUrl
+      }}
+    />
+  )
 }
