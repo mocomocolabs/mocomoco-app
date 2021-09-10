@@ -4,7 +4,7 @@ import { IFileDto } from './common/file'
 import { ICommunityDto } from './community-store.d'
 import { IUserDto } from './user-store.d'
 
-export type InsertClubTask = Task<[Partial<IClubForm>], IClubDto>
+export type InsertClubTask = Task<[Partial<IClubForm>, boolean], IClubDto>
 
 export type JoinClubTask = Task<[IJoinClubDto], void>
 
@@ -19,7 +19,7 @@ export interface IClubDto {
   description: string
   meetingTime: string
   meetingPlace: string
-  clubUsers: { user: IUserDto; isLike: boolean; isUse: boolean }[]
+  clubUsers: IClubMemberDto[]
   chatroom: {
     id: number
   }
@@ -28,6 +28,23 @@ export interface IClubDto {
   atchFiles: IFileDto[]
   isPublic: boolean
   isLike: boolean
-  clubHashtags: { hashtag: { name: string } }[]
+  clubHashtags: IClubHashtagDto[]
   createdAt: string
+}
+
+export interface IClubMemberDto {
+  user: IUserDto
+  isLike: boolean
+  isUse: boolean
+}
+export interface IClubHashtagDto {
+  id: number
+  hashtag: IHashtagDto
+  isUse: boolean
+}
+
+export interface IHashtagDto {
+  id: number
+  name: string
+  isUse: boolean
 }

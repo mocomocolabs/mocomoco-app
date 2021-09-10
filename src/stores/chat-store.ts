@@ -17,6 +17,7 @@ import { storage } from '../services/storage-service'
 import { webSocket } from '../services/web-socket-service'
 import { AuthStore } from './auth-store'
 import {
+  IChatDto,
   IChatRoomDto,
   IInsertChatMessage,
   InsertChatMessageTask,
@@ -93,7 +94,7 @@ export class ChatStore {
     }
 
     await api
-      .get<{ chatrooms: IChatRoomDto[] }>(`/v1/chatrooms?limit=999`, {
+      .get<{ chatrooms: IChatRoomDto[] }>(`/v1/chatrooms?is-use=true&limit=999`, {
         params: { ids: roomIds.toString() },
       })
       .then(
@@ -203,13 +204,16 @@ export class ChatStore {
    */
   @task.resolved
   getChatMessages = (async (chatRoomId: number, lastId: number) => {
-    const { chats } = await api.get<{ chats: IChat[] }>('/v1/chats', {
+    const { chats: chatsDto } = await api.get<{ chats: IChatDto[] }>('/v1/chats', {
       params: {
         'chat-room-id': chatRoomId,
         'last-id': lastId,
+        'is-use': true,
         'limit': 20,
       },
     })
+
+    const chats = chatsDto.map((chatDto) => ChatRoom.chatOf(chatDto))
 
     this.setChats(chatRoomId, chats)
   }) as TaskBy2<number, number>

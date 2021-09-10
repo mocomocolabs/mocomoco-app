@@ -116,7 +116,7 @@ export class StuffTalentStore {
       action((data) => {
         this.items = (data[this.predefined.getItemsProperty as keyof IStuffsTalentsDto] as IStuffTalentDto[])
           .filter((item) => filter.isLike === undefined || item.isLike === filter.isLike)
-          .map((item) => StuffTalent.of(item, this.predefined, this.$auth.user.id))
+          .map((item) => StuffTalent.of(item, this.predefined.pageKey, this.$auth.user.id))
       })
     )
   }) as TaskBy2<string, IStuffTalentFilter>
@@ -157,7 +157,7 @@ export class StuffTalentStore {
   getItem = (async (id: number) => {
     await api.get<IStuffTalentDto>(`${this.predefined.baseApi}/${id}`).then(
       action((data) => {
-        this.item = StuffTalent.of(data, this.predefined, this.$auth.user.id)
+        this.item = StuffTalent.of(data, this.predefined.pageKey, this.$auth.user.id)
       })
     )
   }) as TaskBy<number>
@@ -270,7 +270,7 @@ export class StuffTalentStore {
   getUpdateForm = (async (_id: number) => {
     await api.get<IStuffTalentDto>(`${this.predefined.baseApi}/${_id}`).then(
       action(async (data) => {
-        const item = StuffTalent.of(data, this.predefined, this.$auth.user.id)
+        const item = StuffTalent.of(data, this.predefined.pageKey, this.$auth.user.id)
 
         const images: ImageUploadItem[] = (await Promise.all(
           item.imageUrls.map((v) => urlToFile(v))

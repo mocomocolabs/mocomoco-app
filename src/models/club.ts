@@ -1,26 +1,35 @@
-import { IClubDto } from '../stores/club-store.d'
-import { IClub } from './club.d'
+import _ from 'lodash'
+import { IClubDto, IClubMemberDto } from '../stores/club-store.d'
+import { IUserDto } from '../stores/user-store.d'
+import { IClub, IClubMember } from './club.d'
+import { Community } from './community'
+import { User } from './user'
 
 export interface Club extends IClub {}
 
 export class Club {
-  static of(payload: IClubDto, userId: number) {
-    return Object.assign(new Club(), {
-      ...payload,
-      community: {
-        ...payload.community,
-        bannerUrl: payload.community.atchFiles[0]?.url,
-      },
-      members: payload.clubUsers.map((v) => ({
-        ...v.user,
-        isAdmin: payload.adminUsers.some((au) => au.id === v.user.id),
-      })),
-      imageUrls: payload.atchFiles.map((v) => v.url),
-      hashtagNames: payload.clubHashtags.map((v) => v.hashtag.name),
-      isMember: payload.clubUsers.some((v) => v.user.id === userId),
-      isAdmin: payload.adminUsers.some((v) => v.id === userId),
-      likeCount: payload.clubUsers.filter((clubUser) => clubUser.isLike).length,
-      chatroomId: payload.chatroom.id,
-    })
+  static of(dto: IClubDto, userId: number): IClub {
+    return !!dto && !_.isEmpty(dto)
+      ? {
+          ...dto,
+          community: Community.of(dto.community),
+          members: dto.clubUsers.map((v) => Club.membersOf(v, dto.adminUsers)),
+          hashtagNames: dto.clubHashtags.map((v) => v.hashtag.name),
+          imageUrls: dto.atchFiles.map((v) => v.url),
+          isMember: dto.clubUsers.some((v) => v.user.id === userId),
+          isAdmin: dto.adminUsers.some((v) => v.id === userId),
+          likeCount: dto.clubUsers.filter((clubUser) => clubUser.isLike).length,
+          chatroomId: dto.chatroom.id,
+        }
+      : ({} as IClub)
+  }
+
+  static membersOf(dto: IClubMemberDto, adminUsers: IUserDto[]): IClubMember {
+    return !!dto && !_.isEmpty(dto)
+      ? {
+          ...User.of(dto.user),
+          isAdmin: adminUsers.some((au) => au.id === dto.user.id),
+        }
+      : ({} as IClubMember)
   }
 }

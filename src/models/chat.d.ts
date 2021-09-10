@@ -1,18 +1,22 @@
-import { IChatRoomDto } from '../stores/chat-store.d'
+import { IChatDto, IChatRoomDto } from '../stores/chat-store.d'
+import { IClub } from './club.d'
+import { IStuffTalent } from './stufftalent.d'
 import { IUser } from './user.d'
 
-export interface IChat {
-  id: number
-  type: ChatType
+export interface IChat extends Pick<IChatDto, 'id' | 'type' | 'message' | 'createdAt'> {
   user: IUser
-  message: string
-  createdAt: string
 }
 
-export interface IChatRoom extends IChatRoomDto {}
+export interface IChatRoom extends Pick<IChatRoomDto, 'id' | 'type' | 'name' | 'readChatId'> {
+  users: IUser[]
+  chats: IChat[]
+  club: IClub
+  stuff: IStuffTalent
+  talent: IStuffTalent
+}
 
 export interface ISubscribeChat extends IChat {
-  chatroom: IChatRoomDto
+  chatroom: IChatRoom
   // 새로 생성한 채팅의 상대방에게 publish하기 위한 값
   targetUserId?: number
 }

@@ -1,8 +1,6 @@
-import { IUser } from './user.d';
+import { ICommentDto } from '../stores/comment-store.d'
+import { IUser } from './user.d'
 
-export interface IComment {
-  id: number
+export interface IComment extends Pick<ICommentDto, 'id' | 'content' | 'createdAt'> {
   user: IUser
-  content: string
-  createdAt: string // TODO: 임시
 }

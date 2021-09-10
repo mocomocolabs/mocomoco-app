@@ -1,7 +1,7 @@
 import { useObserver } from 'mobx-react-lite'
 import { FC, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
-import { IComment } from '../../models/comment'
+import { IComment } from '../../models/comment.d'
 import { timeDiff } from '../../utils/datetime-util'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { MorePopoverButton } from './MorePopoverButtonComponent'

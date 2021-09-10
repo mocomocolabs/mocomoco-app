@@ -1,7 +1,8 @@
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { RootStore } from '.'
-import { ICommunity } from '../models/community'
+import { Community } from '../models/community'
+import { ICommunity } from '../models/community.d'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { AuthStore } from './auth-store'
@@ -32,12 +33,9 @@ export class CommunityStore {
 
   @task
   getCommunities = (async () => {
-    await http.get<{ communities: ICommunityDto[] }>('/v1/communities').then(
+    await http.get<{ communities: ICommunityDto[] }>('/v1/communities?is-use=true').then(
       action((data) => {
-        this.communities = data.communities.map((v: ICommunityDto) => ({
-          ...v,
-          bannerUrl: v.atchFiles[0]?.url,
-        }))
+        this.communities = data.communities.map((v: ICommunityDto) => Community.of(v))
       })
     )
   }) as Task

@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form'
+import { ICommunity } from '../../models/community.d'
 import { IUserForm } from '../../models/user.d'
-import { IStuffTalentCommunityDto } from '../../stores/stufftalent-store.d'
 import { maxLengthValidator } from '../../utils/form-util'
 import { InputNormal } from '../atoms/InputNormalComponent'
 import { Pad } from '../atoms/PadComponent'
@@ -82,7 +82,7 @@ export const ProfileUpdateInput: React.FC<IProfileUpdateInput> = ({ fields }) =>
       <div className='flex-center'>
         <TextBase className='flex-none gray ml-3 mr-6'>마을</TextBase>
         <TextBase className='flex-grow gray pl-3'>
-          {(watchCommunities as IStuffTalentCommunityDto[])?.map((c) => c.name).join(' / ')}
+          {(watchCommunities as ICommunity[])?.map((c) => c.name).join(' / ')}
         </TextBase>
       </div>
 

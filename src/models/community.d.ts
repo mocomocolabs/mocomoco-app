@@ -1,6 +1,5 @@
-export interface ICommunity {
-  id: number
-  name: string
-  userCount: number
+import { ICommunityDto } from '../stores/community-store.d'
+
+export interface ICommunity extends ICommunityDto {
   bannerUrl: string
 }

@@ -1,5 +1,8 @@
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
-import { IStuffTalentDto } from '../stores/stufftalent-store.d'
+import { IStuffTalentDto, IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
+import { IChatRoom } from './chat.d'
+import { ICommunity } from './community.d'
+import { IUser } from './user.d'
 
 export enum StuffTalentPageKey {
   STUFF = 'STUFF',
@@ -19,10 +22,35 @@ export enum StuffTalentStatus {
   FINISH = 'FINISH',
 }
 
-export interface IStuffTalent extends IStuffTalentDto {
+export interface IStuffTalent
+  extends Pick<
+    IStuffTalentDto,
+    | 'id'
+    | 'type'
+    | 'status'
+    | 'category'
+    | 'title'
+    | 'content'
+    | 'price'
+    | 'exchangeText'
+    | 'isLike'
+    | 'isExchangeable'
+    | 'isNegotiable'
+    | 'isPublic'
+    | 'atchFiles'
+    | 'createdAt'
+  > {
+  user: IUser
+  community: ICommunity
+  stuffUsers: IStuffTalentLikeUser[]
+  talentUsers: IStuffTalentLikeUser[]
   likeCount: number
-  imageUrls: string[]
   chatroomId: number
+  imageUrls: string[]
+}
+export interface IStuffTalentLikeUser extends Pick<IStuffTalentLikeUserDto, 'id' | 'isLike'> {
+  user: IUser
+  chatroom: IChatRoom
 }
 
 export interface IStuffTalentFilter {

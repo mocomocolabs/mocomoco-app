@@ -60,16 +60,18 @@ export class FeedStore {
 
   @task
   getMyFeeds = (async () => {
-    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds?user-id=${this.$auth.user.id}&limit=999`).then(
-      action((data) => {
-        this.feeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
-      })
-    )
+    await api
+      .get<{ feeds: IFeedDto[] }>(`/v1/feeds?user-id=${this.$auth.user.id}&is-use=true&limit=999`)
+      .then(
+        action((data) => {
+          this.feeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
+        })
+      )
   }) as Task
 
   @task
   getLikeFeeds = (async () => {
-    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds?limit=999`).then(
+    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds?is-use=true&limit=999`).then(
       action((data) => {
         this.feeds = data.feeds.filter((v) => v.isLike).map((v) => Feed.of(v, this.$auth.user.id))
       })
@@ -99,7 +101,7 @@ export class FeedStore {
       )
       .then(
         action((data) => {
-          this.homeScheduleFeeds = data.schedules.map((v) => Feed.scheduleOf(v)!)
+          this.homeScheduleFeeds = data.schedules.filter((s) => s.isUse).map((v) => Feed.scheduleOf(v)!)
         })
       )
   }) as Task
@@ -120,7 +122,7 @@ export class FeedStore {
         const feed = Feed.of(dto, this.$auth.user.id)
 
         const images: ImageUploadItem[] = (await Promise.all(
-          feed.atchFiles?.map((v) => urlToFile(v.url))
+          feed.imageUrls.map((url) => urlToFile(url))
         )) as ImageUploadItem[]
 
         this.setUpdateForm({

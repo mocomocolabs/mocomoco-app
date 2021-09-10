@@ -30,6 +30,7 @@ export class ClubStore {
   @observable.ref clubs: Club[] = []
   @observable.ref club: Club
   @observable.struct form: IClubForm = initState.form
+  @observable.struct updateForm: IClubForm = initState.form
 
   $auth: AuthStore
 
@@ -42,7 +43,7 @@ export class ClubStore {
     // TODO: 페이징 처리 추후 구현
     await api
       .get<{ clubs: IClubDto[]; count: number }>(
-        `/v1/clubs?community-id=${this.$auth.user.communityId}&sort-order=popular&limit=${limit}`
+        `/v1/clubs?community-id=${this.$auth.user.communityId}&sort-order=popular&is-use=true&limit=${limit}`
       )
       .then(
         action((data) => {
@@ -56,7 +57,7 @@ export class ClubStore {
     // TODO: 페이징 처리 추후 구현
     await api
       .get<{ clubs: IClubDto[]; count: number }>(
-        `/v1/clubs?community-id=${this.$auth.user.communityId}&sort-order=created_at_desc&limit=999`
+        `/v1/clubs?community-id=${this.$auth.user.communityId}&sort-order=created_at_desc&is-use=true&limit=999`
       )
       .then(
         action((data) => {
@@ -70,7 +71,7 @@ export class ClubStore {
     // TODO: 페이징 처리 추후 구현
     await api
       .get<{ clubs: IClubDto[]; count: number }>(
-        `/v1/clubs/users/${this.$auth.user.id}?sort-order=created_at_desc&limit=999`
+        `/v1/clubs/users/${this.$auth.user.id}?sort-order=created_at_desc&is-use=true&limit=999`
       )
       .then(
         action((data) => {
@@ -83,7 +84,7 @@ export class ClubStore {
   getLikeClubs = (async () => {
     // TODO: 페이징 처리 추후 구현
     await api
-      .get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=created_at_desc&limit=999`)
+      .get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=created_at_desc&is-use=true&limit=999`)
       .then(
         action((data) => {
           // TODO clubs api 바뀌면, 이 부분 교체하기
@@ -105,52 +106,59 @@ export class ClubStore {
   }) as TaskBy<number>
 
   @task
-  getClubForm = (async (_id: number) => {
-    await this.getClub(_id)
+  getUpdateForm = (async (id: number) => {
+    await api.get<IClubDto>(`/v1/clubs/${id}`).then(
+      action(async (data) => {
+        const club = Club.of(data, this.$auth.user.id!)
 
-    console.log(this.club.imageUrls)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const images: any = await Promise.all(this.club.imageUrls.map((v) => urlToFile(v)))
+        const images: ImageUploadItem[] = (await Promise.all(
+          club.imageUrls?.map((url) => urlToFile(url))
+        )) as ImageUploadItem[]
 
-    this.setForm({
-      ...this.club,
-      images,
-    })
+        this.setUpdateForm({
+          ...club,
+          images,
+        })
+      })
+    )
   }) as TaskBy<number>
 
   @task.resolved
-  insertClub = (async (form: IClubForm) => {
+  insertClub = (async (form: IClubForm, isUpdate: boolean) => {
     if (form.images.length === 0) throw new Error('최소 1개의 이미지를 등록해주세요')
 
     const formData = new FormData()
 
+    const data = JSON.stringify({
+      id: form.id,
+      communityId: form.communityId,
+      name: form.name,
+      description: form.description,
+      meetingTime: form.meetingTime,
+      meetingPlace: form.meetingPlace,
+      hashtagNames: form.hashtagNames,
+      isPublic: form.isPublic,
+      isUse: true,
+    } as Omit<IClubForm, 'images'>)
+
     formData.append(
       'clubReqDto',
-      new Blob(
-        [
-          JSON.stringify({
-            communityId: form.communityId,
-            name: form.name,
-            description: form.description,
-            meetingTime: form.meetingTime,
-            meetingPlace: form.meetingPlace,
-            hashtagNames: form.hashtagNames,
-            isPublic: form.isPublic,
-          }),
-        ],
-        {
-          type: 'application/json',
-        }
-      )
+      new Blob([data], {
+        type: 'application/json',
+      })
     )
 
-    form.images.forEach((v) => {
+    form.images?.forEach((v) => {
       formData.append('files', v, v.name)
     })
 
-    await api.post(`/v1/clubs`, formData)
-
-    return this.getCreatedClub()
+    if (isUpdate) {
+      await api.put('/v1/clubs', formData)
+      return { id: form.id } as IClubDto
+    } else {
+      await api.post('/v1/clubs', formData)
+      return this.getCreatedClub()
+    }
   }) as InsertClubTask
 
   @task.resolved
@@ -179,11 +187,22 @@ export class ClubStore {
 
   @action
   resetForm() {
-    console.log('reset??')
-
     this.form = {
       ...initState.form,
     }
+  }
+
+  @action
+  setUpdateForm(data: Partial<IClubForm>) {
+    this.updateForm = {
+      ...this.updateForm,
+      ...data,
+    }
+  }
+
+  @action
+  resetUpdateForm() {
+    this.updateForm = initState.form
   }
 
   @task.resolved

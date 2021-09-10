@@ -1,18 +1,9 @@
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
-import { ICommunity } from './community'
-import { SIGN_UP_STATUS } from './sign-up.d'
+import { IUserDto } from '../stores/user-store.d'
+import { ICommunity } from './community.d'
 
-export interface IUser {
-  id: number
-  name: string
-  nickname: string
+export interface IUser extends Pick<IUserDto, 'id' | 'name' | 'nickname' | 'description' | 'status'> {
   communities: ICommunity[]
-  email: string
-  isPublicEmail: boolean
-  mobile: string
-  isPublicMobile: boolean
-  status: SIGN_UP_STATUS
-  description: string
   profileUrl: string
 }
 

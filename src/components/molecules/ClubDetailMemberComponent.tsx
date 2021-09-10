@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IClubMember } from '../../models/club.d'
-import { ICommunity } from '../../models/community'
+import { ICommunity } from '../../models/community.d'
 import { route } from '../../services/route-service'
 import { executeWithError } from '../../utils/http-helper-util'
 import { Icon } from '../atoms/IconComponent'

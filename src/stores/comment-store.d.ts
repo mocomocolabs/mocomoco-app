@@ -1,4 +1,13 @@
 import { Task } from 'mobx-task'
+import { IUserDto } from './user-store.d'
+
+export interface ICommentDto {
+  id: number
+  user: IUserDto
+  content: string
+  createdAt: string // TODO: 임시
+  isUse: boolean
+}
 
 export interface IInsertComment {
   feedId: number

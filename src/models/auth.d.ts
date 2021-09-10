@@ -1,6 +1,6 @@
-import { IUser } from './user.d'
+import { IAuthUserDto } from '../stores/auth-store.d'
 
-export interface IAuthUser extends IUser {
+export interface IAuthUser extends IAuthUserDto {
+  profileUrl: string
   communityId: number
-  chatroomIds: []
 }

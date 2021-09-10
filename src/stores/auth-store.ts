@@ -4,11 +4,13 @@ import { Task, task } from 'mobx-task'
 import { AuthUser } from '../models/auth'
 import { IAuthUser } from '../models/auth.d'
 import { ISignUpForm } from '../models/sign-up'
+import { User } from '../models/user'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy } from './task'
+import { IUserDto } from './user-store.d'
 
 const inko = new Inko()
 
@@ -83,7 +85,6 @@ export class AuthStore {
 
   @task.resolved
   signUp = (async (form) => {
-    console.log(form)
     const param = { ...form }
     // TODO: fcmToken 업데이트
     param.fcmToken = '_'
@@ -107,15 +108,19 @@ export class AuthStore {
         email,
         password: inko.ko2en(password),
       })
-      .then(async (authUser: IAuthUserDto) => await this.signInCallback(authUser))
+      .then(async (dto: IAuthUserDto) => await this.signInCallback(dto))
   }) as SignInTask
 
   @action
-  signInCallback = async (dto: IAuthUserDto) => {
+  signInCallback = async (dto: IAuthUserDto, ignoreAuth?: boolean) => {
     console.log('signInCallback', dto)
-    const authUser = AuthUser.of(dto)
-    await this.setAuth(authUser)
-    this.setUser(authUser)
+
+    !ignoreAuth && (await this.setAuth(dto))
+
+    this.setUser(AuthUser.of(dto))
+
+    !!!this.user.profileUrl && this.updateUser()
+
     this.setIsLogin(true)
   }
 
@@ -128,10 +133,9 @@ export class AuthStore {
       api.setAuthoriationBy(hasToken)
       await storage.setAccessTokenForSync()
       try {
-        await api.get<IAuthUserDto>(signInWithTokenApiUrl).then(async (dto: IAuthUserDto) => {
-          this.setUser(AuthUser.of(dto))
-          this.setIsLogin(true)
-        })
+        await api
+          .get<IAuthUserDto>(signInWithTokenApiUrl)
+          .then(async (dto: IAuthUserDto) => await this.signInCallback(dto, true))
       } catch (e) {
         if (e.status === 401) {
           this.refreshToken()
@@ -146,8 +150,8 @@ export class AuthStore {
 
     const refreshToken = await storage.getRefreshToken()
     api.setAuthoriationBy(refreshToken)
-    api.post<IAuthUserDto>('/auth/refresh-token', {}).then(async (authUser: IAuthUserDto) => {
-      await this.setAuth(authUser)
+    api.post<IAuthUserDto>('/auth/refresh-token', {}).then(async (dto: IAuthUserDto) => {
+      await this.setAuth(dto)
     })
   }
 
@@ -166,8 +170,8 @@ export class AuthStore {
   }
 
   @action
-  async setAuth(user: IAuthUserDto) {
-    const { accessToken, refreshToken } = user
+  async setAuth(dto: IAuthUserDto) {
+    const { accessToken, refreshToken } = dto
     await storage.setAccessToken(accessToken)
     await storage.setRefreshToken(refreshToken)
     await storage.setAccessTokenForSync()
@@ -178,4 +182,12 @@ export class AuthStore {
   setUser(user: IAuthUser) {
     this.user = user
   }
+
+  @task.resolved
+  updateUser = (async () => {
+    // TODO 서버에 요청하지 않고 $user.user가 업데이트되는 걸 리액션받을 방법이 있나?
+    await api
+      .get<IUserDto>(`/sys/users/${this.user.id}`)
+      .then(action((userDto) => this.setUser({ ...this.user, ...User.of(userDto) })))
+  }) as TaskBy<void>
 }

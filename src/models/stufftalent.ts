@@ -1,23 +1,51 @@
 import _ from 'lodash'
 import { IRouteParam, route } from '../services/route-service'
-import { IStuffTalentPredefined } from '../stores/stufftalent-store'
 import { IStuffTalentDto, IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
-import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus, StuffTalentType } from './stufftalent.d'
+import { ChatRoom } from './chat-room'
+import { Community } from './community'
+import {
+  IStuffTalent,
+  IStuffTalentLikeUser,
+  StuffTalentPageKey,
+  StuffTalentStatus,
+  StuffTalentType,
+} from './stufftalent.d'
+import { User } from './user'
 
 export interface StuffTalent extends IStuffTalent {}
 
 export class StuffTalent {
-  static of(payload: IStuffTalentDto, predefined: IStuffTalentPredefined, loginUserId: number) {
-    return Object.assign(new StuffTalent(), {
-      ...payload,
-      likeCount: (
-        payload[predefined.stuffTalentUsersProperty as keyof IStuffTalentDto] as IStuffTalentLikeUserDto[]
-      ).filter((likeUsers) => likeUsers.isLike).length,
-      imageUrls: payload.atchFiles.map((v) => v.url),
-      chatroomId: (
-        payload[predefined.stuffTalentUsersProperty as keyof IStuffTalentDto] as IStuffTalentLikeUserDto[]
-      ).find((likeUsers) => likeUsers.isUse && likeUsers.user?.id === loginUserId)?.chatroom?.id,
-    })
+  static of(dto: IStuffTalentDto, key: StuffTalentPageKey, loginUserId: number): IStuffTalent {
+    if (!!!dto || _.isEmpty(dto)) {
+      return {} as IStuffTalent
+    }
+
+    const stufftalentUsers = (key === StuffTalentPageKey.STUFF ? dto.stuffUsers : dto.talentUsers) ?? []
+
+    return {
+      ...dto,
+      user: User.of(dto.user),
+      community: Community.of(dto.community),
+      stuffUsers: !!dto.stuffUsers
+        ? dto.stuffUsers.map((u) => this.stufftalentUserOf(u, loginUserId))
+        : ({} as IStuffTalentLikeUser[]),
+      talentUsers: !!dto.talentUsers
+        ? dto.talentUsers.map((u) => this.stufftalentUserOf(u, loginUserId))
+        : ({} as IStuffTalentLikeUser[]),
+      likeCount: stufftalentUsers.filter((u) => u.isLike)?.length ?? 0,
+      chatroomId: stufftalentUsers.find((u) => u.isUse && u.user?.id === loginUserId)?.chatroom?.id ?? 0,
+      imageUrls: dto.atchFiles.map((v) => v.url),
+    }
+  }
+
+  static stufftalentUserOf(dto: IStuffTalentLikeUserDto, loginUserId: number): IStuffTalentLikeUser {
+    return !!dto && !_.isEmpty(dto)
+      ? {
+          ...dto,
+          user: User.of(dto.user),
+          chatroom: ChatRoom.of(dto.chatroom, loginUserId),
+        }
+      : ({} as IStuffTalentLikeUser)
   }
 }
 

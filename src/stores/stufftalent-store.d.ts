@@ -1,15 +1,16 @@
-import { IChatRoom } from '../models/chat'
-import { IUser } from '../models/user.d'
 import { StuffTalentStatus as Status, StuffTalentType as Type } from './../models/stufftalent.d'
+import { IChatRoomDto } from './chat-store.d'
 import { IFileDto } from './common/file.d'
+import { ICommunityDto } from './community-store.d'
+import { IUserDto } from './user-store.d'
 
 interface IStuffTalentDtoBase {
   id: number
   type: Type
   status: Status
   category: IStuffTalentCategoryDto
-  community: IStuffTalentCommunityDto
-  user: IUser
+  community: ICommunityDto
+  user: IUserDto
   title: string
   content: string
   price: number
@@ -42,9 +43,9 @@ interface IStuffTalentInsertReqDto {
 export interface IStuffTalentLikeUserDto {
   id: number
   isLike: boolean
-  user: IUser
+  user: IUserDto
   isUse: boolean
-  chatroom: IChatRoom
+  chatroom: IChatRoomDto
 }
 
 export interface IStuffTalentDto extends IStuffTalentDtoBase {
@@ -60,15 +61,6 @@ export interface IStuffsTalentsDto {
 export interface IStuffTalentCategoryDto {
   id: number
   name: string
-}
-
-export interface IStuffTalentCommunityDto {
-  id: number
-  name: string
-}
-
-export interface IStuffTalentChatroomDto {
-  id: number
 }
 
 export interface ICreateChatDto {

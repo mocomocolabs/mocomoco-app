@@ -1,5 +1,6 @@
 import { Task } from 'mobx-task'
 import { FeedType, IFeedForm, ScheduleType } from '../models/feed.d'
+import { ICommentDto } from './comment-store.d'
 import { IFileDto } from './common/file.d'
 import { ICommunityDto } from './community-store.d'
 import { IUserDto } from './user-store.d'
@@ -20,7 +21,7 @@ export interface IFeedDto {
   isPublic: boolean
   isLike: boolean
   createdAt: string
-  feedComments: { id: number; isUse: boolean }[]
+  feedComments: ICommentDto[]
   feedUsers: { isLike: boolean }[]
 }
 

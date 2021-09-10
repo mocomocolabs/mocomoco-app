@@ -1,23 +1,20 @@
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
-import { ICommunity } from './community'
+import { IClubDto } from '../stores/club-store.d'
+import { ICommunity } from './community.d'
 import { IUser } from './user.d'
 
-export interface IClub {
-  id: number
-  name: string
-  description: string
-  meetingTime: string
-  meetingPlace: string
+export interface IClub
+  extends Pick<
+    IClubDto,
+    'id' | 'name' | 'description' | 'meetingTime' | 'meetingPlace' | 'isPublic' | 'isLike'
+  > {
   community: ICommunity
   members: IClubMember[]
   hashtagNames: string[]
   imageUrls: string[]
   isMember: boolean
   isAdmin: boolean
-  isPublic: boolean
-  isLike: boolean
   likeCount: number
-  createdAt: string
   chatroomId: number
 }
 
