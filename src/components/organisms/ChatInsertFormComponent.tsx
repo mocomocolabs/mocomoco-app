@@ -15,7 +15,7 @@ export interface IChatInsertForm {
 }
 
 export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = false }) => {
-  const { $chat, $user } = useStore()
+  const { $chat, $auth } = useStore()
   const [inputRef, setFocus] = useFocus()
 
   const sendMessage = useCallback(async () => {
@@ -29,7 +29,9 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
   return useObserver(() => (
     <div className='flex flex-1 pv-2'>
       <div className='flex flex-none'>
-        <ProfileImage url={$user.user.profileUrl}></ProfileImage>
+        <ProfileImage
+          url={$auth.user.profileUrl ?? $chat.room?.users.find(({ id }) => id === $auth.user.id)?.profileUrl}
+        />
       </div>
 
       <div className='chat-insert-form flex-between-center w-full ml-3 px-3 br-20 border-primary'>
