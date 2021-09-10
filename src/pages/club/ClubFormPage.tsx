@@ -1,7 +1,8 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
+import { useHistory } from 'react-router'
 import { HeaderSubmitText } from '../../components/atoms/HeaderSubmitText'
 import { Icon } from '../../components/atoms/IconComponent'
 import { InputNormal } from '../../components/atoms/InputNormalComponent'
@@ -11,88 +12,118 @@ import { ValidationMessage } from '../../components/atoms/ValidationMessageCompo
 import { SpinnerWrapper } from '../../components/helpers/SpinnerWrapper'
 import { BackButton } from '../../components/molecules/BackButtonComponent'
 import { Hashtag } from '../../components/molecules/HashtagComponent'
-import {
-  assignPreview,
-  IImageUploaderRef,
-  ImageUploader,
-} from '../../components/molecules/ImageUploaderComponent'
+import { IImageUploaderRef, ImageUploader } from '../../components/molecules/ImageUploaderComponent'
 import { Footer } from '../../components/organisms/FooterComponent'
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
 import { IClubForm } from '../../models/club.d'
-import { route } from '../../services/route-service'
+import { IRouteParam, route } from '../../services/route-service'
 import { maxLengthValidator } from '../../utils/form-util'
 import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubFormPage: React.FC = () => {
+  const goDetailOnSubmit = useHistory<IRouteParam>().location.state?.goDetailOnSubmit
+
   const { $auth, $ui, $club, $chat } = useStore()
-  const {
-    register,
-    handleSubmit,
-    formState: { isValid, errors },
-    reset,
-  } = useForm<IClubForm>({
-    mode: 'onChange',
-    defaultValues: {
-      ...$club.form,
-    },
-  })
 
   const uploader = useRef<IImageUploaderRef>()
 
-  useEffect(() => {
-    $ui.setIsBottomTab(false)
+  const isUpdate = !!$club.updateForm.id
+  const init = Object.assign({}, isUpdate ? { ...$club.updateForm } : { ...$club.form })
+
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid, dirtyFields, errors },
+    getValues,
+    setValue,
+    watch,
+  } = useForm<IClubForm>({
+    mode: 'onChange',
+    defaultValues: {
+      ...init,
+      // TODO 최종적으로는 $community.selectedId 를 사용하는 게 맞는데, 지금은 내 공동체에만 글을 쓸 수 있으니 auth.user.communityId를 사용하도록 함.
+      communityId: init.communityId > 0 ? init.communityId : $auth.user.communityId,
+    },
+  })
+
+  const [watchImages, watchHashtagNames] = watch(['images', 'hashtagNames'])
+
+  const setValueCustom = useCallback((name, value) => {
+    // shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
+    setValue(name, value, { shouldDirty: true, shouldValidate: true })
   }, [])
 
-  // TODO: 데이터 변경이 있을 때만 완료 버튼 활성화되도록 조건 추가되면 좋을 것 같네요
-  // => 저는 기본값과 비교해서 수정된 값 있는지 확인하려고 dirtyFields를 활용했는데, 다른 방법이 있을 수도 있겠네요
-  // => formState.isValid && Object.keys(formState.dirtyFields).length > 0
+  const submittable = useMemo(() => {
+    const isChangedFromDefaultValues = Object.keys(dirtyFields).length > 0
+
+    return isValid && !(isUpdate && !isChangedFromDefaultValues)
+  }, [isValid, Object.keys(dirtyFields)])
+
+  const isSubmitCompleted = useRef(false)
+
   const onSubmit = handleSubmit(async (form) => {
-    $club.setForm({
-      ...form,
-      images: $club.form.images,
-    })
-
     executeWithError(async () => {
-      const club = await $club.insertClub({
-        ...$club.form,
-        communityId: $auth.user.communityId,
-      })
+      const club = await $club.insertClub(form, isUpdate)
 
-      $chat.subscribeNewRoom(club.chatroom.id)
+      isUpdate ? $club.resetUpdateForm() : $club.resetForm()
 
-      $club.resetForm()
-      reset()
+      // TODO 소모임채팅방의 대표사진을 업뎃해줘야 함
+      !isUpdate && $chat.subscribeNewRoom(club.chatroom.id)
 
-      await Promise.all([$club.getPopularClubs(999), $club.getRecentClubs()])
+      isSubmitCompleted.current = true
 
-      route.clubs()
+      goDetailOnSubmit ? route.clubDetail(club.id!, true) : route.goBack()
     })
   })
+
+  const SubmitBtn = useMemo(
+    () => <HeaderSubmitText isSubmittable={submittable} onSubmit={onSubmit} />,
+    [submittable, onSubmit]
+  )
+
+  useEffect(() => {
+    $ui.setIsBottomTab(false)
+
+    return () => {
+      isUpdate ? $club.resetUpdateForm() : $club.resetForm()
+
+      // TODO 임시저장 루틴을 통일하자 - 물건, 재능, 이야기 등
+      if (isUpdate || isSubmitCompleted.current) return
+
+      const [name, description, images] = getValues(['name', 'description', 'images'])
+
+      if (name || description || images?.length) {
+        $club.setForm(getValues())
+        console.log('cleanup', '임시저장 완료')
+      }
+    }
+  }, [])
 
   return useObserver(() => (
     <IonPage>
       <Header
         start={<BackButton type='close' />}
         center='소모임'
-        end={
-          <SpinnerWrapper
-            task={$club.insertClub}
-            Submit={<HeaderSubmitText isSubmittable={isValid} onSubmit={onSubmit} />}
-          />
-        }
+        end={<SpinnerWrapper task={$club.insertClub} Submit={SubmitBtn} />}
       />
+
       <IonContent>
         <div className='px-container'>
-          <form onSubmit={onSubmit}>
+          <form id='club-form' onSubmit={onSubmit}>
+            <input type='hidden' {...register('id')} />
+            <input type='hidden' {...register('images')} />
+            <input type='hidden' {...register('hashtagNames')} />
+            {/* <input type='hidden' {...register('isPublic')} /> */}
+
             <ImageUploader
               className='mt-5'
-              images={$club.form.images?.map((v, i) => assignPreview(v, i))}
-              setImages={(param) => $club.setFormImage(param)}
+              images={watchImages}
+              setImages={(param) => setValueCustom('images', param)}
               refUploader={uploader as IImageUploaderRef}
             ></ImageUploader>
 
-            <Pad className='h-2'></Pad>
+            <Pad className='h-2' />
 
             <InputNormal
               placeholder='모임의 이름을 입력해주세요'
@@ -123,8 +154,8 @@ export const ClubFormPage: React.FC = () => {
 
             {/* TODO validate: (value) => maxLengthValidator(value, 100), */}
             <Hashtag
-              onChange={(hashtagNames) => $club.setForm({ hashtagNames })}
-              value={$club.form.hashtagNames?.join(' ')}
+              onChange={(hashtagNames) => setValueCustom('hashtagNames', hashtagNames)}
+              value={watchHashtagNames.join(' ')}
             />
 
             <Textarea
@@ -143,16 +174,16 @@ export const ClubFormPage: React.FC = () => {
       <Footer>
         {/* TODO: 카메라 플러그인 추가 */}
         <Icon
-          name={$club.form.images.length ? 'image-solid' : 'image'}
+          name={watchImages.length ? 'image-solid' : 'image'}
           className='icon-secondary'
           onClick={() => uploader.current?.click()}
-        ></Icon>
+        />
         {/* TODO 소모임은 현재, 모든 공동체 보기가 없기 때문에 전체 공개 체크박스도 막아두는 게 일관성있겠다.
           <Checkbox
             label='모든 마을에 보이기'
-            defaultChecked={$club.form.isPublic!}
-            onChange={(checked) => $club.setForm({ isPublic: checked })}
-          ></Checkbox>
+            defaultChecked={init.isPublic!}
+            onChange={(checked) => setValueCustom('isPublic', checked)}
+          />
           <IsPublicToast /> */}
       </Footer>
     </IonPage>

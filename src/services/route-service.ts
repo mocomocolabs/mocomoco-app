@@ -116,12 +116,12 @@ class RouteService {
     this.route(`/tabs/club`)
   }
 
-  clubForm() {
-    this.route(`/tabs/club/form`)
+  clubForm(param?: IRouteParam) {
+    this.route(`/tabs/club/form`, param)
   }
 
-  clubDetail(clubId: number) {
-    this.route(`/tabs/club/${clubId}`)
+  clubDetail(clubId: number, isReplace = false) {
+    this.route(`/tabs/club/${clubId}`, undefined, isReplace)
   }
 
   myPageMyList() {

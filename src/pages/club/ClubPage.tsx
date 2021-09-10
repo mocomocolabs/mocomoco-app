@@ -29,7 +29,7 @@ export const ClubPage: React.FC = () => {
         end={
           /* TODO: 추후구현 */
           /* <Icon name='search' /> */
-          <div onClick={() => route.clubForm()}>
+          <div onClick={() => route.clubForm({ goDetailOnSubmit: true })}>
             <Icon name='pencil' />
           </div>
         }
