@@ -6,6 +6,7 @@ import { Description } from '../atoms/DescriptionComponent'
 import { Icon } from '../atoms/IconComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
 import { TextLg } from '../atoms/TextLgComponent'
+import { TextSm } from '../atoms/TextSmComponent'
 import { XDivider } from '../atoms/XDividerComponent'
 import { ImageSlider } from './ImageSliderComponent'
 import { MorePopoverButton } from './MorePopoverButtonComponent'
@@ -29,7 +30,7 @@ export const ClubDetailContents: FC<IClubDetailContents> = ({ club }) => {
                 {
                   label: '수정',
                   onClick: async () => {
-                    await $club.getClubForm(club.id)
+                    await $club.getUpdateForm(club.id)
                     route.clubForm()
                   },
                 },
@@ -48,6 +49,12 @@ export const ClubDetailContents: FC<IClubDetailContents> = ({ club }) => {
         </div>
         <XDivider className='mt-4 mb-6'></XDivider>
         <Description>{club.description}</Description>
+
+        {club.hashtagNames.length ? (
+          <TextSm className='mt-5 texthashtag ellipsis'>#{club.hashtagNames.join(' #')}</TextSm>
+        ) : (
+          ''
+        )}
         <XDivider className='mt-5 mb-6'></XDivider>
       </div>
     </div>
