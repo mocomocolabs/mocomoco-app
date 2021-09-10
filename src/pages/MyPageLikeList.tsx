@@ -15,7 +15,7 @@ export const MyPageLikeList: React.FC = () => {
         initialFilter: {
           communityId: null,
           userId: undefined,
-          isPublic: false,
+          isPublic: undefined,
           categories: [],
           notStatuses: [],
           types: [],

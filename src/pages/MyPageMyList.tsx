@@ -13,7 +13,7 @@ export const MyPageMyList: React.FC = () => {
       {...{
         title: '내 목록',
         initialFilter: {
-          isPublic: false,
+          isPublic: undefined,
           communityId: null,
           userId: $auth.user.id,
           categories: [],
