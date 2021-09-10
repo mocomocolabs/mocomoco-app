@@ -29,7 +29,7 @@ export const Hashtag: FC<IHashtag> = ({ value = '', onChange }) => {
   const setAndOnChange = (v: string) => {
     beforeInput = v
     setVal(v)
-    onChange(_.compact(v.split('#')))
+    onChange(_.compact(v.replaceAll(' ', '').split('#')))
   }
 
   return useObserver(() => (
