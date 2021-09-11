@@ -24,8 +24,10 @@ export const SignUpCompletePage: React.FC = () => {
         <ImageSlider urls={['/assets/img/hama-signup.png']} height={452}></ImageSlider>
         <div className='px-6 text-center'>
           <TextXxxl className='text-bold textprimary'>하마가 당신을 기다리고 있어요!</TextXxxl>
-          <TextBase className='gray mt-6'>
-            맞이할 준비가 되면 알려드릴게요.
+          <TextBase className='gray text-left mt-6'>
+            맞이할 준비를 마치면
+            <br />
+            하마지기가 안내해 드릴 거에요.
             <br />
             잠시 후에 만나요 :)
           </TextBase>

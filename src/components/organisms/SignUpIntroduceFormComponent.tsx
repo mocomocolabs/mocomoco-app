@@ -54,7 +54,7 @@ export const SignUpIntroduceForm: FC = () => {
           required: true,
           validate: (value) => maxLengthValidator(value, 100),
         })}
-        placeholder='간단히 소개 부탁드려요. 마을을 돌보는 하마새에게 소개글이 전해져요.'
+        placeholder='마을의 하마지기가 확인할 수 있도록 간단히 소개 부탁드려요'
         rows={3}
       />
 
