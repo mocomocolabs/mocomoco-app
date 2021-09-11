@@ -1,9 +1,11 @@
 import { action, observable } from 'mobx'
 import { task, Task } from 'mobx-task'
+import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { User } from '../models/user'
 import { IUser, IUserForm } from '../models/user.d'
 import { api } from '../services/api-service'
+import { AuthStore } from './auth-store'
 import { TaskBy } from './task'
 import { IUserDto } from './user-store.d'
 
@@ -22,6 +24,12 @@ export class UserStore {
   // is structurally equal to the current value will be ignored.
   @observable.struct user: IUser = initState.user
   @observable.struct updateForm: IUserForm = initState.form
+
+  $auth: AuthStore
+
+  constructor(rootStore: RootStore) {
+    this.$auth = rootStore.$auth
+  }
 
   @task
   getUser = (async (userId: number) => {
@@ -76,6 +84,8 @@ export class UserStore {
       return false
     }
 
+    // TODO 여기서 직접 호출하지 말고, userStore에서 updateUser flag를 observing 하면 어떨까나?
+    this.$auth.updateUser()
     return true
   }) as Task<[IUserForm], boolean>
 }

@@ -183,11 +183,10 @@ export class AuthStore {
     this.user = user
   }
 
-  @task.resolved
-  updateUser = (async () => {
+  updateUser = async () => {
     // TODO 서버에 요청하지 않고 $user.user가 업데이트되는 걸 리액션받을 방법이 있나?
     await api
       .get<IUserDto>(`/sys/users/${this.user.id}`)
       .then(action((userDto) => this.setUser({ ...this.user, ...User.of(userDto) })))
-  }) as TaskBy<void>
+  }
 }

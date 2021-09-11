@@ -27,8 +27,8 @@ export class RootStore {
   $segment: SegmentStore
 
   constructor() {
-    this.$user = new UserStore()
     this.$auth = new AuthStore()
+    this.$user = new UserStore(this)
     this.$community = new CommunityStore(this)
     this.$feed = new FeedStore(this)
     this.$comment = new CommentStore()
