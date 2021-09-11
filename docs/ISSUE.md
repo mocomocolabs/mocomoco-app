@@ -280,3 +280,52 @@ useEffect(() => {
 // 요래 하면 된다.
 setValue(name, value, { shouldDirty: true, shouldValidate: true })
 ```
+
+### number타입 필드의 빈값 처리 문제
+
+react-hook-form 구현상, number타입 input의 빈값과 null값이 다음과 같이 바뀌어 저장된다.
+
+- undefined / 사용자가 입력값 삭제 시 => NaN
+- null => 0
+
+placeholder를 보여주기 위해 기본값을 빈값으로 설정하면 NaN으로 바뀌어 저장된다.<br />
+이후에 사용자가 입력값을 삭제할 경우에도 NaN으로 저장되는데,<br />
+기본값도 NaN이니까 값의 변경이 없는 것으로 판정되길 기대하지만 그렇지 않다.<br />
+즉, dirtyFields에 해당 필드가 포함된다.<br />
+
+아마도, react-hook-form 내부에서 기본값과 현재값을 비교하는 방식이 A === B 인 것 같다.<br />
+그렇다면 NaN === NaN 의 결과는 false 이므로 위 현상이 발생할 수 있다.<br />
+
+해결법으로, 기본값을 NaN 대신 0으로 설정하되,<br />
+실제값을 갖는 input(number타입)과 화면에 표시하는 input(text타입)를 따로 만들고<br />
+값이 0으로 설정될 경우 화면에 빈 텍스트가 표시되도록 한다.
+
+- StuffTalentFormPage의 price필드를 참고하자
+
+```typescript
+// 화면에 표시하지 않고, 폼 값을 가지는 용도로 사용
+<input
+  type='hidden'
+  {...register('price', {
+    required: watchType === StuffTalentType.SELL,
+    validate: (value) => {
+      if (value === 0) {
+        return watchType !== StuffTalentType.SELL || '가격을 입력해주세요'
+      }
+
+      return minMaxNumberValidator(value, 1, 99999999999)
+    },
+    valueAsNumber: true,
+  })}
+/>
+
+// 화면에 표시하는 용도로 사용
+<InputNormal
+  placeholder='원하시는 가격을 적어주세요'
+  type='text'
+  value={watchPrice || ''}
+  onChange={(value) => setValueCustom('price', value || 0)}
+/>
+
+<ValidationMessage message={errors.price?.message} />
+```

@@ -1,7 +1,7 @@
-import { Task } from 'mobx-task'
 import { ChatRoomType, ChatType } from '../models/chat'
 import { IClubDto } from './club-store.d'
 import { IStuffTalentDto } from './stufftalent-store.d'
+import { TaskBy } from './task'
 import { IUserDto } from './user-store.d'
 
 export interface IInsertChatMessage {
@@ -40,8 +40,8 @@ export interface IChatDto {
   createdAt: string
 }
 
-export type InsertChatMessageTask = Task<[IInsertChatMessage], void>
+export type InsertChatMessageTask = TaskBy<IInsertChatMessage>
 
-export type GetChatMessagesTask = Task<[IGetChatMessages], void>
+export type GetChatMessagesTask = TaskBy<IGetChatMessages>
 
-export type SetReadChatIdTask = Task<[ISetReadChatId], void>
+export type SetReadChatIdTask = TaskBy<ISetReadChatId>

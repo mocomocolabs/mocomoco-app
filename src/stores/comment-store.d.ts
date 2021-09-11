@@ -1,4 +1,4 @@
-import { Task } from 'mobx-task'
+import { TaskBy } from './task'
 import { IUserDto } from './user-store.d'
 
 export interface ICommentDto {
@@ -25,6 +25,6 @@ export interface IDeleteComment {
   commentId: number
 }
 
-export type InsertCommentTask = Task<[IInsertComment], void>
-export type UpdateCommentTask = Task<[IUpdateComment], void>
-export type DeleteCommentTask = Task<[IDeleteComment], void>
+export type InsertCommentTask = TaskBy<IInsertComment>
+export type UpdateCommentTask = TaskBy<IUpdateComment>
+export type DeleteCommentTask = TaskBy<IDeleteComment>

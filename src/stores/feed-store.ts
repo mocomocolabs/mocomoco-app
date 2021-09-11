@@ -189,10 +189,24 @@ export class FeedStore {
 
     if (isUpdate) {
       await api.put('/v1/feeds', formData)
+      return { id: form.id }
     } else {
       await api.post('/v1/feeds', formData)
+      return this.getCreatedFeed()
     }
   }) as SaveFeedTask
+
+  /**
+   * 방금 생성한 피드를 리턴합니다.
+   * TODO: 추후 insert후 새로 생성된 객체 리턴하도록 협의필요
+   */
+  getCreatedFeed = async () => {
+    const data = await api.get<{ feeds: IFeedDto[]; count: number }>(
+      `/v1/feeds?user-id=${this.$auth.user.id}&sort-order=created_at_desc&limit=1`
+    )
+
+    return data.feeds.pop()
+  }
 
   @task.resolved
   toggleFeedLike = (async (feedId: number, isLike: boolean) => {

@@ -125,7 +125,8 @@ export class ClubStore {
 
   @task.resolved
   insertClub = (async (form: IClubForm, isUpdate: boolean) => {
-    if (form.images.length === 0) throw new Error('최소 1개의 이미지를 등록해주세요')
+    if (form.images.length === 0)
+      throw new Error('소모임이 잘 소개될 수 있도록<br />사진을 한 장 이상 추가해주세요 :)')
 
     const formData = new FormData()
 

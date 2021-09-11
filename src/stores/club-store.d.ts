@@ -1,12 +1,12 @@
-import { Task } from 'mobx-task'
 import { IClubForm } from '../models/club.d'
 import { IFileDto } from './common/file'
 import { ICommunityDto } from './community-store.d'
+import { TaskBy, TaskBy2As } from './task'
 import { IUserDto } from './user-store.d'
 
-export type InsertClubTask = Task<[Partial<IClubForm>, boolean], IClubDto>
+export type InsertClubTask = TaskBy2As<Partial<IClubForm>, boolean, IClubDto>
 
-export type JoinClubTask = Task<[IJoinClubDto], void>
+export type JoinClubTask = TaskBy<IJoinClubDto>
 
 export interface IJoinClubDto {
   clubId: number

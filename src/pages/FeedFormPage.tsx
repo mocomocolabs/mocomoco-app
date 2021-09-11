@@ -27,7 +27,7 @@ import { executeWithError } from '../utils/http-helper-util'
 export const FeedFormPage: FC = () => {
   const goDetailOnSubmit = useHistory<IRouteParam>().location.state?.goDetailOnSubmit
 
-  const { $ui, $feed, $auth, $community } = useStore()
+  const { $ui, $feed, $auth } = useStore()
 
   const uploader = useRef<IImageUploaderRef>()
 
@@ -61,7 +61,7 @@ export const FeedFormPage: FC = () => {
     const isChangedFromDefaultValues = Object.keys(dirtyFields).length > 0
 
     return isValid && !(isUpdate && !isChangedFromDefaultValues)
-  }, [isValid, Object.keys(dirtyFields)])
+  }, [isValid, Object.keys(dirtyFields).length])
 
   const isSubmitCompleted = useRef(false)
 
@@ -77,17 +77,13 @@ export const FeedFormPage: FC = () => {
     }
 
     executeWithError(async () => {
-      if (isUpdate) {
-        await $feed.saveFeed(form, true)
-        $feed.resetUpdateForm()
-      } else {
-        await $feed.saveFeed(form, false)
-        $feed.resetForm()
-      }
+      const { id } = await $feed.saveFeed(form, isUpdate)
+
+      isUpdate ? $feed.resetUpdateForm() : $feed.resetForm()
 
       isSubmitCompleted.current = true
 
-      goDetailOnSubmit ? route.feedDetail(form.id!, undefined, true) : route.goBack()
+      goDetailOnSubmit ? route.feedDetail(id!, undefined, true) : route.goBack()
     })
   })
 

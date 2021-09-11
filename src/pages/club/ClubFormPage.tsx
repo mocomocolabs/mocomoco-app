@@ -58,7 +58,7 @@ export const ClubFormPage: React.FC = () => {
     const isChangedFromDefaultValues = Object.keys(dirtyFields).length > 0
 
     return isValid && !(isUpdate && !isChangedFromDefaultValues)
-  }, [isValid, Object.keys(dirtyFields)])
+  }, [isValid, Object.keys(dirtyFields).length])
 
   const isSubmitCompleted = useRef(false)
 
@@ -68,7 +68,7 @@ export const ClubFormPage: React.FC = () => {
 
       isUpdate ? $club.resetUpdateForm() : $club.resetForm()
 
-      // TODO 소모임채팅방의 대표사진을 업뎃해줘야 함
+      // TODO isUpdate && 소모임채팅방의 데이터를 업뎃해줘야 함
       !isUpdate && $chat.subscribeNewRoom(club.chatroom.id)
 
       isSubmitCompleted.current = true

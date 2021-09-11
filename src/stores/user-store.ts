@@ -1,12 +1,12 @@
 import { action, observable } from 'mobx'
-import { task, Task } from 'mobx-task'
+import { task } from 'mobx-task'
 import { RootStore } from '.'
 import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { User } from '../models/user'
 import { IUser, IUserForm } from '../models/user.d'
 import { api } from '../services/api-service'
 import { AuthStore } from './auth-store'
-import { TaskBy } from './task'
+import { TaskBy, TaskByAs } from './task'
 import { IUserDto } from './user-store.d'
 
 const initState = {
@@ -87,5 +87,5 @@ export class UserStore {
     // TODO 여기서 직접 호출하지 말고, userStore에서 updateUser flag를 observing 하면 어떨까나?
     this.$auth.updateUser()
     return true
-  }) as Task<[IUserForm], boolean>
+  }) as TaskByAs<IUserForm, boolean>
 }

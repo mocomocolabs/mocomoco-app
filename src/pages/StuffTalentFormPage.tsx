@@ -25,7 +25,7 @@ import { getPageKey, routeFunc, typeLabels } from '../models/stufftalent'
 import { IStuffTalentForm, StuffTalentPageKey, StuffTalentType } from '../models/stufftalent.d'
 import { IRouteParam, route } from '../services/route-service'
 import { StuffTalentStore } from '../stores/stufftalent-store'
-import { maxLengthValidator } from '../utils/form-util'
+import { maxLengthValidator, minMaxNumberValidator } from '../utils/form-util'
 import { executeWithError } from '../utils/http-helper-util'
 
 export const StuffTalentFormPage: React.FC = () => {
@@ -47,16 +47,27 @@ export const StuffTalentFormPage: React.FC = () => {
   const { store, title } = pageData[getPageKey(useLocation().pathname)]
   const { routeDetail } = routeFunc[store.predefined.pageKey]
 
+  const uploader = useRef<IImageUploaderRef>()
+
   const isUpdate = !!store.updateForm.id
-  const form = Object.assign({}, isUpdate ? { ...store.updateForm } : { ...store.form })
+  const init = Object.assign({}, isUpdate ? { ...store.updateForm } : { ...store.form })
 
-  const { formState, register, handleSubmit, getValues, setValue, watch } = useForm<IStuffTalentForm>({
+  const {
+    formState: { isValid, dirtyFields, errors },
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    watch,
+  } = useForm<IStuffTalentForm>({
     mode: 'onChange',
-    // TODO 최종적으로는 $community.selectedId 를 사용하는 게 맞는데, 지금은 내 공동체에만 글을 쓸 수 있으니 auth.user.communityId를 사용하도록 함.
-    defaultValues: { ...form, communityId: form.communityId > 0 ? form.communityId : $auth.user.communityId },
+    reValidateMode: 'onChange',
+    defaultValues: {
+      ...init,
+      // TODO 최종적으로는 $community.selectedId 를 사용하는 게 맞는데, 지금은 내 공동체에만 글을 쓸 수 있으니 auth.user.communityId를 사용하도록 함.
+      communityId: init.communityId > 0 ? init.communityId : $auth.user.communityId,
+    },
   })
-
-  const { isValid, dirtyFields, errors } = formState
 
   const [watchCategoryId, watchType, watchPrice, watchExchangeText, watchImages] = watch([
     'categoryId',
@@ -65,8 +76,6 @@ export const StuffTalentFormPage: React.FC = () => {
     'exchangeText',
     'images',
   ])
-
-  const uploader = useRef<IImageUploaderRef>()
 
   const setValueCustom = useCallback((name, value) => {
     // shouldTouch: true 설정하면, checkbox값이 변경되어도 dirtyFields에 포함되지 않는다. 이유는 모름.
@@ -84,25 +93,26 @@ export const StuffTalentFormPage: React.FC = () => {
     const isChangedFromDefaultValues = Object.keys(dirtyFields).length > 0
 
     return isValid && isValidType && !(isUpdate && !isChangedFromDefaultValues)
-  }, [isValid, watchType, watchPrice, watchExchangeText, Object.keys(dirtyFields)])
+  }, [isValid, watchType, watchPrice, watchExchangeText, Object.keys(dirtyFields).length])
 
   const isSubmitCompleted = useRef(false)
 
   const onSubmit = handleSubmit(async (form) => {
     executeWithError(async () => {
-      if (isUpdate) {
-        await store.updateItem(form)
-        store.resetUpdateForm()
-      } else {
-        await store.insertItem(form)
-        store.resetForm()
-      }
+      const { id } = await store.insertItem(form, isUpdate)
+
+      isUpdate ? store.resetUpdateForm() : store.resetForm()
 
       isSubmitCompleted.current = true
 
-      goDetailOnSubmit ? routeDetail(form.id!, true) : route.goBack()
+      goDetailOnSubmit ? routeDetail(id, true) : route.goBack()
     })
   })
+
+  const SubmitBtn = useMemo(
+    () => <HeaderSubmitText isSubmittable={submittable} onSubmit={onSubmit} />,
+    [submittable, onSubmit]
+  )
 
   useEffect(() => {
     $ui.setIsBottomTab(false)
@@ -126,12 +136,12 @@ export const StuffTalentFormPage: React.FC = () => {
   useEffect(() => {
     // 불필요한 setValue 호출을 막기 위해 현재 빈 값인 필드는 그냥 둔다.
     if ([StuffTalentType.SHARE, StuffTalentType.WANT].includes(watchType)) {
-      !!watchExchangeText && setValueCustom('exchangeText', undefined)
-      !!watchPrice && setValueCustom('price', undefined)
+      !!watchExchangeText && setValueCustom('exchangeText', '')
+      !!watchPrice && setValueCustom('price', 0)
     } else if (StuffTalentType.SELL === watchType) {
-      !!watchExchangeText && setValueCustom('exchangeText', undefined)
+      !!watchExchangeText && setValueCustom('exchangeText', '')
     } else if (StuffTalentType.EXCHANGE === watchType) {
-      !!watchPrice && setValueCustom('price', undefined)
+      !!watchPrice && setValueCustom('price', 0)
     }
   }, [watchType])
 
@@ -140,12 +150,7 @@ export const StuffTalentFormPage: React.FC = () => {
       <Header
         start={<BackButton type='close' />}
         center={title}
-        end={
-          <SpinnerWrapper
-            task={store.insertItem}
-            Submit={<HeaderSubmitText isSubmittable={submittable} onSubmit={onSubmit} />}
-          />
-        }
+        end={<SpinnerWrapper task={store.insertItem} Submit={SubmitBtn} />}
       />
       <IonContent>
         <div className='px-container py-5'>
@@ -157,6 +162,25 @@ export const StuffTalentFormPage: React.FC = () => {
             <input type='hidden' {...register('isExchangeable')} />
             <input type='hidden' {...register('isNegotiable')} />
             <input type='hidden' {...register('isPublic')} />
+            {/* 
+            react-hook-form 구현상 number타입 필드의 빈값 처리 문제가 있다.
+            이를 피하기 위해, price 필드는 폼값을 가지는 input과 화면에 표시할 input을 별개도 두고 필요한 처리를 한다.
+            자세한 내용은 issue.md를 참고하자.
+            */}
+            <input
+              type='hidden'
+              {...register('price', {
+                required: watchType === StuffTalentType.SELL,
+                validate: (value) => {
+                  if (value === 0) {
+                    return watchType !== StuffTalentType.SELL || '가격을 입력해주세요'
+                  }
+
+                  return minMaxNumberValidator(value, 1, 99999999999)
+                },
+                valueAsNumber: true,
+              })}
+            />
 
             <ImageUploader
               className='mb-4'
@@ -191,13 +215,13 @@ export const StuffTalentFormPage: React.FC = () => {
             <div className='flex gap-4'>
               <Checkbox
                 label='교환 가능'
-                defaultChecked={form.isExchangeable}
+                defaultChecked={init.isExchangeable}
                 onChange={(checked) => setValueCustom('isExchangeable', checked)}
                 color='primary'
               ></Checkbox>
               <Checkbox
                 label='가격제안 가능'
-                defaultChecked={form.isNegotiable}
+                defaultChecked={init.isNegotiable}
                 onChange={(checked) => setValueCustom('isNegotiable', checked)}
                 color='primary'
               ></Checkbox>
@@ -232,12 +256,10 @@ export const StuffTalentFormPage: React.FC = () => {
 
             <div hidden={watchType !== StuffTalentType.SELL}>
               <InputNormal
-                type='number'
                 placeholder='원하시는 가격을 적어주세요'
-                register={register('price', {
-                  min: { value: 1, message: '1~1000000000000 사이의 숫자를 입력해주세요' },
-                  max: { value: 1000000000000, message: '1~1000000000000 사이의 숫자를 입력해주세요' },
-                })}
+                type='text'
+                value={watchPrice || ''}
+                onChange={(value) => setValueCustom('price', value || 0)}
               />
               <ValidationMessage message={errors.price?.message} />
             </div>
@@ -246,6 +268,7 @@ export const StuffTalentFormPage: React.FC = () => {
               <InputNormal
                 placeholder='무엇과 교환하고 싶으신가요?'
                 register={register('exchangeText', {
+                  required: watchType === StuffTalentType.EXCHANGE,
                   validate: (value) => maxLengthValidator(value, 100),
                 })}
               />
@@ -274,7 +297,7 @@ export const StuffTalentFormPage: React.FC = () => {
         ></Icon>
         <Checkbox
           label='모든 마을에 보이기'
-          defaultChecked={form.isPublic}
+          defaultChecked={init.isPublic}
           onChange={(checked) => setValueCustom('isPublic', checked)}
         />
         <IsPublicToast />

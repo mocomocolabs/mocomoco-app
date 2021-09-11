@@ -1,11 +1,11 @@
-import { Task } from 'mobx-task'
-import { FeedType, IFeedForm, ScheduleType } from '../models/feed.d'
+import { FeedType, IFeed, IFeedForm, ScheduleType } from '../models/feed.d'
 import { ICommentDto } from './comment-store.d'
 import { IFileDto } from './common/file.d'
 import { ICommunityDto } from './community-store.d'
+import { TaskBy2As } from './task'
 import { IUserDto } from './user-store.d'
 
-export type SaveFeedTask = Task<[Partial<IFeedForm>, boolean], void>
+export type SaveFeedTask = TaskBy2As<Partial<IFeedForm>, boolean, IFeed>
 
 export interface IFeedDto {
   id: number

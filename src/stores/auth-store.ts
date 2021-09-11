@@ -1,6 +1,6 @@
 import Inko from 'inko'
 import { action, observable } from 'mobx'
-import { Task, task } from 'mobx-task'
+import { task } from 'mobx-task'
 import { AuthUser } from '../models/auth'
 import { IAuthUser } from '../models/auth.d'
 import { ISignUpForm } from '../models/sign-up'
@@ -9,7 +9,7 @@ import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
-import { TaskBy } from './task'
+import { TaskBy, TaskByAs } from './task'
 import { IUserDto } from './user-store.d'
 
 const inko = new Inko()
@@ -60,7 +60,7 @@ export class AuthStore {
     }
 
     return false
-  }) as Task<[string], boolean>
+  }) as TaskByAs<string, boolean>
 
   @task.resolved
   checkNicknameExists = (async (nickname: string) => {
@@ -75,7 +75,7 @@ export class AuthStore {
     }
 
     return false
-  }) as Task<[string], boolean>
+  }) as TaskByAs<string, boolean>
 
   private makeUniqueNickname = async (nickname: string): Promise<string> => {
     return (await this.checkNicknameExists(nickname))

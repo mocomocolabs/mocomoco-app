@@ -22,7 +22,7 @@ import {
   IStuffTalentDto,
   IStuffTalentInsertReqDto,
 } from './stufftalent-store.d'
-import { Task, TaskBy, TaskBy2 } from './task'
+import { Task, TaskBy, TaskBy2, TaskBy2As } from './task'
 
 const initState = {
   items: [],
@@ -30,6 +30,10 @@ const initState = {
   categories: [] as IStuffTalentCategoryDto[],
   form: {
     status: StuffTalentStatus.AVAILABLE,
+    title: '',
+    content: '',
+    price: 0,
+    exchangeText: '',
     isExchangeable: false,
     isNegotiable: false,
     isPublic: false,
@@ -168,7 +172,8 @@ export class StuffTalentStore {
   }) as TaskBy<number>
 
   createInsertFormData = async (form: IStuffTalentForm) => {
-    if (form.images.length === 0) throw new Error('최소 1개의 이미지를 등록해주세요')
+    if (form.images.length === 0)
+      throw new Error('설명이 잘 전달될 수 있도록<br />사진을 한 장 이상 추가해주세요 :)')
 
     const formData = new FormData()
 
@@ -206,16 +211,29 @@ export class StuffTalentStore {
   }
 
   @task.resolved
-  insertItem = (async (form: IStuffTalentForm) => {
+  insertItem = (async (form: IStuffTalentForm, isUpdate: boolean) => {
     const formData = await this.createInsertFormData(form)
-    await api.post(this.predefined.baseApi, formData)
-  }) as TaskBy<Partial<IStuffTalentForm>>
+    if (isUpdate) {
+      await api.put(this.predefined.baseApi, formData)
+      return { id: form.id }
+    } else {
+      await api.post(this.predefined.baseApi, formData)
+      return this.getCreatedItem()
+    }
+  }) as TaskBy2As<Partial<IStuffTalentForm>, boolean, IStuffTalent>
 
-  @task.resolved
-  updateItem = (async (form: IStuffTalentForm) => {
-    const formData = await this.createInsertFormData(form)
-    await api.put(this.predefined.baseApi, formData)
-  }) as TaskBy<Partial<IStuffTalentForm>>
+  /**
+   * 방금 생성한 아이템을 리턴합니다.
+   * TODO: 추후 insert후 새로 생성된 객체 리턴하도록 협의필요
+   */
+  getCreatedItem = async () => {
+    const data = await api.get<IStuffsTalentsDto>(
+      `${this.predefined.baseApi}?user-id=${this.$auth.user.id}&sort-order=created_at_desc&limit=1`
+    )
+
+    const items = data[this.predefined.getItemsProperty as keyof IStuffsTalentsDto]
+    return items.pop()
+  }
 
   @task.resolved
   updateItemStatus = (async (id: number, status: StuffTalentStatus) => {

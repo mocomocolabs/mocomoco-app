@@ -72,7 +72,7 @@ export interface IStuffTalentForm {
   categoryId: number
   title: string
   content: string
-  price?: number
+  price: number
   exchangeText?: string
   isExchangeable: boolean
   isNegotiable: boolean
