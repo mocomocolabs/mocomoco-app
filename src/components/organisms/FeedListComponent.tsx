@@ -53,7 +53,7 @@ export const FeedList: React.FC<IFeedList> = ({ fetchTask, segment = SEGMENT_KEY
 
   const onEdit = async (id: number) => {
     await $feed.getUpdateForm(id)
-    route.feedForm({ goDetailOnSubmit: true })
+    route.feedForm()
     fetchTask()
   }
 

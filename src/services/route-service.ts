@@ -76,8 +76,8 @@ class RouteService {
     this.route('/tabs/feed', param)
   }
 
-  feedForm(param?: IRouteParam) {
-    this.route('/tabs/feed/form', param)
+  feedForm(goDetailOnSubmit = true) {
+    this.route('/tabs/feed/form', { goDetailOnSubmit })
   }
 
   feedDetail(feedId: number, param?: IRouteParam, isReplace = false) {
@@ -88,8 +88,8 @@ class RouteService {
     this.route('/tabs/stuff')
   }
 
-  stuffForm(param?: IRouteParam) {
-    this.route('/tabs/stuff/form', param)
+  stuffForm(goDetailOnSubmit = true) {
+    this.route('/tabs/stuff/form', { goDetailOnSubmit })
   }
 
   stuffDetail(stuffId: number, isReplace = false) {
@@ -100,8 +100,8 @@ class RouteService {
     this.route('/tabs/talent')
   }
 
-  talentForm(param?: IRouteParam) {
-    this.route('/tabs/talent/form', param)
+  talentForm(goDetailOnSubmit = true) {
+    this.route('/tabs/talent/form', { goDetailOnSubmit })
   }
 
   talentDetail(talentId: number, isReplace = false) {
@@ -116,8 +116,8 @@ class RouteService {
     this.route(`/tabs/club`)
   }
 
-  clubForm(param?: IRouteParam) {
-    this.route(`/tabs/club/form`, param)
+  clubForm(goDetailOnSubmit = true) {
+    this.route(`/tabs/club/form`, { goDetailOnSubmit })
   }
 
   clubDetail(clubId: number, isReplace = false) {

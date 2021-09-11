@@ -32,7 +32,7 @@ export const FeedDetailPage: React.FC = () => {
 
   const onEdit = async (id: number) => {
     await $feed.getUpdateForm(id)
-    route.feedForm()
+    route.feedForm(false)
   }
 
   return (

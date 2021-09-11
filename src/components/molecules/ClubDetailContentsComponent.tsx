@@ -31,7 +31,7 @@ export const ClubDetailContents: FC<IClubDetailContents> = ({ club }) => {
                   label: '수정',
                   onClick: async () => {
                     await $club.getUpdateForm(club.id)
-                    route.clubForm()
+                    route.clubForm(false)
                   },
                 },
               ]}

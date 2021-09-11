@@ -1,4 +1,5 @@
 import { IonContent, IonPage } from '@ionic/react'
+import { Observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
 import { Icon } from '../../components/atoms/IconComponent'
 import { TextLg } from '../../components/atoms/TextLgComponent'
@@ -9,6 +10,7 @@ import { ClubPopularSlider } from '../../components/organisms/ClubPopularSliderC
 import { Header } from '../../components/organisms/HeaderComponent'
 import { useStore } from '../../hooks/use-store'
 import { route } from '../../services/route-service'
+import { allCommunity } from '../../stores/community-store'
 
 export const ClubPage: React.FC = () => {
   const { $ui, $club, $community } = useStore()
@@ -29,9 +31,36 @@ export const ClubPage: React.FC = () => {
         end={
           /* TODO: 추후구현 */
           /* <Icon name='search' /> */
-          <div onClick={() => route.clubForm({ goDetailOnSubmit: true })}>
-            <Icon name='pencil' />
-          </div>
+          <Observer>
+            {() => (
+              <div
+                hidden={![$community.myCommunity, allCommunity].includes($community.community)}
+                onClick={() => {
+                  const isWriting = $club.form.name || $club.form.description || $club.form.images?.length
+
+                  if (isWriting) {
+                    return $ui.showAlert({
+                      message: '작성하던 글이 있어요. 이어서 작성하시겠어요?',
+                      onSuccess() {
+                        route.clubForm()
+                      },
+                      onFail() {
+                        $club.resetForm()
+                        $club.setForm({ isPublic: $community.community === allCommunity })
+                        route.clubForm()
+                      },
+                    })
+                  }
+
+                  $club.setForm({ isPublic: $community.community === allCommunity })
+
+                  route.clubForm()
+                }}
+              >
+                <Icon name='pencil' />
+              </div>
+            )}
+          </Observer>
         }
       />
       <IonContent>

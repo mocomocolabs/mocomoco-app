@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { IRouteParam, route } from '../services/route-service'
+import { route } from '../services/route-service'
 import { IStuffTalentDto, IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
 import { ChatRoom } from './chat-room'
 import { Community } from './community'
@@ -78,7 +78,7 @@ export const getPageKey = (path: string) => {
 interface IRouteFunc {
   [index: string]: {
     routeList: () => void
-    routeForm: (param?: IRouteParam) => void
+    routeForm: (goDetailOnSubmit?: boolean) => void
     routeDetail: (id: number, isReplace?: boolean) => void
   }
 }
@@ -86,12 +86,12 @@ interface IRouteFunc {
 export const routeFunc: IRouteFunc = {
   [StuffTalentPageKey.STUFF]: {
     routeList: () => route.stuff(),
-    routeForm: (param?) => route.stuffForm(param),
+    routeForm: (goDetailOnSubmit?) => route.stuffForm(goDetailOnSubmit),
     routeDetail: (id, isReplace?) => route.stuffDetail(id, isReplace),
   },
   [StuffTalentPageKey.TALENT]: {
     routeList: () => route.talent(),
-    routeForm: (param?) => route.talentForm(param),
+    routeForm: (goDetailOnSubmit?) => route.talentForm(goDetailOnSubmit),
     routeDetail: (id, isReplace?) => route.talentDetail(id, isReplace),
   },
 }

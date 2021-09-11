@@ -16,9 +16,13 @@ import { TaskObserver } from '../components/molecules/TaskObserverComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
 import { getPageKey, routeFunc } from '../models/stufftalent'
-import { IStuffTalent, StuffTalentPageKey, StuffTalentStatus } from '../models/stufftalent.d'
+import {
+  IStuffTalent,
+  IStuffTalentLikeUser,
+  StuffTalentPageKey,
+  StuffTalentStatus,
+} from '../models/stufftalent.d'
 import { route } from '../services/route-service'
-import { IStuffTalentLikeUserDto } from '../stores/stufftalent-store.d'
 
 export const StuffTalentDetailPage: React.FC = () => {
   const id = parseInt(useParams<{ id: string }>().id)
@@ -49,11 +53,13 @@ export const StuffTalentDetailPage: React.FC = () => {
     const dispose = when(
       () => store.getItem.state === 'resolved' && store.item?.user?.id === $auth.user.id,
       () => {
-        const _chatList = (
-          store.item[
-            store.predefined.stuffTalentUsersProperty as keyof IStuffTalent
-          ] as IStuffTalentLikeUserDto[]
-        )?.map((user, index) => user.chatroom && <ChatRoomListItem key={index} room={user.chatroom} />)
+        const stufftalentUsers = store.item[
+          store.predefined.stuffTalentUsersProperty as keyof IStuffTalent
+        ] as IStuffTalentLikeUser[]
+
+        const _chatList = stufftalentUsers
+          ?.filter(({ user, chatroom }) => user.id !== $auth.user.id && !!chatroom)
+          .map(({ chatroom }, index) => <ChatRoomListItem key={index} room={chatroom} />)
 
         _chatList && setChatList(_chatList)
       }
@@ -86,7 +92,7 @@ export const StuffTalentDetailPage: React.FC = () => {
 
   const onEdit = async (id: number) => {
     await store.getUpdateForm(id)
-    routeForm()
+    routeForm(false)
   }
 
   const onDelete = async (id: number) => {
@@ -144,7 +150,7 @@ export const StuffTalentDetailPage: React.FC = () => {
                         : $ui.showToastError({ message: '채팅 목록이 없습니다' })
                     }}
                   />
-                ) : !store.item?.chatroomId ? (
+                ) : !!!store.item?.chatroomId ? (
                   <SpinnerWrapper
                     task={store.createChat}
                     Submit={createChatButton()}

@@ -23,7 +23,7 @@ export const StuffTalentList: React.FC<IStuffTalentList> = ({ store, search, fil
 
   const onEditItem = async (id: number) => {
     await store.getUpdateForm(id)
-    routeForm({ goDetailOnSubmit: true })
+    routeForm()
   }
 
   const onDeleteItem = async (id: number) => {

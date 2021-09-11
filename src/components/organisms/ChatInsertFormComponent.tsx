@@ -30,7 +30,7 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
     <div className='flex flex-1 pv-2'>
       <div className='flex flex-none'>
         <ProfileImage
-          url={$auth.user.profileUrl ?? $chat.room?.users.find(({ id }) => id === $auth.user.id)?.profileUrl}
+          url={$auth.user.profileUrl || $chat.room?.users.find(({ id }) => id === $auth.user.id)?.profileUrl}
         />
       </div>
 

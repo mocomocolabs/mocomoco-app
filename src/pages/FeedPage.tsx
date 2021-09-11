@@ -22,7 +22,7 @@ export const FeedPage: React.FC = () => {
   const segment = useHistory<IRouteParam>().location.state?.segment
   const initSegment = segment ?? SEGMENT_KEYS.feed
 
-  const { $ui, $feed, $community, $auth } = useStore()
+  const { $ui, $feed, $community } = useStore()
 
   useEffect(() => {
     $ui.setIsBottomTab(true)
