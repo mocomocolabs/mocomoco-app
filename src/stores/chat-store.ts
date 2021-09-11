@@ -156,7 +156,7 @@ export class ChatStore {
     const roomId = await this.getRoomIdBy(targetUserId)
 
     if (!roomId) {
-      throw new Error('채팅 생성에 문제가 발생했습니다. 하마새에게 문의해주실래요?')
+      throw new Error('채팅 생성에 문제가 발생했습니다. 하마지기에게 문의해주실래요?')
     }
 
     this.subscribeNewRoom(roomId)
