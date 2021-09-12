@@ -88,7 +88,6 @@ export class ChatStore {
 
   @task
   getRooms = (async (roomIds) => {
-    console.log(roomIds)
     if (!roomIds || roomIds.length === 0) {
       return
     }
