@@ -100,6 +100,11 @@ export const ClubFormPage: React.FC = () => {
     }
   }, [])
 
+  const errorsHashtagNames = useMemo(
+    () => (errors.hashtagNames && 'message' in errors.hashtagNames ? errors.hashtagNames['message'] : ''),
+    [errors.hashtagNames]
+  )
+
   return useObserver(() => (
     <IonPage>
       <Header
@@ -113,7 +118,12 @@ export const ClubFormPage: React.FC = () => {
           <form id='club-form' onSubmit={onSubmit}>
             <input type='hidden' {...register('id')} />
             <input type='hidden' {...register('images')} />
-            <input type='hidden' {...register('hashtagNames')} />
+            <input
+              type='hidden'
+              {...register('hashtagNames', {
+                validate: (tags: string[]) => maxLengthValidator(tags.join(), 100),
+              })}
+            />
             {/* <input type='hidden' {...register('isPublic')} /> */}
 
             <ImageUploader
@@ -152,11 +162,11 @@ export const ClubFormPage: React.FC = () => {
             />
             <ValidationMessage message={errors.meetingPlace?.message} />
 
-            {/* TODO validate: (value) => maxLengthValidator(value, 100), */}
             <Hashtag
               onChange={(hashtagNames) => setValueCustom('hashtagNames', hashtagNames)}
               value={watchHashtagNames.join(' ')}
             />
+            <ValidationMessage message={errorsHashtagNames} />
 
             <Textarea
               rows={10}
