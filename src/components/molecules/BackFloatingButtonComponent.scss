@@ -12,7 +12,7 @@
 ion-app.ios {
   .back-floating-button {
     ion-fab-button {
-      margin-top: 1.2rem;
+      margin-top: calc(env(safe-area-inset-top, 0) / 2 + 1.2rem);
     }
   }
 }
