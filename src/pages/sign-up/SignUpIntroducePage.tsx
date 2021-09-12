@@ -13,10 +13,11 @@ export const SignUpIntroducePage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader></IonHeader>
+      <IonHeader>
+        <BackButtonIntro>나는 누구인가요?</BackButtonIntro>
+      </IonHeader>
       <IonContent>
-        <div className='px-container mt-8'>
-          <BackButtonIntro>나는 누구인가요?</BackButtonIntro>
+        <div className='px-container'>
           <SignUpIntroduceForm />
         </div>
       </IonContent>

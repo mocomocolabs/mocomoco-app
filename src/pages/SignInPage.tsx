@@ -1,4 +1,4 @@
-import { IonContent, IonPage } from '@ionic/react'
+import { IonContent, IonHeader, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { BackButtonIntro } from '../components/molecules/BackButtonIntroComponent'
 import { SignInEmail } from '../components/organisms/SignInEmailComponent'
@@ -13,12 +13,14 @@ export const SignInPage: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader>
+        <BackButtonIntro>
+          이미 회원이시군요!
+          <br /> 다시 만나서 반가워요 :)
+        </BackButtonIntro>
+      </IonHeader>
       <IonContent>
-        <div className='px-container ios-pt-container'>
-          <BackButtonIntro>
-            이미 회원이시군요!
-            <br /> 다시 만나서 반가워요 :)
-          </BackButtonIntro>
+        <div className='px-container'>
           <SignInEmail></SignInEmail>
         </div>
       </IonContent>

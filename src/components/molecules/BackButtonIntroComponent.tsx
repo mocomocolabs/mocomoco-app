@@ -10,7 +10,7 @@ export interface IBackButtonIntro {
 export const BackButtonIntro: FC<IBackButtonIntro> = ({ children }) => {
   return (
     <>
-      <div className='flex mt-5 keep-word'>
+      <div className='px-container flex keep-word mt-8'>
         <div className='mt-1 absolute'>
           <BackButton type='arrow' />
         </div>

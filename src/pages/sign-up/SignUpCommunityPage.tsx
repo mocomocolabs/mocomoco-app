@@ -13,7 +13,7 @@ export const SignUpCommunityPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader className='px-container'>
+      <IonHeader>
         <BackButtonIntro>나의 마을은 어디인가요?</BackButtonIntro>
       </IonHeader>
       <IonContent>

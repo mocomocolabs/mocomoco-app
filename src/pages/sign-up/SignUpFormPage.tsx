@@ -13,7 +13,7 @@ export const SignUpFormPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader className='px-container'>
+      <IonHeader>
         <BackButtonIntro>
           환영합니다!
           <br />
