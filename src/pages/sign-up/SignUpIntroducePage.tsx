@@ -1,4 +1,4 @@
-import { IonContent, IonPage } from '@ionic/react'
+import { IonContent, IonHeader, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { BackButtonIntro } from '../../components/molecules/BackButtonIntroComponent'
 import { SignUpIntroduceForm } from '../../components/organisms/SignUpIntroduceFormComponent'
@@ -13,8 +13,9 @@ export const SignUpIntroducePage: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader></IonHeader>
       <IonContent>
-        <div className='px-container ios-pt-container'>
+        <div className='px-container mt-8'>
           <BackButtonIntro>나는 누구인가요?</BackButtonIntro>
           <SignUpIntroduceForm />
         </div>

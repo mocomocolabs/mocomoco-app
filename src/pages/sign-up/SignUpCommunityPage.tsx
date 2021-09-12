@@ -1,4 +1,4 @@
-import { IonContent, IonPage } from '@ionic/react'
+import { IonContent, IonHeader, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { BackButtonIntro } from '../../components/molecules/BackButtonIntroComponent'
 import { SignUpCommunity } from '../../components/organisms/SignUpCommunityComponent'
@@ -13,9 +13,11 @@ export const SignUpCommunityPage: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader className='px-container'>
+        <BackButtonIntro>나의 마을은 어디인가요?</BackButtonIntro>
+      </IonHeader>
       <IonContent>
-        <div className='px-container ios-pt-container'>
-          <BackButtonIntro>나의 마을은 어디인가요?</BackButtonIntro>
+        <div className='px-container'>
           <SignUpCommunity />
         </div>
       </IonContent>

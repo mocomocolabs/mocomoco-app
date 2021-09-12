@@ -41,3 +41,8 @@ ion-note,
 ion-select {
   font-size: $text-base-size !important;
 }
+
+ion-header {
+  // 노치가 있는경우 여백을 줌
+  padding-top: calc(env(safe-area-inset-top, 0));
+}

@@ -1,4 +1,4 @@
-import { IonContent, IonPage } from '@ionic/react'
+import { IonContent, IonHeader, IonPage } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -29,9 +29,10 @@ export const SignUpPage: React.FC = () => {
 
   return useObserver(() => (
     <IonPage>
+      <IonHeader></IonHeader>
       <IonContent>
-        <div className='px-container ios-pt-container'>
-          <TextXxxl className='text-bold textprimary mt-5'>
+        <div className='px-container mt-8'>
+          <TextXxxl className='text-bold textprimary'>
             하나의 마을
             <br />
             하마에 어서오세요!

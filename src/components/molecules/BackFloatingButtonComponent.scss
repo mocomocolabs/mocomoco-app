@@ -1,8 +1,18 @@
-ion-fab-button {
-  --box-shadow: none;
-  --background: rgb(255, 255, 255, 0.7);
-  --background-activated: rgb(255, 255, 255, 0.7);
+.back-floating-button {
+  ion-fab-button {
+    --box-shadow: none;
+    --background: rgb(255, 255, 255, 0.7);
+    --background-activated: rgb(255, 255, 255, 0.7);
 
-  width: 3.2rem;
-  height: 3.2rem;
+    width: 3.2rem;
+    height: 3.2rem;
+  }
+}
+
+ion-app.ios {
+  .back-floating-button {
+    ion-fab-button {
+      margin-top: 1.2rem;
+    }
+  }
 }

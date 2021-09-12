@@ -14,8 +14,7 @@ export const BackFloatingButton: FC<IBackFloatingButton> = ({ action }) => {
   return (
     <>
       <IonFab
-        //TODO ios일 때만 top-0-safe-area 적용하기
-        //className='top-0-safe-area'
+        className='back-floating-button'
         vertical='top'
         horizontal='start'
         slot='fixed'
