@@ -11,8 +11,9 @@ export const ImageBackground: FC<IImageBackground> = ({ className = '', url, sty
     className={`${className ? className : 'w-full height-250'}`}
     style={{
       backgroundImage: `url(${url})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
+      backgroundSize: style?.backgroundSize || 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: style?.backgroundPosition || 'center',
       ...style,
     }}
   ></div>

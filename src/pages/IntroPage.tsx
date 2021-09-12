@@ -20,14 +20,20 @@ export const IntroPage: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <ImageSlider urls={['/assets/img/hama.png']} height={380}></ImageSlider>
-        <div className='px-8'>
+        <ImageSlider
+          urls={['/assets/img/hama-nobg.png']}
+          bg='/assets/img/bg.png'
+          height='55vh'
+          position='bottom'
+          cover={false}
+        />
+        <div className='flex-col flex-none px-8 -mt-3 absolute z-10 keep-word'>
           <TextXxxl className='text-bold textprimary'>
             하나의 마을
             <br />
             하마에 어서오세요!
           </TextXxxl>
-          <TextSm className='gray my-7'>
+          <TextSm className='gray mt-6 leading-9'>
             개인이 모여 하나의 공동체를 이루고
             <br />
             확장되고 연결되어 하나의 마을을 이루고

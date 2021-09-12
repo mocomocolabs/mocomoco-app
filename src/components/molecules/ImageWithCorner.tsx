@@ -11,13 +11,15 @@ interface IStyle {
   tailDivStyle: Record<string, unknown>
 }
 export interface IImageWithCorner {
-  height: number
-  width?: number
+  height: number | string
+  width?: number | string
   url?: string
   isRoundTop?: boolean
   radiusSize?: number
   tailRight?: boolean
   dark?: boolean
+  position?: 'top' | 'center' | 'bottom'
+  cover?: boolean
 }
 
 export const ImageWithCorner: FC<IImageWithCorner> = ({
@@ -28,6 +30,8 @@ export const ImageWithCorner: FC<IImageWithCorner> = ({
   radiusSize = 40,
   tailRight = false,
   dark = false,
+  position = 'center',
+  cover = true,
 }) => {
   const { outerDivClass, imageClass, cornerClass, cornerStyle, tailDivClass, tailDivStyle }: IStyle =
     tailRight
@@ -43,14 +47,23 @@ export const ImageWithCorner: FC<IImageWithCorner> = ({
           outerDivClass: 'relative w-full',
           imageClass: `${isRoundTop ? 'br-t-xxlg' : ''} ${dark ? 'dark' : ''}`,
           cornerClass: 'absolute right-0',
-          cornerStyle: { top: height - radiusSize * 2, width: radiusSize, height: radiusSize },
+          cornerStyle: { bottom: radiusSize, width: radiusSize, height: radiusSize },
           tailDivClass: 'z-10 w-full bg-white absolute bottom-0 bottom-radius',
           tailDivStyle: { height: radiusSize, borderTopLeftRadius: radiusSize },
         }
 
   return (
     <div className={outerDivClass}>
-      <ImageBackground style={{ height, width }} url={url} className={imageClass} />
+      <ImageBackground
+        style={{
+          height,
+          width,
+          backgroundSize: cover ? 'cover' : 'contain',
+          backgroundPosition: position,
+        }}
+        url={url}
+        className={imageClass}
+      />
       <img src='/assets/img/corner.svg' style={cornerStyle} className={cornerClass} alt='' />
       <div className={tailDivClass} style={tailDivStyle} />
     </div>

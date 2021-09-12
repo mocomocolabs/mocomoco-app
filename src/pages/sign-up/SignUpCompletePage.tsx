@@ -1,7 +1,7 @@
 import { IonContent, IonPage } from '@ionic/react'
 import { useEffect } from 'react'
 import { TextBase } from '../../components/atoms/TextBaseComponent'
-import { TextXxxl } from '../../components/atoms/TextXxxlComponent'
+import { TextXxl } from '../../components/atoms/TextXxlComponent'
 import { ImageSlider } from '../../components/molecules/ImageSliderComponent'
 import { useStore } from '../../hooks/use-store'
 import { SIGN_UP_STATUS } from '../../models/sign-up.d'
@@ -21,15 +21,17 @@ export const SignUpCompletePage: React.FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <ImageSlider urls={['/assets/img/hama-signup.png']} height={452}></ImageSlider>
-        <div className='px-6 text-center'>
-          <TextXxxl className='text-bold textprimary'>하마가 당신을 기다리고 있어요!</TextXxxl>
-          <TextBase className='gray text-left mt-6'>
-            맞이할 준비를 마치면
-            <br />
-            하마지기가 안내해 드릴 거에요.
-            <br />
-            잠시 후에 만나요 :)
+        <ImageSlider
+          urls={['/assets/img/hama-signup.png']}
+          bg='/assets/img/bg.png'
+          height='60vh'
+          position='top'
+          cover={false}
+        />
+        <div className='px-8 -mt-2 w-full absolute z-10 keep-word'>
+          <TextXxl className='text-bold textprimary'>하마가 당신을 기다리고 있어요!</TextXxl>
+          <TextBase className='gray mt-6'>
+            맞이 준비를 마치면 하마지기가 알려드릴게요. 잠시 후에 만나요 :)
           </TextBase>
         </div>
       </IonContent>
