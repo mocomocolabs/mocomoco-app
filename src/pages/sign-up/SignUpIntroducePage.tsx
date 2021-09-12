@@ -13,7 +13,7 @@ export const SignUpIntroducePage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader className='ion-no-border'>
         <BackButtonIntro>나는 누구인가요?</BackButtonIntro>
       </IonHeader>
       <IonContent>

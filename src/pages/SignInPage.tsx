@@ -13,7 +13,7 @@ export const SignInPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader className='ion-no-border'>
         <BackButtonIntro>
           이미 회원이시군요!
           <br /> 다시 만나서 반가워요 :)

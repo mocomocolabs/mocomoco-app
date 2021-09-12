@@ -29,7 +29,7 @@ export const SignUpPage: React.FC = () => {
 
   return useObserver(() => (
     <IonPage>
-      <IonHeader></IonHeader>
+      <IonHeader className='ion-no-border'></IonHeader>
       <IonContent>
         <div className='px-container mt-8'>
           <TextXxxl className='text-bold textprimary'>
