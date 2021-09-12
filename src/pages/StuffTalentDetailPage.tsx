@@ -15,6 +15,7 @@ import { StuffTalentDetailContents } from '../components/molecules/StuffTalentDe
 import { TaskObserver } from '../components/molecules/TaskObserverComponent'
 import { Footer } from '../components/organisms/FooterComponent'
 import { useStore } from '../hooks/use-store'
+import { IChatRoom } from '../models/chat'
 import { getPageKey, routeFunc } from '../models/stufftalent'
 import {
   IStuffTalent,
@@ -59,7 +60,17 @@ export const StuffTalentDetailPage: React.FC = () => {
 
         const _chatList = stufftalentUsers
           ?.filter(({ user, chatroom }) => user.id !== $auth.user.id && !!chatroom)
-          .map(({ chatroom }, index) => <ChatRoomListItem key={index} room={chatroom} />)
+          .map(({ user, chatroom }, index) => {
+            // TODO 사용자 프로필 url을 넘기고 싶다. chatroom 객체에 넣어서.
+            chatroom = {
+              ...chatroom,
+              users: [...chatroom.users, user],
+              // stuff or talent
+              [store.predefined.chatroomProperty as keyof IChatRoom]: { ...store.item },
+            }
+
+            return <ChatRoomListItem key={index} room={chatroom} />
+          })
 
         _chatList && setChatList(_chatList)
       }

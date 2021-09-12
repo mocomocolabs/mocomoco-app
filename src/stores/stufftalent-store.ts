@@ -50,6 +50,7 @@ export interface IStuffTalentPredefined {
   stuffTalentUsersProperty: string
   getItemsProperty: string
   insertItemReqDto: string
+  chatroomProperty: string
 }
 
 const apiVer = 'v1'
@@ -64,6 +65,7 @@ const predefined: IStuffTalentPredefined[] = [
     stuffTalentUsersProperty: 'stuffUsers',
     getItemsProperty: 'stuffs',
     insertItemReqDto: 'stuffReqDto',
+    chatroomProperty: 'stuff',
   },
   {
     pageKey: PageKey.TALENT,
@@ -74,6 +76,7 @@ const predefined: IStuffTalentPredefined[] = [
     stuffTalentUsersProperty: 'talentUsers',
     getItemsProperty: 'talents',
     insertItemReqDto: 'talentReqDto',
+    chatroomProperty: 'talent',
   },
 ]
 

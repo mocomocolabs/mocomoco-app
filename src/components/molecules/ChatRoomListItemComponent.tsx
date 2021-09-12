@@ -52,10 +52,10 @@ const roomInfoGetter: IRoomInfoGetter[] = [
       const contactUser: IUser = room.users.find((v) => v.id !== loginUserId) ?? ({} as IUser)
 
       return {
-        imageUrl: room.stuff.atchFiles[0].url,
+        imageUrl: contactUser.profileUrl,
         roomName: contactUser.nickname,
         communityName: room.stuff.community.name,
-        route: () => !!room.stuff.id && route.stuffDetail(room.stuff.id),
+        route: () => !!contactUser.id && route.profileDetail(contactUser.id),
       }
     },
   },
@@ -65,10 +65,10 @@ const roomInfoGetter: IRoomInfoGetter[] = [
       const contactUser: IUser = room.users.find((v) => v.id !== loginUserId) ?? ({} as IUser)
 
       return {
-        imageUrl: room.talent.atchFiles[0].url,
+        imageUrl: contactUser.profileUrl,
         roomName: contactUser.nickname,
         communityName: room.talent.community.name,
-        route: () => !!room.talent.id && route.talentDetail(room.talent.id),
+        route: () => !!contactUser.id && route.profileDetail(contactUser.id),
       }
     },
   },
@@ -100,7 +100,7 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
             <TextBase className='mr-1 text-bold'>{roomInfo?.roomName}</TextBase>
             <TextSm className='mr-1 gray ellipsis'>{roomInfo?.communityName}</TextSm>
           </div>
-          <TextSm className='flex-none gray'>{timeDiff(lastChat?.createdAt)}</TextSm>
+          <TextSm className='flex-none gray'>{timeDiff(lastChat?.createdAt ?? room.createdAt)}</TextSm>
         </div>
         <div className='flex-between-center flex-none'>
           <TextSm className='ellipsis'>{lastChat?.message}</TextSm>
