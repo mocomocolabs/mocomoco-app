@@ -42,3 +42,22 @@ ionic에서 제공하는 IonReactRouter + IonRouterOutlet 조합으로 IonPage �
 
 IonRouterOutlet을 사용하지 않으면 useIonViewWillEnter 등 ionic lifecycle hook들이 trigger되지 않는데,
 이 부분들을 useEffect로 대체해보고 동작상 문제될 것이 없다면 react-router-dom.Router + Switch 조합으로 라우팅 구성하는게 나아보인다.
+
+## 버튼 누른 후에도 키보드 계속 표시되게 하는 방법
+
+- android : 버튼의 onMouseEvent 안에서 e.preventDefault() 를 호출해 줘야 함
+
+```typescript
+<div onMouseEvent={(e) => e.preventDefault()} onClick={() => somthing} />
+```
+
+- iOS : cordova config에 KeyboardDisplayRequiresUserAction=false 로 설정해 줘야 함
+
+```typescript
+  // capaciator.config.ts
+  cordova: {
+    preferences: {
+      KeyboardDisplayRequiresUserAction: 'false',
+    },
+  },
+```

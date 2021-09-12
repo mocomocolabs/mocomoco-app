@@ -3,4 +3,5 @@
   <access origin="*" />
   
   
+  <preference name="KeyboardDisplayRequiresUserAction" value="false" />
 </widget>

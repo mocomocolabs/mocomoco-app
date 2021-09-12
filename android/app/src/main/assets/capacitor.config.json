@@ -17,5 +17,9 @@
 			"splashImmersive": false
 		}
 	},
-	"cordova": {}
+	"cordova": {
+		"preferences": {
+			"KeyboardDisplayRequiresUserAction": "false"
+		}
+	}
 }

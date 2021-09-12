@@ -19,7 +19,6 @@ const config: CapacitorConfig = {
   // server: {
   //   androidScheme: 'https',
   // },
-
   plugins: {
     SplashScreen: {
       launchShowDuration: 900,
@@ -39,7 +38,13 @@ const config: CapacitorConfig = {
     //     presentationOptions: ["alert", "sound"]
     //   }
   },
-  cordova: {},
+  cordova: {
+    preferences: {
+      // iOS에서 채팅 입력 후 키보드 유지하기 위해 이 설정값이 필요하다고 한다.
+      // 테스트해보고, 이거 없이도 잘 동작하면 지우자
+      KeyboardDisplayRequiresUserAction: 'false',
+    },
+  },
 }
 
 export = config
