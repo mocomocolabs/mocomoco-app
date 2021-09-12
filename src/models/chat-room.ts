@@ -3,7 +3,7 @@ import { IChatDto, IChatRoomDto } from '../stores/chat-store.d'
 import { ChatRoomType, IChat, IChatRoom } from './chat.d'
 import { Club } from './club'
 import { StuffTalent } from './stufftalent'
-import { IStuffTalent, StuffTalentPageKey } from './stufftalent.d'
+import { StuffTalentPageKey } from './stufftalent.d'
 import { User } from './user'
 
 export interface ChatRoom extends IChatRoom {}
@@ -23,13 +23,8 @@ export class ChatRoom {
           users: dto.users.map((u) => User.of(u)),
           chats: dto.chats.map((c) => ChatRoom.chatOf(c)),
           club: Club.of(dto.club, loginUserId),
-          stuff:
-            !!dto.stuff && !_.isEmpty(dto.stuff)
-              ? StuffTalent.of(dto.stuff, StuffTalentPageKey.STUFF, loginUserId)
-              : ({} as IStuffTalent),
-          talent: !!dto.talent
-            ? StuffTalent.of(dto.talent, StuffTalentPageKey.TALENT, loginUserId)
-            : ({} as IStuffTalent),
+          stuff: StuffTalent.of(dto.stuff, StuffTalentPageKey.STUFF, loginUserId),
+          talent: StuffTalent.of(dto.talent, StuffTalentPageKey.TALENT, loginUserId),
         }
       : ({} as IChatRoom)
   }
