@@ -24,6 +24,7 @@ interface IStuffTalentIItem {
   onDelete?: (id: number) => void
   onUpdateStatus?: (id: number, status: StuffTalentStatus) => void
   hideMoreIcon?: boolean
+  thin?: boolean
 }
 
 export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
@@ -34,6 +35,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
   onDelete,
   onUpdateStatus,
   hideMoreIcon = false,
+  thin = false,
 }) => {
   const { $ui } = useStore()
 
@@ -80,7 +82,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
 
   return (
     <li>
-      <div className='flex br-xxlg shadow mb-4 pr-1'>
+      <div className={`flex br-xxlg shadow mb-${thin ? '0' : '4'} pr-1`}>
         <div className='flex' onClick={() => routeDetail(item.id)}>
           <div
             hidden={item.status === StuffTalentStatus.AVAILABLE}
@@ -90,16 +92,19 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
             {getLabel(statusLabels, item.status)}
           </div>
           <ImageWithCorner
-            height={124}
-            width={138}
+            height={thin ? 73 : 124}
+            width={thin ? 80 : 138}
             url={item.imageUrls[0]}
-            radiusSize={20}
+            radiusSize={thin ? 10 : 20}
             tailRight={true}
             dark={item.status !== StuffTalentStatus.AVAILABLE}
           ></ImageWithCorner>
         </div>
 
-        <div className='flex-col flex-1 min-w-0 -ml-1 z-10 mr-1 py-2' onClick={() => routeDetail(item.id)}>
+        <div
+          className={`flex-col flex-1 min-w-0 z-10 mr-1 py-2 ${thin ? 'ml-1' : '-ml-1'}`}
+          onClick={() => routeDetail(item.id)}
+        >
           <div className='flex justify-between items-center'>
             <div className='flex-none'>
               <SquareWithCorner
@@ -114,10 +119,10 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
               {!hideMoreIcon && loginUserId === item.user.id && <MorePopoverButton items={popoverItems} />}
             </div>
           </div>
-          <div className='flex-grow gray ellipsis pt-0_5 text-xxs'>
+          <div hidden={thin} className='flex-grow gray ellipsis pt-0_5 text-xxs'>
             {item.community.name} / {timeDiff(item.createdAt)}
           </div>
-          <div className='inline-flex' style={{ gap: '0 0.2rem' }}>
+          <div hidden={thin} className='inline-flex' style={{ gap: '0 0.2rem' }}>
             {item.isExchangeable && <SquareWithCorner>교환 가능</SquareWithCorner>}
             {item.isNegotiable && <SquareWithCorner>가격제안 가능</SquareWithCorner>}
           </div>
@@ -127,7 +132,7 @@ export const StuffTalentItem: React.FC<IStuffTalentIItem> = ({
               {item.type === StuffTalentType.EXCHANGE && item.exchangeText}
               {item.type === StuffTalentType.SHARE && '무료나눔'}
             </TextBase>
-            <div className='flex-center ml-1'>
+            <div hidden={thin} className='flex-center ml-1'>
               <Icon name={item.isLike ? 'heart-solid' : 'heart'} className='icon-secondary mr-1' size={16} />
               <TextSm className='secondary'>{item.likeCount}</TextSm>
             </div>

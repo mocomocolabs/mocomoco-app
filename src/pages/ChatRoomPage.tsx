@@ -75,6 +75,7 @@ export const ChatRoomPage: React.FC = () => {
                   loginUserId={$auth.user.id}
                   pageKey={StuffTalentPageKey.STUFF}
                   hideMoreIcon
+                  thin
                 />
               </div>
             )
@@ -88,6 +89,7 @@ export const ChatRoomPage: React.FC = () => {
                   loginUserId={$auth.user.id}
                   pageKey={StuffTalentPageKey.TALENT}
                   hideMoreIcon
+                  thin
                 />
               </div>
             )

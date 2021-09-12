@@ -22,7 +22,7 @@ export const ChatRoomDetail: React.FC<IChatRoomDetail> = ({}) => {
       id='scrollable'
       className='px-container'
       style={{
-        height: 'calc(100vh - 120px)',
+        height: '100%',
         overflow: 'auto',
         display: 'flex',
         flexDirection: 'column-reverse',
