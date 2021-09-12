@@ -30,6 +30,7 @@ export interface IChatRoomDto {
   club: IClubDto
   stuff: IStuffTalentDto
   talent: IStuffTalentDto
+  createdAt: string
 }
 
 export interface IChatDto {

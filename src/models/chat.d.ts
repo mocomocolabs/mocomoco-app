@@ -7,7 +7,7 @@ export interface IChat extends Pick<IChatDto, 'id' | 'type' | 'message' | 'creat
   user: IUser
 }
 
-export interface IChatRoom extends Pick<IChatRoomDto, 'id' | 'type' | 'name' | 'readChatId'> {
+export interface IChatRoom extends Pick<IChatRoomDto, 'id' | 'type' | 'name' | 'readChatId' | 'createdAt'> {
   users: IUser[]
   chats: IChat[]
   club: IClub
