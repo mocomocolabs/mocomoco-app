@@ -1,9 +1,10 @@
 import { useObserver } from 'mobx-react-lite'
-import React, { FC, useCallback, useMemo } from 'react'
+import React, { FC, useCallback, useMemo, useState } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed.d'
 import { route } from '../../services/route-service'
 import { timeDiff } from '../../utils/datetime-util'
+import { collapseTextByLine } from '../../utils/text-util'
 import { Icon } from '../atoms/IconComponent'
 import { Pad } from '../atoms/PadComponent'
 import { TextBase } from '../atoms/TextBaseComponent'
@@ -58,6 +59,21 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
     }
   }, [])
 
+  const [showMore, setShowMore] = useState<boolean>(false)
+
+  const content = useMemo(() => {
+    const content = feed.content
+
+    if (isDetail) return content
+
+    const collapsed = collapseTextByLine(content, 3)
+
+    if (content == collapsed) return content
+
+    setShowMore(true)
+    return collapsed
+  }, [feed.content])
+
   return useObserver(() => (
     <li>
       {feed.imageUrls?.length > 0 ? (
@@ -67,7 +83,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
       ) : (
         <Pad className={isDetail ? 'h-15' : 'h-5'}></Pad>
       )}
-      <div className='px-container flex-col'>
+      <div className='px-container flex-col ellipsis'>
         {feed.title && (
           <div onClick={onClick} className='text-bold text-xl mb-5'>
             {feed.title}
@@ -85,8 +101,11 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
           {$auth.user.id === feed.user.id && <MorePopoverButton items={popoverItems} />}
         </div>
 
-        <div onClick={onClick}>
-          <TextBase className='pre-line'>{feed.content}</TextBase>
+        <div className='text-base pre-line ellipsis' onClick={onClick}>
+          {content}
+          <div hidden={!showMore} className='text-sm text-bold gray'>
+            ...더보기
+          </div>
         </div>
 
         {feed.schedule && (
@@ -134,7 +153,8 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
                 comment={v}
                 feedId={feed.id}
                 showOverlowMenu={isDetail && $auth.user.id === v.user.id}
-              ></CommentItem>
+                collapse={!isDetail}
+              />
             ))}
           </div>
         ) : (

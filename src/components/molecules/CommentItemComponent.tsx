@@ -1,9 +1,7 @@
-import { useObserver } from 'mobx-react-lite'
 import { FC, useMemo } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IComment } from '../../models/comment.d'
 import { timeDiff } from '../../utils/datetime-util'
-import { TextBase } from '../atoms/TextBaseComponent'
 import { MorePopoverButton } from './MorePopoverButtonComponent'
 import { ProfileCard } from './ProfileCardComponent'
 
@@ -11,10 +9,17 @@ export interface ICommentItem {
   comment: IComment
   feedId: number
   showOverlowMenu: boolean
+  collapse?: boolean
   className?: string
 }
 
-export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu, className }) => {
+export const CommentItem: FC<ICommentItem> = ({
+  comment,
+  feedId,
+  showOverlowMenu,
+  collapse = false,
+  className,
+}) => {
   const { $comment, $feed, $ui } = useStore()
 
   const onDelete = async (id: number) => {
@@ -46,8 +51,8 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
     []
   )
 
-  return useObserver(() => (
-    <div className={`${className} flex-col`}>
+  return (
+    <div className={`${className} flex-col w-full`}>
       <div className='flex-between-center mb-2'>
         <ProfileCard
           userId={comment.user.id}
@@ -59,7 +64,9 @@ export const CommentItem: FC<ICommentItem> = ({ comment, feedId, showOverlowMenu
 
         {showOverlowMenu && <MorePopoverButton items={popoverItems} />}
       </div>
-      <TextBase className='ml-13'>{comment.content}</TextBase>
+      <div className='flex flex-none ml-13 pre-line ellipsis' style={{ maxHeight: collapse ? '3.2em' : '' }}>
+        {comment.content}
+      </div>
     </div>
-  ))
+  )
 }
