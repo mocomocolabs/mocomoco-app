@@ -1,7 +1,8 @@
 import { IonTextarea } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useStore } from '../../hooks/use-store'
+import { maxLengthValidator } from '../../utils/form-util'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
@@ -13,13 +14,15 @@ export interface IChatInsertForm {
 }
 
 export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = false }) => {
-  const { $chat, $auth } = useStore()
+  const { $chat, $auth, $ui } = useStore()
+
+  const [isValid, setValid] = useState<boolean>(false)
 
   const sendMessage = useCallback(async () => {
-    if ($chat.form[roomId]?.message) {
+    if (isValid && $chat.form[roomId]?.message) {
       await $chat.insertChatMessage({ roomId, message: $chat.form[roomId]?.message })
     }
-  }, [])
+  }, [isValid])
 
   return useObserver(() => (
     <div className='flex flex-1 pv-2'>
@@ -38,7 +41,11 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
           value={$chat.form[roomId]?.message}
           autofocus={autoFocus}
           onIonChange={(e) => {
-            $chat.setForm(roomId, e.detail.value!)
+            const value = e.detail.value!
+            const validate = maxLengthValidator(value, 200)
+
+            setValid(validate === true)
+            validate === true ? $chat.setForm(roomId, value) : $ui.showToastError({ message: validate })
           }}
         />
 
@@ -47,7 +54,7 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
           Submit={
             <Icon
               name='send-solid'
-              className={$chat.form[roomId]?.message ? 'icon-secondary' : 'icon-gray'}
+              className={isValid && $chat.form[roomId]?.message ? 'icon-secondary' : 'icon-gray'}
               onClick={sendMessage}
             ></Icon>
           }

@@ -1,7 +1,8 @@
 import { IonTextarea } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
-import React from 'react'
+import React, { useState } from 'react'
 import { useStore } from '../../hooks/use-store'
+import { maxLengthValidator } from '../../utils/form-util'
 import { executeWithError } from '../../utils/http-helper-util'
 import { scrollToBottom } from '../../utils/scroll-util'
 import { Icon } from '../atoms/IconComponent'
@@ -15,7 +16,9 @@ export interface ICommentInsertForm {
 }
 
 export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFocus = false }) => {
-  const { $comment, $feed, $auth } = useStore()
+  const { $comment, $feed, $auth, $ui } = useStore()
+
+  const [isValid, setValid] = useState<boolean>(false)
 
   return useObserver(() => (
     <div className='comment-insert-container flex-center flex-1'>
@@ -29,7 +32,13 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
           value={$comment.insertForm[feedId]?.content}
           autofocus={autoFocus}
           onIonChange={(e) => {
-            $comment.setInsertFormBy(feedId, e.detail.value!)
+            const value = e.detail.value!
+            const validate = maxLengthValidator(value, 100)
+
+            setValid(validate === true)
+            validate === true
+              ? $comment.setInsertFormBy(feedId, value)
+              : $ui.showToastError({ message: validate })
           }}
         />
 
@@ -38,9 +47,9 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
           Submit={
             <Icon
               name='send-solid'
-              className={$comment.insertForm[feedId]?.content ? 'icon-secondary' : 'icon-gray'}
+              className={isValid && $comment.insertForm[feedId]?.content ? 'icon-secondary' : 'icon-gray'}
               onClick={() => {
-                if ($comment.insertForm[feedId]?.content) {
+                if (isValid && $comment.insertForm[feedId]?.content) {
                   executeWithError(async () => {
                     await $comment.insertComment({ feedId, content: $comment.insertForm[feedId]?.content })
                     await $feed.getFeed(feedId)
