@@ -37,7 +37,7 @@ export const ClubPopularSlider: FC<IClubPopularSlider> = ({ clubs }) => {
               url={v.imageUrls?.[0]}
               isRoundTop={true}
             ></ImageWithCorner>
-            <div className='flex-col w-full height-92 bg-white px-3 br-b-xxlg text-left'>
+            <div className='flex-col w-full min-height-92 bg-white px-3 br-b-xxlg text-left'>
               <TextBase className='text-bold mb-1 ellipsis'>{v.name}</TextBase>
               <div className='flex items-center'>
                 <Icon name='time' className='icon-secondary' size={12} />
