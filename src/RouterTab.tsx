@@ -83,6 +83,7 @@ const publicPaths = [
   '/sign-up/form',
   '/sign-up/community',
   '/sign-up/introduce',
+  '/sign-up/complete',
   '/term/privacy',
   '/term/use',
 ]

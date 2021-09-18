@@ -8,10 +8,8 @@ import { Popover } from './components/atoms/PopoverComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
 import { Toast } from './components/atoms/ToastComponent'
 import { Modal } from './components/modals/ModalComponent'
-import { config } from './config'
 import './global.scss'
 import { useStore } from './hooks/use-store'
-import { SIGN_UP_STATUS } from './models/sign-up.d'
 import { cannotGoBackPaths, RouterTab } from './RouterTab'
 import { route } from './services/route-service'
 import { storage } from './services/storage-service'
@@ -44,11 +42,7 @@ export const App: React.FC = () => {
     $stuff.getCategories()
     $talent.getCategories()
 
-    if ($auth.user.status === SIGN_UP_STATUS.대기 && config.IS_PROD) {
-      route.signUpComplete()
-    } else {
-      route.home()
-    }
+    route.home()
   }
 
   const onLogout = async () => {

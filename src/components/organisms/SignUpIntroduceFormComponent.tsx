@@ -34,7 +34,6 @@ export const SignUpIntroduceForm: FC = () => {
 
       isSubmitSuccessful.current = true
 
-      await $auth.signIn($auth.signUpForm.email!, $auth.signUpForm.password!)
       route.signUpComplete()
     })
   )
