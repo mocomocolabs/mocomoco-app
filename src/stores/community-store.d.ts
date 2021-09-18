@@ -1,10 +1,11 @@
-import { IFileDto } from './common/file'
+import type { IFileDto } from './common/file'
+import type { IUserDto } from './user-store.d'
 
 export interface ICommunityDto {
   id: number
   isUse: boolean
   name: string
   userCount: number
-  // users: []
+  users?: IUserDto[]
   atchFiles: IFileDto[]
 }
