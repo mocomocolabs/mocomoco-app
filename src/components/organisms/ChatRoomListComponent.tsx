@@ -12,7 +12,10 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
   const { $chat } = useStore()
 
   const sortCreatedAtDsc = useCallback(
-    (a: ChatRoom, b: ChatRoom) => ((a.chats[0] ?? a).createdAt >= (b.chats[0] ?? b).createdAt ? -1 : 1),
+    (a: ChatRoom, b: ChatRoom) =>
+      (a.chats?.length > 0 ? a.chats[0] : a).createdAt >= (b.chats?.length > 0 ? b.chats[0] : b).createdAt
+        ? -1
+        : 1,
     []
   )
 
@@ -25,8 +28,8 @@ export const ChatRoomList: React.FC<IChatRoomList> = () => {
 
         return rooms.length > 0 ? (
           <ul className='py-1'>
-            {rooms.map((v, i) => (
-              <ChatRoomListItem key={i} room={v} />
+            {rooms.map((v) => (
+              <ChatRoomListItem key={v.id} room={v} />
             ))}
           </ul>
         ) : (
