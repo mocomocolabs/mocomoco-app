@@ -39,9 +39,6 @@ export const timeDiff = (from?: string, to?: string) => {
   const diffMinutes = toDate.diff(fromDate, 'minute')
   if (diffMinutes > 0) return `${diffMinutes}분 전`
 
-  const diffSeconds = toDate.diff(fromDate, 'second')
-  if (diffSeconds > 0) return `${diffSeconds}초 전`
-
   return '방금 전'
 }
 
