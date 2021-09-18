@@ -4,7 +4,7 @@ import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed.d'
 import { SEGMENT_KEYS } from '../../models/segment.d'
 import { route } from '../../services/route-service'
-import { hms, ymd } from '../../utils/datetime-util'
+import { ymdhms } from '../../utils/datetime-util'
 import { FeedItem } from '../molecules/FeedItemComponent'
 import { NoContents } from '../molecules/NoContentsComponent'
 import { TaskObserver } from '../molecules/TaskObserverComponent'
@@ -22,10 +22,8 @@ interface IFeedFilter {
 
 const filter: IFeedFilter = {
   [SEGMENT_KEYS.feed]: undefined,
-  [SEGMENT_KEYS.schedule]: ({ schedule }) => {
-    const futureSchedule = !!schedule?.isUse && schedule.startDate >= ymd() && schedule.startTime >= hms()
-    return futureSchedule
-  },
+  [SEGMENT_KEYS.schedule]: ({ schedule }) =>
+    !!schedule?.isUse && schedule.startDate + schedule.startTime >= ymdhms(),
 }
 
 const sort: { [key: string]: ((a: IFeed, b: IFeed) => number) | undefined } = {
