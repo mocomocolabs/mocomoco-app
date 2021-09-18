@@ -57,7 +57,7 @@ export class ClubStore {
     // TODO: 페이징 처리 추후 구현
     await api
       .get<{ clubs: IClubDto[]; count: number }>(
-        `/v1/clubs?community-id=${this.$auth.user.communityId}&sort-order=created_at_desc&is-use=true&limit=999`
+        `/v1/clubs?community-id=${this.$auth.user.communityId}&sort-order=created-at_desc&is-use=true&limit=999`
       )
       .then(
         action((data) => {
@@ -71,7 +71,7 @@ export class ClubStore {
     // TODO: 페이징 처리 추후 구현
     await api
       .get<{ clubs: IClubDto[]; count: number }>(
-        `/v1/clubs/users/${this.$auth.user.id}?sort-order=created_at_desc&is-use=true&limit=999`
+        `/v1/clubs/users/${this.$auth.user.id}?sort-order=created-at_desc&is-use=true&limit=999`
       )
       .then(
         action((data) => {
@@ -84,7 +84,7 @@ export class ClubStore {
   getLikeClubs = (async () => {
     // TODO: 페이징 처리 추후 구현
     await api
-      .get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=created_at_desc&is-use=true&limit=999`)
+      .get<{ clubs: IClubDto[]; count: number }>(`/v1/clubs?sort-order=created-at_desc&is-use=true&limit=999`)
       .then(
         action((data) => {
           // TODO clubs api 바뀌면, 이 부분 교체하기
@@ -231,7 +231,7 @@ export class ClubStore {
    */
   getCreatedClub = async () => {
     const data = await api.get<{ clubs: IClubDto[]; count: number }>(
-      `/v1/clubs/users/${this.$auth.user.id}?sort-order=created_at_desc&limit=1`
+      `/v1/clubs/users/${this.$auth.user.id}?sort-order=created-at_desc&limit=1`
     )
 
     return data.clubs.pop()

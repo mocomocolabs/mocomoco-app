@@ -33,7 +33,7 @@ export class CommunityStore {
 
   @task
   getCommunities = (async () => {
-    await http.get<{ communities: ICommunityDto[] }>('/v1/communities?is-use=true').then(
+    await http.get<{ communities: ICommunityDto[] }>('/v1/communities?sort-order=name_asc&is-use=true').then(
       action((data) => {
         this.communities = data.communities.map((v: ICommunityDto) => Community.of(v))
       })

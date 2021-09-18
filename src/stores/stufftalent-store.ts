@@ -107,28 +107,33 @@ export class StuffTalentStore {
       params: {
         'type': this.predefined.pageKey,
         'is-use': true,
+        'sort-order': 'created-at_asc',
       },
     }
 
     await api.get<{ categories: IStuffTalentCategoryDto[] }>(this.categoriesUrl, config).then(
       action((data) => {
-        this.categories = data.categories.sort((a, b) => a.id - b.id) // sort by id asc
+        this.categories = data.categories
       })
     )
   }) as Task
 
   @task
   getItems = (async (search, filter) => {
-    await api.get<IStuffsTalentsDto>(this.predefined.baseApi, this.config(search, filter)).then(
-      action((data) => {
-        this.items = (data[this.predefined.getItemsProperty as keyof IStuffsTalentsDto] as IStuffTalentDto[])
-          .filter((item) => filter.isLike === undefined || item.isLike === filter.isLike)
-          .map((item) => StuffTalent.of(item, this.predefined.pageKey, this.$auth.user.id))
-      })
-    )
+    await api
+      .get<IStuffsTalentsDto>(this.predefined.baseApi, this.config(search, filter, 'created-at_desc'))
+      .then(
+        action((data) => {
+          this.items = (
+            data[this.predefined.getItemsProperty as keyof IStuffsTalentsDto] as IStuffTalentDto[]
+          )
+            .filter((item) => filter.isLike === undefined || item.isLike === filter.isLike)
+            .map((item) => StuffTalent.of(item, this.predefined.pageKey, this.$auth.user.id))
+        })
+      )
   }) as TaskBy2<string, IStuffTalentFilter>
 
-  private config = (search: string, filter: IStuffTalentFilter) => {
+  private config = (search: string, filter: IStuffTalentFilter, sortOrder?: string) => {
     const { userId, categories, notStatuses, types, isPublic, communityId } = filter
 
     const config: AxiosRequestConfig = {
@@ -148,6 +153,7 @@ export class StuffTalentStore {
 
     !!search && this.addParam(config, 'title', 'like:' + search)
 
+    !!sortOrder && this.addParam(config, 'sort-order', sortOrder)
     this.addParam(config, 'limit', filter.limit)
     return config
   }
@@ -231,7 +237,7 @@ export class StuffTalentStore {
    */
   getCreatedItem = async () => {
     const data = await api.get<IStuffsTalentsDto>(
-      `${this.predefined.baseApi}?user-id=${this.$auth.user.id}&sort-order=created_at_desc&limit=1`
+      `${this.predefined.baseApi}?user-id=${this.$auth.user.id}&sort-order=created-at_desc&limit=1`
     )
 
     const items = data[this.predefined.getItemsProperty as keyof IStuffsTalentsDto]

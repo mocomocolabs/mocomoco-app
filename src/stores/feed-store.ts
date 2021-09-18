@@ -49,7 +49,9 @@ export class FeedStore {
 
     await api
       .get<{ feeds: IFeedDto[] }>(
-        `/v1/feeds?community-id=${this.$community.selectedId ?? ''}${isPublic}&is-use=true&limit=999`
+        `/v1/feeds?community-id=${
+          this.$community.selectedId ?? ''
+        }${isPublic}&sort-order=created-at_desc&is-use=true&limit=999`
       )
       .then(
         action((data) => {
@@ -61,7 +63,9 @@ export class FeedStore {
   @task
   getMyFeeds = (async () => {
     await api
-      .get<{ feeds: IFeedDto[] }>(`/v1/feeds?user-id=${this.$auth.user.id}&is-use=true&limit=999`)
+      .get<{ feeds: IFeedDto[] }>(
+        `/v1/feeds?user-id=${this.$auth.user.id}&sort-order=created-at_desc&is-use=true&limit=999`
+      )
       .then(
         action((data) => {
           this.feeds = data.feeds.map((v) => Feed.of(v, this.$auth.user.id))
@@ -71,7 +75,7 @@ export class FeedStore {
 
   @task
   getLikeFeeds = (async () => {
-    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds?is-use=true&limit=999`).then(
+    await api.get<{ feeds: IFeedDto[] }>(`/v1/feeds?sort-order=created-at_desc&is-use=true&limit=999`).then(
       action((data) => {
         this.feeds = data.feeds.filter((v) => v.isLike).map((v) => Feed.of(v, this.$auth.user.id))
       })
@@ -82,7 +86,7 @@ export class FeedStore {
   getHomeFeeds = (async () => {
     await api
       .get<{ feeds: IFeedDto[] }>(
-        `/v1/feeds?community-id=${this.$auth.user.communityId}&is-use=true&limit=10`
+        `/v1/feeds?community-id=${this.$auth.user.communityId}&is-use=true&sort-order=created-at_desc&limit=10`
       )
       .then(
         action((data) => {
@@ -202,7 +206,7 @@ export class FeedStore {
    */
   getCreatedFeed = async () => {
     const data = await api.get<{ feeds: IFeedDto[]; count: number }>(
-      `/v1/feeds?user-id=${this.$auth.user.id}&sort-order=created_at_desc&limit=1`
+      `/v1/feeds?user-id=${this.$auth.user.id}&sort-order=created-at_desc&limit=1`
     )
 
     return data.feeds.pop()
