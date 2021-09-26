@@ -1,5 +1,6 @@
 import { App as AppPlugin } from '@capacitor/app'
 import { SplashScreen } from '@capacitor/splash-screen'
+import { StatusBar, Style } from '@capacitor/status-bar'
 import { IonApp } from '@ionic/react'
 import { reaction } from 'mobx'
 import { useEffect, useState } from 'react'
@@ -20,6 +21,8 @@ export const App: React.FC = () => {
 
   const init = async () => {
     console.log('app init called')
+
+    StatusBar.setStyle({ style: Style.Light })
 
     SplashScreen.hide({ fadeOutDuration: 300 })
 
