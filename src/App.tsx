@@ -1,4 +1,5 @@
 import { App as AppPlugin } from '@capacitor/app'
+import { Capacitor } from '@capacitor/core'
 import { SplashScreen } from '@capacitor/splash-screen'
 import { StatusBar, Style } from '@capacitor/status-bar'
 import { IonApp } from '@ionic/react'
@@ -22,9 +23,11 @@ export const App: React.FC = () => {
   const init = async () => {
     console.log('app init called')
 
-    StatusBar.setStyle({ style: Style.Light })
+    if (Capacitor.isNativePlatform()) {
+      StatusBar.setStyle({ style: Style.Light })
 
-    SplashScreen.hide({ fadeOutDuration: 300 })
+      SplashScreen.hide({ fadeOutDuration: 300 })
+    }
 
     await $community.getCommunities()
 
