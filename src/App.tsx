@@ -1,7 +1,7 @@
 import { App as AppPlugin } from '@capacitor/app'
 import { Capacitor } from '@capacitor/core'
 import { SplashScreen } from '@capacitor/splash-screen'
-import { StatusBar, Style } from '@capacitor/status-bar'
+import { StatusBar } from '@capacitor/status-bar'
 import { IonApp } from '@ionic/react'
 import { reaction } from 'mobx'
 import { useEffect, useState } from 'react'
@@ -10,6 +10,7 @@ import { Popover } from './components/atoms/PopoverComponent'
 import { Spinner } from './components/atoms/SpinnerComponent'
 import { Toast } from './components/atoms/ToastComponent'
 import { Modal } from './components/modals/ModalComponent'
+import { config } from './config'
 import './global.scss'
 import { useStore } from './hooks/use-store'
 import { cannotGoBackPaths, RouterTab } from './RouterTab'
@@ -23,11 +24,7 @@ export const App: React.FC = () => {
   const init = async () => {
     console.log('app init called')
 
-    if (Capacitor.isNativePlatform()) {
-      StatusBar.setStyle({ style: Style.Light })
-
-      SplashScreen.hide({ fadeOutDuration: 300 })
-    }
+    Capacitor.isNativePlatform() && applyAppLaunchStyle()
 
     await $community.getCommunities()
 
@@ -38,6 +35,16 @@ export const App: React.FC = () => {
     }
 
     setInitailzed(true)
+  }
+
+  const applyAppLaunchStyle = () => {
+    Capacitor.isPluginAvailable('StatusBar') && applyStatusBarStyle()
+    Capacitor.isPluginAvailable('SplashScreen') && SplashScreen.hide({ fadeOutDuration: 300 })
+  }
+
+  const applyStatusBarStyle = () => {
+    config.STATUSBAR_STYLE && StatusBar.setStyle({ style: config.STATUSBAR_STYLE })
+    config.STATUSBAR_BG_COLOR && StatusBar.setBackgroundColor({ color: config.STATUSBAR_BG_COLOR })
   }
 
   const onLogin = async () => {
