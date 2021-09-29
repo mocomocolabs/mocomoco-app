@@ -15,7 +15,10 @@ export class Feed {
           user: User.of(dto.user),
           schedule: dto.schedule?.isUse ? this.scheduleOf(dto.schedule) : undefined,
           imageUrls: dto.atchFiles.map((v) => v.url),
-          comments: dto.feedComments.filter((v) => v.isUse).map((c) => Comment.of(c)),
+          comments: dto.feedComments
+            .filter((v) => v.isUse)
+            .sort((a, b) => Number.parseInt(a.createdAt) - Number.parseInt(b.createdAt))
+            .map((c) => Comment.of(c)),
           likeCount: dto.feedUsers.filter((v) => v.isLike).length,
           writtenComment: dto.feedComments.some((v) => v.id === userId),
         }

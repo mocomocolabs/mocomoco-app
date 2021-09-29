@@ -1,4 +1,3 @@
-import { useObserver } from 'mobx-react-lite'
 import React, { FC, useCallback, useMemo, useState } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { IFeed } from '../../models/feed.d'
@@ -74,7 +73,7 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
     return collapsed
   }, [feed.content])
 
-  return useObserver(() => (
+  return (
     <li>
       {feed.imageUrls?.length > 0 ? (
         <div onClick={onClick}>
@@ -163,5 +162,5 @@ export const FeedItem: FC<IFeedItem> = ({ feed, isDetail = false, onDelete, onEd
       </div>
       <Pad className='h-2' />
     </li>
-  ))
+  )
 }
