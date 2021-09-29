@@ -7,7 +7,7 @@ import { IClubForm } from '../models/club.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
-import { IClubDto, IJoinClubDto, InsertClubTask, JoinClubTask } from './club-store.d'
+import { CLUB_ROLE, IClubDto, IJoinClubDto, InsertClubTask, JoinClubTask } from './club-store.d'
 import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
@@ -166,7 +166,7 @@ export class ClubStore {
   joinClub = (async (payload: IJoinClubDto) => {
     await api.post(`/v1/clubs-users`, {
       ...payload,
-      role: 'ROLE_USER',
+      role: CLUB_ROLE.USER,
     })
   }) as JoinClubTask
 

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { IClubDto, IClubMemberDto } from '../stores/club-store.d'
+import { CLUB_ROLE, IClubDto, IClubMemberDto } from '../stores/club-store.d'
 import { IUserDto } from '../stores/user-store.d'
 import { IClub, IClubMember } from './club.d'
 import { Community } from './community'
@@ -13,7 +13,9 @@ export class Club {
       ? {
           ...dto,
           community: Community.of(dto.community),
-          members: dto.clubUsers.map((v) => Club.membersOf(v, dto.adminUsers)),
+          members: dto.clubUsers
+            .filter((cu) => [CLUB_ROLE.ADMIN, CLUB_ROLE.USER].includes(cu.role) && cu.isUse && cu.user.isUse)
+            .map((v) => Club.membersOf(v, dto.adminUsers)),
           hashtagNames: dto.clubHashtags.map((v) => v.hashtag.name),
           imageUrls: dto.atchFiles.map((v) => v.url),
           isMember: dto.clubUsers.some((v) => v.user.id === userId),

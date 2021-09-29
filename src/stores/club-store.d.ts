@@ -34,9 +34,17 @@ export interface IClubDto {
 
 export interface IClubMemberDto {
   user: IUserDto
+  role: CLUB_ROLE
   isLike: boolean
   isUse: boolean
 }
+
+export enum CLUB_ROLE {
+  USER = 'ROLE_USER',
+  ADMIN = 'ROLE_ADMIN',
+  NONE = 'ROLE_NONE', //TODO 추후 서버적용사항과 맞추기
+}
+
 export interface IClubHashtagDto {
   id: number
   hashtag: IHashtagDto
