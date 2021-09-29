@@ -205,7 +205,7 @@ export class ChatStore {
   getChatMessages = (async (chatRoomId: number, lastId: number) => {
     const { chats: chatsDto } = await api.get<{ chats: IChatDto[] }>('/v1/chats', {
       params: {
-        'chat-room-id': chatRoomId,
+        'chatroom-id': chatRoomId,
         'last-id': lastId,
         'is-use': true,
         'limit': 20,
