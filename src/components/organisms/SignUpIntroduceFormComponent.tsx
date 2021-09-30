@@ -63,7 +63,7 @@ export const SignUpIntroduceForm: FC = () => {
 
       <Pad className='height-40' />
 
-      <TaskObserver taskTypes={[$auth.signUp, $auth.signIn]} spinnerPosition='centerX'>
+      <TaskObserver taskTypes={[$auth.signUp]} spinnerPosition='centerX'>
         {() => <SubmitButton color='secondary' size='large' disabled={!isValid} text='회원가입 완료하기' />}
       </TaskObserver>
     </form>

@@ -19,4 +19,5 @@ export interface ISignUpForm {
 export enum SIGN_UP_STATUS {
   대기 = 'PENDING',
   승인 = 'APPROVAL',
+  승인거절 = 'DISAPPROVAL',
 }

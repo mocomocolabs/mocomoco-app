@@ -3,11 +3,12 @@ import { action, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { AuthUser } from '../models/auth'
 import { IAuthUser } from '../models/auth.d'
-import { ISignUpForm } from '../models/sign-up'
+import { ISignUpForm, SIGN_UP_STATUS } from '../models/sign-up.d'
 import { User } from '../models/user'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
+import { isOfType } from '../utils/type-util'
 import { IAuthUserDto, SignInTask, SignUpTask } from './auth-store.d'
 import { TaskBy, TaskByAs } from './task'
 import { IUserDto } from './user-store.d'
@@ -52,7 +53,7 @@ export class AuthStore {
     try {
       await http.post(`/sys/users/email/exists`, { email })
     } catch (e) {
-      if (e.status === 409) {
+      if (isOfType<{ status: number }>(e, 'status') && e.status === 409) {
         return true
       }
 
@@ -67,7 +68,7 @@ export class AuthStore {
     try {
       await http.post(`/sys/users/nickname/exists`, { nickname })
     } catch (e) {
-      if (e.status === 409) {
+      if (isOfType<{ status: number }>(e, 'status') && e.status === 409) {
         return true
       }
 
@@ -115,13 +116,29 @@ export class AuthStore {
   signInCallback = async (dto: IAuthUserDto, ignoreAuth?: boolean) => {
     console.log('signInCallback', dto)
 
+    // TODO sign-in api가 에러메시지를 응답하도록 수정한 후 이 부분을 삭제하자.
+    const result: true | string = this.checkUserApproved(dto.status)
+    if (result !== true) {
+      throw new Error(result)
+    }
+
     !ignoreAuth && (await this.setAuth(dto))
 
     this.setUser(AuthUser.of(dto))
 
-    !!!this.user.profileUrl && this.updateUser()
-
     this.setIsLogin(true)
+  }
+
+  checkUserApproved = (status: SIGN_UP_STATUS) => {
+    if (status === SIGN_UP_STATUS.승인) {
+      return true
+    }
+
+    if (status === SIGN_UP_STATUS.대기) {
+      return '마을의 하마지기가 가입신청내역을 확인하고 있어요.<br>안내를 받으신 후 로그인해주세요 :)'
+    }
+
+    return '가입신청이 승인되지 않아 로그인하실 수 없습니다.<br>마을의 하마지기에게 문의해주세요.'
   }
 
   @action
@@ -137,7 +154,7 @@ export class AuthStore {
           .get<IAuthUserDto>(signInWithTokenApiUrl)
           .then(async (dto: IAuthUserDto) => await this.signInCallback(dto, true))
       } catch (e) {
-        if (e.status === 401) {
+        if (isOfType<{ status: number }>(e, 'status') && e.status === 401) {
           this.refreshToken()
         }
       }
