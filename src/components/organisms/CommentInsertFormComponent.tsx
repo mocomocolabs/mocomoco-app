@@ -21,10 +21,12 @@ export const CommentInsertForm: React.FC<ICommentInsertForm> = ({ feedId, autoFo
   const [isValid, setValid] = useState<boolean>(false)
 
   return useObserver(() => (
-    <div className='comment-insert-container flex-center flex-1'>
-      <ProfileImage url={$auth.user?.profileUrl}></ProfileImage>
+    <div className='flex-center flex-1'>
+      <div className='flex flex-none'>
+        <ProfileImage url={$auth.user?.profileUrl}></ProfileImage>
+      </div>
 
-      <div className='flex-between-center w-full ml-3 px-3 br-20 border-primary'>
+      <div className='comment-insert-container flex-between-center w-full ml-3 px-3 br-20 border-primary'>
         <IonTextarea
           autoGrow={true}
           rows={1}

@@ -5,6 +5,7 @@ import { useStore } from '../../hooks/use-store'
 import { executeWithError } from '../../utils/http-helper-util'
 import { Icon } from '../atoms/IconComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
+import './CommentInsertFormComponent.scss'
 
 export interface ICommentUpdateForm {
   commentId: number
@@ -15,15 +16,17 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
   const { $comment, $feed } = useStore()
 
   return useObserver(() => (
-    <>
-      <Icon
-        name='close'
-        onClick={() => {
-          $comment.setUpdateCommentId(null)
-        }}
-      ></Icon>
+    <div className='flex-center flex-1'>
+      <div className='flex flex-none'>
+        <Icon
+          name='close'
+          onClick={() => {
+            $comment.setUpdateCommentId(null)
+          }}
+        />
+      </div>
 
-      <div className='flex-between-center w-full ml-3 px-3 br-20 border-primary'>
+      <div className='comment-insert-container flex-between-center w-full ml-3 px-3 br-20 border-primary'>
         <IonTextarea
           autoGrow={true}
           rows={1}
@@ -58,6 +61,6 @@ export const CommentUpdateForm: React.FC<ICommentUpdateForm> = ({ commentId, fee
           }
         />
       </div>
-    </>
+    </div>
   ))
 }
