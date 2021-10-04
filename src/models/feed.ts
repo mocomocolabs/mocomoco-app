@@ -20,7 +20,7 @@ export class Feed {
             .sort((a, b) => Number.parseInt(a.createdAt) - Number.parseInt(b.createdAt))
             .map((c) => Comment.of(c)),
           likeCount: dto.feedUsers.filter((v) => v.isLike).length,
-          writtenComment: dto.feedComments.some((v) => v.id === userId),
+          writtenComment: dto.feedComments.some((v) => v.user.id === userId),
         }
       : ({} as IFeed)
   }

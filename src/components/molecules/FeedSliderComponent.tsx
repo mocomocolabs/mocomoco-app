@@ -43,9 +43,20 @@ export const FeedSlider: FC<IFeedSlider> = ({ items }) => {
                 <div className='overflow-hidden'>
                   {v.title && <TextXs className='ellipsis'>{v.content}</TextXs>}
                 </div>
-                <div className='flex-center justify-end gap-1' style={{ flex: '1 0 0' }}>
-                  <Icon name={v.isLike ? 'heart-solid' : 'heart'} className='icon-secondary' size={16} />
-                  <TextXs className='secondary'>{v.likeCount}</TextXs>
+
+                <div className='flex-center justify-end gap-2' style={{ flex: '1 0 0' }}>
+                  <div className='flex gap-1'>
+                    <Icon name={v.isLike ? 'heart-solid' : 'heart'} className='icon-secondary' size={16} />
+                    <TextXs className='secondary'>{v.likeCount}</TextXs>
+                  </div>
+                  <div className='flex gap-1'>
+                    <Icon
+                      name={v.writtenComment ? 'chat-solid' : 'chat'}
+                      className='icon-secondary'
+                      size={16}
+                    />
+                    <TextXs className='secondary'>{v.comments?.length}</TextXs>
+                  </div>
                 </div>
               </div>
             </div>
