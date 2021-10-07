@@ -59,7 +59,7 @@ export const StuffTalentDetailPage: React.FC = () => {
         ] as IStuffTalentLikeUser[]
 
         const _chatList = stufftalentUsers
-          ?.filter(({ user, chatroom }) => user.id !== $auth.user.id && !!chatroom)
+          ?.filter(({ user, chatroom }) => user.id !== $auth.user.id && !_.isEmpty(chatroom))
           .map(({ user, chatroom }, index) => {
             // TODO 사용자 프로필 url을 넘기고 싶다. chatroom 객체에 넣어서.
             chatroom = {
