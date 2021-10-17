@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>ko</string>
 	<key>CFBundleDisplayName</key>
 	<string>하마</string>
 	<key>CFBundleExecutable</key>
@@ -30,11 +30,11 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>카메라 촬영을 위해 권한 수락이 필요해요</string>
+	<string>카메라 촬영 후 게시글이나 프로필에 업로드하실 수 있어요. 카메라 권한을 수락하시겠어요?</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>앨범 부가 사용 권한 수락이 필요해요</string>
+	<string>앨범 사진을 선택하여 업로드하실 수 있어요. 앨범 부가 사용 권한을 수락하시겠어요?</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>앨범 사용 권한 수락이 필요해요</string>
+	<string>앨범 사진을 선택하여 업로드하실 수 있어요. 앨범 사용 권한을 수락하시겠어요?</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
