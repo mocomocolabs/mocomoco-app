@@ -6,10 +6,13 @@
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run front\"",
     "front": "ionic serve -p 3000",
+    "front:external": "ionic serve -p 8100 --external",
     "server": "nodemon --watch server server/index.js",
     "build": "react-scripts build",
     "serve:build": "npx serve -s build",
     "sync": "yarn build && npx cap sync",
+    "sync:ios": "yarn build && npx cap sync",
+    "sync:and": "yarn build && npx cap sync",
     "dev:ios": "ionic capacitor run ios -l --external",
     "dev:and": "ionic capacitor run android -l --external",
     "prod:and": "ionic capacitor run android && npx cap sync",
