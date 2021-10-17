@@ -40,7 +40,7 @@ export const ImageWithCorner: FC<IImageWithCorner> = ({
           imageClass: `br-l-xxlg ${dark ? 'dark' : ''}`,
           cornerClass: 'icon-rotate-270 absolute top-0',
           cornerStyle: { right: radiusSize, width: radiusSize, height: radiusSize },
-          tailDivClass: 'z-10 w-full h-full bg-white absolute right-0 right-radius',
+          tailDivClass: 'z-10 w-full h-full bg-white absolute right-0 right-radius border-white',
           tailDivStyle: { width: radiusSize, borderBottomLeftRadius: radiusSize },
         }
       : {
@@ -48,7 +48,7 @@ export const ImageWithCorner: FC<IImageWithCorner> = ({
           imageClass: `${isRoundTop ? 'br-t-xxlg' : ''} ${dark ? 'dark' : ''}`,
           cornerClass: 'absolute right-0',
           cornerStyle: { bottom: radiusSize, width: radiusSize, height: radiusSize },
-          tailDivClass: 'z-10 w-full bg-white absolute bottom-0 bottom-radius',
+          tailDivClass: 'z-10 w-full bg-white absolute bottom-0 bottom-radius border-white',
           tailDivStyle: { height: radiusSize, borderTopLeftRadius: radiusSize },
         }
 

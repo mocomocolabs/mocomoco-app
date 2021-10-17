@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core'
 import { IonTextarea } from '@ionic/react'
 import { useObserver } from 'mobx-react-lite'
 import React, { useCallback, useState } from 'react'
@@ -39,6 +40,14 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
           autoGrow={true}
           rows={1}
           value={$chat.form[roomId]?.message}
+          onFocus={() => {
+            // FIXME: IOS 포커스시 스크롤이 되지 않는 이슈가 있어 강제로 스크롤을 이동한다
+            if (Capacitor.getPlatform() === 'ios') {
+              setTimeout(() => {
+                window.scrollTo(0, document.body.scrollHeight)
+              }, 290)
+            }
+          }}
           autofocus={autoFocus}
           onIonChange={(e) => {
             const value = e.detail.value!
