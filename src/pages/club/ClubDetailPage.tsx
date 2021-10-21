@@ -17,7 +17,7 @@ import { executeWithError } from '../../utils/http-helper-util'
 
 export const ClubDetailPage: React.FC = () => {
   const id = parseInt(useParams<{ id: string }>().id)
-  const { $ui, $club, $auth, $chat } = useStore()
+  const { $ui, $club, $chat } = useStore()
 
   useEffect(() => {
     // TODO: statusbar 투명 체크
@@ -64,7 +64,7 @@ export const ClubDetailPage: React.FC = () => {
                         className='h-10'
                         onClick={() => {
                           executeWithError(async () => {
-                            await $club.joinClub({ clubId: $club.club.id, userId: $auth.user.id })
+                            await $club.joinClub(id)
                             await $club.getClub(id)
                             $chat.subscribeNewRoom($club.club.chatroomId)
                             route.chatRoom($club.club.chatroomId)

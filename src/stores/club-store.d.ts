@@ -6,11 +6,12 @@ import { IUserDto } from './user-store.d'
 
 export type InsertClubTask = TaskBy2As<Partial<IClubForm>, boolean, IClubDto>
 
-export type JoinClubTask = TaskBy<IJoinClubDto>
+export type JoinClubTask = TaskBy<number>
 
 export interface IJoinClubDto {
   clubId: number
-  userId: number
+  isJoin: true
+  isUse: true
 }
 
 export interface IClubDto {

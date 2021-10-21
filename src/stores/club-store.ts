@@ -7,7 +7,7 @@ import { IClubForm } from '../models/club.d'
 import { api } from '../services/api-service'
 import { urlToFile } from '../utils/image-util'
 import { AuthStore } from './auth-store'
-import { CLUB_ROLE, IClubDto, IJoinClubDto, InsertClubTask, JoinClubTask } from './club-store.d'
+import { IClubDto, IJoinClubDto as IJoinClubReqDto, InsertClubTask, JoinClubTask } from './club-store.d'
 import { Task, TaskBy, TaskBy2 } from './task'
 
 const initState = {
@@ -163,11 +163,12 @@ export class ClubStore {
   }) as InsertClubTask
 
   @task.resolved
-  joinClub = (async (payload: IJoinClubDto) => {
-    await api.post(`/v1/clubs-users`, {
-      ...payload,
-      role: CLUB_ROLE.USER,
-    })
+  joinClub = (async (clubId: number) => {
+    await api.post(`/v1/clubs-users/joins`, {
+      clubId,
+      isJoin: true,
+      isUse: true,
+    } as IJoinClubReqDto)
   }) as JoinClubTask
 
   @action
