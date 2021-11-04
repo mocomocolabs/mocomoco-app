@@ -236,17 +236,13 @@ export class ChatStore {
   setLastChatId = (async ({ roomId, readChatId }: ISetReadChatId) => {
     if (this.currentRoomId !== roomId) {
       this.setStoreRooms(
-        this.storeRooms.map((v) => {
-          if (v.id === roomId) return { ...v, readCount: v.readCount + 1 }
-          else return v
-        })
+        this.storeRooms.map((v) => (v.id === roomId ? { ...v, readCount: v.readCount + 1 } : v))
       )
     } else {
+      await api.post(`/v1/chatrooms-users/read-chat-id`, { chatroomId: roomId, readChatId })
+
       this.setStoreRooms(
-        this.storeRooms.map((v) => {
-          if (v.id === roomId) return { ...v, readChatId, readCount: 0 }
-          else return v
-        })
+        this.storeRooms.map((v) => (v.id === roomId ? { ...v, readChatId, readCount: 0 } : v))
       )
     }
 
