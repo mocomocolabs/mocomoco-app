@@ -234,7 +234,7 @@ export class ChatStore {
 
   @action
   setLastChatId = (async ({ roomId, readChatId }: ISetReadChatId) => {
-    if (this.currentRoomId === undefined || this.currentRoomId === null) {
+    if (this.currentRoomId !== roomId) {
       this.setStoreRooms(
         this.storeRooms.map((v) => {
           if (v.id === roomId) return { ...v, readCount: v.readCount + 1 }
