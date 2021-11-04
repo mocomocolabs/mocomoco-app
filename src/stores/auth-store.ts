@@ -6,6 +6,7 @@ import { IAuthUser } from '../models/auth.d'
 import { ISignUpForm, SIGN_UP_STATUS } from '../models/sign-up.d'
 import { User } from '../models/user'
 import { api } from '../services/api-service'
+import { route } from '../services/route-service'
 import { storage } from '../services/storage-service'
 import { http } from '../utils/http-util'
 import { isOfType } from '../utils/type-util'
@@ -24,6 +25,7 @@ const initState = {
 }
 
 export const signInWithTokenApiUrl = '/auth/account'
+export const refreshTokenApiUrl = '/auth/refresh-token'
 
 export class AuthStore {
   @observable.struct signUpForm: Partial<ISignUpForm> = initState.signUpForm
@@ -149,15 +151,12 @@ export class AuthStore {
     if (hasToken) {
       api.setAuthoriationBy(hasToken)
       await storage.setAccessTokenForSync()
-      try {
-        await api
-          .get<IAuthUserDto>(signInWithTokenApiUrl)
-          .then(async (dto: IAuthUserDto) => await this.signInCallback(dto, true))
-      } catch (e) {
-        if (isOfType<{ status: number }>(e, 'status') && e.status === 401) {
-          this.refreshToken()
-        }
-      }
+      await api
+        .get<IAuthUserDto>(signInWithTokenApiUrl)
+        .then(async (dto: IAuthUserDto) => await this.signInCallback(dto, true))
+    } else {
+      console.log('🚀 there is no token!!')
+      this.signOutCallback()
     }
   }
 
@@ -167,7 +166,7 @@ export class AuthStore {
 
     const refreshToken = await storage.getRefreshToken()
     api.setAuthoriationBy(refreshToken)
-    api.post<IAuthUserDto>('/auth/refresh-token', {}).then(async (dto: IAuthUserDto) => {
+    await api.post<IAuthUserDto>(refreshTokenApiUrl, {}).then(async (dto: IAuthUserDto) => {
       await this.setAuth(dto)
     })
   }
@@ -183,7 +182,7 @@ export class AuthStore {
     await storage.clear()
     api.setAuthoriationBy('')
     this.setUser({} as IAuthUser)
-    this.setIsLogin(false)
+    this.isLogin ? this.setIsLogin(false) : route.signUp()
   }
 
   @action
