@@ -96,7 +96,7 @@ class WebSocketService {
   sendMessageForRoom(roomId: number, message: string) {
     this.stompClient.publish({
       destination: `/pub/chat/chatrooms/${roomId}`,
-      headers: { Authorization: storage.accessTokenForSync }, //TODO canbe removed?
+      headers: { Authorization: storage.accessTokenForSync },
       body: message,
     })
   }
@@ -104,7 +104,7 @@ class WebSocketService {
   sendMessageForNewRoom(userId: number, message: string) {
     this.stompClient.publish({
       destination: `/pub/chat/users/${userId}`,
-      headers: { Authorization: storage.accessTokenForSync }, //TODO canbe removed?
+      headers: { Authorization: storage.accessTokenForSync },
       body: message,
     })
   }
