@@ -71,12 +71,14 @@ export class ChatStore {
         cb: async (data) => {
           // 첫 채팅을 받는 경우
           const subChat = JSON.parse(data.body) as ISubscribeChat
+
+          if (this.rooms.some((r) => r.id === subChat.chatroom.id)) {
+            console.log('새 채팅방 정보가 이미 처리된 상태임. 남은 작업 안함')
+            return
+          }
+
           // 새로 만들어진 채팅방을 구독상태로 한다.
           await this.subscribeNewRoom(subChat.chatroom.id)
-
-          // 기존 채팅방에 새로운 채팅룸 공간을 생성.
-          // 첫 채팅 데이터를 스토어에 저장한다.
-          this.setChatAndMeta(subChat)
         },
       }
     )
@@ -100,27 +102,27 @@ export class ChatStore {
         action(async (data) => {
           this.rooms = data.chatrooms.map((v) => ChatRoom.of(v, this.$auth.user.id))
 
-          // TODO: 앱 재설치시, 모든 채팅이 unread 상태인데 추후 대안 필요
           const orgStoreChatRooms = await storage.getStoreChatRoom()
           if (_.isEmpty(orgStoreChatRooms)) {
             this.setStoreRooms(
               this.rooms.map((v) => ({
                 id: v.id,
-                readChatId: 0,
-                readCount: 0,
+                readChatId: v.readChatId,
+                readCount: v.chats?.filter((c) => c.id > v.readChatId).length,
               }))
             )
           } else {
             this.setStoreRooms(
               this.rooms.map((v) => {
                 const find = orgStoreChatRooms.find((vv) => vv.id === v.id)
-                return _.isEmpty(find) || find === undefined
-                  ? {
-                      id: v.id,
-                      readChatId: 0,
-                      readCount: 0,
-                    }
-                  : find
+                const readChatId = _.max([find?.readChatId, v.readChatId]) ?? 0
+                const readCount = v.chats?.filter((c) => c.id > readChatId).length
+
+                return {
+                  id: v.id,
+                  readChatId,
+                  readCount,
+                }
               })
             )
           }
@@ -167,6 +169,10 @@ export class ChatStore {
   insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
     const room = _.find(this.rooms, (v) => v.id === roomId)
 
+    if (room === undefined) {
+      throw new Error('채팅방 정보를 찾을 수 없습니다.')
+    }
+
     await api
       .post<ISubscribeChat>('/v1/chats', {
         type: ChatType.TALK,
@@ -175,19 +181,21 @@ export class ChatStore {
         isUse: true,
       })
       .then((data) => {
-        if (room !== undefined) room.readChatId = data.id
-        console.log(room?.chats.length)
+        this.setLastChatId({ roomId, readChatId: data.id })
 
         // 첫 채팅시
-        if (room?.chats.length === 0 && room.type === ChatRoomType.NORMAL) {
+        if (room.chats.length === 0) {
           console.log('sendMessageForNewRoom')
 
-          const targetUser = room.users.find((v) => v.id !== this.$auth.user.id)
-          if (!targetUser) {
-            throw new Error('오류가 발생하였습니다')
+          const targetUsers = room.users.filter((v) => v.id !== this.$auth.user.id)
+          if (_.isEmpty(targetUsers)) {
+            throw new Error('채팅방 참여자 정보를 찾을 수 없습니다.')
           }
-          data.targetUserId = targetUser.id
-          webSocket.sendMessageForNewRoom(targetUser.id, JSON.stringify(data))
+
+          targetUsers.forEach(({ id: targetUserId }) => {
+            data.targetUserId = targetUserId
+            webSocket.sendMessageForNewRoom(targetUserId, JSON.stringify(data))
+          })
         } else {
           console.log('sendMessageForRoom')
 
