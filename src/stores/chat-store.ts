@@ -181,8 +181,6 @@ export class ChatStore {
         isUse: true,
       })
       .then((data) => {
-        this.setLastChatId({ roomId, readChatId: data.id })
-
         // 첫 채팅시
         if (room.chats.length === 0) {
           console.log('sendMessageForNewRoom')
