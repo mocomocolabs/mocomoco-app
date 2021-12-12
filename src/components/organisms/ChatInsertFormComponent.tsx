@@ -4,6 +4,7 @@ import { useObserver } from 'mobx-react-lite'
 import React, { useCallback, useState } from 'react'
 import { useStore } from '../../hooks/use-store'
 import { maxLengthValidator } from '../../utils/form-util'
+import { infinityScrollToBottom } from '../../utils/scroll-util'
 import { Icon } from '../atoms/IconComponent'
 import { ProfileImage } from '../atoms/ProfileImageComponent'
 import { SpinnerWrapper } from '../helpers/SpinnerWrapper'
@@ -41,11 +42,9 @@ export const ChatInsertForm: React.FC<IChatInsertForm> = ({ roomId, autoFocus = 
           rows={1}
           value={$chat.form[roomId]?.message}
           onFocus={() => {
-            // FIXME: IOS 포커스시 스크롤이 되지 않는 이슈가 있어 강제로 스크롤을 이동한다
+            // IOS Infinite Scroll 포커스시 스크롤 되지 않는 이슈가 있어 강제로 스크롤을 이동한다
             if (Capacitor.getPlatform() === 'ios') {
-              setTimeout(() => {
-                window.scrollTo(0, document.body.scrollHeight)
-              }, 290)
+              infinityScrollToBottom()
             }
           }}
           autofocus={autoFocus}

@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core'
 import _ from 'lodash'
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
@@ -15,6 +16,7 @@ import {
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
 import { webSocket } from '../services/web-socket-service'
+import { infinityScrollToBottom } from '../utils/scroll-util'
 import { AuthStore } from './auth-store'
 import {
   IChatDto,
@@ -264,6 +266,8 @@ export class ChatStore {
       roomId: chat.chatroom.id,
       readChatId: chat.id,
     })
+
+    this.scrollToBottom(chat.chatroom.id)
   }
 
   subscribeRoom = (roomId: number) => {
@@ -312,6 +316,19 @@ export class ChatStore {
   @action
   setStoreRooms(storeRooms: IStoreChatRoom[]) {
     this.storeRooms = storeRooms
+  }
+
+  /**
+   * IOS Infinite Scroll이 자동으로 최하단으로 이동하지 않아서, 강제로 이동시켜줍니다.
+   * TODO: store에서 UI를 조작하는 로직을 실행하는게 적합하지 않음.
+   * @param currentRoomId 현재 RoomId
+   */
+  scrollToBottom(currentRoomId: number) {
+    if (currentRoomId === this.currentRoomId) {
+      if (Capacitor.getPlatform() === 'ios') {
+        infinityScrollToBottom()
+      }
+    }
   }
 
   @computed
