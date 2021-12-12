@@ -16,10 +16,5 @@
 			"splashFullScreen": false,
 			"splashImmersive": false
 		}
-	},
-	"cordova": {
-		"preferences": {
-			"KeyboardDisplayRequiresUserAction": "false"
-		}
 	}
 }
