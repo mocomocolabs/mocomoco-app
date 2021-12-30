@@ -33,6 +33,7 @@ export class ChatRoom {
     return !!dto && !_.isEmpty(dto)
       ? {
           ...dto,
+          imageUrls: dto.atchFiles.map((v) => v.url),
           user: User.of(dto.user),
         }
       : ({} as IChat)

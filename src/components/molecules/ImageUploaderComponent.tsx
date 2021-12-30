@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { FC, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useStore } from '../../hooks/use-store'
@@ -24,7 +25,7 @@ export const assignPreview = (v: File, i: number) =>
   Object.assign(v, {
     id: i,
     preview: URL.createObjectURL(v),
-  })
+  } as ImageUploadItem)
 
 export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refUploader, className }) => {
   const { $ui } = useStore()
@@ -33,6 +34,8 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
+    multiple: true,
+    maxFiles: 10,
     onDrop: async (acceptedFiles: File[]) => {
       if (acceptedFiles.length + images.length > 10) {
         return $ui.showToastError({ message: '이미지는 10장까지만 올릴 수 있어요 🤗' })
@@ -59,7 +62,7 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
   })
 
   useEffect(() => {
-    setImages(images.map((v, i) => assignPreview(v, i)))
+    setImages(images.map((v, i) => assignPreview(v, Number(_.uniqueId()) * 100 + i)))
 
     return () => {
       // revokeObjectURL을 통해 해제하지 않으면 기존 URL를 유효하다고 판단하고 자바스크립트 엔진에서 GC 되지 않습니다
@@ -77,8 +80,11 @@ export const ImageUploader: FC<IImageUploader> = ({ images = [], setImages, refU
           <Icon
             name='delete'
             className='absolute mr-2 mt-2 right-0 top-0 uploader-delete-icon'
-            onClick={() => setImages(images.filter((v) => v.id !== image.id))}
-          ></Icon>
+            onClick={() => {
+              setImages(images.filter((v) => v.id !== image.id))
+              URL.revokeObjectURL(image.preview)
+            }}
+          />
           <img src={image.preview} alt='' className='h-full w-auto br-md' />
         </div>
       ))}

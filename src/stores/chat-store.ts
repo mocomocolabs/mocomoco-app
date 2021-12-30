@@ -3,15 +3,16 @@ import _ from 'lodash'
 import { action, computed, observable } from 'mobx'
 import { task } from 'mobx-task'
 import { RootStore } from '.'
+import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { ChatRoom } from '../models/chat-room'
 import {
   ChatRoomType,
   ChatType,
   IChat,
-  IChatForm,
+  IChatImagesForm,
+  IChatMessageForm,
   IChatRoom,
   IStoreChatRoom,
-  ISubscribeChat,
 } from '../models/chat.d'
 import { api } from '../services/api-service'
 import { storage } from '../services/storage-service'
@@ -20,10 +21,16 @@ import { infinityScrollToBottom } from '../utils/scroll-util'
 import { AuthStore } from './auth-store'
 import {
   IChatDto,
+  IChatReqDto,
   IChatRoomDto,
+  IInsertChat,
+  IInsertChatImages,
   IInsertChatMessage,
+  InsertChatImagesTask,
   InsertChatMessageTask,
+  InsertChatTask,
   ISetReadChatId,
+  ISubscribeChat,
   SetReadChatIdTask,
 } from './chat-store.d'
 import { TaskBy, TaskBy2 } from './task'
@@ -31,7 +38,8 @@ import { TaskBy, TaskBy2 } from './task'
 const initState = {
   rooms: [],
   currentRoomId: null,
-  form: {} as { [roomId: number]: IChatForm },
+  messageForm: {} as { [roomId: number]: IChatMessageForm },
+  imagesForm: {} as { [roomId: number]: IChatImagesForm[] },
   storeRooms: [],
 }
 
@@ -41,7 +49,8 @@ export class ChatStore {
   @observable currentRoomId: number | null = initState.currentRoomId
 
   // TODO: struct로 선언했을때 resetForm이 제대로 동작하지 않음.
-  @observable form: { [roomId: number]: IChatForm } = initState.form
+  @observable messageForm: { [roomId: number]: IChatMessageForm } = initState.messageForm
+  @observable imagesForm: { [roomId: number]: IChatImagesForm[] } = initState.imagesForm
   /**
    * 방마다의 읽음 정보를 저장
    * TODO: 읽음 정보를 저장한다고 알 수 있는 직관적인 네이밍이 좋을듯
@@ -104,7 +113,11 @@ export class ChatStore {
         action(async (data) => {
           this.rooms = data.chatrooms.map((v) => ChatRoom.of(v, this.$auth.user.id))
 
+          console.log('getRooms', this.rooms)
+
           const orgStoreChatRooms = await storage.getStoreChatRoom()
+          console.log('getRooms orgStoreChatRooms', orgStoreChatRooms)
+
           if (_.isEmpty(orgStoreChatRooms)) {
             this.setStoreRooms(
               this.rooms.map((v) => ({
@@ -128,6 +141,8 @@ export class ChatStore {
               })
             )
           }
+
+          console.log('getRooms storeRooms', this.storeRooms)
         })
       )
   }) as TaskBy<number[]>
@@ -169,41 +184,72 @@ export class ChatStore {
 
   @task.resolved
   insertChatMessage = (async ({ roomId, message }: IInsertChatMessage) => {
+    console.log('============================ insertChatMessage')
+
+    await this.insertChat({ roomId, message, images: [] })
+    this.setMessageForm(roomId, '')
+  }) as InsertChatMessageTask
+
+  @task.resolved
+  insertChatImages = (async ({ roomId, imagesId, images }: IInsertChatImages) => {
+    console.log('============================ insertChatImages')
+
+    await this.insertChat({ roomId, message: '-', images })
+  }) as InsertChatImagesTask
+
+  @task.resolved
+  insertChat = (async ({ roomId, message, images = [] }: IInsertChat) => {
+    console.log('============================ insertChat')
+
     const room = _.find(this.rooms, (v) => v.id === roomId)
 
     if (room === undefined) {
       throw new Error('채팅방 정보를 찾을 수 없습니다.')
     }
 
-    await api
-      .post<ISubscribeChat>('/v1/chats', {
-        type: ChatType.TALK,
-        message,
-        chatroomId: roomId,
-        isUse: true,
+    const formData = new FormData()
+
+    const data = JSON.stringify({
+      type: ChatType.TALK,
+      message,
+      chatroomId: roomId,
+      isUse: true,
+    } as IChatReqDto)
+
+    formData.append(
+      'chatReqDto',
+      new Blob([data], {
+        type: 'application/json',
       })
-      .then((data) => {
-        // 첫 채팅시
-        if (room.chats.length === 0) {
-          console.log('sendMessageForNewRoom')
+    )
 
-          const targetUsers = room.users.filter((v) => v.id !== this.$auth.user.id)
-          if (_.isEmpty(targetUsers)) {
-            throw new Error('채팅방 참여자 정보를 찾을 수 없습니다.')
-          }
+    images?.forEach((v) => {
+      formData.append('files', v, v.name)
+    })
 
-          targetUsers.forEach(({ id: targetUserId }) => {
-            data.targetUserId = targetUserId
-            webSocket.sendMessageForNewRoom(targetUserId, JSON.stringify(data))
-          })
-        } else {
-          console.log('sendMessageForRoom')
+    console.log('formData', Object.fromEntries(formData.entries()))
 
-          webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
+    await api.post<ISubscribeChat>('/v1/chats', formData).then((data) => {
+      // 첫 채팅시
+      if (room.chats.length === 0) {
+        console.log('sendMessageForNewRoom')
+
+        const targetUsers = room.users.filter((v) => v.id !== this.$auth.user.id)
+        if (_.isEmpty(targetUsers)) {
+          throw new Error('채팅방 참여자 정보를 찾을 수 없습니다.')
         }
-        this.setForm(roomId, '')
-      })
-  }) as InsertChatMessageTask
+
+        targetUsers.forEach(({ id: targetUserId }) => {
+          data.targetUserId = targetUserId
+          webSocket.sendMessageForNewRoom(targetUserId, JSON.stringify(data))
+        })
+      } else {
+        console.log('sendMessageForRoom')
+
+        webSocket.sendMessageForRoom(roomId, JSON.stringify(data))
+      }
+    })
+  }) as InsertChatTask
 
   /**
    *
@@ -259,8 +305,6 @@ export class ChatStore {
 
   @action
   setChatAndMeta = (chat: ISubscribeChat) => {
-    // 기존 채팅방에 새로운 채팅룸 공간을 생성.
-    // 첫 채팅 데이터를 스토어에 저장한다.
     this.setChat(chat)
     this.setLastChatId({
       roomId: chat.chatroom.id,
@@ -287,18 +331,54 @@ export class ChatStore {
 
   @action
   setCurrentRoomId(roomId: number | null) {
+    console.log('setCurrentRoomId - roomId=', roomId)
     this.currentRoomId = roomId
   }
 
   @action
-  setForm(roomId: number, message: string) {
-    this.form[roomId] = { roomId, message }
+  setMessageForm(roomId: number, message: string) {
+    this.messageForm[roomId] = { message }
+  }
+
+  @action
+  setImagesForm(roomId: number, imagesId: number, images: ImageUploadItem[]) {
+    console.log('setImagesForm - imagesId=', imagesId, 'images.length=', images?.length ?? 0)
+
+    if (_.isEmpty(images)) {
+      const index = this.imagesForm[roomId]?.findIndex((form) => form.id === imagesId)
+      if (index >= 0) {
+        this.imagesForm[roomId].splice(index, 1)
+      }
+
+      return
+    }
+
+    const data = {
+      id: imagesId,
+      images,
+    }
+
+    const notEmpty = this.imagesForm[roomId]?.length > 0
+
+    if (!notEmpty) {
+      this.imagesForm[roomId] = [data]
+    } else {
+      const exist = this.imagesForm[roomId]?.some((form) => form.id === imagesId)
+
+      if (exist) {
+        this.imagesForm[roomId] = this.imagesForm[roomId].map((form) => (form.id === imagesId ? data : form))
+      } else {
+        this.imagesForm[roomId] = [data, ...this.imagesForm[roomId]]
+      }
+    }
+
+    console.log('setImagesForm - roomId=', roomId, 'form=', this.imagesForm[roomId])
   }
 
   @action
   setChat(subChat: ISubscribeChat) {
-    const chat = _.omit(subChat, ['chatroom']) as IChat
-
+    const chat = ChatRoom.chatOf(_.omit(subChat, ['chatroom']))
+    console.log('setChat', chat)
     this.rooms = this.rooms.map((v) => ({
       ...v,
       chats: v.id === subChat.chatroom.id ? [chat, ...v.chats] : v.chats,
@@ -333,7 +413,10 @@ export class ChatStore {
 
   @computed
   get room(): IChatRoom | undefined {
-    return this.rooms.find((v) => v.id === this.currentRoomId)
+    const room = this.rooms.find((v) => v.id === this.currentRoomId)
+    console.log('get room - currentRoomId=', this.currentRoomId)
+    console.log('get room - room data=', room)
+    return room
   }
 
   @computed
@@ -343,7 +426,7 @@ export class ChatStore {
 
   @computed
   get lastMessageId(): number | undefined {
-    return this.room?.chats?.slice(-1).pop()?.id
+    return this.room?.chats?.slice(0, 1).pop()?.id
   }
 
   @computed

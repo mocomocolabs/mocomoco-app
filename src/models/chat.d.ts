@@ -1,3 +1,4 @@
+import { ImageUploadItem } from '../components/molecules/ImageUploaderComponent'
 import { IChatDto, IChatRoomDto } from '../stores/chat-store.d'
 import { IClub } from './club.d'
 import { IStuffTalent } from './stufftalent.d'
@@ -5,6 +6,7 @@ import { IUser } from './user.d'
 
 export interface IChat extends Pick<IChatDto, 'id' | 'type' | 'message' | 'createdAt'> {
   user: IUser
+  imageUrls: string[]
 }
 
 export interface IChatRoom extends Pick<IChatRoomDto, 'id' | 'type' | 'name' | 'readChatId' | 'createdAt'> {
@@ -15,15 +17,13 @@ export interface IChatRoom extends Pick<IChatRoomDto, 'id' | 'type' | 'name' | '
   talent: IStuffTalent
 }
 
-export interface ISubscribeChat extends IChat {
-  chatroom: IChatRoom
-  // 새로 생성한 채팅의 상대방에게 publish하기 위한 값
-  targetUserId?: number
+export interface IChatMessageForm {
+  message: string
 }
 
-export interface IChatForm {
-  roomId: number
-  message: string
+export interface IChatImagesForm {
+  id: number
+  images: ImageUploadItem[]
 }
 
 export interface IStoreChatRoom {
@@ -45,4 +45,5 @@ export enum ChatType {
   TALK = 'TALK',
   ENTER = 'ENTER',
   LEAVE = 'LEAVE',
+  UPLOADING = 'UPLOADING',
 }

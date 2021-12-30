@@ -103,7 +103,9 @@ export const ChatRoomListItem: FC<IChatRoomListItem> = ({ room }) => {
           <TextSm className='flex-none gray'>{timeDiff(lastChat?.createdAt ?? room.createdAt)}</TextSm>
         </div>
         <div className='flex-between-center flex-none'>
-          <TextSm className='ellipsis'>{lastChat?.message}</TextSm>
+          <TextSm className='ellipsis'>
+            {lastChat?.imageUrls?.length ? '사진을 보냈어요.' : lastChat?.message}
+          </TextSm>
           {_.isNumber(readCount) && readCount > 0 && (
             <div className='flex-center flex-none br-full bg-red min-width-20 min-height-20 leading-none ml-2 white'>
               <TextSm>{readCount}</TextSm>

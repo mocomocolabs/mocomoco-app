@@ -27,11 +27,16 @@ export const ChatRoomPage: React.FC = () => {
   useEffect(() => {
     $ui.setIsBottomTab(false)
 
-    return () => $chat.setCurrentRoomId(null)
+    return () => {
+      console.log('ChatRoom useEffect#1 - page exit')
+      $chat.setCurrentRoomId(null)
+    }
   }, [])
 
   useEffect(() => {
     // TODO : 접근제한 테스트 필요
+    console.log('ChatRoom useEffect#2 - roomId=', roomId)
+
     if (roomId !== undefined) $chat.setCurrentRoomId(roomId)
     const curReadChatId = $chat.storeRoom?.readChatId
     const lastReadChatId = _.maxBy($chat.room?.chats, (v) => v.createdAt)?.id
